@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
@@ -167,50 +168,7 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static bool InSpacePolygon(this XYZ pt, List<Line> lines)
         {
-            // TODO: It seems no ok.
-            var x = pt.X;
-            var y = pt.Y;
-            var z = pt.Z;
-            var xs = new List<double>();
-            var ys = new List<double>();
-            var zs = new List<double>();
-
-            foreach (var line in lines)
-            {
-                xs.Add(line.GetEndPoint(0).X);
-                ys.Add(line.GetEndPoint(0).Y);
-                zs.Add(line.GetEndPoint(0).Z);
-            }
-
-            if (xs.Count == 0 || x < xs.Min() || x > xs.Max())
-                return false;
-
-            if (ys.Count == 0 || y < ys.Min() || y > ys.Max())
-                return false;
-
-            if (zs.Count == 0 || z < zs.Min() || z > zs.Max())
-                return false;
-
-            var result = false;
-
-            for (int i = 0, j = xs.Count - 1; i < xs.Count; j = i++)
-            {
-                if (ys[i] > y != ys[j] > y)
-                    continue;
-
-                if (zs[i] > z != zs[j] > z)
-                    continue;
-
-                if (x >= (xs[j] - xs[i]) * (y - ys[i]) / (ys[j] - ys[i]) + xs[i])
-                    continue;
-
-                if (x >= (xs[j] - xs[i]) * (z - zs[i]) / (zs[j] - zs[i]) + xs[i])
-                    continue;
-
-                result = !result;
-            }
-
-            return result;
+            throw new NotImplementedException();
         }
     }
 }

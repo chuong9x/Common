@@ -77,27 +77,6 @@ namespace KeLi.Common.Revit.Widget
         }
 
         /// <summary>
-        /// Compares the two number with high precision.
-        /// </summary>
-        /// <param name="d1"></param>
-        /// <param name="d2"></param>
-        /// <param name="precision"></param>
-        /// <returns></returns>
-        public static int Compare(double d1, double d2 = 0, double precision = -6)
-        {
-            int result;
-
-            if (d1 - d2 > Math.Pow(10, precision))
-                result = 1;
-            else if (d1 - d2 < -Math.Pow(10, precision))
-                result = -1;
-            else
-                result = 0;
-
-            return result;
-        }
-
-        /// <summary>
         /// Gets the distance square.
         /// </summary>
         /// <param name="d"></param>

@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
@@ -74,7 +75,7 @@ namespace KeLi.Common.Revit.Relation
             // Distance Arithmetic: If a point in a line, it meets sum of the distance from the point to each endpoint equal the line length.
             var k = pt1.DistanceTo(pt) + pt2.DistanceTo(pt) - pt2.DistanceTo(pt1);
 
-            return NumberUtil.Compare(k) == -1 ? GeometryPosition.Inner : GeometryPosition.Other;
+            return Math.Abs(k) < 10e-3 ? GeometryPosition.Inner : GeometryPosition.Other;
         }
 
         /// <summary>
@@ -91,7 +92,7 @@ namespace KeLi.Common.Revit.Relation
             // Distance Arithmetic: If a point in a line, it meets sum of the distance from the point to each endpoint equal the line length.
             var k = pt1.DistanceTo(pt) + pt2.DistanceTo(pt) - pt2.DistanceTo(pt1);
 
-            return NumberUtil.Compare(k) == -1 ? GeometryPosition.Inner : GeometryPosition.Other;
+            return Math.Abs(k) < 10e-3 ? GeometryPosition.Inner : GeometryPosition.Other;
         }
 
         /// <summary>

@@ -49,6 +49,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using Autodesk.Revit.DB;
 using KeLi.Common.Revit.Widget;
 
@@ -93,6 +94,17 @@ namespace KeLi.Common.Revit.Relation
         }
 
         /// <summary>
+        /// Gets the result of whether the line line1 and the line line2 is space vertical.
+        /// </summary>
+        /// <param name="line1"></param>
+        /// <param name="line2"></param>
+        /// <returns></returns>
+        public static bool IsSpaceVertical(this Line line1, Line line2)
+        {
+            return Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI / 2) < 2 * 10e-3;
+        }
+
+        /// <summary>
         /// Gets the result of whether the line line1 and the line line2 is space parallel.
         /// </summary>
         /// <param name="line1"></param>
@@ -100,7 +112,23 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static bool IsSpaceParallel(this Line line1, Line line2)
         {
-            return NumberUtil.Compare(Math.Sin(line1.Direction.AngleTo(line2.Direction))) == 0;
+            if (Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI) < 2 * 10e-3)
+                return true;
+
+            return line1.Direction.AngleTo(line2.Direction) < 2 * 10e-3;
+        }
+
+        /// <summary>
+        /// Converts to plane line.
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        public static Line ToPlaneLine(this Line line)
+        {
+            var p1 = line.GetEndPoint(0);
+            var p2 = line.GetEndPoint(1);
+
+            return Line.CreateBound(new XYZ(p1.X, p1.Y, 0), new XYZ(p2.X, p2.Y, 0));
         }
 
         /// <summary>
@@ -111,15 +139,27 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static bool IsPlaneParallel(this Line line1, Line line2)
         {
-            var p1 = line1.GetEndPoint(0);
-            var p2 = line1.GetEndPoint(1);
-            var p3 = line2.GetEndPoint(0);
-            var p4 = line2.GetEndPoint(1);
+            line1 = line1.ToPlaneLine();
+            line2 = line2.ToPlaneLine();
 
-            line1 = Line.CreateBound(new XYZ(p1.X, p1.Y, 0), new XYZ(p2.X, p2.Y, 0));
-            line2 = Line.CreateBound(new XYZ(p3.X, p3.Y, 0), new XYZ(p4.X, p4.Y, 0));
+            if (Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI) < 2 * 10e-3)
+                return true;
 
-            return NumberUtil.Compare(Math.Sin(line1.Direction.AngleTo(line2.Direction))) == 0;
+            return line1.Direction.AngleTo(line2.Direction) % Math.PI < 2 * 10e-3;
+        }
+
+        /// <summary>
+        /// Gets the result of whether the line line1 and the line line2 is plane vertical.
+        /// </summary>
+        /// <param name="line1"></param>
+        /// <param name="line2"></param>
+        /// <returns></returns>
+        public static bool IsPlaneVertical(this Line line1, Line line2)
+        {
+            line1 = line1.ToPlaneLine();
+            line2 = line2.ToPlaneLine();
+
+            return Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI / 2) < 2 * 10e-3;
         }
 
         /// <summary>
@@ -131,28 +171,46 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static XYZ GetPlaneInsPoint(this Line line1, Line line2, bool isTouch = true)
         {
+            if (line1.IsPlaneParallel(line2))
+                return null;
+
+            XYZ result;
             var pt1 = line1.GetEndPoint(0);
             var pt2 = line1.GetEndPoint(1);
             var pt3 = line2.GetEndPoint(0);
             var pt4 = line2.GetEndPoint(1);
-            var k1 = (pt2.X - pt1.X) * (pt3.X - pt4.X) * (pt3.Y - pt1.Y)
-                     - pt3.X * (pt2.X - pt1.X) * (pt3.Y - pt4.Y)
-                     + pt1.X * (pt2.Y - pt1.Y) * (pt3.X - pt4.X);
-            var k2 = (pt2.Y - pt1.Y) * (pt3.X - pt4.X)
-                     - (pt2.X - pt1.X) * (pt3.Y - pt4.Y);
-            var k3 = (pt2.Y - pt1.Y) * (pt3.Y - pt4.Y) * (pt3.X - pt1.X)
-                     - pt3.Y * (pt2.Y - pt1.Y) * (pt3.X - pt4.X)
-                     + pt1.Y * (pt2.X - pt1.X) * (pt3.Y - pt4.Y);
-            var k4 = (pt2.X - pt1.X) * (pt3.Y - pt4.Y)
-                     - (pt2.Y - pt1.Y) * (pt3.X - pt4.X);
 
-            // Equations of the state, by the formula to calculate the intersection.
-            var result = new XYZ(k1 / k2, k3 / k4, 0);
+            if (line1.IsPlaneVertical(line2))
+            {
+                // Must quadrature.
+                var flag = Math.Abs(line1.Direction.AngleTo(XYZ.BasisX) - Math.PI / 2) < 2 * 10e-3;
 
-            // You can choose distance arithmetic, it is very easy to understand.
-            var flag1 = (result.X - pt1.X) * (result.X - pt2.X) <= 0;
-            var flag2 = (result.X - pt3.X) * (result.X - pt4.X) <= 0;
-            var flag3 = (result.Y - pt1.Y) * (result.Y - pt2.Y) <= 0;
+                if (!flag)
+                    flag = Math.Abs(line2.Direction.AngleTo(XYZ.BasisX) - Math.PI / 2) < 2 * 10e-3;
+
+                result = flag ? new XYZ(pt1.X, pt3.Y, 0) : new XYZ(pt3.X, pt1.Y, 0);
+            }
+            else
+            {
+                var k1 = (pt2.X - pt1.X) * (pt3.X - pt4.X) * (pt3.Y - pt1.Y)
+                         - pt3.X * (pt2.X - pt1.X) * (pt3.Y - pt4.Y)
+                         + pt1.X * (pt2.Y - pt1.Y) * (pt3.X - pt4.X);
+                var k2 = (pt2.Y - pt1.Y) * (pt3.X - pt4.X)
+                         - (pt2.X - pt1.X) * (pt3.Y - pt4.Y);
+                var k3 = (pt2.Y - pt1.Y) * (pt3.Y - pt4.Y) * (pt3.X - pt1.X)
+                         - pt3.Y * (pt2.Y - pt1.Y) * (pt3.X - pt4.X)
+                         + pt1.Y * (pt2.X - pt1.X) * (pt3.Y - pt4.Y);
+                var k4 = (pt2.X - pt1.X) * (pt3.Y - pt4.Y)
+                         - (pt2.Y - pt1.Y) * (pt3.X - pt4.X);
+
+                // Equations of the state, by the formula to calculate the intersection.
+                result = new XYZ(k1 / k2, k3 / k4, 0);
+            }
+
+            // It be used to calc the result in line1 and line2.
+            var flag1 = (result.Y - pt1.X) * (result.X - pt2.X) <= 0;
+            var flag2 = (result.Y - pt1.Y) * (result.Y - pt2.Y) <= 0;
+            var flag3 = (result.X - pt3.X) * (result.X - pt4.X) <= 0;
             var flag4 = (result.Y - pt3.Y) * (result.Y - pt4.Y) <= 0;
 
             // No touch or true cross returns the ins pt, otherwise returns null.
@@ -169,9 +227,6 @@ namespace KeLi.Common.Revit.Relation
         public static List<XYZ> GetPlaneInsPointList(this Line line, List<Line> lines, bool isTouch = true)
         {
             var results = new List<XYZ>();
-
-            // Must be filter parallel lines.
-            lines = lines.Where(w => !line.IsPlaneParallel(w)).ToList();
 
             lines.ForEach(f => results.Add(line.GetPlaneInsPoint(f, isTouch)));
 
