@@ -71,6 +71,9 @@ namespace KeLi.Common.Drive.Excel
         /// <returns></returns>
         public static object[,] As2DArray(this ExcelParam param)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
             var fileInfo = new FileInfo(param.FilePath);
 
             using (var excel = new ExcelPackage(fileInfo))
@@ -93,6 +96,9 @@ namespace KeLi.Common.Drive.Excel
         /// <returns></returns>
         public static object[][] AsCrossArray(this ExcelParam param)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
             return param.As2DArray().Convert();
         }
 
@@ -104,6 +110,9 @@ namespace KeLi.Common.Drive.Excel
         /// <returns></returns>
         public static List<T> AsList<T>(this ExcelParam param)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
             var fileInfo = new FileInfo(param.FilePath);
             var results = new List<T>();
             var ps = typeof(T).GetProperties();
@@ -149,6 +158,9 @@ namespace KeLi.Common.Drive.Excel
         /// <returns></returns>
         public static DataTable AsDataTable(this ExcelParam param)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
             var fileInfo = new FileInfo(param.FilePath);
             var results = new DataTable();
 
@@ -181,6 +193,12 @@ namespace KeLi.Common.Drive.Excel
         /// <param name="createHeader"></param>
         public static void ToExcel<T>(this ExcelParam param, List<T> objs, bool createHeader = true)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
+            if (objs == null)
+                throw new ArgumentNullException(nameof(objs));
+
             // If exists, auto width setting will throw exception.
             if (File.Exists(param.FilePath))
                 File.Delete(param.FilePath);
@@ -215,6 +233,12 @@ namespace KeLi.Common.Drive.Excel
         /// <returns></returns>
         public static ExcelPackage ToExcel(this ExcelParam param, object[][] table)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
+            if (table == null)
+                throw new ArgumentNullException(nameof(table));
+
             // If exists, auto width setting will throw exception.
             if (File.Exists(param.FilePath))
                 File.Delete(param.FilePath);
@@ -244,6 +268,12 @@ namespace KeLi.Common.Drive.Excel
         /// <returns></returns>
         public static ExcelPackage ToExcel(this ExcelParam param, object[,] table)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
+            if (table == null)
+                throw new ArgumentNullException(nameof(table));
+
             // If exists, auto width setting will throw exception.
             if (File.Exists(param.FilePath))
                 File.Delete(param.FilePath);
@@ -273,6 +303,12 @@ namespace KeLi.Common.Drive.Excel
         /// <param name="createHeader"></param>
         public static ExcelPackage ToExcel(this ExcelParam param, DataTable table, bool createHeader = true)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
+            if (table == null)
+                throw new ArgumentNullException(nameof(table));
+
             // If exists, auto width setting will throw exception.
             if (File.Exists(param.FilePath))
                 File.Delete(param.FilePath);
@@ -308,7 +344,16 @@ namespace KeLi.Common.Drive.Excel
         /// <param name="param"></param>
         public static void SetExcelStyle(this ExcelPackage excel, Action<ExcelWorksheet> action, ExcelParam param)
         {
-            action?.Invoke(excel.Workbook.Worksheets[param.SheetName]);
+            if (excel == null)
+                throw new ArgumentNullException(nameof(excel));
+
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
+            action(excel.Workbook.Worksheets[param.SheetName]);
             excel.Save();
         }
 
@@ -320,6 +365,9 @@ namespace KeLi.Common.Drive.Excel
         /// <returns></returns>
         public static ExcelPackage GetExcelPackage(this ExcelParam param, out ExcelWorksheet sheet)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
             var fileInfo = new FileInfo(param.FilePath);
             var result = new ExcelPackage(fileInfo);
             var sheets = result.Workbook.Worksheets;
@@ -338,6 +386,9 @@ namespace KeLi.Common.Drive.Excel
         /// <returns></returns>
         public static string GetDcrp(this PropertyInfo p)
         {
+            if (p == null)
+                throw new ArgumentNullException(nameof(p));
+
             var objs = p.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
             // To throw not exception, must return empty string.
@@ -351,6 +402,9 @@ namespace KeLi.Common.Drive.Excel
         /// <returns></returns>
         public static int GetSpan(this PropertyInfo p)
         {
+            if (p == null)
+                throw new ArgumentNullException(nameof(p));
+
             var objs = p.GetCustomAttributes(typeof(SpanAttribute), false);
 
             if (objs.Length == 0)
@@ -369,6 +423,9 @@ namespace KeLi.Common.Drive.Excel
         /// <returns></returns>
         public static string GetReference(this PropertyInfo p)
         {
+            if (p == null)
+                throw new ArgumentNullException(nameof(p));
+
             var objs = p.GetCustomAttributes(typeof(ReferenceAttribute), false);
 
             if (objs.Length == 0)
@@ -389,6 +446,9 @@ namespace KeLi.Common.Drive.Excel
         /// <returns></returns>
         public static string GetMegerValue(this ExcelWorksheet worksheet, int row, int column)
         {
+            if (worksheet == null)
+                throw new ArgumentNullException(nameof(worksheet));
+
             var rangeStr = worksheet.MergedCells[row, column];
             var excelRange = worksheet.Cells;
             var cellVal = excelRange[row, column].Value;
@@ -407,6 +467,9 @@ namespace KeLi.Common.Drive.Excel
         /// <param name="worksheet"></param>
         public static void SetExcelStyle(this ExcelWorksheet worksheet)
         {
+            if (worksheet == null)
+                throw new ArgumentNullException(nameof(worksheet));
+
             worksheet.Cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             worksheet.Cells.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
             worksheet.Cells.AutoFitColumns();

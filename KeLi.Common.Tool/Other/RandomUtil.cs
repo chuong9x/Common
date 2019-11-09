@@ -318,7 +318,7 @@ namespace KeLi.Common.Tool.Other
 
                 var random = new Random();
 
-                for (var i = 0; results.Count < num; i++)
+                while (results.Count < num)
                 {
                     var temp = random.Next(min, max);
 

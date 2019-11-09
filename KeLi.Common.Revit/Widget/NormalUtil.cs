@@ -64,6 +64,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static double GetDotProduct(this XYZ p1, XYZ p2)
         {
+            if (p1 == null)
+                throw new ArgumentNullException(nameof(p1));
+
+            if (p2 == null)
+                throw new ArgumentNullException(nameof(p2));
+
             return p1.X * p2.X + p1.Y * p2.Y + p1.Z * p2.Z;
         }
 
@@ -75,6 +81,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static XYZ GetSpaceNormal(this Curve curve, XYZ point)
         {
+            if (curve == null)
+                throw new ArgumentNullException(nameof(curve));
+
+            if (point == null)
+                throw new ArgumentNullException(nameof(point));
+
             var line = curve as Line;
             var p1 = line.GetEndPoint(0);
             var p2 = line.GetEndPoint(1);
@@ -91,6 +103,15 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static XYZ GetSpaceNormal(this XYZ p1, XYZ p2, XYZ p3)
         {
+            if (p1 == null)
+                throw new ArgumentNullException(nameof(p1));
+
+            if (p2 == null)
+                throw new ArgumentNullException(nameof(p2));
+
+            if (p3 == null)
+                throw new ArgumentNullException(nameof(p3));
+
             var a = p1.Y * p2.Z + p2.Y * p3.Z + p1.Z * p3.Y - p1.Y * p3.Z - p1.Z * p2.Y - p2.Z * p3.Y;
             var b = p1.X * p3.Z + p1.Z * p2.X + p2.Z * p3.X - p1.X * p2.Z - p2.X * p3.Z - p1.Z * p3.X;
             var c = p1.X * p2.Y + p2.X * p3.Y + p1.Y * p3.X - p1.X * p3.Y - p1.Y * p2.X - p2.Y * p3.X;

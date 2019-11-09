@@ -71,32 +71,31 @@ namespace KeLi.Common.Converter.Converter
         /// <returns></returns>
         public static List<T> ToList<T>(DataTable dt)
         {
-            List<T> results;
+            if (dt == null)
+                throw new ArgumentNullException(nameof(dt));
 
-            if (dt == null || dt.Rows.Count == 0)
-                results = new List<T>();
-            else
+            if (dt.Rows.Count == 0)
+                return new List<T>();
+
+            var results = new List<T>();
+
+            for (var i = 0; i < dt.Rows.Count; i++)
             {
-                results = new List<T>();
+                var tab = Activator.CreateInstance<T>();
+                var properties = tab.GetType().GetProperties();
 
-                for (var i = 0; i < dt.Rows.Count; i++)
+                for (var j = 0; j < dt.Columns.Count; j++)
                 {
-                    var tab = Activator.CreateInstance<T>();
-                    var properties = tab.GetType().GetProperties();
+                    var index = j;
 
-                    for (var j = 0; j < dt.Columns.Count; j++)
+                    foreach (var property in properties.Where(w => w.Name.Equals(dt.Columns[index].ColumnName)))
                     {
-                        var index = j;
-
-                        foreach (var property in properties.Where(w => w.Name.Equals(dt.Columns[index].ColumnName)))
-                        {
-                            property.SetValue(tab, dt.Rows[i][j] != DBNull.Value ? dt.Rows[i][j] : null, null);
-                            break;
-                        }
+                        property.SetValue(tab, dt.Rows[i][j] != DBNull.Value ? dt.Rows[i][j] : null, null);
+                        break;
                     }
-
-                    results.Add(tab);
                 }
+
+                results.Add(tab);
             }
 
             return results;
@@ -110,43 +109,43 @@ namespace KeLi.Common.Converter.Converter
         /// <returns></returns>
         public static IList ToList(DataTable dt, Type type)
         {
-            IList results;
+            if (dt == null)
+                throw new ArgumentNullException(nameof(dt));
+
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+
             var master = typeof(List<>);
             var types = master.MakeGenericType(type);
 
-            if (dt == null || dt.Rows.Count == 0)
-                results = Activator.CreateInstance(types) as IList;
-            else if (type == null)
-                results = Activator.CreateInstance(types) as IList;
-            else
+            if (dt.Rows.Count == 0)
+                return Activator.CreateInstance(types) as IList;
+
+            var results = Activator.CreateInstance(types) as IList;
+            const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+            var constructor = type.GetConstructors(flags).OrderBy(c => c.GetParameters().Length).FirstOrDefault();
+
+            if (constructor == null)
+                return results;
+
+            var parameters = constructor.GetParameters();
+            var values = new object[parameters.Length];
+
+            foreach (DataRow dr in dt.Rows)
             {
-                results = Activator.CreateInstance(types) as IList;
+                var index = 0;
 
-                const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-                var constructor = type.GetConstructors(flags).OrderBy(c => c.GetParameters().Length).FirstOrDefault();
-
-                if (constructor == null)
-                    return results;
-
-                var parameters = constructor.GetParameters();
-                var values = new object[parameters.Length];
-
-                foreach (DataRow dr in dt.Rows)
+                foreach (var item in parameters)
                 {
-                    var index = 0;
+                    object val = null;
 
-                    foreach (var item in parameters)
-                    {
-                        object val = null;
+                    if (dr[item.Name] != null && dr[item.Name] != DBNull.Value)
+                        val = Convert.ChangeType(dr[item.Name], item.ParameterType);
 
-                        if (dr[item.Name] != null && dr[item.Name] != DBNull.Value)
-                            val = Convert.ChangeType(dr[item.Name], item.ParameterType);
-
-                        values[index++] = val;
-                    }
-
-                    results?.Add(constructor.Invoke(values));
+                    values[index++] = val;
                 }
+
+                results?.Add(constructor.Invoke(values));
             }
 
             return results;
@@ -160,28 +159,26 @@ namespace KeLi.Common.Converter.Converter
         /// <returns></returns>
         public static List<T> ToList<T>(SqlDataReader reader)
         {
-            List<T> results;
+            if (reader == null)
+                throw new ArgumentNullException(nameof(reader));
 
-            if (reader == null || !reader.HasRows)
-                results = new List<T>();
-            else
+            if (!reader.HasRows)
+                return new List<T>();
+
+            var results = new List<T>();
+            var properties = typeof(T).GetProperties();
+
+            while (reader.Read())
             {
-                results = new List<T>();
+                var t = Activator.CreateInstance<T>();
 
-                var properties = typeof(T).GetProperties();
+                foreach (var property in properties)
+                    property.SetValue(t, reader[property.Name] is DBNull ? null : reader[property.Name]);
 
-                while (reader.Read())
-                {
-                    var t = Activator.CreateInstance<T>();
-
-                    foreach (var property in properties)
-                        property.SetValue(t, reader[property.Name] is DBNull ? null : reader[property.Name]);
-
-                    results.Add(t);
-                }
-
-                reader.Close();
+                results.Add(t);
             }
+
+            reader.Close();
 
             return results;
         }
@@ -194,44 +191,41 @@ namespace KeLi.Common.Converter.Converter
         /// <returns></returns>
         public static IList ToList(SqlDataReader reader, Type type)
         {
-            IList results;
-            var masterType = typeof(List<>);
-            var listType = masterType.MakeGenericType(type);
+            if (reader == null)
+                throw new ArgumentNullException(nameof(reader));
 
-            if (reader == null || !reader.HasRows)
-                results = Activator.CreateInstance(listType) as IList;
-            else if (type == null)
-                results = Activator.CreateInstance(listType) as IList;
-            else
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+
+            var listType = typeof(List<>).MakeGenericType(type);
+
+            if (!reader.HasRows)
+                return Activator.CreateInstance(listType) as IList;
+
+            var results = Activator.CreateInstance(listType) as IList;
+            var constructor = type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .OrderBy(c => c.GetParameters().Length).First();
+            var parameters = constructor.GetParameters();
+            var values = new object[parameters.Length];
+
+            while (reader.Read())
             {
-                results = Activator.CreateInstance(listType) as IList;
+                var index = 0;
 
-                var constructor = type
-                    .GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                    .OrderBy(c => c.GetParameters().Length)
-                    .First();
-                var parameters = constructor.GetParameters();
-                var values = new object[parameters.Length];
-
-                while (reader.Read())
+                foreach (var item in parameters)
                 {
-                    var index = 0;
+                    var val = reader[item.Name];
 
-                    foreach (var item in parameters)
-                    {
-                        var val = reader[item.Name];
+                    if (val != DBNull.Value)
+                        val = Convert.ChangeType(val, item.ParameterType);
 
-                        if (val != DBNull.Value)
-                            val = Convert.ChangeType(val, item.ParameterType);
-
-                        values[index++] = val;
-                    }
-
-                    results?.Add(constructor.Invoke(values));
+                    values[index++] = val;
                 }
 
-                reader.Close();
+                results?.Add(constructor.Invoke(values));
             }
+
+            reader.Close();
 
             return results;
         }
@@ -244,6 +238,9 @@ namespace KeLi.Common.Converter.Converter
         /// <returns></returns>
         public static DataTable ToTable<T>(List<T> ts)
         {
+            if (ts == null)
+                throw new ArgumentNullException(nameof(ts));
+
             var results = new DataTable();
             var props = ts[0].GetType().GetProperties();
 
@@ -270,39 +267,38 @@ namespace KeLi.Common.Converter.Converter
         /// <returns></returns>
         public static DataTable ToTable(SqlDataReader reader)
         {
-            DataTable results;
+            if (reader == null)
+                throw new ArgumentNullException(nameof(reader));
 
-            if (reader == null || !reader.HasRows)
-                results = new DataTable();
-            else
+            if (!reader.HasRows)
+                return new DataTable();
+
+            var results = new DataTable();
+
+            // Adds the data table's columns.
+            for (var i = 0; i < reader.FieldCount; i++)
             {
-                results = new DataTable();
-
-                // Adds the data table's columns.
-                for (var i = 0; i < reader.FieldCount; i++)
+                var column = new DataColumn
                 {
-                    var column = new DataColumn
-                    {
-                        DataType = reader.GetFieldType(i),
-                        ColumnName = reader.GetName(i)
-                    };
+                    DataType = reader.GetFieldType(i),
+                    ColumnName = reader.GetName(i)
+                };
 
-                    results.Columns.Add(column);
-                }
-
-                // Adds the data table's content.
-                while (reader.Read())
-                {
-                    var row = results.NewRow();
-
-                    for (var i = 0; i < reader.FieldCount; i++)
-                        row[i] = reader[i];
-
-                    results.Rows.Add(row);
-                }
-
-                reader.Close();
+                results.Columns.Add(column);
             }
+
+            // Adds the data table's content.
+            while (reader.Read())
+            {
+                var row = results.NewRow();
+
+                for (var i = 0; i < reader.FieldCount; i++)
+                    row[i] = reader[i];
+
+                results.Rows.Add(row);
+            }
+
+            reader.Close();
 
             return results;
         }
@@ -317,7 +313,7 @@ namespace KeLi.Common.Converter.Converter
         public static S ToAnyType<T, S>(this T t)
         {
             if (t == null)
-                return Activator.CreateInstance<S>();
+                throw new ArgumentNullException(nameof(t));
 
             var result = Activator.CreateInstance<S>();
             var properties = typeof(T).GetProperties();
@@ -356,70 +352,65 @@ namespace KeLi.Common.Converter.Converter
         /// <returns></returns>
         public static SqlDbType ToDbType(object obj)
         {
-            SqlDbType result;
-
             if (obj == null)
-                result = SqlDbType.NChar;
-            else
+                throw new ArgumentNullException(nameof(obj));
+
+            var result = SqlDbType.NChar;
+            var type = obj.GetType();
+
+            switch (type.Name)
             {
-                result = SqlDbType.NChar;
+                case "Boolean":
+                    result = SqlDbType.Bit;
+                    break;
 
-                var type = obj.GetType();
+                case "Byte":
+                    result = SqlDbType.TinyInt;
+                    break;
 
-                switch (type.Name)
-                {
-                    case "Boolean":
-                        result = SqlDbType.Bit;
-                        break;
+                case "Int16":
+                    result = SqlDbType.SmallInt;
+                    break;
 
-                    case "Byte":
-                        result = SqlDbType.TinyInt;
-                        break;
+                case "Int32":
+                    result = SqlDbType.SmallInt;
+                    break;
 
-                    case "Int16":
-                        result = SqlDbType.SmallInt;
-                        break;
+                case "Single":
+                    result = SqlDbType.Real;
+                    break;
 
-                    case "Int32":
-                        result = SqlDbType.SmallInt;
-                        break;
+                case "Double":
+                    result = SqlDbType.Float;
+                    break;
 
-                    case "Single":
-                        result = SqlDbType.Real;
-                        break;
+                case "String":
+                    result = SqlDbType.NChar;
+                    break;
 
-                    case "Double":
-                        result = SqlDbType.Float;
-                        break;
+                case "Guid":
+                    result = SqlDbType.UniqueIdentifier;
+                    break;
 
-                    case "String":
-                        result = SqlDbType.NChar;
-                        break;
+                case "XmlReader":
+                    result = SqlDbType.Xml;
+                    break;
 
-                    case "Guid":
-                        result = SqlDbType.UniqueIdentifier;
-                        break;
+                case "Decimal":
+                    result = SqlDbType.Money;
+                    break;
 
-                    case "XmlReader":
-                        result = SqlDbType.Xml;
-                        break;
+                case "DateTime":
+                    result = SqlDbType.DateTime2;
+                    break;
 
-                    case "Decimal":
-                        result = SqlDbType.Money;
-                        break;
+                case "Byte[]":
+                    result = SqlDbType.Binary;
+                    break;
 
-                    case "DateTime":
-                        result = SqlDbType.DateTime2;
-                        break;
-
-                    case "Byte[]":
-                        result = SqlDbType.Binary;
-                        break;
-
-                    case "Object":
-                        result = SqlDbType.Variant;
-                        break;
-                }
+                case "Object":
+                    result = SqlDbType.Variant;
+                    break;
             }
 
             return result;
@@ -432,6 +423,9 @@ namespace KeLi.Common.Converter.Converter
         /// <returns></returns>
         public static IDictionary<string, string[]> ToDictionary(this NameValueCollection pairs)
         {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
             return pairs.AllKeys.ToDictionary(k => k, pairs.GetValues);
         }
 
@@ -442,6 +436,9 @@ namespace KeLi.Common.Converter.Converter
         /// <returns></returns>
         public static ILookup<string, string[]> ToLookup(this NameValueCollection pairs)
         {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
             return pairs.AllKeys.ToLookup(t => t, pairs.GetValues);
         }
 
@@ -452,6 +449,9 @@ namespace KeLi.Common.Converter.Converter
         /// <returns></returns>
         public static NameValueCollection ToNameValueCollection(this IDictionary<string, string[]> pairs)
         {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
             var result = new NameValueCollection();
 
             foreach (var pair in pairs)
@@ -468,6 +468,9 @@ namespace KeLi.Common.Converter.Converter
         /// <returns></returns>
         public static NameValueCollection ToNameValueCollection(this ILookup<string, string[]> pairs)
         {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
             var result = new NameValueCollection();
 
             foreach (var pair in pairs)
@@ -483,6 +486,9 @@ namespace KeLi.Common.Converter.Converter
         /// <param name="pairs"></param>
         public static string ToNvcString(this NameValueCollection pairs)
         {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
             return string.Join(Environment.NewLine, pairs.AllKeys.SelectMany(pairs.GetValues, (k, v) => k + ": " + v));
         }
 
@@ -492,6 +498,9 @@ namespace KeLi.Common.Converter.Converter
         /// <param name="pairs"></param>
         public static NameValueCollection ToNvc(string pairs)
         {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
             var kvs = Regex.Split(pairs, "\r\n", RegexOptions.IgnoreCase);
             var results = new NameValueCollection();
 

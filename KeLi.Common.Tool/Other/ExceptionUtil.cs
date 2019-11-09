@@ -17,6 +17,9 @@ namespace KeLi.Common.Tool.Other
         /// <param name="showMsg"></param>
         public static void AutoTry(Action act, string name = null, bool showMsg = false)
         {
+            if (act == null)
+                throw new ArgumentNullException(nameof(act));
+
             try
             {
                 act.Invoke();

@@ -65,6 +65,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static GeometryPosition GetPlanePosition(this List<Line> plane1, List<Line> plane2)
         {
+            if (plane1 == null)
+                throw new ArgumentNullException(nameof(plane1));
+
+            if (plane2 == null)
+                throw new ArgumentNullException(nameof(plane2));
+
             throw new NotImplementedException();
         }
 
@@ -76,6 +82,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static GeometryPosition GetSpacePosition(this List<Line> plane1, List<Line> plane2)
         {
+            if (plane1 == null)
+                throw new ArgumentNullException(nameof(plane1));
+
+            if (plane2 == null)
+                throw new ArgumentNullException(nameof(plane2));
+
             throw new NotImplementedException();
         }
     }

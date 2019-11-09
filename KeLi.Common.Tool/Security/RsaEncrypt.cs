@@ -71,26 +71,23 @@ namespace KeLi.Common.Tool.Security
         /// <returns></returns>
         public static string Encrypt(string content, string key = null)
         {
-            string result;
+            if (content == null)
+                throw new ArgumentNullException(nameof(content));
 
             if (string.IsNullOrWhiteSpace(content))
-                result = null;
-            else
-            {
-                if (string.IsNullOrWhiteSpace(key))
-                    key = Pair.Key;
+                return null;
 
-                var rsa = new RSACryptoServiceProvider();
+            if (string.IsNullOrWhiteSpace(key))
+                key = Pair.Key;
 
-                rsa.FromXmlString(key);
+            var rsa = new RSACryptoServiceProvider();
 
-                var bytes = new UnicodeEncoding().GetBytes(content);
-                var marks = rsa.Encrypt(bytes, false);
+            rsa.FromXmlString(key);
 
-                result = Convert.ToBase64String(marks);
-            }
+            var bytes = new UnicodeEncoding().GetBytes(content);
+            var marks = rsa.Encrypt(bytes, false);
 
-            return result;
+            return Convert.ToBase64String(marks);
         }
 
         /// <summary>
@@ -101,26 +98,20 @@ namespace KeLi.Common.Tool.Security
         /// <returns></returns>
         public static string Decrypt(string ciphertext, string value = null)
         {
-            string result;
-
             if (string.IsNullOrWhiteSpace(ciphertext))
-                result = null;
-            else
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                    value = Pair.Value;
+                return null;
 
-                var rsa = new RSACryptoServiceProvider();
+            if (string.IsNullOrWhiteSpace(value))
+                value = Pair.Value;
 
-                rsa.FromXmlString(value);
+            var rsa = new RSACryptoServiceProvider();
 
-                var marks = Convert.FromBase64String(ciphertext);
-                var bytes = rsa.Decrypt(marks, false);
+            rsa.FromXmlString(value);
 
-                result = new UnicodeEncoding().GetString(bytes);
-            }
+            var marks = Convert.FromBase64String(ciphertext);
+            var bytes = rsa.Decrypt(marks, false);
 
-            return result;
+            return new UnicodeEncoding().GetString(bytes);
         }
 
         /// <summary>

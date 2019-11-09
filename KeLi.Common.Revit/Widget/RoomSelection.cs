@@ -49,6 +49,7 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI.Selection;
+using System;
 
 namespace KeLi.Common.Revit.Widget
 {
@@ -60,11 +61,14 @@ namespace KeLi.Common.Revit.Widget
         /// <summary>
         /// Allows the element to be picked.
         /// </summary>
-        /// <param name="elem"></param>
+        /// <param name="elm"></param>
         /// <returns></returns>
-        public bool AllowElement(Element elem)
+        public bool AllowElement(Element elm)
         {
-            return elem is Room;
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
+            return elm is Room;
         }
 
         /// <summary>
@@ -75,6 +79,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public bool AllowReference(Reference reference, XYZ position)
         {
+            if (reference == null)
+                throw new ArgumentNullException(nameof(reference));
+
+            if (position == null)
+                throw new ArgumentNullException(nameof(position));
+
             return false;
         }
     }

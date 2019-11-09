@@ -70,40 +70,37 @@ namespace KeLi.Common.Tool.Security
         /// <summary>
         /// Encrypts the content.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="content"></param>
         /// <param name="keys"></param>
         /// <param name="ivs"></param>
         /// <returns></returns>
-        public static string Encrypt(string context, byte[] keys = null, byte[] ivs = null)
+        public static string Encrypt(string content, byte[] keys = null, byte[] ivs = null)
         {
-            string result;
+            if (content == null)
+                throw new ArgumentNullException(nameof(content));
 
-            if (string.IsNullOrWhiteSpace(context))
-                result = null;
-            else
+            if (string.IsNullOrWhiteSpace(content))
+                return null;
+
+            if (keys == null || keys.Length == 0)
+                keys = Keys;
+
+            if (ivs == null || ivs.Length == 0)
+                ivs = Ivs;
+
+            var dcsp = new DESCryptoServiceProvider();
+
+            using (var ms = new MemoryStream())
+            using (var cs = new CryptoStream(ms, dcsp.CreateEncryptor(keys, ivs), CryptoStreamMode.Write))
+            using (var sw = new StreamWriter(cs))
             {
-                if (keys == null || keys.Length == 0)
-                    keys = Keys;
+                sw.Write(content);
+                sw.Flush();
+                cs.FlushFinalBlock();
+                ms.Flush();
 
-                if (ivs == null || ivs.Length == 0)
-                    ivs = Ivs;
-
-                var dcsp = new DESCryptoServiceProvider();
-
-                using (var ms = new MemoryStream())
-                using (var cs = new CryptoStream(ms, dcsp.CreateEncryptor(keys, ivs), CryptoStreamMode.Write))
-                using (var sw = new StreamWriter(cs))
-                {
-                    sw.Write(context);
-                    sw.Flush();
-                    cs.FlushFinalBlock();
-                    ms.Flush();
-
-                    result = Convert.ToBase64String(ms.GetBuffer(), 0, (int)ms.Length);
-                }
+                return Convert.ToBase64String(ms.GetBuffer(), 0, (int)ms.Length);
             }
-
-            return result;
         }
 
         /// <summary>
@@ -115,30 +112,25 @@ namespace KeLi.Common.Tool.Security
         /// <returns></returns>
         public static string Decrypt(string ciphertext, byte[] keys = null, byte[] ivs = null)
         {
-            string result;
+            if (ciphertext == null)
+                throw new ArgumentNullException(nameof(ciphertext));
 
             if (string.IsNullOrWhiteSpace(ciphertext))
-                result = null;
-            else
-            {
-                if (keys == null || keys.Length == 0)
-                    keys = Keys;
+                return null;
 
-                if (ivs == null || ivs.Length == 0)
-                    ivs = Ivs;
+            if (keys == null || keys.Length == 0)
+                keys = Keys;
 
-                var dcsp = new DESCryptoServiceProvider();
-                var context = Convert.FromBase64String(ciphertext);
+            if (ivs == null || ivs.Length == 0)
+                ivs = Ivs;
 
-                using (var ms = new MemoryStream(context))
-                using (var cs = new CryptoStream(ms, dcsp.CreateDecryptor(keys, ivs), CryptoStreamMode.Read))
-                using (var sr = new StreamReader(cs))
-                {
-                    result = sr.ReadToEnd();
-                }
-            }
+            var dcsp = new DESCryptoServiceProvider();
+            var context = Convert.FromBase64String(ciphertext);
 
-            return result;
+            using (var ms = new MemoryStream(context))
+            using (var cs = new CryptoStream(ms, dcsp.CreateDecryptor(keys, ivs), CryptoStreamMode.Read))
+            using (var sr = new StreamReader(cs))
+                return sr.ReadToEnd();
         }
     }
 }

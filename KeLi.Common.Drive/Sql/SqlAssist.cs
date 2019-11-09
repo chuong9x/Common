@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -84,6 +85,9 @@ namespace KeLi.Common.Drive.Sql
         /// <returns></returns>
         public static int UpdateData(string text, CommandType ct = CommandType.Text)
         {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
             int result;
 
             using (var conn = new SqlConnection(ConnSql))
@@ -107,6 +111,9 @@ namespace KeLi.Common.Drive.Sql
         /// <returns></returns>
         public static int UpdateData(string text, SqlParameter[] sps, CommandType ct = CommandType.Text)
         {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
             int result;
 
             using (var conn = new SqlConnection(ConnSql))
@@ -130,6 +137,9 @@ namespace KeLi.Common.Drive.Sql
         /// <returns></returns>
         public static int UpdateMultiple(List<string> texts, CommandType ct = CommandType.Text)
         {
+            if (texts == null)
+                throw new ArgumentNullException(nameof(texts));
+
             var result = 0;
             var cmd = new SqlCommand();
 
@@ -173,6 +183,12 @@ namespace KeLi.Common.Drive.Sql
         /// <returns></returns>
         public static int UpdateMultiple(List<string> texts, SqlParameter[][] sps, CommandType ct = CommandType.Text)
         {
+            if (texts == null)
+                throw new ArgumentNullException(nameof(texts));
+
+            if (sps == null)
+                throw new ArgumentNullException(nameof(sps));
+
             var result = 0;
             var cmd = new SqlCommand();
 
@@ -218,6 +234,9 @@ namespace KeLi.Common.Drive.Sql
         /// <returns></returns>
         public static object QueryObject(string text, CommandType ct = CommandType.Text)
         {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
             object result;
 
             using (var conn = new SqlConnection(ConnSql))
@@ -225,7 +244,7 @@ namespace KeLi.Common.Drive.Sql
                 var cmd = new SqlCommand(text, conn) { CommandType = ct };
 
                 conn.Open();
-                 result = cmd.ExecuteScalar();
+                result = cmd.ExecuteScalar();
                 cmd.Dispose();
             }
 
@@ -241,6 +260,12 @@ namespace KeLi.Common.Drive.Sql
         /// <returns></returns>
         public static object QueryObject(string text, SqlParameter[] sps, CommandType ct = CommandType.Text)
         {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
+            if (sps == null)
+                throw new ArgumentNullException(nameof(sps));
+
             object result;
 
             using (var conn = new SqlConnection(ConnSql))
@@ -249,7 +274,7 @@ namespace KeLi.Common.Drive.Sql
 
                 conn.Open();
                 cmd.Parameters.AddRange(sps);
-                 result = cmd.ExecuteScalar();
+                result = cmd.ExecuteScalar();
                 cmd.Dispose();
             }
 
@@ -264,7 +289,10 @@ namespace KeLi.Common.Drive.Sql
         /// <returns></returns>
         public static DataTable QueryData(string text, CommandType ct = CommandType.Text)
         {
-           var results = new DataTable();
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
+            var results = new DataTable();
 
             using (var conn = new SqlConnection(ConnSql))
             {
@@ -286,6 +314,12 @@ namespace KeLi.Common.Drive.Sql
         /// <returns></returns>
         public static DataTable QueryData(string text, SqlParameter[] sps, CommandType ct = CommandType.Text)
         {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
+            if (sps == null)
+                throw new ArgumentNullException(nameof(sps));
+
             var results = new DataTable();
 
             using (var conn = new SqlConnection(ConnSql))

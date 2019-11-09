@@ -46,6 +46,8 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
+
 namespace KeLi.Common.Converter.Converter
 {
     /// <summary>
@@ -60,6 +62,9 @@ namespace KeLi.Common.Converter.Converter
         /// <returns></returns>
         public static object[][] Convert(this object[,] array)
         {
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+
             var results = new object[array.GetLength(0)][];
 
             for (var i = 0; i < array.GetLength(0); i++)
@@ -76,10 +81,13 @@ namespace KeLi.Common.Converter.Converter
         /// <returns></returns>
         public static object[,] Convert(this object[][] array)
         {
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+
             var results = new object[array.Length, array[0].Length];
 
-            for (int i = 0; i < array.Length; i++)
-                for (int j = 0; j < array[i].Length; j++)
+            for (var i = 0; i < array.Length; i++)
+                for (var j = 0; j < array[i].Length; j++)
                     results[i, j] = array[i][j];
 
             return results;

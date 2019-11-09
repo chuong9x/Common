@@ -64,6 +64,12 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="act"></param>
         public static void AutoTransaction(this Document doc, Action act)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (act == null)
+                throw new ArgumentNullException(nameof(act));
+
             using (var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name))
             {
                 trans.Start();

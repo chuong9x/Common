@@ -68,6 +68,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static GeometryPosition GetPlanePosition(this Line line1, Line line2, out XYZ insPt, bool isTouch = true)
         {
+            if (line1 == null)
+                throw new ArgumentNullException(nameof(line1));
+
+            if (line2 == null)
+                throw new ArgumentNullException(nameof(line2));
+
             insPt = null;
 
             if (line1.IsPlaneParallel(line2))
@@ -88,6 +94,14 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static GeometryPosition GetSpacePosition(this Line line1, Line line2, out XYZ insPt, bool isTouch = true)
         {
+            if (line1 == null)
+                throw new ArgumentNullException(nameof(line1));
+
+            if (line2 == null)
+                throw new ArgumentNullException(nameof(line2));
+
+            insPt = null;
+
             throw new NotImplementedException();
         }
 
@@ -99,6 +113,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static bool IsSpaceVertical(this Line line1, Line line2)
         {
+            if (line1 == null)
+                throw new ArgumentNullException(nameof(line1));
+
+            if (line2 == null)
+                throw new ArgumentNullException(nameof(line2));
+
             return Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI / 2) < 2 * 10e-3;
         }
 
@@ -110,6 +130,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static bool IsSpaceParallel(this Line line1, Line line2)
         {
+            if (line1 == null)
+                throw new ArgumentNullException(nameof(line1));
+
+            if (line2 == null)
+                throw new ArgumentNullException(nameof(line2));
+
             if (Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI) < 2 * 10e-3)
                 return true;
 
@@ -123,6 +149,9 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static Line ToPlaneLine(this Line line)
         {
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
+
             var p1 = line.GetEndPoint(0);
             var p2 = line.GetEndPoint(1);
 
@@ -137,6 +166,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static bool IsPlaneParallel(this Line line1, Line line2)
         {
+            if (line1 == null)
+                throw new ArgumentNullException(nameof(line1));
+
+            if (line2 == null)
+                throw new ArgumentNullException(nameof(line2));
+
             line1 = line1.ToPlaneLine();
             line2 = line2.ToPlaneLine();
 
@@ -154,6 +189,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static bool IsPlaneVertical(this Line line1, Line line2)
         {
+            if (line1 == null)
+                throw new ArgumentNullException(nameof(line1));
+
+            if (line2 == null)
+                throw new ArgumentNullException(nameof(line2));
+
             line1 = line1.ToPlaneLine();
             line2 = line2.ToPlaneLine();
 
@@ -169,6 +210,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static XYZ GetPlaneInsPoint(this Line line1, Line line2, bool isTouch = true)
         {
+            if (line1 == null)
+                throw new ArgumentNullException(nameof(line1));
+
+            if (line2 == null)
+                throw new ArgumentNullException(nameof(line2));
+
             if (line1.IsPlaneParallel(line2))
                 return null;
 
@@ -232,6 +279,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static List<XYZ> GetPlaneInsPointList(this Line line, List<Line> lines, bool isTouch = true)
         {
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
+
+            if (lines == null)
+                throw new ArgumentNullException(nameof(lines));
+
             var results = new List<XYZ>();
 
             lines.ForEach(f => results.Add(line.GetPlaneInsPoint(f, isTouch)));
@@ -248,6 +301,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static XYZ GetSpaceInsPoint(this Line line1, Line line2, bool isTouch = true)
         {
+            if (line1 == null)
+                throw new ArgumentNullException(nameof(line1));
+
+            if (line2 == null)
+                throw new ArgumentNullException(nameof(line2));
+
             throw new NotImplementedException();
         }
 
@@ -260,6 +319,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static List<XYZ> GetSpaceInsPointList(this Line line, List<Line> lines, bool isTouch = true)
         {
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
+
+            if (lines == null)
+                throw new ArgumentNullException(nameof(lines));
+
             var results = new List<XYZ>();
 
             // Must be filter parallel lines.
@@ -277,6 +342,9 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static List<XYZ> GetDistinctPointList(this List<Line> lines)
         {
+            if (lines == null)
+                throw new ArgumentNullException(nameof(lines));
+
             var results = new List<XYZ>();
 
             foreach (var line in lines)
@@ -310,6 +378,9 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static List<XYZ> GetBoundaryPointList(this List<Line> lines)
         {
+            if (lines == null)
+                throw new ArgumentNullException(nameof(lines));
+
             var results = new List<XYZ>();
 
             foreach (var line in lines)
@@ -331,6 +402,9 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static XYZ GetMaxPoint(this Line line)
         {
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
+
             var pt1 = line.GetEndPoint(0);
             var pt2 = line.GetEndPoint(1);
 
@@ -344,6 +418,9 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static XYZ GetMaxPoint(this List<Line> lines)
         {
+            if (lines == null)
+                throw new ArgumentNullException(nameof(lines));
+
             var pts = new List<XYZ>();
 
             foreach (var line in lines)
@@ -369,6 +446,9 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static XYZ GetMinPoint(this Line line)
         {
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
+
             var pt1 = line.GetEndPoint(0);
             var pt2 = line.GetEndPoint(1);
 
@@ -382,6 +462,9 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static XYZ GetMinPoint(this List<Line> lines)
         {
+            if (lines == null)
+                throw new ArgumentNullException(nameof(lines));
+
             var pts = new List<XYZ>();
 
             foreach (var line in lines)
@@ -403,6 +486,9 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static XYZ GetMidPoint(this Line line)
         {
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
+
             return (line.GetEndPoint(0) + line.GetEndPoint(1)) * 0.5;
         }
 
@@ -414,6 +500,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static XYZ GetMidPoint(this Line line1, Line line2)
         {
+            if (line1 == null)
+                throw new ArgumentNullException(nameof(line1));
+
+            if (line2 == null)
+                throw new ArgumentNullException(nameof(line2));
+
             var pt1 = line1.GetEndPoint(0);
             var pt2 = line1.GetEndPoint(1);
             var pt3 = line2.GetEndPoint(0);

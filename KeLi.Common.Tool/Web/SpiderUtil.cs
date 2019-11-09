@@ -46,10 +46,10 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
-using KeLi.Common.Tool.Properties;
 
 namespace KeLi.Common.Tool.Web
 {
@@ -65,31 +65,26 @@ namespace KeLi.Common.Tool.Web
         /// <returns></returns>
         public static string GetHtml(string url)
         {
-            string result;
+            if (url == null)
+                throw new ArgumentNullException(nameof(url));
 
             if (string.IsNullOrWhiteSpace(url))
-                result = string.Empty;
-            else
-            {
-                result = string.Empty;
+                return string.Empty;
 
-                var request = (HttpWebRequest)WebRequest.Create(url);
+            var request = (HttpWebRequest)WebRequest.Create(url);
 
-                request.Timeout = 5000;
-                request.UserAgent = "Mozilla/5.0 (Windows NT 10.0;) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0 Safari/537.36";
-                request.ContentType = "text/html; charset=utf-8";
+            request.Timeout = 5000;
+            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0;) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0 Safari/537.36";
+            request.ContentType = "text/html; charset=utf-8";
 
-                var response = (HttpWebResponse)request.GetResponse();
-                var stream = response.GetResponseStream();
+            var response = (HttpWebResponse)request.GetResponse();
+            var stream = response.GetResponseStream();
 
-                if (stream == null)
-                    return result;
+            if (stream == null)
+                return null;
 
-                using (var reader = new StreamReader(stream, Encoding.UTF8))
-                    result = response.StatusCode != HttpStatusCode.OK ? null : reader.ReadToEnd();
-            }
-
-            return result;
+            using (var reader = new StreamReader(stream, Encoding.UTF8))
+                return response.StatusCode != HttpStatusCode.OK ? null : reader.ReadToEnd();
         }
     }
 }

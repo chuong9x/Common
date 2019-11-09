@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -66,6 +67,9 @@ namespace KeLi.Common.Tool.Other
         /// <returns></returns>
         public static BitmapImage ToBitmapImage(this Bitmap bitmap)
         {
+            if (bitmap == null)
+                throw new ArgumentNullException(nameof(bitmap));
+
             using (var ms = new MemoryStream())
             {
                 bitmap.Save(ms, ImageFormat.Png);
@@ -89,6 +93,9 @@ namespace KeLi.Common.Tool.Other
         /// <returns></returns>
         public static BitmapSource GetEmbeddedImage(string resName)
         {
+            if (resName == null)
+                throw new ArgumentNullException(nameof(resName));
+
             var asm = Assembly.GetExecutingAssembly();
             var stream = asm.GetManifestResourceStream(resName);
 

@@ -69,6 +69,15 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="value"></param>
         public static void SetValue(this Element elm, string paramName, string value)
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (paramName == null)
+                throw new ArgumentNullException(nameof(paramName));
+
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
             elm.LookupParameter(paramName)?.Set(value);
         }
 
@@ -80,6 +89,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static string GetValue(this Element elm, string paramName)
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (paramName == null)
+                throw new ArgumentNullException(nameof(paramName));
+
             var parameter = elm.LookupParameter(paramName);
             var result = string.Empty;
 
@@ -120,6 +135,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static Definition GetDefinition(this DefinitionGroup group, string paramName, bool canEdit = false)
         {
+            if (group == null)
+                throw new ArgumentNullException(nameof(group));
+
+            if (paramName == null)
+                throw new ArgumentNullException(nameof(paramName));
+
             var definition = group.Definitions.get_Item(paramName);
 
             if (definition != null)
@@ -138,6 +159,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static DefinitionGroup GetGroup(this DefinitionGroups groups, string groupName)
         {
+            if (groups == null)
+                throw new ArgumentNullException(nameof(groups));
+
+            if (groupName == null)
+                throw new ArgumentNullException(nameof(groupName));
+
             return groups.get_Item(groupName) ?? groups.Create(groupName);
         }
 
@@ -149,6 +176,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static DefinitionGroups GetGroups(this UIApplication uiapp, string paramPath)
         {
+            if (uiapp == null)
+                throw new ArgumentNullException(nameof(uiapp));
+
+            if (paramPath == null)
+                throw new ArgumentNullException(nameof(paramPath));
+
             if (!File.Exists(paramPath))
                 File.CreateText(paramPath);
 
@@ -165,6 +198,15 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="paramPath"></param>
         public static void InitParams(this UIApplication uiapp, Element elm, string paramPath)
         {
+            if (uiapp == null)
+                throw new ArgumentNullException(nameof(uiapp));
+
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (paramPath == null)
+                throw new ArgumentNullException(nameof(paramPath));
+
             var doc = uiapp.ActiveUIDocument.Document;
             var bindingMap = doc.ParameterBindings;
             var gs = uiapp.GetGroups(paramPath);
@@ -212,6 +254,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<Group> GetGroups(string paramPath)
         {
+            if (paramPath == null)
+                throw new ArgumentNullException(nameof(paramPath));
+
             var texts = File.ReadLines(paramPath).ToList();
             var groups = new List<Group>();
             var paras = new List<Param>();

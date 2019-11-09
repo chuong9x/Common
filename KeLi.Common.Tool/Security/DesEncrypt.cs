@@ -68,6 +68,9 @@ namespace KeLi.Common.Tool.Security
         /// <returns></returns>
         public static string Encrypt(string content, string key = null)
         {
+            if (content == null)
+                throw new ArgumentNullException(nameof(content));
+
             if (string.IsNullOrWhiteSpace(key))
                 key = Key;
 
@@ -92,36 +95,31 @@ namespace KeLi.Common.Tool.Security
         /// <returns></returns>
         public static string Decrypt(string ciphertext, string key = null)
         {
-            string result;
+            if (ciphertext == null)
+                throw new ArgumentNullException(nameof(ciphertext));
 
             if (string.IsNullOrWhiteSpace(ciphertext))
-                result = null;
-            else if (string.IsNullOrWhiteSpace(Key))
-                result = null;
-            else
+                return null;
+            if (string.IsNullOrWhiteSpace(Key))
+                return null;
+            if (string.IsNullOrWhiteSpace(key))
+                key = Key;
+
+            var marks = ciphertext.Split("-".ToCharArray());
+            var bytes = new byte[marks.Length];
+
+            for (var i = 0; i < marks.Length; i++)
+                bytes[i] = byte.Parse(marks[i], NumberStyles.HexNumber);
+
+            var dcsp = new DESCryptoServiceProvider
             {
-                if (string.IsNullOrWhiteSpace(key))
-                    key = Key;
+                Key = Encoding.ASCII.GetBytes(key),
+                IV = Encoding.ASCII.GetBytes(key)
+            };
 
-                var marks = ciphertext.Split("-".ToCharArray());
-                var bytes = new byte[marks.Length];
+            bytes = dcsp.CreateDecryptor().TransformFinalBlock(bytes, 0, bytes.Length);
 
-                for (var i = 0; i < marks.Length; i++)
-                    bytes[i] = byte.Parse(marks[i], NumberStyles.HexNumber);
-
-                var dcsp = new DESCryptoServiceProvider
-                {
-                    Key = Encoding.ASCII.GetBytes(key),
-                    IV = Encoding.ASCII.GetBytes(key)
-                };
-
-                var ct = dcsp.CreateDecryptor();
-
-                bytes = ct.TransformFinalBlock(bytes, 0, bytes.Length);
-                result = Encoding.UTF8.GetString(bytes);
-            }
-
-            return result;
+            return Encoding.UTF8.GetString(bytes);
         }
 
         /// <summary>

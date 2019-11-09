@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
@@ -65,6 +66,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<Element> Checkout(this Document doc, bool onlyCurrentView = false)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             var baseCollector = onlyCurrentView ? new FilteredElementCollector(doc, doc.ActiveView.Id)
                 : new FilteredElementCollector(doc);
             var logicCollector = new LogicalOrFilter(new ElementIsElementTypeFilter(false),
@@ -81,6 +85,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<T> GetTypeElements<T>(this Document doc, bool onlyCurrentView = false) where T : Element
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             var baseCollector = onlyCurrentView ? new FilteredElementCollector(doc, doc.ActiveView.Id)
                 : new FilteredElementCollector(doc);
 
@@ -96,6 +103,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<Element> GetCategoryElements(this Document doc, BuiltInCategory category, bool onlyCurrentView = false)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             var baseCollector = onlyCurrentView ? new FilteredElementCollector(doc, doc.ActiveView.Id)
                 : new FilteredElementCollector(doc);
 
@@ -111,6 +121,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<T> GetTypeElements<T>(this Document doc, BuiltInCategory category, bool onlyCurrentView = false) where T : Element
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             var baseCollector = onlyCurrentView ? new FilteredElementCollector(doc, doc.ActiveView.Id)
                 : new FilteredElementCollector(doc);
 
@@ -128,6 +141,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<Element> GetElements(this Document doc, CalcType type, int maxNum, bool moreThan, bool onlyCurrentView = false)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             var elms = doc.Checkout(onlyCurrentView);
             var results = new List<Element>();
             var num = 0;
@@ -170,6 +186,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static (Element, int) GetMaxElement(this Document doc, CalcType type, bool onlyCurrentView = false)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             var elms = doc.Checkout(onlyCurrentView);
             var maxElm = default(Element);
             var maxNum = int.MinValue;

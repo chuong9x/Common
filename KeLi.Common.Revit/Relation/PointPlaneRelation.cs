@@ -48,7 +48,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI.Selection;
 using KeLi.Common.Revit.Widget;
@@ -68,6 +70,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static GeometryPosition GetPlanePosition(this XYZ pt, PickedBox box)
         {
+            if (pt == null)
+                throw new ArgumentNullException(nameof(pt));
+
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             GeometryPosition result;
             var pointl = pt.GetRoundPoint();
             var xs = new[] { box.Min.X, box.Max.X };
@@ -99,6 +107,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static GeometryPosition GetSpacePosition(this XYZ pt, PickedBox box)
         {
+            if (pt == null)
+                throw new ArgumentNullException(nameof(pt));
+
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             GeometryPosition result;
             var pt1 = pt.GetRoundPoint();
             var xs = new[] { box.Min.X, box.Max.X };
@@ -131,16 +145,22 @@ namespace KeLi.Common.Revit.Relation
         /// Gets the result of whether the point is in the plane direction polygon.
         /// </summary>
         /// <param name="pt"></param>
-        /// <param name="lines"></param>
+        /// <param name="polygon"></param>
         /// <returns></returns>
-        public static bool InPlanePolygon(this XYZ pt, List<Line> lines)
+        public static bool InPlanePolygon(this XYZ pt, List<Line> polygon)
         {
+            if (pt == null)
+                throw new ArgumentNullException(nameof(pt));
+
+            if (polygon == null)
+                throw new ArgumentNullException(nameof(polygon));
+
             var x = pt.X;
             var y = pt.Y;
             var xs = new List<double>();
             var ys = new List<double>();
 
-            foreach (var line in lines)
+            foreach (var line in polygon)
             {
                 xs.Add(line.GetEndPoint(0).X);
                 ys.Add(line.GetEndPoint(0).Y);
@@ -151,12 +171,12 @@ namespace KeLi.Common.Revit.Relation
             var minY = ys.Min();
             var maxY = ys.Max();
 
-            if (lines.Count == 0 || x < minX || x > maxX || y < minY || y > maxY)
+            if (polygon.Count == 0 || x < minX || x > maxX || y < minY || y > maxY)
                 return false;
 
             var result = false;
 
-            for (int i = 0, j = lines.Count - 1; i < lines.Count; j = i++)
+            for (int i = 0, j = polygon.Count - 1; i < polygon.Count; j = i++)
             {
                 var dxji = xs[j] - xs[i];
                 var dyji = ys[j] - ys[i];
@@ -172,10 +192,16 @@ namespace KeLi.Common.Revit.Relation
         /// Gets the result of whether the point is in the space direction polygon.
         /// </summary>
         /// <param name="pt"></param>
-        /// <param name="lines"></param>
+        /// <param name="polygon"></param>
         /// <returns></returns>
-        public static bool InSpacePolygon(this XYZ pt, List<Line> lines)
+        public static bool InSpacePolygon(this XYZ pt, List<Line> polygon)
         {
+            if (pt == null)
+                throw new ArgumentNullException(nameof(pt));
+
+            if (polygon == null)
+                throw new ArgumentNullException(nameof(polygon));
+
             throw new NotImplementedException();
         }
     }

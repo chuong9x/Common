@@ -64,6 +64,9 @@ namespace KeLi.Common.Tool.Other
         /// <returns></returns>
         public static Assembly GetAssemblyType(string className)
         {
+            if (className == null)
+                throw new ArgumentNullException(nameof(className));
+
             Assembly result;
 
             if (string.IsNullOrWhiteSpace(className))
@@ -85,6 +88,9 @@ namespace KeLi.Common.Tool.Other
         /// <returns></returns>
         public static Type GetClassType(string className)
         {
+            if (className == null)
+                throw new ArgumentNullException(nameof(className));
+
             Type result;
 
             if (string.IsNullOrWhiteSpace(className))
@@ -107,6 +113,9 @@ namespace KeLi.Common.Tool.Other
         /// <returns></returns>
         private static string GetAssemblyName(string className)
         {
+            if (className == null)
+                throw new ArgumentNullException(nameof(className));
+
             return string.IsNullOrWhiteSpace(className)
                 ? string.Empty
                 : ConfigurationManager.AppSettings[className].Split(',')[1].Substring(1);
@@ -119,6 +128,9 @@ namespace KeLi.Common.Tool.Other
         /// <returns></returns>
         private static string GetClassName(string className)
         {
+            if (className == null)
+                throw new ArgumentNullException(nameof(className));
+
             return string.IsNullOrWhiteSpace(className)
                 ? string.Empty
                 : ConfigurationManager.AppSettings[className].Split(',')[0];

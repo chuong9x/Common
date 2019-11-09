@@ -141,6 +141,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static IntPtr Callback(int nCode, IntPtr wParam, ref int lParam)
         {
+            if (wParam == null)
+                throw new ArgumentNullException(nameof(wParam));
+
             KeyCode = lParam;
 
             if (nCode >= 0 && wParam == (IntPtr)WmKeydown || wParam == (IntPtr)WmSyskeydown)

@@ -64,19 +64,16 @@ namespace KeLi.Common.Tool.Security
         /// <returns></returns>
         public static string Encrypt(string content)
         {
-            string result;
+            if (content == null)
+                throw new ArgumentNullException(nameof(content));
 
             if (string.IsNullOrWhiteSpace(content))
-                result = null;
-            else
-            {
-                var mcsp = new MD5CryptoServiceProvider();
-                var bytes = Encoding.GetEncoding("UTF-8").GetBytes(content);
+                return null;
 
-                result = BitConverter.ToString(mcsp.ComputeHash(bytes)).Replace("-", "");
-            }
+            var mcsp = new MD5CryptoServiceProvider();
+            var bytes = Encoding.GetEncoding("UTF-8").GetBytes(content);
 
-            return result;
+            return BitConverter.ToString(mcsp.ComputeHash(bytes)).Replace("-", string.Empty);
         }
     }
 }

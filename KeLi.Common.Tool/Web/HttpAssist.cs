@@ -77,6 +77,12 @@ namespace KeLi.Common.Tool.Web
         /// <returns></returns>
         public static string GetTypeRequest(this ResponseParam param, string url, string filePath = null, string postData = null)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
+            if (url == null)
+                throw new ArgumentNullException(nameof(url));
+
             var response = param.CreateHttpResponse(url, filePath, postData);
 
             using (var reader = new StreamReader(response.GetResponseStream(), param.EncodeType))
@@ -94,6 +100,12 @@ namespace KeLi.Common.Tool.Web
         /// <returns></returns>
         public static T GetTypeRequest<T>(this ResponseParam param, string url, string filePath = null, string postData = null)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
+            if (url == null)
+                throw new ArgumentNullException(nameof(url));
+
             var response = GetTypeRequest(param, url, filePath, postData);
 
             return JsonConvert.DeserializeObject<T>(response);
@@ -109,6 +121,12 @@ namespace KeLi.Common.Tool.Web
         /// <returns></returns>
         public static string GetTypeRequest(this ResponseParam param, string url, string filePath = null, IDictionary<string, string> postData = null)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
+            if (url == null)
+                throw new ArgumentNullException(nameof(url));
+
             var postDatal = CreateParameter(postData);
             var response = param.CreateHttpResponse(url, filePath, postDatal);
 
@@ -127,6 +145,12 @@ namespace KeLi.Common.Tool.Web
         /// <returns></returns>
         public static T GetTypeRequest<T>(this ResponseParam param, string url, string filePath = null, IDictionary<string, string> postData = null)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
+            if (url == null)
+                throw new ArgumentNullException(nameof(url));
+
             var response = GetTypeRequest(param, url, filePath, postData);
 
             return JsonConvert.DeserializeObject<T>(response);
@@ -141,6 +165,12 @@ namespace KeLi.Common.Tool.Web
         /// <returns></returns>
         public static byte[] DownloadFile(this ResponseParam param, string url, string filePath = null)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
+            if (url == null)
+                throw new ArgumentNullException(nameof(url));
+
             var response = param.CreateHttpResponse(url, filePath);
             var st = response.GetResponseStream();
             var results = new byte[response.ContentLength];
@@ -160,6 +190,12 @@ namespace KeLi.Common.Tool.Web
         /// <returns></returns>
         public static string UploadFile(this ResponseParam param, string url, string filePath)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
+            if (url == null)
+                throw new ArgumentNullException(nameof(url));
+
             var response = param.CreateHttpResponse(url, filePath);
 
             using (var reader = new StreamReader(response.GetResponseStream(), param.EncodeType))
@@ -221,6 +257,12 @@ namespace KeLi.Common.Tool.Web
         /// <returns></returns>
         private static HttpWebResponse CreateHttpResponse(this ResponseParam param, string url, string filePath = null, string postData = null)
         {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
+            if (url == null)
+                throw new ArgumentNullException(nameof(url));
+
             HttpWebRequest request;
 
             if (url.StartsWith(@"https:\\", StringComparison.OrdinalIgnoreCase))
@@ -320,6 +362,9 @@ namespace KeLi.Common.Tool.Web
         /// <returns></returns>
         private static string CreateParameter(IDictionary<string, string> parameters)
         {
+            if (parameters == null)
+                throw new ArgumentNullException(nameof(parameters));
+
             var buffer = new StringBuilder();
 
             foreach (var key in parameters.Keys)
@@ -338,6 +383,15 @@ namespace KeLi.Common.Tool.Web
         /// <returns></returns>
         private static bool CheckResultValidation(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
+            if (certificate == null)
+                throw new ArgumentNullException(nameof(certificate));
+
+            if (chain == null)
+                throw new ArgumentNullException(nameof(chain));
+
             return true;
         }
     }

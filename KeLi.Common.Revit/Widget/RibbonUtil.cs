@@ -46,7 +46,9 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Autodesk.Revit.UI;
 using RibbonPanel = Autodesk.Revit.UI.RibbonPanel;
 
@@ -65,6 +67,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static void AddButton(this RibbonPanel pnl, PushButtonData pbd)
         {
+            if (pnl == null)
+                throw new ArgumentNullException(nameof(pnl));
+
             if (!(pnl.AddItem(pbd) is PushButton btn))
                 return;
 
@@ -81,6 +86,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static void AddButton<T>(this RibbonPanel pnl, ButtonInfo<T> info) where T : IExternalCommand
         {
+            if (pnl == null)
+                throw new ArgumentNullException(nameof(pnl));
+
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
             if (!(pnl.AddItem(info.CreatePbd()) is PushButton btn))
                 return;
 
@@ -97,6 +108,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static void AddButtons(this RibbonPanel pnl, List<PushButtonData> pbds)
         {
+            if (pnl == null)
+                throw new ArgumentNullException(nameof(pnl));
+
+            if (pbds == null)
+                throw new ArgumentNullException(nameof(pbds));
+
             pbds.ForEach(pnl.AddButton);
         }
 
@@ -109,6 +126,15 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static void AddPushButton(this RibbonPanel pnl, PulldownButtonData pbd, List<PushButtonData> pbds)
         {
+            if (pnl == null)
+                throw new ArgumentNullException(nameof(pnl));
+
+            if (pbd == null)
+                throw new ArgumentNullException(nameof(pbd));
+
+            if (pbds == null)
+                throw new ArgumentNullException(nameof(pbds));
+
             if (!(pnl.AddItem(pbd) is PulldownButton pdbtn))
                 return;
 
@@ -136,6 +162,12 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="pbds"></param>
         public static void AddPushButtons(this RibbonPanel pnl, Dictionary<PulldownButtonData, List<PushButtonData>> pbds)
         {
+            if (pnl == null)
+                throw new ArgumentNullException(nameof(pnl));
+
+            if (pbds == null)
+                throw new ArgumentNullException(nameof(pbds));
+
             foreach (var pbd in pbds)
                 pnl.AddPushButton(pbd.Key, pbd.Value);
         }

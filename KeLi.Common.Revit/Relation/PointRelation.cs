@@ -48,6 +48,7 @@
 
 using Autodesk.Revit.DB;
 using KeLi.Common.Revit.Widget;
+using System;
 
 namespace KeLi.Common.Revit.Relation
 {
@@ -64,6 +65,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static GeometryPosition GetPlanePosition(this XYZ pt1, XYZ pt2)
         {
+            if (pt1 == null)
+                throw new ArgumentNullException(nameof(pt1));
+
+            if (pt2 == null)
+                throw new ArgumentNullException(nameof(pt2));
+
             return pt1.ToPlanePoint().IsAlmostEqualTo(pt2.ToPlanePoint()) ? GeometryPosition.Overlay : GeometryPosition.Other;
         }
 
@@ -75,6 +82,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static GeometryPosition GetSpacePosition(this XYZ pt1, XYZ pt2)
         {
+            if (pt1 == null)
+                throw new ArgumentNullException(nameof(pt1));
+
+            if (pt2 == null)
+                throw new ArgumentNullException(nameof(pt2));
+
             return pt1.IsAlmostEqualTo(pt2) ? GeometryPosition.Overlay : GeometryPosition.Other;
         }
     }

@@ -47,6 +47,7 @@
 */
 
 using Autodesk.Revit.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -77,6 +78,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns>Returns projection area.</returns>
         public static double GetShadowArea(this Element elm)
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
             var areas = new List<double>();
             var geo = elm.get_Geometry(new Options());
 

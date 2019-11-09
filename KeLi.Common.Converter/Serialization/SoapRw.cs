@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -66,6 +67,12 @@ namespace KeLi.Common.Converter.Serialization
         /// <param name="filePath"></param>
         public static void Serialize<T>(this List<T> ts, string filePath)
         {
+            if (ts == null)
+                throw new ArgumentNullException(nameof(ts));
+
+            if (filePath == null)
+                throw new ArgumentNullException(nameof(filePath));
+
             using (var fs = new FileStream(filePath, FileMode.Create))
                 new SoapFormatter().Serialize(fs, ts.ToArray());
         }
@@ -78,6 +85,9 @@ namespace KeLi.Common.Converter.Serialization
         /// <returns></returns>
         public static List<T> Deserialize<T>(string filePath)
         {
+            if (filePath == null)
+                throw new ArgumentNullException(nameof(filePath));
+
             using (var fs = new FileStream(filePath, FileMode.Open))
                 return ((T[])new SoapFormatter().Deserialize(fs)).ToList();
         }

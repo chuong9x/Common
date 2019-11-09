@@ -46,6 +46,8 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
+
 namespace KeLi.Common.Drive.Excel
 {
     /// <summary>
@@ -65,8 +67,8 @@ namespace KeLi.Common.Drive.Excel
         /// <param name="templatePath"></param>
         public ExcelParam(string filePath, string templatePath)
         {
-            FilePath = filePath;
-            TemplatePath = templatePath;
+            FilePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
+            TemplatePath = templatePath ?? throw new ArgumentNullException(nameof(templatePath));
             SheetName = SHEET_NAME;
             RowIndex = 1;
             ColumnIndex = 0;

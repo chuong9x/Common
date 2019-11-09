@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Drawing.Imaging;
 using System.IO;
 
@@ -63,6 +64,9 @@ namespace KeLi.Common.Drive.Pdf
         /// <param name="imgName"></param>
         public PdfParam(string pdfPath, string imgName = null)
         {
+            if (pdfPath == null)
+                throw new ArgumentNullException(nameof(pdfPath));
+
             PdfPath = new FileInfo(pdfPath);
             ImgName = imgName ?? Path.GetFileNameWithoutExtension(pdfPath);
             StartPage = 1;

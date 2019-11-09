@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI.Selection;
@@ -65,6 +66,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static BoundingBoxXYZ GetBoundingBox(this Element elm, Document doc)
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             var box = elm.get_BoundingBox(doc.ActiveView);
 
             return new BoundingBoxXYZ
@@ -81,6 +88,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static BoundingBoxXYZ GetRoundBox(this BoundingBoxXYZ box)
         {
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             return new BoundingBoxXYZ
             {
                 Min = box.Min.GetRoundPoint(),
@@ -96,6 +106,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static BoundingBoxXYZ GetRoundBox(this Element elm, Document doc)
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             var box = elm.get_BoundingBox(doc.ActiveView);
 
             return new BoundingBoxXYZ
@@ -112,6 +128,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<Line> GetPlaneEdges(this BoundingBoxXYZ box)
         {
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             var vectors = box.GetPlaneVectors();
             var p1 = vectors[0];
             var p2 = vectors[1];
@@ -132,6 +151,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<XYZ> GetPlaneVectors(this BoundingBoxXYZ box)
         {
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             var p1 = box.Min;
             var p2 = new XYZ(box.Max.X, box.Min.Y, p1.Z);
             var p3 = new XYZ(box.Max.X, box.Max.Y, p1.Z);
@@ -147,6 +169,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<Line> GetSpaceEdges(this BoundingBoxXYZ box)
         {
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             var vectors = box.GetSpaceVectors();
             var p1 = vectors[0];
             var p2 = vectors[1];
@@ -179,6 +204,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<XYZ> GetSpaceVectors(this BoundingBoxXYZ box)
         {
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             var p1 = box.Min;
             var p2 = new XYZ(box.Max.X, box.Min.Y, p1.Z);
             var p3 = new XYZ(box.Max.X, box.Max.Y, p1.Z);
@@ -198,6 +226,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<Line> GetPlaneEdges(this PickedBox box)
         {
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             var vectors = box.GetPlaneVectors();
             var p1 = vectors[0];
             var p2 = vectors[1];
@@ -218,6 +249,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<XYZ> GetPlaneVectors(this PickedBox box)
         {
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             var p1 = box.Min;
             var p2 = new XYZ(box.Max.X, box.Min.Y, p1.Z);
             var p3 = new XYZ(box.Max.X, box.Max.Y, p1.Z);
@@ -233,6 +267,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<Line> GetSpaceEdges(this PickedBox box)
         {
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             var vectors = box.GetSpaceVectors();
             var p1 = vectors[0];
             var p2 = vectors[1];
@@ -265,6 +302,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<XYZ> GetSpaceVectors(this PickedBox box)
         {
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             var p1 = box.Min;
             var p2 = new XYZ(box.Max.X, box.Min.Y, p1.Z);
             var p3 = new XYZ(box.Max.X, box.Max.Y, p1.Z);

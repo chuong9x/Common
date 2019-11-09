@@ -65,6 +65,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static GeometryPosition GetPosition(this Line line, List<List<Line>> solid)
         {
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
+
+            if (solid == null)
+                throw new ArgumentNullException(nameof(solid));
+
             throw new NotImplementedException();
         }
     }

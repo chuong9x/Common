@@ -67,6 +67,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static GeometryPosition GetPlanePosition(this XYZ pt, Line line)
         {
+            if (pt == null)
+                throw new ArgumentNullException(nameof(pt));
+
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
+
             pt = pt.ToPlanePoint();
 
             var pt1 = line.GetEndPoint(0).ToPlanePoint();
@@ -86,6 +92,12 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static GeometryPosition GetSpacePosition(this XYZ pt, Line line)
         {
+            if (pt == null)
+                throw new ArgumentNullException(nameof(pt));
+
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
+
             var pt1 = line.GetEndPoint(0);
             var pt2 = line.GetEndPoint(1);
 
@@ -102,6 +114,9 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static XYZ GetMaxPoint(this List<XYZ> pts)
         {
+            if (pts == null)
+                throw new ArgumentNullException(nameof(pts));
+
             return new XYZ(pts.Max(m => m.X), pts.Max(m => m.Y), pts.Max(m => m.Z));
         }
 
@@ -112,6 +127,9 @@ namespace KeLi.Common.Revit.Relation
         /// <returns></returns>
         public static XYZ GetMinPoint(this List<XYZ> pts)
         {
+            if (pts == null)
+                throw new ArgumentNullException(nameof(pts));
+
             return new XYZ(pts.Min(m => m.X), pts.Min(m => m.Y), pts.Min(m => m.Z));
         }
     }

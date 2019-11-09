@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Script.Serialization;
@@ -65,6 +66,12 @@ namespace KeLi.Common.Converter.Serialization
         /// <param name="filePath"></param>
         public static void Serialize<T>(this List<T> ts, string filePath)
         {
+            if (ts == null)
+                throw new ArgumentNullException(nameof(ts));
+
+            if (filePath == null)
+                throw new ArgumentNullException(nameof(filePath));
+
             using (var sw = new StreamWriter(filePath))
                 ts.ForEach(t => sw.WriteLine(new JavaScriptSerializer().Serialize(t)));
         }
@@ -77,7 +84,10 @@ namespace KeLi.Common.Converter.Serialization
         /// <returns></returns>
         public static List<T> Deserialize<T>(string filePath)
         {
-           var results = new List<T>();
+            if (filePath == null)
+                throw new ArgumentNullException(nameof(filePath));
+
+            var results = new List<T>();
 
             using (var sr = new StreamReader(filePath))
             {

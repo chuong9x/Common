@@ -61,7 +61,7 @@ namespace KeLi.Common.Drive.Excel
         /// <param name="columnName"></param>
         public ReferenceAttribute(string columnName)
         {
-            ColumnName = columnName;
+            ColumnName = columnName ?? throw new ArgumentNullException(nameof(columnName));
         }
 
         /// <summary>

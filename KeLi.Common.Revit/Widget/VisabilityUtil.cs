@@ -47,6 +47,7 @@
 */
 
 using Autodesk.Revit.DB;
+using System;
 
 namespace KeLi.Common.Revit.Widget
 {
@@ -61,6 +62,9 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="gf"></param>
         public static void SetExtrusionVisible(this GenericForm gf)
         {
+            if (gf == null)
+                throw new ArgumentNullException(nameof(gf));
+
             var visibility = gf.GetVisibility();
 
             // No display on plane view.

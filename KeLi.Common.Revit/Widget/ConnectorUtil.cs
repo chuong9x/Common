@@ -67,6 +67,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static int ConnectWall(this Document doc)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             // The wall group by level's elevation.
             var wallGroups = doc.GetTypeElements<Wall>()
                 .GroupBy(g => g.LevelId)
@@ -88,6 +91,9 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="doc"></param>
         public static int ConnectInstance(this Document doc)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             var instanceGroups = doc.GetTypeElements<FamilyInstance>(BuiltInCategory.OST_GenericModel)
                 .GroupBy(g => ((LocationPoint)g.Location).Point.Z)
                 .OrderBy(o => o.Key)
@@ -110,6 +116,15 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="pipe2"></param>
         public static void ConnectPipe(this Document doc, MEPCurve pipe1, MEPCurve pipe2)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (pipe1 == null)
+                throw new ArgumentNullException(nameof(pipe1));
+
+            if (pipe2 == null)
+                throw new ArgumentNullException(nameof(pipe2));
+
             var line1 = (pipe1.Location as LocationCurve)?.Curve as Line;
             var line2 = (pipe2.Location as LocationCurve)?.Curve as Line;
             var point = line1.GetMidPoint(line2);
@@ -131,6 +146,18 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="pipe3"></param>
         public static void ConnectPipe(this Document doc, MEPCurve pipe1, MEPCurve pipe2, MEPCurve pipe3)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (pipe1 == null)
+                throw new ArgumentNullException(nameof(pipe1));
+
+            if (pipe2 == null)
+                throw new ArgumentNullException(nameof(pipe2));
+
+            if (pipe3 == null)
+                throw new ArgumentNullException(nameof(pipe3));
+
             var line1 = (pipe1.Location as LocationCurve).Curve as Line;
             var line2 = (pipe2.Location as LocationCurve).Curve as Line;
             var line3 = (pipe3.Location as LocationCurve).Curve as Line;
@@ -160,6 +187,21 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="pipe4"></param>
         public static void ConnectPipe(this Document doc, MEPCurve pipe1, MEPCurve pipe2, MEPCurve pipe3, MEPCurve pipe4)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (pipe1 == null)
+                throw new ArgumentNullException(nameof(pipe1));
+
+            if (pipe2 == null)
+                throw new ArgumentNullException(nameof(pipe2));
+
+            if (pipe3 == null)
+                throw new ArgumentNullException(nameof(pipe3));
+
+            if (pipe4 == null)
+                throw new ArgumentNullException(nameof(pipe4));
+
             var line1 = (pipe1.Location as LocationCurve).Curve as Line;
             var line2 = (pipe2.Location as LocationCurve).Curve as Line;
             var line3 = (pipe3.Location as LocationCurve).Curve as Line;
@@ -192,6 +234,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static Connector GetLatestConnector(this MEPCurve pipe, XYZ point)
         {
+            if (pipe == null)
+                throw new ArgumentNullException(nameof(pipe));
+
+            if (point == null)
+                throw new ArgumentNullException(nameof(point));
+
             Connector result = null;
             var minDist = double.MaxValue;
 
@@ -217,6 +265,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static Connector GetLatestConnector(ConnectorSet connectors, XYZ point)
         {
+            if (connectors == null)
+                throw new ArgumentNullException(nameof(connectors));
+
+            if (point == null)
+                throw new ArgumentNullException(nameof(point));
+
             Connector result = null;
             var minDist = 1.0;
 
@@ -245,6 +299,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         private static int JoinElmBySameFloor<T>(Document doc, List<IGrouping<ElementId, T>> wallGroups) where T : Element
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (wallGroups == null)
+                throw new ArgumentNullException(nameof(wallGroups));
+
             var result = 0;
 
             foreach (var group in wallGroups)
@@ -285,6 +345,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         private static int JoinElmByAdjacentFloor<T>(Document doc, IReadOnlyList<IGrouping<ElementId, T>> wallGroups) where T : Element
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (wallGroups == null)
+                throw new ArgumentNullException(nameof(wallGroups));
+
             var result = 0;
 
             for (var i = 0; i < wallGroups.Count - 1; i++)
@@ -325,6 +391,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         private static int JoinElmBySameFloor<T>(Document doc, List<IGrouping<double, T>> wallGroups) where T : Element
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (wallGroups == null)
+                throw new ArgumentNullException(nameof(wallGroups));
+
             var result = 0;
 
             foreach (var group in wallGroups)
@@ -365,6 +437,12 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         private static int JoinElmByAdjacentFloor<T>(Document doc, IReadOnlyList<IGrouping<double, T>> wallGroups) where T : Element
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (wallGroups == null)
+                throw new ArgumentNullException(nameof(wallGroups));
+
             var result = 0;
 
             for (var i = 0; i < wallGroups.Count - 1; i++)

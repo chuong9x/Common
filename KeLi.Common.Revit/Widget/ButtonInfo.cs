@@ -47,6 +47,7 @@
 */
 
 using Autodesk.Revit.UI;
+using System;
 
 namespace KeLi.Common.Revit.Widget
 {
@@ -61,7 +62,7 @@ namespace KeLi.Common.Revit.Widget
         /// </summary>
         public ButtonInfo(string text) : base(typeof(T).Name, text, typeof(T).Assembly.Location, typeof(T).FullName)
         {
-            Text = text;
+            Text = text ?? throw new ArgumentNullException(nameof(text));
         }
 
         /// <summary>

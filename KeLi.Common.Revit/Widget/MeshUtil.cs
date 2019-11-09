@@ -66,6 +66,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<Line> GetDispersedLines(this Curve curve, int gapNum = 0)
         {
+            if (curve == null)
+                throw new ArgumentNullException(nameof(curve));
+
             return curve.Tessellate().ToList().GetDispersedLines(gapNum);
         }
 
@@ -77,6 +80,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<Line> GetDispersedLines(this IList<XYZ> points, int gapNum = 0)
         {
+            if (points == null)
+                throw new ArgumentNullException(nameof(points));
+
             var results = new List<Line>();
 
             for (var i = 0; i < points.Count - 1; i++)
@@ -105,6 +111,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static Dictionary<Mesh, List<MeshTriangle>> GetMeshTriangles(this Element elm)
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
             var results = new Dictionary<Mesh, List<MeshTriangle>>();
             var meshes = elm.GetMeshes();
 
@@ -120,6 +129,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<MeshTriangle> GetMeshTriangles(this Mesh mesh)
         {
+            if (mesh == null)
+                throw new ArgumentNullException(nameof(mesh));
+
             var results = new List<MeshTriangle>();
 
             for (var i = 0; i < mesh.NumTriangles; i++)
@@ -135,6 +147,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<Mesh> GetMeshes(this Element elm)
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
             var results = new List<Mesh>();
 
             elm.GetFaces().ForEach(f => results.Add(f.Triangulate()));
@@ -149,6 +164,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<Face> GetFaces(this Element elm)
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
             var results = new List<Face>();
 
             elm.GetValidSolids().ForEach(f => results.AddRange(f.Faces.Cast<Face>()));
@@ -163,6 +181,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<XYZ> GetFacePoints(this Element elm)
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
             var results = new List<XYZ>();
 
             elm.GetEdges().ForEach(f => results.AddRange(f.Tessellate()));
@@ -177,6 +198,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<XYZ> GetSolidPoints(this Element elm)
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
             var results = elm.GetFacePoints().OrderBy(o => o.X).ThenBy(o => o.Y).ThenBy(o => o.Z).ToList();
 
             for (var i = 0; i < results.Count; i++)
@@ -201,6 +225,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<Edge> GetEdges(this Element elm)
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
             var results = new List<Edge>();
 
             elm.GetValidSolids().ForEach(f => results.AddRange(f.Edges.Cast<Edge>()));
@@ -215,13 +242,13 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<Solid> GetValidSolids(this Element elm)
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
             var opt = new Options() { ComputeReferences = true, DetailLevel = ViewDetailLevel.Coarse };
             var ge = elm.get_Geometry(opt);
 
-            if (ge == null)
-                return new List<Solid>();
-
-            return ge.GetValidSolids();
+            return ge == null ? new List<Solid>() : ge.GetValidSolids();
         }
 
         /// <summary>
@@ -232,6 +259,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static List<Solid> GetValidSolids(this GeometryElement ge, int precision = 10)
         {
+            if (ge == null)
+                throw new ArgumentNullException(nameof(ge));
+
             var results = new List<Solid>();
 
             foreach (var obj in ge)
