@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using Autodesk.Revit.DB;
 using System.Collections.Generic;
 
@@ -132,7 +133,7 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static XYZ GetRoundPoint(this XYZ point, int precision = 4)
         {
-            return new XYZ(NumberUtil.GetRound(point.X, precision), NumberUtil.GetRound(point.Y, precision), NumberUtil.GetRound(point.Z, precision));
+            return new XYZ(Math.Round(point.X, precision), Math.Round(point.Y, precision), Math.Round(point.Z, precision));
         }
     }
 }

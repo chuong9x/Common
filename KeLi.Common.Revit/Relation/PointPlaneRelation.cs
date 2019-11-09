@@ -70,8 +70,8 @@ namespace KeLi.Common.Revit.Relation
         {
             GeometryPosition result;
             var pointl = pt.GetRoundPoint();
-            var xs = new[] { NumberUtil.GetRound(box.Min.X), NumberUtil.GetRound(box.Max.X) };
-            var ys = new[] { NumberUtil.GetRound(box.Min.Y), NumberUtil.GetRound(box.Max.Y) };
+            var xs = new[] { box.Min.X, box.Max.X };
+            var ys = new[] { box.Min.Y, box.Max.Y };
             var minPt = new XYZ(xs.Min(), ys.Min(), 0);
             var maxPt = new XYZ(xs.Max(), ys.Max(), 0);
 
@@ -101,9 +101,9 @@ namespace KeLi.Common.Revit.Relation
         {
             GeometryPosition result;
             var pt1 = pt.GetRoundPoint();
-            var xs = new[] { NumberUtil.GetRound(box.Min.X), NumberUtil.GetRound(box.Max.X) };
-            var ys = new[] { NumberUtil.GetRound(box.Min.Y), NumberUtil.GetRound(box.Max.Y) };
-            var zs = new[] { NumberUtil.GetRound(box.Min.Z), NumberUtil.GetRound(box.Max.Z) };
+            var xs = new[] { box.Min.X, box.Max.X };
+            var ys = new[] { box.Min.Y, box.Max.Y };
+            var zs = new[] { box.Min.Z, box.Max.Z };
             var minPt = new XYZ(xs.Min(), ys.Min(), zs.Min());
             var maxPt = new XYZ(xs.Max(), ys.Max(), zs.Max());
             var position = pt.GetPlanePosition(box);
@@ -146,14 +146,22 @@ namespace KeLi.Common.Revit.Relation
                 ys.Add(line.GetEndPoint(0).Y);
             }
 
-            if (xs.Count == 0 || ys.Count == 0 || x < xs.Min() || x > xs.Max() || y < ys.Min() || y > ys.Max())
+            var minX = xs.Min();
+            var maxX = xs.Max();
+            var minY = ys.Min();
+            var maxY = ys.Max();
+
+            if (lines.Count == 0 || x < minX || x > maxX || y < minY || y > maxY)
                 return false;
 
             var result = false;
 
-            for (int i = 0, j = xs.Count - 1; i < xs.Count; j = i++)
+            for (int i = 0, j = lines.Count - 1; i < lines.Count; j = i++)
             {
-                if (ys[i] > y != ys[j] > y && x < (xs[j] - xs[i]) * (y - ys[i]) / (ys[j] - ys[i]) + xs[i])
+                var dxji = xs[j] - xs[i];
+                var dyji = ys[j] - ys[i];
+
+                if (ys[i] > y != ys[j] > y && x < dxji * (y - ys[i]) / dyji + xs[i])
                     result = !result;
             }
 

@@ -66,28 +66,6 @@ namespace KeLi.Common.Revit.Widget
         private const double MM_TO_FT = 0.0032808399;
 
         /// <summary>
-        /// Gets the round value.
-        /// </summary>
-        /// <param name="num"></param>
-        /// <param name="precision"></param>
-        /// <returns></returns>
-        public static double GetRound(double num, int precision = 4)
-        {
-            return Math.Round(num, precision);
-        }
-
-        /// <summary>
-        /// Gets the distance square.
-        /// </summary>
-        /// <param name="d"></param>
-        /// <param name="pow"></param>
-        /// <returns></returns>
-        public static double GetPow(double d, int pow = 2)
-        {
-            return Math.Pow(d, pow);
-        }
-
-        /// <summary>
         /// Millimeter to foot.
         /// </summary>
         /// <param name="mm"></param>
