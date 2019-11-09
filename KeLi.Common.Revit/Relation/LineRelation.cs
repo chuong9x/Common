@@ -49,9 +49,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using Autodesk.Revit.DB;
-using KeLi.Common.Revit.Widget;
 
 namespace KeLi.Common.Revit.Relation
 {
@@ -179,6 +177,14 @@ namespace KeLi.Common.Revit.Relation
             var pt2 = line1.GetEndPoint(1);
             var pt3 = line2.GetEndPoint(0);
             var pt4 = line2.GetEndPoint(1);
+            var x1 = pt1.X;
+            var y1 = pt1.Y;
+            var x2 = pt2.X;
+            var y2 = pt2.Y;
+            var x3 = pt3.X;
+            var y3 = pt3.Y;
+            var x4 = pt4.X;
+            var y4 = pt4.Y;
 
             if (line1.IsPlaneVertical(line2))
             {
@@ -188,30 +194,30 @@ namespace KeLi.Common.Revit.Relation
                 if (!flag)
                     flag = Math.Abs(line2.Direction.AngleTo(XYZ.BasisX) - Math.PI / 2) < 2 * 10e-3;
 
-                result = flag ? new XYZ(pt1.X, pt3.Y, 0) : new XYZ(pt3.X, pt1.Y, 0);
+                result = flag ? new XYZ(x1, y3, 0) : new XYZ(x3, y1, 0);
             }
             else
             {
-                var k1 = (pt2.X - pt1.X) * (pt3.X - pt4.X) * (pt3.Y - pt1.Y)
-                         - pt3.X * (pt2.X - pt1.X) * (pt3.Y - pt4.Y)
-                         + pt1.X * (pt2.Y - pt1.Y) * (pt3.X - pt4.X);
-                var k2 = (pt2.Y - pt1.Y) * (pt3.X - pt4.X)
-                         - (pt2.X - pt1.X) * (pt3.Y - pt4.Y);
-                var k3 = (pt2.Y - pt1.Y) * (pt3.Y - pt4.Y) * (pt3.X - pt1.X)
-                         - pt3.Y * (pt2.Y - pt1.Y) * (pt3.X - pt4.X)
-                         + pt1.Y * (pt2.X - pt1.X) * (pt3.Y - pt4.Y);
-                var k4 = (pt2.X - pt1.X) * (pt3.Y - pt4.Y)
-                         - (pt2.Y - pt1.Y) * (pt3.X - pt4.X);
+                var dx12 = x2 - x1;
+                var dx31 = x3 - x1;
+                var dx34 = x3 - x4;
+                var dy21 = y2 - y1;
+                var dy31 = y3 - y1;
+                var dy34 = y3 - y4;
+                var k1 = dx12 * dx34 * dy31 - x3 * dx12 * dy34 + x1 * dy21 * dx34;
+                var k2 = dy21 * dx34 - dx12 * dy34;
+                var k3 = dy21 * dy34 * dx31 - y3 * dy21 * dx34 + y1 * dx12 * dy34;
+                var k4 = dx12 * dy34 - dy21 * dx34;
 
                 // Equations of the state, by the formula to calculate the intersection.
                 result = new XYZ(k1 / k2, k3 / k4, 0);
             }
 
             // It be used to calc the result in line1 and line2.
-            var flag1 = (result.Y - pt1.X) * (result.X - pt2.X) <= 0;
-            var flag2 = (result.Y - pt1.Y) * (result.Y - pt2.Y) <= 0;
-            var flag3 = (result.X - pt3.X) * (result.X - pt4.X) <= 0;
-            var flag4 = (result.Y - pt3.Y) * (result.Y - pt4.Y) <= 0;
+            var flag1 = (result.Y - x1) * (result.X - x2) <= 0;
+            var flag2 = (result.Y - y1) * (result.Y - y2) <= 0;
+            var flag3 = (result.X - x3) * (result.X - x4) <= 0;
+            var flag4 = (result.Y - y3) * (result.Y - y4) <= 0;
 
             // No touch or true cross returns the ins pt, otherwise returns null.
             return !isTouch || flag1 && flag2 && flag3 && flag4 ? result : null;
