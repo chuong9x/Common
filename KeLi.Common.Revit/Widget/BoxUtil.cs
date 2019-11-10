@@ -99,6 +99,38 @@ namespace KeLi.Common.Revit.Widget
         }
 
         /// <summary>
+        /// Gets the intersection box between the box1 and the box2.
+        /// </summary>
+        /// <param name="box1"></param>
+        /// <param name="box2"></param>
+        /// <returns></returns>
+        public static BoundingBoxXYZ GetInsBox(this BoundingBoxXYZ box1, BoundingBoxXYZ box2)
+        {
+            if (box1 == null)
+                throw new ArgumentNullException(nameof(box1));
+
+            if (box2 == null)
+                throw new ArgumentNullException(nameof(box2));
+
+            var box1Min = box1.Min;
+            var box1Max = box1.Max;
+            var box2Min = box2.Min;
+            var box2Max = box2.Max;
+            var minX = Math.Max(box1Min.X, box2Min.X);
+            var minY = Math.Max(box1Min.Y, box2Min.Y);
+            var minZ = Math.Max(box1Min.Z, box2Min.Z);
+            var maxX = Math.Min(box1Max.X, box2Max.X);
+            var maxY = Math.Min(box1Max.Y, box2Max.Y);
+            var maxZ = Math.Min(box1Max.Z, box2Max.Z);
+
+            return new BoundingBoxXYZ
+            {
+                Min = new XYZ(minX, minY, minZ),
+                Max = new XYZ(maxX, maxY, maxZ)
+            };
+        }
+
+        /// <summary>
         /// Converts to bouding box.
         /// </summary>
         /// <param name="box"></param>
