@@ -105,6 +105,9 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public static BoundingBoxXYZ ToBoundingBoxXYZ(this PickedBox box)
         {
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             var minPt = box.Min;
             var maxPt = box.Max;
             var minX = Math.Min(minPt.X, maxPt.X);
