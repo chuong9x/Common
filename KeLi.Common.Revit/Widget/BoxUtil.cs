@@ -99,6 +99,29 @@ namespace KeLi.Common.Revit.Widget
         }
 
         /// <summary>
+        /// Converts to bouding box.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <returns></returns>
+        public static BoundingBoxXYZ ToBoundingBoxXYZ(this PickedBox box)
+        {
+            var minPt = box.Min;
+            var maxPt = box.Max;
+            var minX = Math.Min(minPt.X, maxPt.X);
+            var minY = Math.Min(minPt.Y, maxPt.Y);
+            var minZ = Math.Min(minPt.Z, maxPt.Z);
+            var maxX = Math.Max(minPt.X, maxPt.X);
+            var maxY = Math.Max(minPt.Y, maxPt.Y);
+            var maxZ = Math.Max(minPt.Z, maxPt.Z);
+
+            return new BoundingBoxXYZ
+            {
+                Min = new XYZ(minX, minY, minZ),
+                Max = new XYZ(maxX, maxY, maxZ)
+            };
+        }
+
+        /// <summary>
         /// Gets the round box.
         /// </summary>
         /// <param name="elm"></param>
@@ -203,104 +226,6 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="box"></param>
         /// <returns></returns>
         public static List<XYZ> GetSpaceVectors(this BoundingBoxXYZ box)
-        {
-            if (box == null)
-                throw new ArgumentNullException(nameof(box));
-
-            var p1 = box.Min;
-            var p2 = new XYZ(box.Max.X, box.Min.Y, p1.Z);
-            var p3 = new XYZ(box.Max.X, box.Max.Y, p1.Z);
-            var p4 = new XYZ(p1.X, box.Max.Y, p1.Z);
-            var p5 = new XYZ(p1.X, p1.Y, box.Max.Z);
-            var p6 = new XYZ(box.Max.X, p1.Y, box.Max.Z);
-            var p7 = new XYZ(p1.X, box.Max.Y, box.Max.Z);
-            var p8 = box.Max;
-
-            return new List<XYZ> { p1, p2, p3, p4, p5, p6, p7, p8 };
-        }
-
-        /// <summary>
-        /// Gets the plane edge set and z axis value equals no zero.
-        /// </summary>
-        /// <param name="box"></param>
-        /// <returns></returns>
-        public static List<Line> GetPlaneEdges(this PickedBox box)
-        {
-            if (box == null)
-                throw new ArgumentNullException(nameof(box));
-
-            var vectors = box.GetPlaneVectors();
-            var p1 = vectors[0];
-            var p2 = vectors[1];
-            var p3 = vectors[2];
-            var p4 = vectors[3];
-            var p12 = Line.CreateBound(p1, p2);
-            var p23 = Line.CreateBound(p2, p3);
-            var p34 = Line.CreateBound(p3, p4);
-            var p41 = Line.CreateBound(p4, p1);
-
-            return new List<Line> { p12, p23, p34, p41 };
-        }
-
-        /// <summary>
-        /// Gets the box's plane 4 vectors.
-        /// </summary>
-        /// <param name="box"></param>
-        /// <returns></returns>
-        public static List<XYZ> GetPlaneVectors(this PickedBox box)
-        {
-            if (box == null)
-                throw new ArgumentNullException(nameof(box));
-
-            var p1 = box.Min;
-            var p2 = new XYZ(box.Max.X, box.Min.Y, p1.Z);
-            var p3 = new XYZ(box.Max.X, box.Max.Y, p1.Z);
-            var p4 = new XYZ(p1.X, box.Max.Y, p1.Z);
-
-            return new List<XYZ> { p1, p2, p3, p4 };
-        }
-
-        /// <summary>
-        /// Gets the space edge set.
-        /// </summary>
-        /// <param name="box"></param>
-        /// <returns></returns>
-        public static List<Line> GetSpaceEdges(this PickedBox box)
-        {
-            if (box == null)
-                throw new ArgumentNullException(nameof(box));
-
-            var vectors = box.GetSpaceVectors();
-            var p1 = vectors[0];
-            var p2 = vectors[1];
-            var p3 = vectors[2];
-            var p4 = vectors[3];
-            var p5 = vectors[4];
-            var p6 = vectors[5];
-            var p7 = vectors[6];
-            var p8 = vectors[7];
-            var p12 = Line.CreateBound(p1, p2);
-            var p14 = Line.CreateBound(p1, p4);
-            var p15 = Line.CreateBound(p1, p5);
-            var p23 = Line.CreateBound(p2, p3);
-            var p24 = Line.CreateBound(p2, p4);
-            var p34 = Line.CreateBound(p3, p4);
-            var p37 = Line.CreateBound(p3, p7);
-            var p48 = Line.CreateBound(p4, p8);
-            var p56 = Line.CreateBound(p5, p6);
-            var p58 = Line.CreateBound(p5, p8);
-            var p67 = Line.CreateBound(p6, p7);
-            var p78 = Line.CreateBound(p7, p8);
-
-            return new List<Line> { p12, p14, p15, p23, p24, p34, p37, p48, p56, p58, p67, p78 };
-        }
-
-        /// <summary>
-        /// Gets the box's space 8 vectors.
-        /// </summary>
-        /// <param name="box"></param>
-        /// <returns></returns>
-        public static List<XYZ> GetSpaceVectors(this PickedBox box)
         {
             if (box == null)
                 throw new ArgumentNullException(nameof(box));
