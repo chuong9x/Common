@@ -131,7 +131,7 @@ namespace KeLi.Common.Revit.Widget
         }
 
         /// <summary>
-        /// Converts to bouding box.
+        /// Converts to bounding box.
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
