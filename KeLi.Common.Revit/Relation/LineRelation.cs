@@ -232,17 +232,12 @@ namespace KeLi.Common.Revit.Relation
             var y3 = pt3.Y;
             var x4 = pt4.X;
             var y4 = pt4.Y;
+            var f1 = Math.Abs(line1.Direction.AngleTo(XYZ.BasisX) - Math.PI / 2) < 2 * 10e-3;
+            var f2 = Math.Abs(line2.Direction.AngleTo(XYZ.BasisX) - Math.PI / 2) < 2 * 10e-3;
 
-            if (line1.IsPlaneVertical(line2))
-            {
-                // Must quadrature.
-                var flag = Math.Abs(line1.Direction.AngleTo(XYZ.BasisX) - Math.PI / 2) < 2 * 10e-3;
-
-                if (!flag)
-                    flag = Math.Abs(line2.Direction.AngleTo(XYZ.BasisX) - Math.PI / 2) < 2 * 10e-3;
-
-                result = flag ? new XYZ(x1, y3, 0) : new XYZ(x3, y1, 0);
-            }
+            // Must quadrature.
+            if (line1.IsPlaneVertical(line2) && f1 || f2)
+                result = f1 ? new XYZ(x1, y3, 0) : new XYZ(x3, y1, 0);
             else
             {
                 var dx12 = x2 - x1;
