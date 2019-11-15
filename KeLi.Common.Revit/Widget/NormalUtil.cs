@@ -79,7 +79,7 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="point"></param>
         /// <param name="curve"></param>
         /// <returns></returns>
-        public static XYZ GetSpaceNormal(this Curve curve, XYZ point)
+        public static XYZ GetNormal(this Curve curve, XYZ point)
         {
             if (curve == null)
                 throw new ArgumentNullException(nameof(curve));
@@ -91,7 +91,7 @@ namespace KeLi.Common.Revit.Widget
             var p1 = line.GetEndPoint(0);
             var p2 = line.GetEndPoint(1);
 
-            return point.GetSpaceNormal(p1, p2);
+            return point.GetNormal(p1, p2);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="p2"></param>
         /// <param name="p3"></param>
         /// <returns></returns>
-        public static XYZ GetSpaceNormal(this XYZ p1, XYZ p2, XYZ p3)
+        public static XYZ GetNormal(this XYZ p1, XYZ p2, XYZ p3)
         {
             if (p1 == null)
                 throw new ArgumentNullException(nameof(p1));

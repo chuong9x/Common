@@ -56,7 +56,7 @@ namespace KeLi.Common.Revit.Builder
     public static class MaterialBuilder
     {
         /// <summary>
-        /// Adds the new material.
+        /// Adds a new material.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="name"></param>

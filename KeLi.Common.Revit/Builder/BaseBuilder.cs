@@ -68,7 +68,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new wall.
+        /// Adds a new wall.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="profile"></param>
@@ -79,7 +79,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new wall.
+        /// Adds a new wall.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="curve"></param>
@@ -91,7 +91,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new wall.
+        /// Adds a new wall.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="typeId"></param>
@@ -104,7 +104,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new wall.
+        /// Adds a new wall.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="typeId"></param>
@@ -118,7 +118,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new floor.
+        /// Adds a new floor.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="profile"></param>
@@ -129,7 +129,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new floor.
+        /// Adds a new floor.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="profile"></param>
@@ -142,7 +142,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new floor.
+        /// Adds a new floor.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="profile"></param>
@@ -156,7 +156,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new extrusion roof.
+        /// Adds a new extrusion roof.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="profile"></param>
@@ -173,7 +173,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new foot print roof.
+        /// Adds a new foot print roof.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="profile"></param>

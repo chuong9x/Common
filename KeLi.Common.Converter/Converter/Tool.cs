@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: kelicto                       |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 11/15/2019 02:43:59 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,50 +46,39 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using Autodesk.Revit.DB;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
-namespace KeLi.Common.Revit.Builder
+namespace KeLi.Common.Converter.Converter
 {
     /// <summary>
-    /// Sweep builder.
+    /// Useful Utility.
     /// </summary>
-    public static class SweepBuilder
+    public static class UsefulUtil
     {
         /// <summary>
-        /// Adds a new sweep.
+        /// Gets a dictionary composed of display name and enum item value from enum type.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="path"></param>
-        /// <param name="profile"></param>
-        /// <param name="index"></param>
+        /// <param name="enumType"></param>
         /// <returns></returns>
-        public static Sweep AddSweep(this Document doc, SweepProfile profile, ReferenceArray path, int index)
+        public static Dictionary<string, Enum> GetDisplayNames(Type enumType)
         {
-            return doc.FamilyCreate.NewSweep(true, path, profile, index, ProfilePlaneLocation.Start);
-        }
+            var results = new Dictionary<string, Enum>();
+            var values = Enum.GetValues(enumType);
 
-        /// <summary>
-        /// Adds a new extrusion.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="profile"></param>
-        /// <param name="plane"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-        public static Extrusion AddExtrusion(this Document doc, CurveArrArray profile, SketchPlane plane, double end)
-        {
-            return doc.FamilyCreate.NewExtrusion(true, profile, plane, end);
-        }
+            foreach (Enum value in values)
+            {
+                var member = enumType.GetMember(value.ToString()).FirstOrDefault();
+                var atts = member.GetCustomAttributes(typeof(DisplayAttribute), false);
+                var name = (atts.FirstOrDefault() as DisplayAttribute)?.Name;
 
-        /// <summary>
-        /// Adds a new profile.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="profile"></param>
-        /// <returns></returns>
-        public static SweepProfile AddProfile(this Document doc, CurveArrArray profile)
-        {
-            return doc.Application.Create.NewCurveLoopsProfile(profile);
+                if (name != null)
+                    results.Add(name, value);
+            }
+
+            return results;
         }
     }
 }

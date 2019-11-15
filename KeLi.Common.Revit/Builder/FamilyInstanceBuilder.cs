@@ -60,7 +60,7 @@ namespace KeLi.Common.Revit.Builder
     public static class FamilyInstanceBuilder
     {
         /// <summary>
-        /// Adds the new family instance.
+        /// Adds a new family instance.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="location"></param>
@@ -75,7 +75,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new family instance.
+        /// Adds a new family instance.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="location"></param>
@@ -90,7 +90,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new family instance.
+        /// Adds a new family instance.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="location"></param>
@@ -106,7 +106,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new family instance.
+        /// Adds a new family instance.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="location"></param>
@@ -122,7 +122,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new family symbol.
+        /// Adds a new family symbol.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="rfa"></param>
@@ -142,7 +142,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new family symbol.
+        /// Adds a new family symbol.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="rfa"></param>
@@ -162,7 +162,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new family symbol.
+        /// Adds a new family symbol.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="rfa"></param>
@@ -177,7 +177,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new family symbol.
+        /// Adds a new family symbol.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="rft"></param>

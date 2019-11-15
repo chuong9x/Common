@@ -60,7 +60,7 @@ namespace KeLi.Common.Revit.Widget
     public static class RibbonUtil
     {
         /// <summary>
-        /// Adds the button.
+        /// Adds a button.
         /// </summary>
         /// <param name="pnl"></param>
         /// <param name="pbd"></param>
@@ -79,7 +79,7 @@ namespace KeLi.Common.Revit.Widget
         }
 
         /// <summary>
-        /// Adds the button.
+        /// Adds a button.
         /// </summary>
         /// <param name="pnl"></param>
         /// <param name="info"></param>
@@ -101,7 +101,7 @@ namespace KeLi.Common.Revit.Widget
         }
 
         /// <summary>
-        /// Adds the button set.
+        /// Adds a button set.
         /// </summary>
         /// <param name="pnl"></param>
         /// <param name="pbds"></param>
@@ -118,7 +118,7 @@ namespace KeLi.Common.Revit.Widget
         }
 
         /// <summary>
-        /// Adds the push button.
+        /// Adds a push button.
         /// </summary>
         /// <param name="pnl"></param>
         /// <param name="pbd"></param>
@@ -156,7 +156,7 @@ namespace KeLi.Common.Revit.Widget
         }
 
         /// <summary>
-        /// Adds the push button set.
+        /// Adds a push button set.
         /// </summary>
         /// <param name="pnl"></param>
         /// <param name="pbds"></param>

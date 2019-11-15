@@ -191,7 +191,7 @@ namespace KeLi.Common.Revit.Widget
         }
 
         /// <summary>
-        /// Adds the workset.
+        /// Adds a workset.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="gridLvl"></param>
@@ -215,7 +215,7 @@ namespace KeLi.Common.Revit.Widget
         }
 
         /// <summary>
-        /// Adds the cad link.
+        /// Adds a cad link.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="linkPath"></param>
@@ -233,7 +233,7 @@ namespace KeLi.Common.Revit.Widget
         }
 
         /// <summary>
-        /// Adds the cad link set.
+        /// Adds a cad link set.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="linkPaths"></param>
@@ -249,7 +249,7 @@ namespace KeLi.Common.Revit.Widget
         }
 
         /// <summary>
-        /// Adds the revit link.
+        /// Adds a revit link.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="linkPath"></param>
@@ -279,7 +279,7 @@ namespace KeLi.Common.Revit.Widget
         }
 
         /// <summary>
-        /// Adds the revit link set.
+        /// Adds a revit link set.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="linkPaths"></param>

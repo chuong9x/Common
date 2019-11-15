@@ -56,7 +56,7 @@ namespace KeLi.Common.Revit.Builder
     public static class PlaneBuilder
     {
         /// <summary>
-        /// Adds the new reference plane.
+        /// Adds a new reference plane.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="bubble"></param>
@@ -70,7 +70,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new sketch plane.
+        /// Adds a new sketch plane.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="datumId"></param>
@@ -81,7 +81,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new sketch plane.
+        /// Adds a new sketch plane.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="plane"></param>
@@ -92,7 +92,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new sketch plane.
+        /// Adds a new sketch plane.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="refer"></param>

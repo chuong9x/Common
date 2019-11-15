@@ -56,7 +56,7 @@ namespace KeLi.Common.Revit.Builder
     public static class ViewBuilder
     {
         /// <summary>
-        /// Adds the new view section.
+        /// Adds a new view section.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="elmId"></param>

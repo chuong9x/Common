@@ -57,7 +57,7 @@ namespace KeLi.Common.Revit.Builder
     public static class GroupBuilder
     {
         /// <summary>
-        /// Adds the new group.
+        /// Adds a new group.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="elmIds"></param>

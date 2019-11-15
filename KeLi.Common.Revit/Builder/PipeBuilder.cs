@@ -59,7 +59,7 @@ namespace KeLi.Common.Revit.Builder
     public static class PipeBuilder
     {
         /// <summary>
-        /// Adds the new pipe.
+        /// Adds a new pipe.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="typeId"></param>
@@ -73,7 +73,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new pipe.
+        /// Adds a new pipe.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="typeId"></param>
@@ -87,7 +87,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new pipe.
+        /// Adds a new pipe.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="systemId"></param>
@@ -103,7 +103,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new flex pipe.
+        /// Adds a new flex pipe.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="systemId"></param>
@@ -118,7 +118,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new flex pipe.
+        /// Adds a new flex pipe.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="systemId"></param>
@@ -135,7 +135,7 @@ namespace KeLi.Common.Revit.Builder
         }
 
         /// <summary>
-        /// Adds the new conduit.
+        /// Adds a new conduit.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="typeId"></param>
