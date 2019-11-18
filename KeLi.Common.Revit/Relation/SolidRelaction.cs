@@ -194,8 +194,8 @@ namespace KeLi.Common.Revit.Relation
             var cp2 = (box2.Max - box2.Min).ToPlanePoint().CrossProduct((box1.Max - box2.Min).ToPlanePoint());
             var cp3 = (box2.Min - box1.Min).ToPlanePoint().CrossProduct((box1.Max - box1.Min).ToPlanePoint());
             var cp4 = (box1.Max - box1.Min).ToPlanePoint().CrossProduct((box2.Max - box1.Min).ToPlanePoint());
-            var f1 = Math.Abs(cp1.GetDotProduct(cp2)) > 10e-3;
-            var f2 = Math.Abs(cp3.GetDotProduct(cp4)) > 10e-3;
+            var f1 = Math.Abs(cp1.DotProduct(cp2)) > 10e-3;
+            var f2 = Math.Abs(cp3.DotProduct(cp4)) > 10e-3;
 
             return f1 && f2;
         }
@@ -221,8 +221,8 @@ namespace KeLi.Common.Revit.Relation
             var cp2 = (box2.Max - box2.Min).ToPlanePoint().CrossProduct((box1.Max - box2.Min).ToPlanePoint());
             var cp3 = (box2.Min - box1.Min).ToPlanePoint().CrossProduct((box1.Max - box1.Min).ToPlanePoint());
             var cp4 = (box1.Max - box1.Min).ToPlanePoint().CrossProduct((box2.Max - box1.Min).ToPlanePoint());
-            var f1 = Math.Abs(cp1.GetDotProduct(cp2)) > 10e-3;
-            var f2 = Math.Abs(cp3.GetDotProduct(cp4)) > 10e-3;
+            var f1 = Math.Abs(cp1.DotProduct(cp2)) > 10e-3;
+            var f2 = Math.Abs(cp3.DotProduct(cp4)) > 10e-3;
 
             return f1 && f2;
         }
@@ -251,8 +251,8 @@ namespace KeLi.Common.Revit.Relation
             var cp2 = (box2.Max - box2.Min).CrossProduct(box1.Max - box2.Min);
             var cp3 = (box2.Min - box1.Min).CrossProduct(box1.Max - box1.Min);
             var cp4 = (box1.Max - box1.Min).CrossProduct(box2.Max - box1.Min);
-            var f1 = Math.Abs(cp1.GetDotProduct(cp2)) > 10e-3;
-            var f2 = Math.Abs(cp3.GetDotProduct(cp4)) > 10e-3;
+            var f1 = Math.Abs(cp1.DotProduct(cp2)) > 10e-3;
+            var f2 = Math.Abs(cp3.DotProduct(cp4)) > 10e-3;
 
             return f1 && f2;
         }
@@ -279,7 +279,7 @@ namespace KeLi.Common.Revit.Relation
             var cp3 = (box2.Min - box1.Min).CrossProduct(box1.Max - box1.Min);
             var cp4 = (box1.Max - box1.Min).CrossProduct(box2.Max - box1.Min);
 
-            return cp1.GetDotProduct(cp2) > 0.000001 && cp3.GetDotProduct(cp4) > 0.000001;
+            return cp1.DotProduct(cp2) > 10e-6 && cp3.DotProduct(cp4) > 10e-6;
         }
 
         /// <summary>

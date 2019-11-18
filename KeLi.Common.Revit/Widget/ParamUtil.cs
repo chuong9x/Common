@@ -57,7 +57,7 @@ using Autodesk.Revit.UI;
 namespace KeLi.Common.Revit.Widget
 {
     /// <summary>
-    /// Parameter utility
+    /// Parameter utility.
     /// </summary>
     public static class ParamUtil
     {
@@ -295,7 +295,7 @@ namespace KeLi.Common.Revit.Widget
         }
 
         /// <summary>
-        /// Parameter's group
+        /// Parameter's group.
         /// </summary>
         public class Group
         {
@@ -328,7 +328,7 @@ namespace KeLi.Common.Revit.Widget
         }
 
         /// <summary>
-        /// Element's parameter
+        /// Element's parameter.
         /// </summary>
         public class Param
         {

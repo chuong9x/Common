@@ -54,7 +54,7 @@ using Autodesk.Revit.UI.Selection;
 namespace KeLi.Common.Revit.Widget
 {
     /// <summary>
-    /// Box utility
+    /// Box utility.
     /// </summary>
     public static class BoxUtil
     {

@@ -53,7 +53,7 @@ using Autodesk.Revit.DB;
 namespace KeLi.Common.Revit.Relation
 {
     /// <summary>
-    /// About two plane relationship
+    /// About two plane relationship.
     /// </summary>
     public static class PlaneRelation
     {

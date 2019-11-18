@@ -55,7 +55,7 @@ using KeLi.Common.Revit.Widget;
 namespace KeLi.Common.Revit.Relation
 {
     /// <summary>
-    /// About a point and a line relationship
+    /// About a point and a line relationship.
     /// </summary>
     public static class PointLineRelation
     {

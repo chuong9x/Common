@@ -54,7 +54,7 @@ using System.Linq;
 namespace KeLi.Common.Revit.Widget
 {
     /// <summary>
-    /// Area utility
+    /// Area utility.
     /// </summary>
     /// <remarks>
     /// About implementation:
@@ -65,7 +65,7 @@ namespace KeLi.Common.Revit.Widget
     public static class AreaUtil
     {
         /// <summary>
-        /// Square foot to spaure meter
+        /// Square foot to spaure meter.
         /// </summary>
         private const double FT2_TO_M2 = 0.092903;
 

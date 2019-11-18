@@ -53,7 +53,7 @@ using Autodesk.Revit.DB;
 namespace KeLi.Common.Revit.Relation
 {
     /// <summary>
-    /// About a line and a solid relationship
+    /// About a line and a solid relationship.
     /// </summary>
     public static class LineSolidRelation
     {

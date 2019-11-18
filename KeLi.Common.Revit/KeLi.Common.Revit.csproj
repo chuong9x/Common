@@ -110,7 +110,6 @@
     <Compile Include="Widget\RibbonUtil.cs" />
     <Compile Include="Widget\AreaUtil.cs" />
     <Compile Include="Widget\BoxUtil.cs" />
-    <Compile Include="Widget\NormalUtil.cs" />
     <Compile Include="Widget\NumberUtil.cs" />
     <Compile Include="Widget\RoomSelection.cs" />
     <Compile Include="Widget\AutoUtil.cs" />
