@@ -75,9 +75,10 @@ namespace KeLi.Common.Revit.Widget
         /// <returns></returns>
         public PushButtonData Copy()
         {
+            // Don't use clone method to do, I don't know why and using below code to do it.
             return new PushButtonData(Name, Text, AssemblyName, ClassName)
             {
-                AvailabilityClassName = ClassName,
+                AvailabilityClassName = AvailabilityClassName,
                 LargeImage = LargeImage
             };
         }
