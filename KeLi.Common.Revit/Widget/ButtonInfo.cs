@@ -47,7 +47,7 @@
 */
 
 using Autodesk.Revit.UI;
-using System;
+using System.Windows.Media;
 
 namespace KeLi.Common.Revit.Widget
 {
@@ -60,18 +60,26 @@ namespace KeLi.Common.Revit.Widget
         /// <summary>
         /// Button info.
         /// </summary>
-        public ButtonInfo(string text) : base(typeof(T).Name, text, typeof(T).Assembly.Location, typeof(T).FullName)
+        public ButtonInfo(string text, ImageSource image, bool isAvailability = false)
+            : base(typeof(T).Name, text, typeof(T).Assembly.Location, typeof(T).FullName)
         {
-            Text = text ?? throw new ArgumentNullException(nameof(text));
+            LargeImage = image;
+
+            if (isAvailability)
+                AvailabilityClassName = typeof(T).FullName;
         }
 
         /// <summary>
-        /// Creates the button.
+        /// Copies the button info.
         /// </summary>
         /// <returns></returns>
-        public PushButtonData CreatePbd()
+        public PushButtonData Copy()
         {
-            return new PushButtonData(Name, Text, AssemblyName, ClassName);
+            return new PushButtonData(Name, Text, AssemblyName, ClassName)
+            {
+                AvailabilityClassName = ClassName,
+                LargeImage = LargeImage
+            };
         }
     }
 }

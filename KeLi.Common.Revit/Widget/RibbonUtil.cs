@@ -48,9 +48,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Windows;
 using Autodesk.Revit.UI;
-using RibbonPanel = Autodesk.Revit.UI.RibbonPanel;
 
 namespace KeLi.Common.Revit.Widget
 {
@@ -65,17 +64,19 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="pnl"></param>
         /// <param name="pbd"></param>
         /// <returns></returns>
-        public static void AddButton(this RibbonPanel pnl, PushButtonData pbd)
+        public static PushButton AddButton(this RibbonPanel pnl, PushButtonData pbd)
         {
             if (pnl == null)
                 throw new ArgumentNullException(nameof(pnl));
 
-            if (!(pnl.AddItem(pbd) is PushButton btn))
-                return;
+            if (!(pnl.AddItem(pbd) is PushButton result))
+                throw new InvalidCastException();
 
-            btn.ToolTip = pbd.ToolTip;
-            btn.LongDescription = pbd.LongDescription;
-            btn.LargeImage = pbd.LargeImage;
+            result.ToolTip = pbd.ToolTip;
+            result.LongDescription = pbd.LongDescription;
+            result.LargeImage = pbd.LargeImage;
+
+            return result;
         }
 
         /// <summary>
@@ -84,7 +85,7 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="pnl"></param>
         /// <param name="info"></param>
         /// <returns></returns>
-        public static void AddButton<T>(this RibbonPanel pnl, ButtonInfo<T> info) where T : IExternalCommand
+        public static PushButton AddButton<T>(this RibbonPanel pnl, ButtonInfo<T> info) where T : IExternalCommand
         {
             if (pnl == null)
                 throw new ArgumentNullException(nameof(pnl));
@@ -92,12 +93,14 @@ namespace KeLi.Common.Revit.Widget
             if (info == null)
                 throw new ArgumentNullException(nameof(info));
 
-            if (!(pnl.AddItem(info.CreatePbd()) is PushButton btn))
-                return;
+            if (!(pnl.AddItem(info.Copy()) is PushButton result))
+                throw new InvalidCastException();
 
-            btn.ToolTip = info.ToolTip;
-            btn.LongDescription = info.LongDescription;
-            btn.LargeImage = info.LargeImage;
+            result.ToolTip = info.ToolTip;
+            result.LongDescription = info.LongDescription;
+            result.LargeImage = info.LargeImage;
+
+            return result;
         }
 
         /// <summary>
@@ -106,7 +109,7 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="pnl"></param>
         /// <param name="pbds"></param>
         /// <returns></returns>
-        public static void AddButtons(this RibbonPanel pnl, List<PushButtonData> pbds)
+        public static List<PushButton> AddButtons(this RibbonPanel pnl, List<PushButtonData> pbds)
         {
             if (pnl == null)
                 throw new ArgumentNullException(nameof(pnl));
@@ -114,7 +117,11 @@ namespace KeLi.Common.Revit.Widget
             if (pbds == null)
                 throw new ArgumentNullException(nameof(pbds));
 
-            pbds.ForEach(pnl.AddButton);
+            var results = new List<PushButton>();
+
+            pbds.ForEach(f => results.Add(pnl.AddButton(f)));
+
+            return results;
         }
 
         /// <summary>
@@ -124,7 +131,7 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="pbd"></param>
         /// <param name="pbds"></param>
         /// <returns></returns>
-        public static void AddPushButton(this RibbonPanel pnl, PulldownButtonData pbd, List<PushButtonData> pbds)
+        public static PulldownButton AddPushButton(this RibbonPanel pnl, PulldownButtonData pbd, List<PushButtonData> pbds)
         {
             if (pnl == null)
                 throw new ArgumentNullException(nameof(pnl));
@@ -135,16 +142,16 @@ namespace KeLi.Common.Revit.Widget
             if (pbds == null)
                 throw new ArgumentNullException(nameof(pbds));
 
-            if (!(pnl.AddItem(pbd) is PulldownButton pdbtn))
-                return;
+            if (!(pnl.AddItem(pbd) is PulldownButton result))
+                throw new InvalidCastException();
 
-            pdbtn.ToolTip = pbd.ToolTip;
-            pdbtn.LongDescription = pbd.LongDescription;
-            pdbtn.LargeImage = pbd.LargeImage;
+            result.ToolTip = pbd.ToolTip;
+            result.LongDescription = pbd.LongDescription;
+            result.LargeImage = pbd.LargeImage;
 
             foreach (var pbdl in pbds)
             {
-                var btn = pdbtn.AddPushButton(pbdl);
+                var btn = result.AddPushButton(pbdl);
 
                 if (btn == null)
                     continue;
@@ -153,6 +160,8 @@ namespace KeLi.Common.Revit.Widget
                 btn.LongDescription = pbdl.LongDescription;
                 btn.LargeImage = pbdl.LargeImage;
             }
+
+            return result;
         }
 
         /// <summary>
@@ -160,7 +169,7 @@ namespace KeLi.Common.Revit.Widget
         /// </summary>
         /// <param name="pnl"></param>
         /// <param name="pbds"></param>
-        public static void AddPushButtons(this RibbonPanel pnl, Dictionary<PulldownButtonData, List<PushButtonData>> pbds)
+        public static List<PulldownButton> AddPushButtons(this RibbonPanel pnl, Dictionary<PulldownButtonData, List<PushButtonData>> pbds)
         {
             if (pnl == null)
                 throw new ArgumentNullException(nameof(pnl));
@@ -168,8 +177,12 @@ namespace KeLi.Common.Revit.Widget
             if (pbds == null)
                 throw new ArgumentNullException(nameof(pbds));
 
+            var results = new List<PulldownButton>();
+
             foreach (var pbd in pbds)
-                pnl.AddPushButton(pbd.Key, pbd.Value);
+                results.Add(pnl.AddPushButton(pbd.Key, pbd.Value));
+
+            return results;
         }
     }
 }
