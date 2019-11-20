@@ -104,7 +104,7 @@ namespace KeLi.Common.Revit.Widget
         /// <param name="box1"></param>
         /// <param name="box2"></param>
         /// <returns></returns>
-        public static BoundingBoxXYZ GetInsBox(this BoundingBoxXYZ box1, BoundingBoxXYZ box2)
+        public static BoundingBoxXYZ GetCrossingBox(this BoundingBoxXYZ box1, BoundingBoxXYZ box2)
         {
             if (box1 == null)
                 throw new ArgumentNullException(nameof(box1));
