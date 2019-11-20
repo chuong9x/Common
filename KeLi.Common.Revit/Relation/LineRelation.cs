@@ -79,7 +79,7 @@ namespace KeLi.Common.Revit.Relation
             if (line1.IsPlaneParallel(line2))
                 return GeometryPosition.Parallel;
 
-            insPt = line1.GetPlaneInsPoint(line2, isTouch);
+            insPt = line1.GetPlaneCrossingPoint(line2, isTouch);
 
             return isTouch ? GeometryPosition.Cross : GeometryPosition.Other;
         }
@@ -99,8 +99,6 @@ namespace KeLi.Common.Revit.Relation
 
             if (line2 == null)
                 throw new ArgumentNullException(nameof(line2));
-
-            insPt = null;
 
             throw new NotImplementedException();
         }
@@ -208,7 +206,7 @@ namespace KeLi.Common.Revit.Relation
         /// <param name="line2"></param>
         /// <param name="isTouch"></param>
         /// <returns></returns>
-        public static XYZ GetPlaneInsPoint(this Line line1, Line line2, bool isTouch = true)
+        public static XYZ GetPlaneCrossingPoint(this Line line1, Line line2, bool isTouch = true)
         {
             if (line1 == null)
                 throw new ArgumentNullException(nameof(line1));
@@ -261,7 +259,7 @@ namespace KeLi.Common.Revit.Relation
             var flag3 = (result.X - x3) * (result.X - x4) <= 0;
             var flag4 = (result.Y - y3) * (result.Y - y4) <= 0;
 
-            // No touch or true cross returns the ins pt, otherwise returns null.
+            // No touch or true cross returns the intersection pt, otherwise returns null.
             return !isTouch || flag1 && flag2 && flag3 && flag4 ? result : null;
         }
 
@@ -272,7 +270,7 @@ namespace KeLi.Common.Revit.Relation
         /// <param name="lines"></param>
         /// <param name="isTouch"></param>
         /// <returns></returns>
-        public static List<XYZ> GetPlaneInsPointList(this Line line, List<Line> lines, bool isTouch = true)
+        public static List<XYZ> GetPlaneCrossingPointList(this Line line, List<Line> lines, bool isTouch = true)
         {
             if (line == null)
                 throw new ArgumentNullException(nameof(line));
@@ -282,7 +280,7 @@ namespace KeLi.Common.Revit.Relation
 
             var results = new List<XYZ>();
 
-            lines.ForEach(f => results.Add(line.GetPlaneInsPoint(f, isTouch)));
+            lines.ForEach(f => results.Add(line.GetPlaneCrossingPoint(f, isTouch)));
 
             return results.Where(w => w != null).ToList();
         }
@@ -294,7 +292,7 @@ namespace KeLi.Common.Revit.Relation
         /// <param name="line2"></param>
         /// <param name="isTouch"></param>
         /// <returns></returns>
-        public static XYZ GetSpaceInsPoint(this Line line1, Line line2, bool isTouch = true)
+        public static XYZ GetSpaceCrossingPoint(this Line line1, Line line2, bool isTouch = true)
         {
             if (line1 == null)
                 throw new ArgumentNullException(nameof(line1));
@@ -312,7 +310,7 @@ namespace KeLi.Common.Revit.Relation
         /// <param name="lines"></param>
         /// <param name="isTouch"></param>
         /// <returns></returns>
-        public static List<XYZ> GetSpaceInsPointList(this Line line, List<Line> lines, bool isTouch = true)
+        public static List<XYZ> GetSpaceCrossingPointList(this Line line, List<Line> lines, bool isTouch = true)
         {
             if (line == null)
                 throw new ArgumentNullException(nameof(line));
@@ -325,7 +323,7 @@ namespace KeLi.Common.Revit.Relation
             // Must be filter parallel lines.
             lines = lines.Where(w => !line.IsSpaceParallel(w)).ToList();
 
-            lines.ForEach(f => results.Add(line.GetSpaceInsPoint(f, isTouch)));
+            lines.ForEach(f => results.Add(line.GetSpaceCrossingPoint(f, isTouch)));
 
             return results.Where(w => w != null).ToList();
         }
