@@ -60,51 +60,67 @@ namespace KeLi.Common.Converter.Converter
     public static class MagicUtil
     {
         /// <summary>
-        /// Converts the value to enum value by display attribute.
+        /// Trys parse the value to enum value by display attribute.
         /// </summary>
         /// <param name="value"></param>
+        /// <param name="result"></param>
         /// <returns></returns>
-        public static Enum ToEnumByDisplayAttr(string value)
+        public static bool TryParseByDisplayAttr<T>(string value, out Enum result) where T : Enum
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
-            var descs = GetDisplayEnumDict(typeof(Enum));
+            var descs = GetDisplayEnumDict<T>();
 
-            return descs.ContainsKey(value) ? descs[value] : null;
+            if (descs.ContainsKey(value))
+            {
+                result = descs[value];
+
+                return true;
+            }
+
+            result = null;
+
+            return false;
         }
 
         /// <summary>
-        /// Converts the value to enum value by description attribute.
+        /// Trys parse the value to enum value by description attribute.
         /// </summary>
         /// <param name="value"></param>
+        /// <param name="result"></param>
         /// <returns></returns>
-        public static Enum ToEnumByDescAttr(string value)
+        public static bool TryParseByDescAttr<T>(string value, out Enum result) where T : Enum
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
-            var descs = GetDescriptionEnumDict(typeof(Enum));
+            var descs = GetDescriptionEnumDict<T>();
 
-            return descs.ContainsKey(value) ? descs[value] : null;
+            if (descs.ContainsKey(value))
+            {
+                result = descs[value];
+
+                return true;
+            }
+
+            result = null;
+
+            return false;
         }
 
         /// <summary>
         /// Gets a dictionary composed of display name and enum item value from enum type.
         /// </summary>
-        /// <param name="enumType"></param>
         /// <returns></returns>
-        public static Dictionary<string, Enum> GetDisplayEnumDict(Type enumType)
+        public static Dictionary<string, T> GetDisplayEnumDict<T>() where T : Enum
         {
-            if (enumType == null)
-                throw new ArgumentNullException(nameof(enumType));
+            var results = new Dictionary<string, T>();
+            var values = Enum.GetValues(typeof(T));
 
-            var results = new Dictionary<string, Enum>();
-            var values = Enum.GetValues(enumType);
-
-            foreach (Enum value in values)
+            foreach (T value in values)
             {
-                var member = enumType.GetMember(value.ToString()).FirstOrDefault();
+                var member = typeof(T).GetMember(value.ToString()).FirstOrDefault();
                 var atts = member.GetCustomAttributes(typeof(DisplayAttribute), false);
                 var name = (atts.FirstOrDefault() as DisplayAttribute)?.Name;
 
@@ -118,19 +134,15 @@ namespace KeLi.Common.Converter.Converter
         /// <summary>
         /// Gets a dictionary composed of description and enum item value from enum type.
         /// </summary>
-        /// <param name="enumType"></param>
         /// <returns></returns>
-        public static Dictionary<string, Enum> GetDescriptionEnumDict(Type enumType)
+        public static Dictionary<string, T> GetDescriptionEnumDict<T>() where T : Enum
         {
-            if (enumType == null)
-                throw new ArgumentNullException(nameof(enumType));
+            var results = new Dictionary<string, T>();
+            var values = Enum.GetValues(typeof(T));
 
-            var results = new Dictionary<string, Enum>();
-            var values = Enum.GetValues(enumType);
-
-            foreach (Enum value in values)
+            foreach (T value in values)
             {
-                var member = enumType.GetMember(value.ToString()).FirstOrDefault();
+                var member = typeof(T).GetMember(value.ToString()).FirstOrDefault();
                 var atts = member.GetCustomAttributes(typeof(DescriptionAttribute), false);
                 var name = (atts.FirstOrDefault() as DescriptionAttribute)?.Description;
 
