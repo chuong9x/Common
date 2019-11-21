@@ -55,9 +55,9 @@ using System.Linq;
 namespace KeLi.Common.Converter.Converter
 {
     /// <summary>
-    /// Magic Utility.
+    /// Enum Utility.
     /// </summary>
-    public static class MagicUtil
+    public static class EnumUtil
     {
         /// <summary>
         /// Trys parse the value to enum value by display attribute.
