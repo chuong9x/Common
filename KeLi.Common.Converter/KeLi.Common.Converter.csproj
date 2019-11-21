@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converter\ArrayConverter.cs" />
-    <Compile Include="Converter\MagicUtil.cs" />
+    <Compile Include="Converter\EnumUtil.cs" />
     <Compile Include="Serialization\BinaryRw.cs" />
     <Compile Include="Converter\CollectionConverter.cs" />
     <Compile Include="Serialization\JsonRw.cs" />
