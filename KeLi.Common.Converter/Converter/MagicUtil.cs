@@ -60,12 +60,45 @@ namespace KeLi.Common.Converter.Converter
     public static class MagicUtil
     {
         /// <summary>
+        /// Converts the value to enum value by display attribute.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Enum ToEnumByDisplayAttr(string value)
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            var descs = GetDisplayEnumDict(typeof(Enum));
+
+            return descs.ContainsKey(value) ? descs[value] : null;
+        }
+
+        /// <summary>
+        /// Converts the value to enum value by description attribute.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Enum ToEnumByDescAttr(string value)
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            var descs = GetDescriptionEnumDict(typeof(Enum));
+
+            return descs.ContainsKey(value) ? descs[value] : null;
+        }
+
+        /// <summary>
         /// Gets a dictionary composed of display name and enum item value from enum type.
         /// </summary>
         /// <param name="enumType"></param>
         /// <returns></returns>
-        public static Dictionary<string, Enum> GetDisplayNames(Type enumType)
+        public static Dictionary<string, Enum> GetDisplayEnumDict(Type enumType)
         {
+            if (enumType == null)
+                throw new ArgumentNullException(nameof(enumType));
+
             var results = new Dictionary<string, Enum>();
             var values = Enum.GetValues(enumType);
 
@@ -87,8 +120,11 @@ namespace KeLi.Common.Converter.Converter
         /// </summary>
         /// <param name="enumType"></param>
         /// <returns></returns>
-        public static Dictionary<string, Enum> GetDescriptionNames(Type enumType)
+        public static Dictionary<string, Enum> GetDescriptionEnumDict(Type enumType)
         {
+            if (enumType == null)
+                throw new ArgumentNullException(nameof(enumType));
+
             var results = new Dictionary<string, Enum>();
             var values = Enum.GetValues(enumType);
 
