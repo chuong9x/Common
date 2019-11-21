@@ -48,15 +48,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace KeLi.Common.Converter.Converter
 {
     /// <summary>
-    /// Useful Utility.
+    /// Magic Utility.
     /// </summary>
-    public static class UsefulUtil
+    public static class MagicUtil
     {
         /// <summary>
         /// Gets a dictionary composed of display name and enum item value from enum type.
@@ -73,6 +74,29 @@ namespace KeLi.Common.Converter.Converter
                 var member = enumType.GetMember(value.ToString()).FirstOrDefault();
                 var atts = member.GetCustomAttributes(typeof(DisplayAttribute), false);
                 var name = (atts.FirstOrDefault() as DisplayAttribute)?.Name;
+
+                if (name != null)
+                    results.Add(name, value);
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Gets a dictionary composed of description and enum item value from enum type.
+        /// </summary>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
+        public static Dictionary<string, Enum> GetDescriptionNames(Type enumType)
+        {
+            var results = new Dictionary<string, Enum>();
+            var values = Enum.GetValues(enumType);
+
+            foreach (Enum value in values)
+            {
+                var member = enumType.GetMember(value.ToString()).FirstOrDefault();
+                var atts = member.GetCustomAttributes(typeof(DescriptionAttribute), false);
+                var name = (atts.FirstOrDefault() as DescriptionAttribute)?.Description;
 
                 if (name != null)
                     results.Add(name, value);
