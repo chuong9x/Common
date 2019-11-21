@@ -65,23 +65,17 @@ namespace KeLi.Common.Converter.Converter
         /// <param name="value"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool TryParseByDisplayAttr<T>(string value, out Enum result) where T : Enum
+        public static bool TryParseByDisplayAttr<T>(string value, out T result) where T : Enum
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
             var descs = GetDisplayEnumDict<T>();
 
-            if (descs.ContainsKey(value))
-            {
-                result = descs[value];
+            if (!descs.TryGetValue(value, out result))
+                throw new InvalidEnumArgumentException();
 
-                return true;
-            }
-
-            result = null;
-
-            return false;
+            return true;
         }
 
         /// <summary>
@@ -90,23 +84,17 @@ namespace KeLi.Common.Converter.Converter
         /// <param name="value"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool TryParseByDescAttr<T>(string value, out Enum result) where T : Enum
+        public static bool TryParseByDescAttr<T>(string value, out T result) where T : Enum
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
             var descs = GetDescriptionEnumDict<T>();
 
-            if (descs.ContainsKey(value))
-            {
-                result = descs[value];
+            if (!descs.TryGetValue(value, out result))
+                throw new InvalidEnumArgumentException();
 
-                return true;
-            }
-
-            result = null;
-
-            return false;
+            return true;
         }
 
         /// <summary>
