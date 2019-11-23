@@ -47,7 +47,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -61,19 +60,18 @@ namespace KeLi.Common.Converter.Serialization
         /// <summary>
         /// Serializes the list.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="ts"></param>
         /// <param name="filePath"></param>
-        public static void Serialize<T>(this List<T> ts, FileInfo filePath)
+        /// <param name="obj"></param>
+        public static void Serialize(this FileInfo filePath, object obj)
         {
-            if (ts == null)
-                throw new ArgumentNullException(nameof(ts));
-
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
 
+            if (obj == null)
+                throw new ArgumentNullException(nameof(obj));
+
             using (var fs = new FileStream(filePath.FullName, FileMode.Create))
-                new BinaryFormatter().Serialize(fs, ts);
+                new BinaryFormatter().Serialize(fs, obj);
         }
 
         /// <summary>
@@ -82,13 +80,13 @@ namespace KeLi.Common.Converter.Serialization
         /// <typeparam name="T"></typeparam>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static List<T> Deserialize<T>(FileInfo filePath)
+        public static T Deserialize<T>(this FileInfo filePath) where T : class
         {
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
 
             using (var fs = new FileStream(filePath.FullName, FileMode.Open))
-                return (List<T>)new BinaryFormatter().Deserialize(fs);
+                return new BinaryFormatter().Deserialize(fs) as T;
         }
     }
 }

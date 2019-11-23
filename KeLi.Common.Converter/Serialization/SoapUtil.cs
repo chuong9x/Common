@@ -65,7 +65,7 @@ namespace KeLi.Common.Converter.Serialization
         /// <typeparam name="T"></typeparam>
         /// <param name="ts"></param>
         /// <param name="filePath"></param>
-        public static void Serialize<T>(this List<T> ts, FileInfo filePath)
+        public static void Serialize<T>(this FileInfo filePath, List<T> ts)
         {
             if (ts == null)
                 throw new ArgumentNullException(nameof(ts));
@@ -73,6 +73,26 @@ namespace KeLi.Common.Converter.Serialization
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
 
+            // Not support generic list, must convert to T type array.
+            using (var fs = new FileStream(filePath.FullName, FileMode.Create))
+                new SoapFormatter().Serialize(fs, ts.ToArray());
+        }
+
+        /// <summary>
+        ///  Serializes the list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ts"></param>
+        /// <param name="filePath"></param>
+        public static void Serialize<T>(this FileInfo filePath, T[] ts)
+        {
+            if (ts == null)
+                throw new ArgumentNullException(nameof(ts));
+
+            if (filePath == null)
+                throw new ArgumentNullException(nameof(filePath));
+
+            // Not support generic list, must convert to T type array.
             using (var fs = new FileStream(filePath.FullName, FileMode.Create))
                 new SoapFormatter().Serialize(fs, ts.ToArray());
         }

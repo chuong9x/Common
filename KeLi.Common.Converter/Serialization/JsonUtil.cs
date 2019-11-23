@@ -47,7 +47,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Web.Script.Serialization;
 
@@ -61,19 +60,18 @@ namespace KeLi.Common.Converter.Serialization
         /// <summary>
         /// Serializes the list.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="ts"></param>
         /// <param name="filePath"></param>
-        public static void Serialize<T>(this List<T> ts, FileInfo filePath)
+        /// <param name="obj"></param>
+        public static void Serialize(this FileInfo filePath, object obj)
         {
-            if (ts == null)
-                throw new ArgumentNullException(nameof(ts));
-
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
 
+            if (obj == null)
+                throw new ArgumentNullException(nameof(obj));
+
             using (var sw = new StreamWriter(filePath.FullName))
-                ts.ForEach(t => sw.WriteLine(new JavaScriptSerializer().Serialize(t)));
+                sw.Write(new JavaScriptSerializer().Serialize(obj));
         }
 
         /// <summary>
@@ -82,25 +80,13 @@ namespace KeLi.Common.Converter.Serialization
         /// <typeparam name="T"></typeparam>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static List<T> Deserialize<T>(FileInfo filePath)
+        public static T Deserialize<T>(this FileInfo filePath) where T : class
         {
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
 
-            var results = new List<T>();
-
             using (var sr = new StreamReader(filePath.FullName))
-            {
-                while (!sr.EndOfStream)
-                {
-                    var line = sr.ReadLine();
-
-                    if (line != null)
-                        results.Add(new JavaScriptSerializer().Deserialize<T>(line));
-                }
-            }
-
-            return results;
+                return new JavaScriptSerializer().Deserialize<T>(sr.ReadToEnd());
         }
     }
 }
