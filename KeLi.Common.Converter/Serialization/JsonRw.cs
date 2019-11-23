@@ -64,7 +64,7 @@ namespace KeLi.Common.Converter.Serialization
         /// <typeparam name="T"></typeparam>
         /// <param name="ts"></param>
         /// <param name="filePath"></param>
-        public static void Serialize<T>(this List<T> ts, string filePath)
+        public static void Serialize<T>(this List<T> ts, FileInfo filePath)
         {
             if (ts == null)
                 throw new ArgumentNullException(nameof(ts));
@@ -72,7 +72,7 @@ namespace KeLi.Common.Converter.Serialization
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
 
-            using (var sw = new StreamWriter(filePath))
+            using (var sw = new StreamWriter(filePath.FullName))
                 ts.ForEach(t => sw.WriteLine(new JavaScriptSerializer().Serialize(t)));
         }
 
@@ -82,14 +82,14 @@ namespace KeLi.Common.Converter.Serialization
         /// <typeparam name="T"></typeparam>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static List<T> Deserialize<T>(string filePath)
+        public static List<T> Deserialize<T>(FileInfo filePath)
         {
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
 
             var results = new List<T>();
 
-            using (var sr = new StreamReader(filePath))
+            using (var sr = new StreamReader(filePath.FullName))
             {
                 while (!sr.EndOfStream)
                 {

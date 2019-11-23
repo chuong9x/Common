@@ -111,12 +111,12 @@ namespace KeLi.Common.Drive.Pdf
         /// </summary>
         /// <param name="pdfPath"></param>
         /// <returns></returns>
-        public static Size GetPdfSize(this string pdfPath)
+        public static Size GetPdfSize(this FileInfo pdfPath)
         {
             if (pdfPath == null)
                 throw new ArgumentNullException(nameof(pdfPath));
 
-            var reader = new PdfReader(pdfPath);
+            var reader = new PdfReader(pdfPath.FullName);
             var width = reader.GetPageSizeWithRotation(1).Width;
             var height = reader.GetPageSizeWithRotation(1).Height;
 
@@ -129,40 +129,41 @@ namespace KeLi.Common.Drive.Pdf
         /// Splits the pdf file to the multi pdf files.
         /// </summary>
         /// <param name="sourcePdf"></param>
-        /// <param name="targetPdfs"></param>
-        public static void SplitedPdfs(string sourcePdf, out List<string> targetPdfs)
+        public static List<FileInfo> SplitedPdfs(FileInfo sourcePdf)
         {
             if (sourcePdf == null)
                 throw new ArgumentNullException(nameof(sourcePdf));
 
-            targetPdfs = new List<string>();
-
-            var reader = new PdfReader(sourcePdf);
+            var results = new List<FileInfo>();
+            var reader = new PdfReader(sourcePdf.FullName);
             var titled = GetPageMark(reader);
 
             if (reader.NumberOfPages == 1)
             {
-                targetPdfs = new List<string> { sourcePdf };
+                results = new List<FileInfo> { sourcePdf };
                 reader.Close();
-                return;
+
+                return results;
             }
 
             for (var i = 1; i <= reader.NumberOfPages; i++)
             {
-                var targetPath = Path.GetDirectoryName(sourcePdf);
-                var targetName = Path.GetFileNameWithoutExtension(sourcePdf);
+                var targetPath = Path.GetDirectoryName(sourcePdf.FullName);
+                var targetName = Path.GetFileNameWithoutExtension(sourcePdf.FullName);
 
                 if (titled.ContainsKey(i))
-                    targetName += "_" + titled[i] + Path.GetExtension(sourcePdf);
+                    targetName += "_" + titled[i] + Path.GetExtension(sourcePdf.FullName);
                 else
-                    targetName += "_" + i + Path.GetExtension(sourcePdf);
+                    targetName += "_" + i + Path.GetExtension(sourcePdf.FullName);
 
-                var targetPdf = Path.Combine(targetPath, targetName);
+                var targetPdf = new FileInfo(Path.Combine(targetPath, targetName));
 
                 CopyPdf(sourcePdf, targetPdf, i, i);
-                targetPdfs.Add(targetPdf);
+                results.Add(targetPdf);
             }
             reader.Close();
+
+            return results;
         }
 
         /// <summary>
@@ -172,7 +173,7 @@ namespace KeLi.Common.Drive.Pdf
         /// <param name="targetPdf"></param>
         /// <param name="startPage"></param>
         /// <param name="endPage"></param>
-        public static void CopyPdf(string sourcePdf, string targetPdf, int startPage, int endPage)
+        public static void CopyPdf(FileInfo sourcePdf, FileInfo targetPdf, int startPage, int endPage)
         {
             if (sourcePdf == null)
                 throw new ArgumentNullException(nameof(sourcePdf));
@@ -180,9 +181,9 @@ namespace KeLi.Common.Drive.Pdf
             if (targetPdf == null)
                 throw new ArgumentNullException(nameof(targetPdf));
 
-            var reader = new PdfReader(sourcePdf);
+            var reader = new PdfReader(sourcePdf.FullName);
             var doc = new Document(reader.GetPageSizeWithRotation(startPage));
-            var writer = PdfWriter.GetInstance(doc, new FileStream(targetPdf, FileMode.Create));
+            var writer = PdfWriter.GetInstance(doc, new FileStream(targetPdf.FullName, FileMode.Create));
 
             doc.Open();
 
@@ -228,7 +229,7 @@ namespace KeLi.Common.Drive.Pdf
         /// <param name="targetPdf"></param>
         /// <param name="startPage"></param>
         /// <param name="endPage"></param>
-        public static void ExtractPdf(string sourcePdf, string targetPdf, int startPage, int endPage)
+        public static void ExtractPdf(FileInfo sourcePdf, FileInfo targetPdf, int startPage, int endPage)
         {
             if (sourcePdf == null)
                 throw new ArgumentNullException(nameof(sourcePdf));
@@ -236,9 +237,9 @@ namespace KeLi.Common.Drive.Pdf
             if (targetPdf == null)
                 throw new ArgumentNullException(nameof(targetPdf));
 
-            var reader = new PdfReader(sourcePdf);
+            var reader = new PdfReader(sourcePdf.FullName);
             var doc = new Document(reader.GetPageSizeWithRotation(startPage));
-            var copy = new PdfCopy(doc, new FileStream(targetPdf, FileMode.Create));
+            var copy = new PdfCopy(doc, new FileStream(targetPdf.FullName, FileMode.Create));
 
             doc.Open();
 
@@ -259,7 +260,7 @@ namespace KeLi.Common.Drive.Pdf
         /// <param name="sourcePdf"></param>
         /// <param name="targetPdf"></param>
         /// <param name="extractPages"></param>
-        public static void ExtractPdf(string sourcePdf, string targetPdf, List<int> extractPages)
+        public static void ExtractPdf(FileInfo sourcePdf, FileInfo targetPdf, List<int> extractPages)
         {
             if (sourcePdf == null)
                 throw new ArgumentNullException(nameof(sourcePdf));
@@ -270,9 +271,9 @@ namespace KeLi.Common.Drive.Pdf
             if (extractPages == null)
                 throw new ArgumentNullException(nameof(extractPages));
 
-            var reader = new PdfReader(sourcePdf);
+            var reader = new PdfReader(sourcePdf.FullName);
             var doc = new Document(reader.GetPageSizeWithRotation(extractPages[0]));
-            var copy = new PdfCopy(doc, new FileStream(targetPdf, FileMode.Create));
+            var copy = new PdfCopy(doc, new FileStream(targetPdf.FullName, FileMode.Create));
 
             doc.Open();
 
