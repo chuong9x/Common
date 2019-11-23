@@ -1,7 +1,7 @@
 ﻿/*
  * MIT License
  *
- * Copyright(c) 2019 kelicto
+ * Copyright(c) 2019 KeLi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@
      |  | C:\>FILE -INFO                                     |  |  |     | -==----'|      |
      |  |                                                    |  |  |     |         |      |
      |  |                                                    |  |  |/----|`---=    |      |
-     |  |              Author: kelicto                       |  |  |     |         |      |
+     |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
      |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
@@ -48,9 +48,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI.Selection;
 using KeLi.Common.Revit.Widget;
