@@ -65,7 +65,7 @@ namespace KeLi.Common.Converter.Serialization
         /// <typeparam name="T"></typeparam>
         /// <param name="ts"></param>
         /// <param name="filePath"></param>
-        public static void Serialize<T>(this FileInfo filePath, List<T> ts)
+        public static void Serialize<T>(FileInfo filePath, List<T> ts)
         {
             if (ts == null)
                 throw new ArgumentNullException(nameof(ts));
@@ -84,7 +84,7 @@ namespace KeLi.Common.Converter.Serialization
         /// <typeparam name="T"></typeparam>
         /// <param name="ts"></param>
         /// <param name="filePath"></param>
-        public static void Serialize<T>(this FileInfo filePath, T[] ts)
+        public static void Serialize<T>(FileInfo filePath, T[] ts)
         {
             if (ts == null)
                 throw new ArgumentNullException(nameof(ts));

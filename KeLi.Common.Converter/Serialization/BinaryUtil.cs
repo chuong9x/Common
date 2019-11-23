@@ -62,7 +62,7 @@ namespace KeLi.Common.Converter.Serialization
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="obj"></param>
-        public static void Serialize(this FileInfo filePath, object obj)
+        public static void Serialize(FileInfo filePath, object obj)
         {
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
@@ -80,7 +80,7 @@ namespace KeLi.Common.Converter.Serialization
         /// <typeparam name="T"></typeparam>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static T Deserialize<T>(this FileInfo filePath) where T : class
+        public static T Deserialize<T>(FileInfo filePath) where T : class
         {
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
