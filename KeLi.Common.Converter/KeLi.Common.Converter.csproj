@@ -48,12 +48,12 @@
   <ItemGroup>
     <Compile Include="Converter\ArrayConverter.cs" />
     <Compile Include="Converter\EnumUtil.cs" />
-    <Compile Include="Serialization\BinaryRw.cs" />
+    <Compile Include="Serialization\BinaryUtil.cs" />
     <Compile Include="Converter\CollectionConverter.cs" />
-    <Compile Include="Serialization\JsonRw.cs" />
+    <Compile Include="Serialization\JsonUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serialization\SoapRw.cs" />
-    <Compile Include="Serialization\XmlRw.cs" />
+    <Compile Include="Serialization\SoapUtil.cs" />
+    <Compile Include="Serialization\XmlUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

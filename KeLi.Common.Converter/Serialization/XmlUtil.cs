@@ -56,7 +56,7 @@ namespace KeLi.Common.Converter.Serialization
     /// <summary>
     /// A xml data serialization.
     /// </summary>
-    public static class XmlRw
+    public static class XmlUtil
     {
         /// <summary>
         /// Serializes the list.

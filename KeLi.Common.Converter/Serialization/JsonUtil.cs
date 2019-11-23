@@ -49,18 +49,17 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Soap;
+using System.Web.Script.Serialization;
 
 namespace KeLi.Common.Converter.Serialization
 {
     /// <summary>
-    /// A soap data serialization.
+    /// A json data serialization.
     /// </summary>
-    public static class SoapRw
+    public static class JsonUtil
     {
         /// <summary>
-        ///  Serializes the list.
+        /// Serializes the list.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="ts"></param>
@@ -73,8 +72,8 @@ namespace KeLi.Common.Converter.Serialization
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
 
-            using (var fs = new FileStream(filePath.FullName, FileMode.Create))
-                new SoapFormatter().Serialize(fs, ts.ToArray());
+            using (var sw = new StreamWriter(filePath.FullName))
+                ts.ForEach(t => sw.WriteLine(new JavaScriptSerializer().Serialize(t)));
         }
 
         /// <summary>
@@ -88,8 +87,20 @@ namespace KeLi.Common.Converter.Serialization
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
 
-            using (var fs = new FileStream(filePath.FullName, FileMode.Open))
-                return ((T[])new SoapFormatter().Deserialize(fs)).ToList();
+            var results = new List<T>();
+
+            using (var sr = new StreamReader(filePath.FullName))
+            {
+                while (!sr.EndOfStream)
+                {
+                    var line = sr.ReadLine();
+
+                    if (line != null)
+                        results.Add(new JavaScriptSerializer().Deserialize<T>(line));
+                }
+            }
+
+            return results;
         }
     }
 }

@@ -49,17 +49,18 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Linq;
+using System.Runtime.Serialization.Formatters.Soap;
 
 namespace KeLi.Common.Converter.Serialization
 {
     /// <summary>
-    /// A binary data serialization.
+    /// A soap data serialization.
     /// </summary>
-    public static class BinaryRw
+    public static class SoapUtil
     {
         /// <summary>
-        /// Serializes the list.
+        ///  Serializes the list.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="ts"></param>
@@ -73,7 +74,7 @@ namespace KeLi.Common.Converter.Serialization
                 throw new ArgumentNullException(nameof(filePath));
 
             using (var fs = new FileStream(filePath.FullName, FileMode.Create))
-                new BinaryFormatter().Serialize(fs, ts);
+                new SoapFormatter().Serialize(fs, ts.ToArray());
         }
 
         /// <summary>
@@ -88,7 +89,7 @@ namespace KeLi.Common.Converter.Serialization
                 throw new ArgumentNullException(nameof(filePath));
 
             using (var fs = new FileStream(filePath.FullName, FileMode.Open))
-                return (List<T>)new BinaryFormatter().Deserialize(fs);
+                return ((T[])new SoapFormatter().Deserialize(fs)).ToList();
         }
     }
 }

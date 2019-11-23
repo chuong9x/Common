@@ -49,14 +49,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Web.Script.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace KeLi.Common.Converter.Serialization
 {
     /// <summary>
-    /// A json data serialization.
+    /// A binary data serialization.
     /// </summary>
-    public static class JsonRw
+    public static class BinaryUtil
     {
         /// <summary>
         /// Serializes the list.
@@ -72,8 +72,8 @@ namespace KeLi.Common.Converter.Serialization
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
 
-            using (var sw = new StreamWriter(filePath.FullName))
-                ts.ForEach(t => sw.WriteLine(new JavaScriptSerializer().Serialize(t)));
+            using (var fs = new FileStream(filePath.FullName, FileMode.Create))
+                new BinaryFormatter().Serialize(fs, ts);
         }
 
         /// <summary>
@@ -87,20 +87,8 @@ namespace KeLi.Common.Converter.Serialization
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
 
-            var results = new List<T>();
-
-            using (var sr = new StreamReader(filePath.FullName))
-            {
-                while (!sr.EndOfStream)
-                {
-                    var line = sr.ReadLine();
-
-                    if (line != null)
-                        results.Add(new JavaScriptSerializer().Deserialize<T>(line));
-                }
-            }
-
-            return results;
+            using (var fs = new FileStream(filePath.FullName, FileMode.Open))
+                return (List<T>)new BinaryFormatter().Deserialize(fs);
         }
     }
 }
