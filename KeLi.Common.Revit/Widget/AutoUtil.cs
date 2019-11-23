@@ -79,5 +79,25 @@ namespace KeLi.Common.Revit.Widget
                     trans.RollBack();
             }
         }
+
+        /// <summary>
+        /// To repeat call command.
+        /// </summary>
+        /// <param name="act"></param>
+        /// <returns></returns>
+        public static bool RepeatCommand(this Action act)
+        {
+            try
+            {
+                act.Invoke();
+                RepeatCommand(act);
+            }
+            catch (OperationCanceledException)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

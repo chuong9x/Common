@@ -276,5 +276,25 @@ namespace KeLi.Common.Revit.Widget
 
             return new List<XYZ> { p1, p2, p3, p4, p5, p6, p7, p8 };
         }
+
+        /// <summary>
+        /// Gets the box's length on y axis dreiction.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <returns></returns>
+        public static double GetBoxLength(this BoundingBoxXYZ box)
+        {
+            return box.Max.Y - box.Min.Y;
+        }
+
+        /// <summary>
+        /// Gets the box's width on x axis direction.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <returns></returns>
+        public static double GetBoxWidth(this BoundingBoxXYZ box)
+        {
+            return box.Max.X - box.Min.X;
+        }
     }
 }
