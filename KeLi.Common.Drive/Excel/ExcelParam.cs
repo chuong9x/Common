@@ -47,6 +47,7 @@
 */
 
 using System;
+using System.IO;
 
 namespace KeLi.Common.Drive.Excel
 {
@@ -65,7 +66,7 @@ namespace KeLi.Common.Drive.Excel
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="templatePath"></param>
-        public ExcelParam(string filePath, string templatePath)
+        public ExcelParam(FileInfo filePath, FileInfo templatePath)
         {
             FilePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
             TemplatePath = templatePath ?? throw new ArgumentNullException(nameof(templatePath));
@@ -77,12 +78,12 @@ namespace KeLi.Common.Drive.Excel
         /// <summary>
         /// The template path.
         /// </summary>
-        public string TemplatePath { get; set; }
+        public FileInfo TemplatePath { get; set; }
 
         /// <summary>
         /// The file path.
         /// </summary>
-        public string FilePath { get; set; }
+        public FileInfo FilePath { get; set; }
 
         /// <summary>
         /// The sheet name.
