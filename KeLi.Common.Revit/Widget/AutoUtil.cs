@@ -49,6 +49,7 @@
 using Autodesk.Revit.DB;
 using System;
 using System.Diagnostics;
+using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledException;
 
 namespace KeLi.Common.Revit.Widget
 {
