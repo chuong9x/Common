@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UIFrameworkServices">
       <HintPath>..\Libs\Revit.API.2018\UIFrameworkServices.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
