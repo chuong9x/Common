@@ -47,14 +47,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converter\ArrayConverter.cs" />
-    <Compile Include="Converter\EnumUtil.cs" />
-    <Compile Include="Serialization\BinaryUtil.cs" />
-    <Compile Include="Converter\CollectionConverter.cs" />
-    <Compile Include="Serialization\JsonUtil.cs" />
+    <Compile Include="Collections\ArrayConverter.cs" />
+    <Compile Include="Collections\EnumUtil.cs" />
+    <Compile Include="Serializations\BinaryUtil.cs" />
+    <Compile Include="Collections\CollectionConverter.cs" />
+    <Compile Include="Serializations\JsonUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serialization\SoapUtil.cs" />
-    <Compile Include="Serialization\XmlUtil.cs" />
+    <Compile Include="Serializations\SoapUtil.cs" />
+    <Compile Include="Serializations\XmlUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
