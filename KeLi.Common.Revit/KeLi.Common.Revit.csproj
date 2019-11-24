@@ -90,7 +90,6 @@
     </Compile>
     <Compile Include="Widgets\ButtonInfo.cs" />
     <Compile Include="Widgets\CalcType.cs" />
-    <Compile Include="Widgets\ConnectorUtil.cs" />
     <Compile Include="Widgets\KeyCodeEnum.cs" />
     <Compile Include="Widgets\MeshUtil.cs" />
     <Compile Include="Widgets\FilterAssist.cs" />
