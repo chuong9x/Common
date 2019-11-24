@@ -36,16 +36,20 @@
   <ItemGroup>
     <Reference Include="EPPlus">
       <HintPath>..\Libs\EPPlus.4.1\EPPlus.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="itextsharp">
       <HintPath>..\Libs\itextsharp.4.1.6\itextsharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\Newtonsoft.Json.10\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="O2S.Components.PDFRender4NET">
       <HintPath>..\Libs\O2S.Components.PDFRender4NET.2.0\O2S.Components.PDFRender4NET.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -73,6 +77,7 @@
     <ProjectReference Include="..\KeLi.Common.Tool\KeLi.Common.Tool.csproj">
       <Project>{349679b3-4bc9-45a0-94e8-06794ed770d1}</Project>
       <Name>KeLi.Common.Tool</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
