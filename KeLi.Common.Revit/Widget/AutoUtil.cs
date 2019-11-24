@@ -46,9 +46,10 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using Autodesk.Revit.DB;
 using System;
+using Autodesk.Revit.DB;
 using System.Diagnostics;
+using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledException;
 
 namespace KeLi.Common.Revit.Widget
 {
