@@ -49,10 +49,10 @@
   <ItemGroup>
     <Compile Include="Collections\ArrayConverter.cs" />
     <Compile Include="Collections\EnumUtil.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serializations\BinaryUtil.cs" />
     <Compile Include="Collections\CollectionConverter.cs" />
     <Compile Include="Serializations\JsonUtil.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serializations\SoapUtil.cs" />
     <Compile Include="Serializations\XmlUtil.cs" />
   </ItemGroup>

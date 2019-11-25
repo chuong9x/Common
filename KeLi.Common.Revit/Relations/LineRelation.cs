@@ -63,8 +63,9 @@ namespace KeLi.Common.Revit.Relations
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
+        /// <param name="tolerance"></param>
         /// <returns></returns>
-        public static bool IsSpaceVertical(this Line line1, Line line2)
+        public static bool IsSpaceVertical(this Line line1, Line line2, double tolerance = 2 * 10e-3)
         {
             if (line1 == null)
                 throw new ArgumentNullException(nameof(line1));
@@ -72,7 +73,7 @@ namespace KeLi.Common.Revit.Relations
             if (line2 == null)
                 throw new ArgumentNullException(nameof(line2));
 
-            return Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI / 2) < 2 * 10e-3;
+            return Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI / 2) < tolerance;
         }
 
         /// <summary>
@@ -80,8 +81,9 @@ namespace KeLi.Common.Revit.Relations
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
+        /// <param name="tolerance"></param>
         /// <returns></returns>
-        public static bool IsSpaceParallel(this Line line1, Line line2)
+        public static bool IsSpaceParallel(this Line line1, Line line2, double tolerance = 2 * 10e-3)
         {
             if (line1 == null)
                 throw new ArgumentNullException(nameof(line1));
@@ -89,10 +91,10 @@ namespace KeLi.Common.Revit.Relations
             if (line2 == null)
                 throw new ArgumentNullException(nameof(line2));
 
-            if (Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI) < 2 * 10e-3)
+            if (Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI) < tolerance)
                 return true;
 
-            return line1.Direction.AngleTo(line2.Direction) < 2 * 10e-3;
+            return line1.Direction.AngleTo(line2.Direction) < tolerance;
         }
 
         /// <summary>
@@ -108,7 +110,7 @@ namespace KeLi.Common.Revit.Relations
             var p1 = line.GetEndPoint(0);
             var p2 = line.GetEndPoint(1);
 
-            return Line.CreateBound(new XYZ(p1.X, p1.Y, 0), new XYZ(p2.X, p2.Y, 0));
+            return Line.CreateBound(new XYZ(p1.X, p1.Y, p1.Z), new XYZ(p2.X, p2.Y, p1.Z));
         }
 
         /// <summary>
@@ -116,8 +118,9 @@ namespace KeLi.Common.Revit.Relations
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
+        /// <param name="tolerance"></param>
         /// <returns></returns>
-        public static bool IsPlaneParallel(this Line line1, Line line2)
+        public static bool IsPlaneParallel(this Line line1, Line line2, double tolerance = 2 * 10e-3)
         {
             if (line1 == null)
                 throw new ArgumentNullException(nameof(line1));
@@ -128,10 +131,10 @@ namespace KeLi.Common.Revit.Relations
             line1 = line1.ToPlaneLine();
             line2 = line2.ToPlaneLine();
 
-            if (Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI) < 2 * 10e-3)
+            if (Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI) < tolerance)
                 return true;
 
-            return line1.Direction.AngleTo(line2.Direction) % Math.PI < 2 * 10e-3;
+            return line1.Direction.AngleTo(line2.Direction) % Math.PI < tolerance;
         }
 
         /// <summary>
@@ -139,8 +142,9 @@ namespace KeLi.Common.Revit.Relations
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
+        /// <param name="tolerance"></param>
         /// <returns></returns>
-        public static bool IsPlaneVertical(this Line line1, Line line2)
+        public static bool IsPlaneVertical(this Line line1, Line line2, double tolerance = 2 * 10e-3)
         {
             if (line1 == null)
                 throw new ArgumentNullException(nameof(line1));
@@ -151,7 +155,7 @@ namespace KeLi.Common.Revit.Relations
             line1 = line1.ToPlaneLine();
             line2 = line2.ToPlaneLine();
 
-            return Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI / 2) < 2 * 10e-3;
+            return Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI / 2) < tolerance;
         }
 
         /// <summary>
@@ -160,8 +164,9 @@ namespace KeLi.Common.Revit.Relations
         /// <param name="line1"></param>
         /// <param name="line2"></param>
         /// <param name="isTouch"></param>
+        /// <param name="tolerance"></param>
         /// <returns></returns>
-        public static XYZ GetPlaneCrossingPoint(this Line line1, Line line2, bool isTouch = true)
+        public static XYZ GetPlaneCrossingPoint(this Line line1, Line line2, bool isTouch = true, double tolerance = 2 * 10e-3)
         {
             if (line1 == null)
                 throw new ArgumentNullException(nameof(line1));
@@ -185,12 +190,12 @@ namespace KeLi.Common.Revit.Relations
             var y3 = pt3.Y;
             var x4 = pt4.X;
             var y4 = pt4.Y;
-            var f1 = Math.Abs(line1.Direction.AngleTo(XYZ.BasisX) - Math.PI / 2) < 2 * 10e-3;
-            var f2 = Math.Abs(line2.Direction.AngleTo(XYZ.BasisX) - Math.PI / 2) < 2 * 10e-3;
+            var f1 = Math.Abs(line1.Direction.AngleTo(XYZ.BasisX) - Math.PI / 2) < tolerance;
+            var f2 = Math.Abs(line2.Direction.AngleTo(XYZ.BasisX) - Math.PI / 2) < tolerance;
 
             // Must quadrature.
             if (line1.IsPlaneVertical(line2) && f1 || f2)
-                result = f1 ? new XYZ(x1, y3, 0) : new XYZ(x3, y1, 0);
+                result = f1 ? new XYZ(x1, y3, pt1.Z) : new XYZ(x3, y1, pt1.Z);
             else
             {
                 var dx12 = x2 - x1;
@@ -205,7 +210,7 @@ namespace KeLi.Common.Revit.Relations
                 var k4 = dx12 * dy34 - dy21 * dx34;
 
                 // Equations of the state, by the formula to calculate the intersection.
-                result = new XYZ(k1 / k2, k3 / k4, 0);
+                result = new XYZ(k1 / k2, k3 / k4, pt1.Z);
             }
 
             // It be used to calc the result in line1 and line2.
@@ -236,49 +241,6 @@ namespace KeLi.Common.Revit.Relations
             var results = new List<XYZ>();
 
             lines.ForEach(f => results.Add(line.GetPlaneCrossingPoint(f, isTouch)));
-
-            return results.Where(w => w != null).ToList();
-        }
-
-        /// <summary>
-        /// Gets the intersection of the line line1 and the line line2 on space.
-        /// </summary>
-        /// <param name="line1"></param>
-        /// <param name="line2"></param>
-        /// <param name="isTouch"></param>
-        /// <returns></returns>
-        public static XYZ GetSpaceCrossingPoint(this Line line1, Line line2, bool isTouch = true)
-        {
-            if (line1 == null)
-                throw new ArgumentNullException(nameof(line1));
-
-            if (line2 == null)
-                throw new ArgumentNullException(nameof(line2));
-
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Gets the intersections of the line and the lines on space.
-        /// </summary>
-        /// <param name="line"></param>
-        /// <param name="lines"></param>
-        /// <param name="isTouch"></param>
-        /// <returns></returns>
-        public static List<XYZ> GetSpaceCrossingPointList(this Line line, List<Line> lines, bool isTouch = true)
-        {
-            if (line == null)
-                throw new ArgumentNullException(nameof(line));
-
-            if (lines == null)
-                throw new ArgumentNullException(nameof(lines));
-
-            var results = new List<XYZ>();
-
-            // Must be filter parallel lines.
-            lines = lines.Where(w => !line.IsSpaceParallel(w)).ToList();
-
-            lines.ForEach(f => results.Add(line.GetSpaceCrossingPoint(f, isTouch)));
 
             return results.Where(w => w != null).ToList();
         }
