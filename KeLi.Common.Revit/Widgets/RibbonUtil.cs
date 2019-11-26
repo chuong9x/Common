@@ -48,8 +48,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Media;
 using Autodesk.Revit.UI;
+using ArgumentException = System.ArgumentException;
+using ArgumentNullException = System.ArgumentNullException;
 
 namespace KeLi.Common.Revit.Widgets
 {
@@ -186,10 +189,60 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static PushButtonData CreatePushButtonData<T>(string text, ImageSource image, bool isAvailability = false)
         {
+            if (string.IsNullOrEmpty(text))
+                throw new ArgumentNullException(nameof(text));
+
+            if (image == null)
+                throw new ArgumentNullException(nameof(image));
+
             return new PushButtonData(typeof(T).Name, text, typeof(T).Assembly.Location, typeof(T).FullName)
             {
                 LargeImage = image,
                 AvailabilityClassName = isAvailability ? typeof(T).FullName : null
+            };
+        }
+
+        /// <summary>
+        /// Creates a push button data.
+        /// </summary>
+        /// <returns></returns>
+        public static PushButtonData CreatePushButtonData(this IExternalCommand cmd, string text, ImageSource image, bool isAvailability = false)
+        {
+            if (string.IsNullOrEmpty(text))
+                throw new ArgumentNullException(nameof(text));
+
+            if (image == null)
+                throw new ArgumentNullException(nameof(image));
+
+            return new PushButtonData(cmd.GetType().Name, text, cmd.GetType().Assembly.Location, cmd.GetType().FullName)
+            {
+                LargeImage = image,
+                AvailabilityClassName = isAvailability ? cmd.GetType().FullName : null
+            };
+        }
+
+        /// <summary>
+        /// Creates a push button data.
+        /// </summary>
+        /// <returns></returns>
+        public static PushButtonData CreatePushButtonData(this Type type, string text, ImageSource image, bool isAvailability = false)
+        {
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+
+            if (type.GetInterfaces().Length == 0 || !type.GetInterfaces().Contains(typeof(IExternalCommand)))
+                throw new ArgumentException("Type error. The type isn't a valid command type!");
+
+            if (string.IsNullOrEmpty(text))
+                throw new ArgumentNullException(nameof(text));
+
+            if (image == null)
+                throw new ArgumentNullException(nameof(image));
+
+            return new PushButtonData(type.Name, text, type.Assembly.Location, type.FullName)
+            {
+                LargeImage = image,
+                AvailabilityClassName = isAvailability ? type.FullName : null
             };
         }
 
