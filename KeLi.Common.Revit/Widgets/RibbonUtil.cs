@@ -214,10 +214,12 @@ namespace KeLi.Common.Revit.Widgets
             if (image == null)
                 throw new ArgumentNullException(nameof(image));
 
-            return new PushButtonData(cmd.GetType().Name, text, cmd.GetType().Assembly.Location, cmd.GetType().FullName)
+            var type = cmd.GetType();
+
+            return new PushButtonData(type.Name, text, type.Assembly.Location, type.FullName)
             {
                 LargeImage = image,
-                AvailabilityClassName = isAvailability ? cmd.GetType().FullName : null
+                AvailabilityClassName = isAvailability ? type.FullName : null
             };
         }
 
