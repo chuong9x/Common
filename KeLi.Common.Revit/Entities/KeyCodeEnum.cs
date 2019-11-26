@@ -46,41 +46,21 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System.Windows.Media;
-using Autodesk.Revit.UI;
-
-namespace KeLi.Common.Revit.Widgets
+namespace KeLi.Common.Revit.Entities
 {
     /// <summary>
-    /// Button info.
+    /// Key code enum.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class ButtonInfo<T> : PushButtonData where T : IExternalCommand
+    public enum KeyCodeEnum
     {
         /// <summary>
-        /// Button info.
+        /// Left shift key code.
         /// </summary>
-        public ButtonInfo(string text, ImageSource image, bool isAvailability = false)
-            : base(typeof(T).Name, text, typeof(T).Assembly.Location, typeof(T).FullName)
-        {
-            LargeImage = image;
-
-            if (isAvailability)
-                AvailabilityClassName = typeof(T).FullName;
-        }
+        LeftShift = 160,
 
         /// <summary>
-        /// Copies the button info.
+        /// Right shift key code.
         /// </summary>
-        /// <returns></returns>
-        public PushButtonData Copy()
-        {
-            // Don't use clone method to do, I don't know why and using below code to do it.
-            return new PushButtonData(Name, Text, AssemblyName, ClassName)
-            {
-                AvailabilityClassName = AvailabilityClassName,
-                LargeImage = LargeImage
-            };
-        }
+        RightShift = 161
     }
 }

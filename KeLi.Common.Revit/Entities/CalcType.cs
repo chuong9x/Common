@@ -46,46 +46,26 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Architecture;
-using Autodesk.Revit.UI.Selection;
-
-namespace KeLi.Common.Revit.Widgets
+namespace KeLi.Common.Revit.Entities
 {
     /// <summary>
-    /// Room selection.
+    /// Calc type.
     /// </summary>
-    public class RoomSelection : ISelectionFilter
+    public enum CalcType
     {
         /// <summary>
-        /// Allows the element to be picked.
+        /// Base face to calc.
         /// </summary>
-        /// <param name="elm"></param>
-        /// <returns></returns>
-        public bool AllowElement(Element elm)
-        {
-            if (elm == null)
-                throw new ArgumentNullException(nameof(elm));
-
-            return elm is Room;
-        }
+        FaceNum,
 
         /// <summary>
-        /// Allows the element to be referenced.
+        /// Base point on face to calc.
         /// </summary>
-        /// <param name="reference"></param>
-        /// <param name="position"></param>
-        /// <returns></returns>
-        public bool AllowReference(Reference reference, XYZ position)
-        {
-            if (reference == null)
-                throw new ArgumentNullException(nameof(reference));
+        FacePointNum,
 
-            if (position == null)
-                throw new ArgumentNullException(nameof(position));
-
-            return false;
-        }
+        /// <summary>
+        /// Base point on solid to calc.
+        /// </summary>
+        SolidPointNum
     }
 }

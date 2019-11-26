@@ -88,9 +88,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Widgets\ButtonInfo.cs" />
-    <Compile Include="Widgets\CalcType.cs" />
-    <Compile Include="Widgets\KeyCodeEnum.cs" />
+    <Compile Include="Entities\CalcType.cs" />
+    <Compile Include="Entities\KeyCodeEnum.cs" />
     <Compile Include="Widgets\MeshUtil.cs" />
     <Compile Include="Widgets\FilterAssist.cs" />
     <Compile Include="Widgets\HookHandler.cs" />
@@ -105,7 +104,6 @@
     <Compile Include="Widgets\AreaUtil.cs" />
     <Compile Include="Widgets\BoxUtil.cs" />
     <Compile Include="Widgets\NumberUtil.cs" />
-    <Compile Include="Widgets\RoomSelection.cs" />
     <Compile Include="Widgets\AutoUtil.cs" />
     <Compile Include="Widgets\TypeConverter.cs" />
     <Compile Include="Widgets\VisabilityUtil.cs" />

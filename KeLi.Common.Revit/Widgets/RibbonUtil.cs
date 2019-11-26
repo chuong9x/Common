@@ -48,6 +48,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Windows.Media;
 using Autodesk.Revit.UI;
 
 namespace KeLi.Common.Revit.Widgets
@@ -79,30 +80,6 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Adds a button.
-        /// </summary>
-        /// <param name="pnl"></param>
-        /// <param name="info"></param>
-        /// <returns></returns>
-        public static PushButton AddButton<T>(this RibbonPanel pnl, ButtonInfo<T> info) where T : IExternalCommand
-        {
-            if (pnl == null)
-                throw new ArgumentNullException(nameof(pnl));
-
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-
-            if (!(pnl.AddItem(info.Copy()) is PushButton result))
-                throw new InvalidCastException();
-
-            result.ToolTip = info.ToolTip;
-            result.LongDescription = info.LongDescription;
-            result.LargeImage = info.LargeImage;
-
-            return result;
-        }
-
-        /// <summary>
         /// Adds a button set.
         /// </summary>
         /// <param name="pnl"></param>
@@ -124,7 +101,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Adds a push button.
+        /// Adds a pulldown button.
         /// </summary>
         /// <param name="pnl"></param>
         /// <param name="pbd"></param>
@@ -164,24 +141,74 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Adds a push button set.
+        /// Adds a split button.
         /// </summary>
         /// <param name="pnl"></param>
+        /// <param name="pbd"></param>
         /// <param name="pbds"></param>
-        public static List<PulldownButton> AddPushButtons(this RibbonPanel pnl, Dictionary<PulldownButtonData, List<PushButtonData>> pbds)
+        /// <returns></returns>
+        public static SplitButton AddPushButton(this RibbonPanel pnl, SplitButtonData pbd, List<PushButtonData> pbds)
         {
             if (pnl == null)
                 throw new ArgumentNullException(nameof(pnl));
 
+            if (pbd == null)
+                throw new ArgumentNullException(nameof(pbd));
+
             if (pbds == null)
                 throw new ArgumentNullException(nameof(pbds));
 
-            var results = new List<PulldownButton>();
+            if (!(pnl.AddItem(pbd) is SplitButton result))
+                throw new InvalidCastException();
 
-            foreach (var pbd in pbds)
-                results.Add(pnl.AddPushButton(pbd.Key, pbd.Value));
+            result.ToolTip = pbd.ToolTip;
+            result.LongDescription = pbd.LongDescription;
+            result.LargeImage = pbd.LargeImage;
 
-            return results;
+            foreach (var pbdl in pbds)
+            {
+                var btn = result.AddPushButton(pbdl);
+
+                if (btn == null)
+                    continue;
+
+                btn.ToolTip = pbdl.ToolTip;
+                btn.LongDescription = pbdl.LongDescription;
+                btn.LargeImage = pbdl.LargeImage;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a push button data.
+        /// </summary>
+        /// <returns></returns>
+        public static PushButtonData CreatePushButtonData<T>(string text, ImageSource image, bool isAvailability = false)
+        {
+            return new PushButtonData(typeof(T).Name, text, typeof(T).Assembly.Location, typeof(T).FullName)
+            {
+                LargeImage = image,
+                AvailabilityClassName = isAvailability ? typeof(T).FullName : null
+            };
+        }
+
+        /// <summary>
+        /// Creates a pulldown button data.
+        /// </summary>
+        /// <returns></returns>
+        public static PulldownButtonData CreatePulldownButtonData(string text, ImageSource image)
+        {
+            return new PulldownButtonData(text, text) { LargeImage = image };
+        }
+
+        /// <summary>
+        /// Creates a split button data.
+        /// </summary>
+        /// <returns></returns>
+        public static SplitButtonData CreateSplitButtonData(string text, ImageSource image)
+        {
+            return new SplitButtonData(text, text) { LargeImage = image };
         }
     }
 }
