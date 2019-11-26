@@ -187,7 +187,7 @@ namespace KeLi.Common.Revit.Widgets
         /// Creates a push button data.
         /// </summary>
         /// <returns></returns>
-        public static PushButtonData CreatePushButtonData<T>(string text, ImageSource image, bool isAvailability = false)
+        public static PushButtonData CreatePushButtonData<T>(string text, ImageSource image, bool isAvailable = false)
         {
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException(nameof(text));
@@ -198,7 +198,7 @@ namespace KeLi.Common.Revit.Widgets
             return new PushButtonData(typeof(T).Name, text, typeof(T).Assembly.Location, typeof(T).FullName)
             {
                 LargeImage = image,
-                AvailabilityClassName = isAvailability ? typeof(T).FullName : null
+                AvailabilityClassName = isAvailable ? typeof(T).FullName : null
             };
         }
 
@@ -206,7 +206,7 @@ namespace KeLi.Common.Revit.Widgets
         /// Creates a push button data.
         /// </summary>
         /// <returns></returns>
-        public static PushButtonData CreatePushButtonData(this IExternalCommand cmd, string text, ImageSource image, bool isAvailability = false)
+        public static PushButtonData CreatePushButtonData(this IExternalCommand cmd, string text, ImageSource image, bool isAvailable = false)
         {
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException(nameof(text));
@@ -219,7 +219,7 @@ namespace KeLi.Common.Revit.Widgets
             return new PushButtonData(type.Name, text, type.Assembly.Location, type.FullName)
             {
                 LargeImage = image,
-                AvailabilityClassName = isAvailability ? type.FullName : null
+                AvailabilityClassName = isAvailable ? type.FullName : null
             };
         }
 
@@ -227,7 +227,7 @@ namespace KeLi.Common.Revit.Widgets
         /// Creates a push button data.
         /// </summary>
         /// <returns></returns>
-        public static PushButtonData CreatePushButtonData(this Type type, string text, ImageSource image, bool isAvailability = false)
+        public static PushButtonData CreatePushButtonData(this Type type, string text, ImageSource image, bool isAvailable = false)
         {
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
@@ -244,7 +244,7 @@ namespace KeLi.Common.Revit.Widgets
             return new PushButtonData(type.Name, text, type.Assembly.Location, type.FullName)
             {
                 LargeImage = image,
-                AvailabilityClassName = isAvailability ? type.FullName : null
+                AvailabilityClassName = isAvailable ? type.FullName : null
             };
         }
 
