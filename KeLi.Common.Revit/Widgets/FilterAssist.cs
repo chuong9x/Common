@@ -64,8 +64,9 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="onlyCurrentView"></param>
+        /// <param name="onlyInstance"></param>
         /// <returns></returns>
-        public static List<Element> Checkout(this Document doc, bool onlyCurrentView = false)
+        public static List<Element> Checkout(this Document doc, bool onlyCurrentView = false, bool onlyInstance = true)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -74,8 +75,12 @@ namespace KeLi.Common.Revit.Widgets
                 : new FilteredElementCollector(doc);
             var logicCollector = new LogicalOrFilter(new ElementIsElementTypeFilter(false),
                 new ElementIsElementTypeFilter(true));
+            var results = baseCollector.WherePasses(logicCollector);
 
-            return baseCollector.WherePasses(logicCollector).ToList();
+            if (onlyInstance)
+                results = results.WhereElementIsNotElementType();
+
+            return results.ToList();
         }
 
         /// <summary>
@@ -83,16 +88,21 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="onlyCurrentView"></param>
+        /// <param name="onlyInstance"></param>
         /// <returns></returns>
-        public static List<T> GetTypeElements<T>(this Document doc, bool onlyCurrentView = false) where T : Element
+        public static List<T> GetTypeElements<T>(this Document doc, bool onlyCurrentView = false, bool onlyInstance = true) where T : Element
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
 
             var baseCollector = onlyCurrentView ? new FilteredElementCollector(doc, doc.ActiveView.Id)
                 : new FilteredElementCollector(doc);
+            var results = baseCollector.OfClass(typeof(T));
 
-            return baseCollector.OfClass(typeof(T)).Cast<T>().ToList();
+            if (onlyInstance)
+                results = results.WhereElementIsNotElementType();
+
+            return results.Cast<T>().ToList();
         }
 
         /// <summary>
@@ -101,16 +111,21 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="doc"></param>
         /// <param name="category"></param>
         /// <param name="onlyCurrentView"></param>
+        /// <param name="onlyInstance"></param>
         /// <returns></returns>
-        public static List<Element> GetCategoryElements(this Document doc, BuiltInCategory category, bool onlyCurrentView = false)
+        public static List<Element> GetCategoryElements(this Document doc, BuiltInCategory category, bool onlyCurrentView = false, bool onlyInstance = true)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
 
             var baseCollector = onlyCurrentView ? new FilteredElementCollector(doc, doc.ActiveView.Id)
                 : new FilteredElementCollector(doc);
+            var results = baseCollector.OfCategory(category);
 
-            return baseCollector.OfCategory(category).ToList();
+            if (onlyInstance)
+                results = results.WhereElementIsNotElementType();
+
+            return results.ToList();
         }
 
         /// <summary>
@@ -119,16 +134,21 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="doc"></param>
         /// <param name="category"></param>
         /// <param name="onlyCurrentView"></param>
+        /// <param name="onlyInstance"></param>
         /// <returns></returns>
-        public static List<T> GetTypeElements<T>(this Document doc, BuiltInCategory category, bool onlyCurrentView = false) where T : Element
+        public static List<T> GetTypeElements<T>(this Document doc, BuiltInCategory category, bool onlyCurrentView = false, bool onlyInstance = true) where T : Element
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
 
             var baseCollector = onlyCurrentView ? new FilteredElementCollector(doc, doc.ActiveView.Id)
                 : new FilteredElementCollector(doc);
+            var results = baseCollector.OfClass(typeof(T)).OfCategory(category);
 
-            return baseCollector.OfClass(typeof(T)).OfCategory(category).Cast<T>().ToList();
+            if (onlyInstance)
+                results = results.WhereElementIsNotElementType();
+
+            return results.Cast<T>().ToList();
         }
 
         /// <summary>
