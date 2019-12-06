@@ -237,7 +237,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="linkPaths"></param>
-        public static void AddCadLinks(this Document doc, List<string> linkPaths)
+        public static void AddCadLinkList(this Document doc, List<string> linkPaths)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -283,7 +283,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="linkPaths"></param>
-        public static void AddRevitLinks(this Document doc, List<string> linkPaths)
+        public static void AddRevitLinkList(this Document doc, List<string> linkPaths)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -332,7 +332,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="doc"></param>
         /// <param name="linkPaths"></param>
         /// <returns></returns>
-        public static void RemoveRevitLinks(this Document doc, List<string> linkPaths)
+        public static void RemoveRevitLinkList(this Document doc, List<string> linkPaths)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -348,7 +348,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="centralPath"></param>
         /// <param name="linkPaths"></param>
-        public static void SetRevitLinks(this string centralPath, List<string> linkPaths)
+        public static void SetRevitLinkList(this string centralPath, List<string> linkPaths)
         {
             if (centralPath == null)
                 throw new ArgumentNullException(nameof(centralPath));
@@ -393,7 +393,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="filePaths"></param>
-        public static void SetRevitLinks(this Document doc, List<string> filePaths)
+        public static void SetRevitLinkList(this Document doc, List<string> filePaths)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -424,7 +424,7 @@ namespace KeLi.Common.Revit.Widgets
                 throw new FileNotFoundException(filePath);
 
             // main model modifies repeatedly, so the performance is poor.
-            var type = doc.GetRevitLinks().FirstOrDefault(w => filePath.Contains(w.Name) || w.Name.Split('-').Length == 5);
+            var type = doc.GetRevitLinkList().FirstOrDefault(w => filePath.Contains(w.Name) || w.Name.Split('-').Length == 5);
 
             if (type == null)
                 return;
@@ -438,12 +438,12 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static List<RevitLinkType> GetRevitLinks(this Document doc)
+        public static List<RevitLinkType> GetRevitLinkList(this Document doc)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
 
-            return doc.GetTypeElements<RevitLinkType>();
+            return doc.GetTypeElementList<RevitLinkType>();
         }
 
         /// <summary>

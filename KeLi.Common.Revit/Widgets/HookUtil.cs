@@ -119,7 +119,8 @@ namespace KeLi.Common.Revit.Widgets
             using (var process = Process.GetCurrentProcess())
             using (var module = process.MainModule)
             {
-                HookId = SetWindowsHookEx(WhKeyboardLl, Handler, GetModuleHandle(module.ModuleName), 0);
+                if (module != null)
+                    HookId = SetWindowsHookEx(WhKeyboardLl, Handler, GetModuleHandle(module.ModuleName), 0);
             }
         }
 

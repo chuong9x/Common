@@ -88,7 +88,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="pnl"></param>
         /// <param name="pbds"></param>
         /// <returns></returns>
-        public static List<PushButton> AddButtons(this RibbonPanel pnl, List<PushButtonData> pbds)
+        public static List<PushButton> AddButtonList(this RibbonPanel pnl, List<PushButtonData> pbds)
         {
             if (pnl == null)
                 throw new ArgumentNullException(nameof(pnl));

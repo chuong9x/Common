@@ -116,7 +116,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="onlyCurrentView"></param>
         /// <param name="onlyInstance"></param>
         /// <returns></returns>
-        public static List<T> GetTypeElements<T>(this Document doc, bool onlyCurrentView = false, bool onlyInstance = true) where T : Element
+        public static List<T> GetTypeElementList<T>(this Document doc, bool onlyCurrentView = false, bool onlyInstance = true) where T : Element
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -138,7 +138,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="viewId"></param>
         /// <param name="onlyInstance"></param>
         /// <returns></returns>
-        public static List<T> GetTypeElements<T>(this Document doc, ElementId viewId, bool onlyInstance = true) where T : Element
+        public static List<T> GetTypeElementList<T>(this Document doc, ElementId viewId, bool onlyInstance = true) where T : Element
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -163,7 +163,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="onlyCurrentView"></param>
         /// <param name="onlyInstance"></param>
         /// <returns></returns>
-        public static List<Element> GetCategoryElements(this Document doc, BuiltInCategory category, bool onlyCurrentView = false, bool onlyInstance = true)
+        public static List<Element> GetCategoryElementList(this Document doc, BuiltInCategory category, bool onlyCurrentView = false, bool onlyInstance = true)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -186,7 +186,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="viewId"></param>
         /// <param name="onlyInstance"></param>
         /// <returns></returns>
-        public static List<Element> GetCategoryElements(this Document doc, BuiltInCategory category, ElementId viewId, bool onlyInstance = true)
+        public static List<Element> GetCategoryElementList(this Document doc, BuiltInCategory category, ElementId viewId, bool onlyInstance = true)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -211,7 +211,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="onlyCurrentView"></param>
         /// <param name="onlyInstance"></param>
         /// <returns></returns>
-        public static List<T> GetTypeElements<T>(this Document doc, BuiltInCategory category, bool onlyCurrentView = false, bool onlyInstance = true) where T : Element
+        public static List<T> GetTypeElementList<T>(this Document doc, BuiltInCategory category, bool onlyCurrentView = false, bool onlyInstance = true) where T : Element
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -234,7 +234,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="viewId"></param>
         /// <param name="onlyInstance"></param>
         /// <returns></returns>
-        public static List<T> GetTypeElements<T>(this Document doc, BuiltInCategory category, ElementId viewId, bool onlyInstance = true) where T : Element
+        public static List<T> GetTypeElementList<T>(this Document doc, BuiltInCategory category, ElementId viewId, bool onlyInstance = true) where T : Element
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -260,7 +260,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="type"></param>
         /// <param name="onlyCurrentView"></param>
         /// <returns></returns>
-        public static List<Element> GetElements(this Document doc, CalcType type, int maxNum, bool moreThan, bool onlyCurrentView = false)
+        public static List<Element> GetElementList(this Document doc, CalcType type, int maxNum, bool moreThan, bool onlyCurrentView = false)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -274,15 +274,15 @@ namespace KeLi.Common.Revit.Widgets
                 switch (type)
                 {
                     case CalcType.FaceNum:
-                        num = elm.GetFaces().Count;
+                        num = elm.GetFaceList().Count;
                         break;
 
                     case CalcType.FacePointNum:
-                        num = elm.GetFacePoints().Count;
+                        num = elm.GetFacePointList().Count;
                         break;
 
                     case CalcType.SolidPointNum:
-                        num = elm.GetSolidPoints().Count;
+                        num = elm.GetSolidPointList().Count;
                         break;
                 }
 
@@ -307,7 +307,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="type"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static List<Element> GetElements(this Document doc, CalcType type, int maxNum, bool moreThan, ElementId viewId)
+        public static List<Element> GetElementList(this Document doc, CalcType type, int maxNum, bool moreThan, ElementId viewId)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -324,15 +324,15 @@ namespace KeLi.Common.Revit.Widgets
                 switch (type)
                 {
                     case CalcType.FaceNum:
-                        num = elm.GetFaces().Count;
+                        num = elm.GetFaceList().Count;
                         break;
 
                     case CalcType.FacePointNum:
-                        num = elm.GetFacePoints().Count;
+                        num = elm.GetFacePointList().Count;
                         break;
 
                     case CalcType.SolidPointNum:
-                        num = elm.GetSolidPoints().Count;
+                        num = elm.GetSolidPointList().Count;
                         break;
                 }
 
@@ -355,7 +355,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="type"></param>
         /// <param name="onlyCurrentView"></param>
         /// <returns></returns>
-        public static (Element, int) GetMaxElement(this Document doc, CalcType type, bool onlyCurrentView = false)
+        public static (Element, int) GetMaxElementPair(this Document doc, CalcType type, bool onlyCurrentView = false)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -370,15 +370,15 @@ namespace KeLi.Common.Revit.Widgets
                 switch (type)
                 {
                     case CalcType.FaceNum:
-                        num = elm.GetFaces().Count;
+                        num = elm.GetFaceList().Count;
                         break;
 
                     case CalcType.FacePointNum:
-                        num = elm.GetFacePoints().Count;
+                        num = elm.GetFacePointList().Count;
                         break;
 
                     case CalcType.SolidPointNum:
-                        num = elm.GetSolidPoints().Count;
+                        num = elm.GetSolidPointList().Count;
                         break;
                 }
 
@@ -399,7 +399,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="type"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static (Element, int) GetMaxElement(this Document doc, CalcType type, ElementId viewId)
+        public static (Element, int) GetMaxElementPair(this Document doc, CalcType type, ElementId viewId)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -417,15 +417,15 @@ namespace KeLi.Common.Revit.Widgets
                 switch (type)
                 {
                     case CalcType.FaceNum:
-                        num = elm.GetFaces().Count;
+                        num = elm.GetFaceList().Count;
                         break;
 
                     case CalcType.FacePointNum:
-                        num = elm.GetFacePoints().Count;
+                        num = elm.GetFacePointList().Count;
                         break;
 
                     case CalcType.SolidPointNum:
-                        num = elm.GetSolidPoints().Count;
+                        num = elm.GetSolidPointList().Count;
                         break;
                 }
 

@@ -67,7 +67,7 @@ namespace KeLi.Common.Drive.Pdf
         /// </summary>
         /// <param name="param"></param>
         /// <exception cref="FileNotFoundException"></exception>
-        public static List<string> ToImages(this PdfParam param)
+        public static List<string> ToImageList(this PdfParam param)
         {
             if (param == null)
                 throw new ArgumentNullException(nameof(param));
@@ -94,7 +94,7 @@ namespace KeLi.Common.Drive.Pdf
                 withNum = param.StartPage == param.EndPage ? null : "_" + withNum;
 
                 var imgPage = pdfFile.GetPageImage(i - 1, 56 * param.Resolution);
-                var filePath = Path.Combine(param.PdfPath.DirectoryName, param.ImgName + withNum + "." + param.Format.ToString().ToLower());
+                var filePath = Path.Combine(param.PdfPath.DirectoryName ?? throw new InvalidOperationException(), param.ImgName + withNum + "." + param.Format.ToString().ToLower());
 
                 results.Add(filePath);
                 imgPage.Save(filePath, param.Format);
@@ -129,7 +129,7 @@ namespace KeLi.Common.Drive.Pdf
         /// Splits the pdf file to the multi pdf files.
         /// </summary>
         /// <param name="sourcePdf"></param>
-        public static List<FileInfo> SplitedPdfs(FileInfo sourcePdf)
+        public static List<FileInfo> SplitedPdfList(FileInfo sourcePdf)
         {
             if (sourcePdf == null)
                 throw new ArgumentNullException(nameof(sourcePdf));
@@ -156,7 +156,7 @@ namespace KeLi.Common.Drive.Pdf
                 else
                     targetName += "_" + i + Path.GetExtension(sourcePdf.FullName);
 
-                var targetPdf = new FileInfo(Path.Combine(targetPath, targetName));
+                var targetPdf = new FileInfo(Path.Combine(targetPath ?? throw new InvalidOperationException(), targetName));
 
                 CopyPdf(sourcePdf, targetPdf, i, i);
                 results.Add(targetPdf);

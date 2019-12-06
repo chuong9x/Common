@@ -174,7 +174,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="uiapp"></param>
         /// <param name="paramPath"></param>
         /// <returns></returns>
-        public static DefinitionGroups GetGroups(this UIApplication uiapp, string paramPath)
+        public static DefinitionGroups GetGroupList(this UIApplication uiapp, string paramPath)
         {
             if (uiapp == null)
                 throw new ArgumentNullException(nameof(uiapp));
@@ -196,7 +196,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="uiapp"></param>
         /// <param name="elm"></param>
         /// <param name="paramPath"></param>
-        public static void InitParams(this UIApplication uiapp, Element elm, string paramPath)
+        public static void InitParamList(this UIApplication uiapp, Element elm, string paramPath)
         {
             if (uiapp == null)
                 throw new ArgumentNullException(nameof(uiapp));
@@ -209,7 +209,7 @@ namespace KeLi.Common.Revit.Widgets
 
             var doc = uiapp.ActiveUIDocument.Document;
             var bindingMap = doc.ParameterBindings;
-            var gs = uiapp.GetGroups(paramPath);
+            var gs = uiapp.GetGroupList(paramPath);
             var elmCtgs = new CategorySet();
 
             elmCtgs.Insert(elm.Category);

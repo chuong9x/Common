@@ -184,12 +184,12 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public static List<Line> GetPlaneEdges(this BoundingBoxXYZ box)
+        public static List<Line> GetPlaneEdgeList(this BoundingBoxXYZ box)
         {
             if (box == null)
                 throw new ArgumentNullException(nameof(box));
 
-            var vectors = box.GetPlaneVectors();
+            var vectors = box.GetPlaneVectorList();
             var p1 = vectors[0];
             var p2 = vectors[1];
             var p3 = vectors[2];
@@ -207,7 +207,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public static List<XYZ> GetPlaneVectors(this BoundingBoxXYZ box)
+        public static List<XYZ> GetPlaneVectorList(this BoundingBoxXYZ box)
         {
             if (box == null)
                 throw new ArgumentNullException(nameof(box));
@@ -225,12 +225,12 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public static List<Line> GetSpaceEdges(this BoundingBoxXYZ box)
+        public static List<Line> GetSpaceEdgeList(this BoundingBoxXYZ box)
         {
             if (box == null)
                 throw new ArgumentNullException(nameof(box));
 
-            var vectors = box.GetSpaceVectors();
+            var vectors = box.GetSpaceVectorList();
             var p1 = vectors[0];
             var p2 = vectors[1];
             var p3 = vectors[2];
@@ -260,7 +260,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public static List<XYZ> GetSpaceVectors(this BoundingBoxXYZ box)
+        public static List<XYZ> GetSpaceVectorList(this BoundingBoxXYZ box)
         {
             if (box == null)
                 throw new ArgumentNullException(nameof(box));

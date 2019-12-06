@@ -317,7 +317,7 @@ namespace KeLi.Common.Revit.Relations
             if (elm2 == null)
                 throw new ArgumentNullException(nameof(elm2));
 
-            return elm1.GetValidSolids().CrossSolid(elm2.GetValidSolids());
+            return elm1.GetValidSolidList().CrossSolid(elm2.GetValidSolidList());
         }
 
         /// <summary>
@@ -334,7 +334,7 @@ namespace KeLi.Common.Revit.Relations
             if (ge2 == null)
                 throw new ArgumentNullException(nameof(ge2));
 
-            return ge1.GetValidSolids().CrossSolid(ge2.GetValidSolids());
+            return ge1.GetValidSolidList().CrossSolid(ge2.GetValidSolidList());
         }
 
         /// <summary>
