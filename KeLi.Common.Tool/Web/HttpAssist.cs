@@ -68,67 +68,22 @@ namespace KeLi.Common.Tool.Web
         public static CookieCollection Cookies { get; } = new CookieCollection();
 
         /// <summary>
-        /// Gets all type request string data.
-        /// </summary>
-        /// <param name="param"></param>
-        /// <param name="url"></param>
-        /// <param name="filePath"></param>
-        /// <param name="postData"></param>
-        /// <returns></returns>
-        public static string GetTypeRequest(this ResponseParam param, string url, string filePath = null, string postData = null)
-        {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
-
-            if (url == null)
-                throw new ArgumentNullException(nameof(url));
-
-            var response = param.CreateHttpResponse(url, filePath, postData);
-
-            using (var reader = new StreamReader(response.GetResponseStream(), param.EncodeType))
-                return reader.ReadToEnd();
-        }
-
-        /// <summary>
-        /// Gets all type request model data.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="param"></param>
-        /// <param name="url"></param>
-        /// <param name="filePath"></param>
-        /// <param name="postData"></param>
-        /// <returns></returns>
-        public static T GetTypeRequest<T>(this ResponseParam param, string url, string filePath = null, string postData = null)
-        {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
-
-            if (url == null)
-                throw new ArgumentNullException(nameof(url));
-
-            var response = GetTypeRequest(param, url, filePath, postData);
-
-            return JsonConvert.DeserializeObject<T>(response);
-        }
-
-        /// <summary>
         /// Gets all type request data.
         /// </summary>
         /// <param name="param"></param>
-        /// <param name="url"></param>
-        /// <param name="filePath"></param>
-        /// <param name="postData"></param>
+        /// <param name="postParamDict"></param>
         /// <returns></returns>
-        public static string GetTypeRequest(this ResponseParam param, string url, string filePath = null, IDictionary<string, string> postData = null)
+        public static string GetRequestResult(this ResponseParam param, IDictionary<string, string> postParamDict = null)
         {
             if (param == null)
                 throw new ArgumentNullException(nameof(param));
 
-            if (url == null)
-                throw new ArgumentNullException(nameof(url));
+            var postData = string.Empty;
 
-            var postDatal = CreateParameter(postData);
-            var response = param.CreateHttpResponse(url, filePath, postDatal);
+            if (postParamDict != null)
+                postData = CreateParameter(postParamDict);
+
+            var response = param.CreateHttpResponse(postData);
 
             using (var reader = new StreamReader(response.GetResponseStream(), param.EncodeType))
                 return reader.ReadToEnd();
@@ -139,19 +94,14 @@ namespace KeLi.Common.Tool.Web
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="param"></param>
-        /// <param name="url"></param>
-        /// <param name="filePath"></param>
-        /// <param name="postData"></param>
+        /// <param name="postParamDict"></param>
         /// <returns></returns>
-        public static T GetTypeRequest<T>(this ResponseParam param, string url, string filePath = null, IDictionary<string, string> postData = null)
+        public static T GetRequestResult<T>(this ResponseParam param, IDictionary<string, string> postParamDict = null)
         {
             if (param == null)
                 throw new ArgumentNullException(nameof(param));
 
-            if (url == null)
-                throw new ArgumentNullException(nameof(url));
-
-            var response = GetTypeRequest(param, url, filePath, postData);
+            var response = GetRequestResult(param, postParamDict);
 
             return JsonConvert.DeserializeObject<T>(response);
         }
@@ -160,23 +110,22 @@ namespace KeLi.Common.Tool.Web
         /// Downloads the file.
         /// </summary>
         /// <param name="param"></param>
-        /// <param name="url"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static byte[] DownloadFile(this ResponseParam param, string url, string filePath = null)
+        public static byte[] DownloadFile(this ResponseParam param, FileSystemInfo filePath = null)
         {
             if (param == null)
                 throw new ArgumentNullException(nameof(param));
 
-            if (url == null)
-                throw new ArgumentNullException(nameof(url));
-
-            var response = param.CreateHttpResponse(url, filePath);
+            var response = param.CreateHttpResponse(string.Empty, filePath);
             var st = response.GetResponseStream();
             var results = new byte[response.ContentLength];
 
-            st.Read(results, 0, results.Length);
-            st.Close();
+            if (st != null)
+            {
+                st.Read(results, 0, results.Length);
+                st.Close();
+            }
 
             return results;
         }
@@ -185,18 +134,14 @@ namespace KeLi.Common.Tool.Web
         /// Uploads the file.
         /// </summary>
         /// <param name="param"></param>
-        /// <param name="url"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static string UploadFile(this ResponseParam param, string url, string filePath)
+        public static string UploadFile(this ResponseParam param, FileSystemInfo filePath = null)
         {
             if (param == null)
                 throw new ArgumentNullException(nameof(param));
 
-            if (url == null)
-                throw new ArgumentNullException(nameof(url));
-
-            var response = param.CreateHttpResponse(url, filePath);
+            var response = param.CreateHttpResponse(string.Empty, filePath);
 
             using (var reader = new StreamReader(response.GetResponseStream(), param.EncodeType))
                 return reader.ReadToEnd();
@@ -207,9 +152,9 @@ namespace KeLi.Common.Tool.Web
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="request"></param>
-        private static void SetFileStream(string filePath, HttpWebRequest request)
+        private static void SetFileStream(FileSystemInfo filePath, WebRequest request)
         {
-            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            using (var fs = new FileStream(filePath.FullName, FileMode.Open, FileAccess.Read))
             {
                 var boundary = $"----------{DateTime.Now.Ticks:x}";
                 var boundaryBytes = Encoding.ASCII.GetBytes("\r\n--" + boundary + "\r\n");
@@ -251,30 +196,28 @@ namespace KeLi.Common.Tool.Web
         /// Creates http request data.
         /// </summary>
         /// <param name="param"></param>
-        /// <param name="url"></param>
-        /// <param name="filePath"></param>
         /// <param name="postData"></param>
+        /// <param name="filePath"></param>
         /// <returns></returns>
-        private static HttpWebResponse CreateHttpResponse(this ResponseParam param, string url, string filePath = null, string postData = null)
+        private static HttpWebResponse CreateHttpResponse(this ResponseParam param, string postData = null, FileSystemInfo filePath = null)
         {
             if (param == null)
                 throw new ArgumentNullException(nameof(param));
 
-            if (url == null)
-                throw new ArgumentNullException(nameof(url));
-
             HttpWebRequest request;
 
-            if (url.StartsWith(@"https:\\", StringComparison.OrdinalIgnoreCase))
+            if (param.Url.StartsWith(@"https:\\", StringComparison.OrdinalIgnoreCase))
             {
                 ServicePointManager.ServerCertificateValidationCallback = CheckResultValidation;
-                request = WebRequest.Create(url) as HttpWebRequest;
+                request = WebRequest.Create(param.Url) as HttpWebRequest;
 
                 if (request != null)
                     request.ProtocolVersion = HttpVersion.Version10;
             }
             else
-                request = WebRequest.Create(url) as HttpWebRequest;
+            {
+                request = WebRequest.Create(param.Url) as HttpWebRequest;
+            }
 
             if (param.Proxy != null && request != null)
                 request.Proxy = param.Proxy;
@@ -311,6 +254,8 @@ namespace KeLi.Common.Tool.Web
             request.Headers.Add("X-Requested-With", "XMLHttpRequest");
             request.Headers.Add("x-authentication-token", param.Token);
             request.Headers.Add("X-CORAL-TENANT", param.TenantId);
+            request.Headers.Add("X-AUTH-ID", param.AuthId);
+            request.Headers.Add("X-Authorization", param.Authorization);
             request.Referer = param.Referer;
             request.UserAgent = param.UserAgent;
             request.ContentType = param.ContentType;
@@ -326,16 +271,12 @@ namespace KeLi.Common.Tool.Web
                 request.CookieContainer.Add(Cookies);
             }
 
-            if (param.Headers != null)
-                foreach (var header in param.Headers)
-                    request.Headers.Add(header.Key, header.Value);
-
             if (param.Timeout.HasValue)
                 request.Timeout = param.Timeout.Value * 1000;
 
             request.Expect = string.Empty;
 
-            if (!string.IsNullOrEmpty(filePath))
+            if (!string.IsNullOrEmpty(filePath?.FullName))
                 SetFileStream(filePath, request);
 
             if (!string.IsNullOrEmpty(postData))
@@ -348,8 +289,8 @@ namespace KeLi.Common.Tool.Web
 
             var result = request.GetResponse() as HttpWebResponse;
 
-            Cookies.Add(request.CookieContainer.GetCookies(new Uri(@"http:\\" + new Uri(url).Host)));
-            Cookies.Add(request.CookieContainer.GetCookies(new Uri(@"https:\\" + new Uri(url).Host)));
+            Cookies.Add(request.CookieContainer.GetCookies(new Uri(@"http:\\" + new Uri(param.Url).Host)));
+            Cookies.Add(request.CookieContainer.GetCookies(new Uri(@"https:\\" + new Uri(param.Url).Host)));
             Cookies.Add(result.Cookies);
 
             return result;

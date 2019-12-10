@@ -46,7 +46,6 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
@@ -60,11 +59,18 @@ namespace KeLi.Common.Tool.Web
         /// <summary>
         /// Response parameter.
         /// </summary>
+        /// <param name="url"></param>
         /// <param name="type"></param>
-        public ResponseParam(RequestType type)
+        public ResponseParam(string url, RequestType type)
         {
+            Url = url;
             Type = type;
         }
+
+        /// <summary>
+        /// The Url.
+        /// </summary>
+        public string Url { get; set; }
 
         /// <summary>
         /// Request type.
@@ -102,23 +108,28 @@ namespace KeLi.Common.Tool.Web
         public string Referer { get; set; }
 
         /// <summary>
-        /// The headers.
-        /// </summary>
-        public Dictionary<string, string> Headers { get; set; }
-
-        /// <summary>
         /// The proxy.
         /// </summary>
         public WebProxy Proxy { get; set; } = new WebProxy();
 
         /// <summary>
-        /// The token.
+        /// The x-authentication-token.
         /// </summary>
         public string Token { get; set; }
 
         /// <summary>
-        /// The tenant id.
+        /// The x-coral-tenant.
         /// </summary>
         public string TenantId { get; set; }
+
+        /// <summary>
+        /// The x-auth-id.
+        /// </summary>
+        public string AuthId { get; set; }
+
+        /// <summary>
+        /// The x-authorization.
+        /// </summary>
+        public string Authorization { get; set; }
     }
 }
