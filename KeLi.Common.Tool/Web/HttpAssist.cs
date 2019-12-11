@@ -299,17 +299,17 @@ namespace KeLi.Common.Tool.Web
         /// <summary>
         /// Creates the parameter.
         /// </summary>
-        /// <param name="parameters"></param>
+        /// <param name="postParameterDict"></param>
         /// <returns></returns>
-        private static string CreateParameter(IDictionary<string, string> parameters)
+        private static string CreateParameter(IDictionary<string, string> postParameterDict)
         {
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
+            if (postParameterDict == null)
+                throw new ArgumentNullException(nameof(postParameterDict));
 
             var buffer = new StringBuilder();
 
-            foreach (var key in parameters.Keys)
-                buffer.AppendFormat("&{0}={1}", key, parameters[key]);
+            foreach (var key in postParameterDict.Keys)
+                buffer.AppendFormat("&{0}={1}", key, postParameterDict[key]);
 
             return buffer.ToString().TrimStart('&');
         }
