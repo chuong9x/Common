@@ -57,54 +57,54 @@ namespace KeLi.Common.Revit.Builders
     public static class BaseBuilder
     {
         /// <summary>
-        ///      new level.
+        ///  Creates a new level.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="elevation"></param>
         /// <returns></returns>
-        public static Level AddLevel(this Document doc, double elevation)
+        public static Level CreateLevel(this Document doc, double elevation)
         {
             return Level.Create(doc, elevation);
         }
 
         /// <summary>
-        /// Adds a new wall.
+        /// Creates a new wall.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="profile"></param>
         /// <returns></returns>
-        public static Wall AddWall(this Document doc, List<Curve> profile)
+        public static Wall CreateWall(this Document doc, List<Curve> profile)
         {
             return Wall.Create(doc, profile, false);
         }
 
         /// <summary>
-        /// Adds a new wall.
+        /// Creates a new wall.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="curve"></param>
         /// <param name="lvlId"></param>
         /// <returns></returns>
-        public static Wall AddWall(this Document doc, Curve curve, ElementId lvlId)
+        public static Wall CreateWall(this Document doc, Curve curve, ElementId lvlId)
         {
             return Wall.Create(doc, curve, lvlId, false);
         }
 
         /// <summary>
-        /// Adds a new wall.
+        /// Creates a new wall.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="typeId"></param>
         /// <param name="lvlId"></param>
         /// <param name="profile"></param>
         /// <returns></returns>
-        public static Wall AddWall(this Document doc, List<Curve> profile, ElementId typeId, ElementId lvlId)
+        public static Wall CreateWall(this Document doc, List<Curve> profile, ElementId typeId, ElementId lvlId)
         {
             return Wall.Create(doc, profile, typeId, lvlId, false);
         }
 
         /// <summary>
-        /// Adds a new wall.
+        /// Creates a new wall.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="typeId"></param>
@@ -118,31 +118,31 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Adds a new floor.
+        /// Creates a new floor.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="profile"></param>
         /// <returns></returns>
-        public static Floor AddFloor(this Document doc, CurveArray profile)
+        public static Floor CreateFloor(this Document doc, CurveArray profile)
         {
             return doc.Create.NewFloor(profile, false);
         }
 
         /// <summary>
-        /// Adds a new floor.
+        /// Creates a new floor.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="profile"></param>
         /// <param name="type"></param>
         /// <param name="lvl"></param>
         /// <returns></returns>
-        public static Floor AddFloor(this Document doc, CurveArray profile, FloorType type, Level lvl)
+        public static Floor CreateFloor(this Document doc, CurveArray profile, FloorType type, Level lvl)
         {
             return doc.Create.NewFloor(profile, type, lvl, false);
         }
 
         /// <summary>
-        /// Adds a new floor.
+        /// Creates a new floor.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="profile"></param>
@@ -150,13 +150,13 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="lvl"></param>
         /// <param name="normal"></param>
         /// <returns></returns>
-        public static Floor AddFloor(this Document doc, CurveArray profile, FloorType type, Level lvl, XYZ normal)
+        public static Floor CreateFloor(this Document doc, CurveArray profile, FloorType type, Level lvl, XYZ normal)
         {
             return doc.Create.NewFloor(profile, type, lvl, false, normal);
         }
 
         /// <summary>
-        /// Adds a new extrusion roof.
+        /// Creates a new extrusion roof.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="profile"></param>
@@ -173,7 +173,7 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Adds a new foot print roof.
+        /// Creates a new foot print roof.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="profile"></param>
@@ -181,7 +181,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="type"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        public static FootPrintRoof AddFootPrintRoof(this Document doc, CurveArray profile, Level lvl, RoofType type,
+        public static FootPrintRoof CreateFootPrintRoof(this Document doc, CurveArray profile, Level lvl, RoofType type,
             out ModelCurveArray model)
         {
             return doc.Create.NewFootPrintRoof(profile, lvl, type, out model);

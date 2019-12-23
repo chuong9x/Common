@@ -59,7 +59,7 @@ namespace KeLi.Common.Revit.Builders
     public static class PipeBuilder
     {
         /// <summary>
-        /// Adds a new pipe.
+        /// Creates a new pipe.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="typeId"></param>
@@ -67,13 +67,13 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static Pipe AddPipe(this Document doc, ElementId typeId, ElementId lvlId, Connector start, Connector end)
+        public static Pipe CreatePipe(this Document doc, ElementId typeId, ElementId lvlId, Connector start, Connector end)
         {
             return Pipe.Create(doc, typeId, lvlId, start, end);
         }
 
         /// <summary>
-        /// Adds a new pipe.
+        /// Creates a new pipe.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="typeId"></param>
@@ -81,13 +81,13 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static Pipe AddPipe(this Document doc, ElementId typeId, ElementId lvlId, Connector start, XYZ end)
+        public static Pipe CreatePipe(this Document doc, ElementId typeId, ElementId lvlId, Connector start, XYZ end)
         {
             return Pipe.Create(doc, typeId, lvlId, start, end);
         }
 
         /// <summary>
-        /// Adds a new pipe.
+        /// Creates a new pipe.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="systemId"></param>
@@ -96,14 +96,14 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static Pipe AddPipe(this Document doc, ElementId systemId, ElementId typeId, ElementId lvlId, XYZ start,
+        public static Pipe CreatePipe(this Document doc, ElementId systemId, ElementId typeId, ElementId lvlId, XYZ start,
             XYZ end)
         {
             return Pipe.Create(doc, systemId, typeId, lvlId, start, end);
         }
 
         /// <summary>
-        /// Adds a new flex pipe.
+        /// Creates a new flex pipe.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="systemId"></param>
@@ -111,14 +111,14 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="lvlId"></param>
         /// <param name="points"></param>
         /// <returns></returns>
-        public static FlexPipe AddFlexPipe(this Document doc, ElementId systemId, ElementId typeId, ElementId lvlId,
+        public static FlexPipe CreateFlexPipe(this Document doc, ElementId systemId, ElementId typeId, ElementId lvlId,
             List<XYZ> points)
         {
             return FlexPipe.Create(doc, systemId, typeId, lvlId, points);
         }
 
         /// <summary>
-        /// Adds a new flex pipe.
+        /// Creates a new flex pipe.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="systemId"></param>
@@ -128,14 +128,14 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="points"></param>
         /// <param name="start"></param>
         /// <returns></returns>
-        public static FlexPipe AddFlexPipe(this Document doc, ElementId systemId, ElementId typeId, ElementId lvlId,
+        public static FlexPipe CreateFlexPipe(this Document doc, ElementId systemId, ElementId typeId, ElementId lvlId,
             XYZ start, XYZ end, List<XYZ> points)
         {
             return FlexPipe.Create(doc, systemId, typeId, lvlId, start, end, points);
         }
 
         /// <summary>
-        /// Adds a new conduit.
+        /// Creates a new conduit.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="typeId"></param>
@@ -143,7 +143,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="end"></param>
         /// <param name="lvlId"></param>
         /// <returns></returns>
-        public static Conduit AddConduit(this Document doc, ElementId typeId, XYZ start, XYZ end, ElementId lvlId)
+        public static Conduit CreateConduit(this Document doc, ElementId typeId, XYZ start, XYZ end, ElementId lvlId)
         {
             return Conduit.Create(doc, typeId, start, end, lvlId);
         }

@@ -56,13 +56,13 @@ namespace KeLi.Common.Revit.Builders
     public static class ViewBuilder
     {
         /// <summary>
-        /// Adds a new view section.
+        /// Creates a new view section.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="elmId"></param>
         /// <param name="box"></param>
         /// <returns></returns>
-        public static ViewSection AddViewSection(this Document doc, ElementId elmId, BoundingBoxXYZ box)
+        public static ViewSection CreateViewSection(this Document doc, ElementId elmId, BoundingBoxXYZ box)
         {
             return doc.GetElement(elmId) == null ? null : ViewSection.CreateSection(doc, elmId, box);
         }

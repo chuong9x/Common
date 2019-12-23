@@ -56,12 +56,12 @@ namespace KeLi.Common.Revit.Builders
     public static class MaterialBuilder
     {
         /// <summary>
-        /// Adds a new material.
+        /// Creates a new material.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static Material AddMaterial(this Document doc, string name)
+        public static Material CreateMaterial(this Document doc, string name)
         {
             return doc.GetElement(Material.Create(doc, name)) as Material;
         }
