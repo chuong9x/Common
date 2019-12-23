@@ -161,7 +161,7 @@ namespace KeLi.Common.Revit.Builders
             var doc = uiapp.ActiveUIDocument.Document;
             var fdoc = uiapp.Application.NewFamilyDocument(rfa);
 
-            fdoc.AddExtrusion(profile, plane, end);
+            fdoc.CreateExtrusion(profile, plane, end);
 
             return doc.GetElement(fdoc.LoadFamily(doc).GetFamilySymbolIds().FirstOrDefault()) as FamilySymbol;
         }
@@ -181,7 +181,7 @@ namespace KeLi.Common.Revit.Builders
             var doc = uiapp.ActiveUIDocument.Document;
             var fdoc = uiapp.Application.NewFamilyDocument(rfa);
 
-            fdoc.AddSweep(profile, path, index);
+            fdoc.CreateSweep(profile, path, index);
 
             return doc.GetElement(fdoc.LoadFamily(doc).GetFamilySymbolIds().FirstOrDefault()) as FamilySymbol;
         }
