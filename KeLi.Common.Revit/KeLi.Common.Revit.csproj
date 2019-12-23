@@ -90,6 +90,7 @@
     </Compile>
     <Compile Include="Entities\CalcType.cs" />
     <Compile Include="Entities\KeyCodeEnum.cs" />
+    <Compile Include="Widgets\ElementUtil.cs" />
     <Compile Include="Widgets\ExtendInfoUtil.cs" />
     <Compile Include="Widgets\MeshUtil.cs" />
     <Compile Include="Widgets\FilterAssist.cs" />
