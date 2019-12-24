@@ -284,7 +284,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static double GetBoxLength(this BoundingBoxXYZ box)
         {
-            return box.Max.Y - box.Min.Y;
+            return box.Max.X - box.Min.X;
         }
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static double GetBoxWidth(this BoundingBoxXYZ box)
         {
-            return box.Max.X - box.Min.X;
+            return box.Max.Y - box.Min.Y;
         }
     }
 }
