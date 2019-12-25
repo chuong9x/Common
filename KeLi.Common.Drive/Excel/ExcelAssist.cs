@@ -101,54 +101,6 @@ namespace KeLi.Common.Drive.Excel
         }
 
         /// <summary>
-        ///  Reads the excel to the list.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="param"></param>
-        /// <returns></returns>
-        public static List<T> AsList<T>(this ExcelParam param)
-        {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
-
-            var results = new List<T>();
-            var ps = typeof(T).GetProperties();
-
-            using (var excel = new ExcelPackage(param.FilePath))
-            {
-                var sheets = excel.Workbook.Worksheets;
-                var sheet = (param.SheetName == null ? sheets.FirstOrDefault()
-                        : sheets[param.SheetName]) ?? sheets.FirstOrDefault();
-
-                if (!(sheet?.Cells.Value is object[,] cells))
-                    return new List<T>();
-
-                for (var i = param.RowIndex; i < sheet.Dimension.Rows; i++)
-                {
-                    var obj = (T)Activator.CreateInstance(typeof(T));
-
-                    for (var j = param.ColumnIndex; j < typeof(T).GetProperties().Length + param.ColumnIndex; j++)
-                    {
-                        var columnName = cells[0, j]?.ToString();
-                        var pls = ps.Where(w => w.GetDcrp().Equals(columnName) || w.Name.Equals(cells[param.RowIndex, j]));
-
-                        foreach (var p in pls)
-                        {
-                            var val = Convert.ChangeType(cells[i, j], p.PropertyType);
-
-                            p.SetValue(obj, cells[i, j] != DBNull.Value ? val : null, null);
-                            break;
-                        }
-                    }
-
-                    results.Add(obj);
-                }
-            }
-
-            return results;
-        }
-
-        /// <summary>
         /// Reads the excel to the data table.
         /// </summary>
         /// <param name="param"></param>
@@ -175,6 +127,54 @@ namespace KeLi.Common.Drive.Excel
                 for (var i = param.RowIndex; i < sheet.Dimension.Rows; i++)
                     for (var j = param.ColumnIndex; j < sheet.Dimension.Columns; j++)
                         results.Rows[i - param.RowIndex][j] = cells[i + param.RowIndex, j];
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        ///  Reads the excel to the list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public static List<T> AsList<T>(this ExcelParam param)
+        {
+            if (param == null)
+                throw new ArgumentNullException(nameof(param));
+
+            var results = new List<T>();
+            var ps = typeof(T).GetProperties();
+
+            using (var excel = new ExcelPackage(param.FilePath))
+            {
+                var sheets = excel.Workbook.Worksheets;
+                var sheet = (param.SheetName == null ? sheets.FirstOrDefault()
+                                : sheets[param.SheetName]) ?? sheets.FirstOrDefault();
+
+                if (!(sheet?.Cells.Value is object[,] cells))
+                    return new List<T>();
+
+                for (var i = param.RowIndex; i < sheet.Dimension.Rows; i++)
+                {
+                    var obj = (T)Activator.CreateInstance(typeof(T));
+
+                    for (var j = param.ColumnIndex; j < typeof(T).GetProperties().Length + param.ColumnIndex; j++)
+                    {
+                        var columnName = cells[0, j]?.ToString();
+                        var pls = ps.Where(w => w.GetDcrp().Equals(columnName) || w.Name.Equals(cells[param.RowIndex, j]));
+
+                        foreach (var p in pls)
+                        {
+                            var val = Convert.ChangeType(cells[i, j], p.PropertyType);
+
+                            p.SetValue(obj, cells[i, j] != DBNull.Value ? val : null, null);
+                            break;
+                        }
+                    }
+
+                    results.Add(obj);
+                }
             }
 
             return results;
