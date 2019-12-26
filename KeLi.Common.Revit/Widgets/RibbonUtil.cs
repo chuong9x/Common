@@ -62,7 +62,7 @@ namespace KeLi.Common.Revit.Widgets
     public static class RibbonUtil
     {
         /// <summary>
-        /// Adds a button.
+        /// Creates a button.
         /// </summary>
         /// <param name="pnl"></param>
         /// <param name="pbd"></param>
@@ -83,7 +83,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Adds a button set.
+        /// Creates a button set.
         /// </summary>
         /// <param name="pnl"></param>
         /// <param name="pbds"></param>
@@ -104,7 +104,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Adds a pulldown button.
+        /// Creates a pulldown button.
         /// </summary>
         /// <param name="pnl"></param>
         /// <param name="pbd"></param>
@@ -144,7 +144,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Adds a split button.
+        /// Creates a split button.
         /// </summary>
         /// <param name="pnl"></param>
         /// <param name="pbd"></param>

@@ -56,7 +56,7 @@ namespace KeLi.Common.Revit.Builders
     public static class PlaneBuilder
     {
         /// <summary>
-        /// Adds a new reference plane.
+        /// Creates a new reference plane.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="bubble"></param>
@@ -64,40 +64,40 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="vector"></param>
         /// <param name="view"></param>
         /// <returns></returns>
-        public static ReferencePlane AddReferencePlane(this Document doc, XYZ bubble, XYZ free, XYZ vector, View view)
+        public static ReferencePlane CreateReferencePlane(this Document doc, XYZ bubble, XYZ free, XYZ vector, View view)
         {
             return doc.Create.NewReferencePlane(bubble, free, vector, doc.ActiveView);
         }
 
         /// <summary>
-        /// Adds a new sketch plane.
+        /// Creates a new sketch plane.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="datumId"></param>
         /// <returns></returns>
-        public static SketchPlane AddSketchPlane(this Document doc, ElementId datumId)
+        public static SketchPlane CreateSketchPlane(this Document doc, ElementId datumId)
         {
             return SketchPlane.Create(doc, datumId);
         }
 
         /// <summary>
-        /// Adds a new sketch plane.
+        /// Creates a new sketch plane.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="plane"></param>
         /// <returns></returns>
-        public static SketchPlane AddSketchPlane(this Document doc, Plane plane)
+        public static SketchPlane CreateSketchPlane(this Document doc, Plane plane)
         {
             return SketchPlane.Create(doc, plane);
         }
 
         /// <summary>
-        /// Adds a new sketch plane.
+        /// Creates a new sketch plane.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="refer"></param>
         /// <returns></returns>
-        public static SketchPlane AddSketchPlane(this Document doc, Reference refer)
+        public static SketchPlane CreateSketchPlane(this Document doc, Reference refer)
         {
             return SketchPlane.Create(doc, refer);
         }

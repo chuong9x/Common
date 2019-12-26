@@ -26,7 +26,7 @@
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -43,6 +43,10 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="RevitAddInUtility">
+      <HintPath>..\Libs\Revit.API.2018\RevitAddInUtility.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="RevitAPI, Version=18.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\Revit.API.2018\RevitAPI.dll</HintPath>
@@ -51,6 +55,10 @@
     <Reference Include="RevitAPIUI, Version=18.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\Revit.API.2018\RevitAPIUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RevitNET">
+      <HintPath>..\Libs\Revit.API.2018\RevitNET.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -90,6 +98,8 @@
     </Compile>
     <Compile Include="Entities\CalcType.cs" />
     <Compile Include="Entities\KeyCodeEnum.cs" />
+    <Compile Include="Widgets\ElementUtil.cs" />
+    <Compile Include="Widgets\ExtendInfoUtil.cs" />
     <Compile Include="Widgets\MeshUtil.cs" />
     <Compile Include="Widgets\FilterAssist.cs" />
     <Compile Include="Widgets\HookHandler.cs" />
@@ -100,6 +110,7 @@
     <Compile Include="Relations\PointPlaneRelation.cs" />
     <Compile Include="Relations\SolidRelaction.cs" />
     <Compile Include="Widgets\ParamUtil.cs" />
+    <Compile Include="Widgets\RevitContext.cs" />
     <Compile Include="Widgets\RibbonUtil.cs" />
     <Compile Include="Widgets\AreaUtil.cs" />
     <Compile Include="Widgets\BoxUtil.cs" />

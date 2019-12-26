@@ -47,6 +47,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Structure;
@@ -60,7 +61,7 @@ namespace KeLi.Common.Revit.Builders
     public static class FamilyInstanceBuilder
     {
         /// <summary>
-        /// Adds a new family instance.
+        /// Creates a new family instance.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="location"></param>
@@ -68,14 +69,14 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="lvl"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static FamilyInstance AddFamilyInstance(this Document doc, XYZ location, FamilySymbol symbol, Level lvl,
+        public static FamilyInstance CreateFamilyInstance(this Document doc, XYZ location, FamilySymbol symbol, Level lvl,
             StructuralType type)
         {
             return doc.Create.NewFamilyInstance(location, symbol, lvl, type);
         }
 
         /// <summary>
-        /// Adds a new family instance.
+        /// Creates a new family instance.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="location"></param>
@@ -83,14 +84,14 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="elm"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static FamilyInstance AddFamilyInstance(this Document doc, XYZ location, FamilySymbol symbol, Element elm,
+        public static FamilyInstance CreateFamilyInstance(this Document doc, XYZ location, FamilySymbol symbol, Element elm,
             StructuralType type)
         {
             return doc.Create.NewFamilyInstance(location, symbol, elm, type);
         }
 
         /// <summary>
-        /// Adds a new family instance.
+        /// Creates a new family instance.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="location"></param>
@@ -99,14 +100,14 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="lvl"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static FamilyInstance AddFamilyInstance(this Document doc, XYZ location, FamilySymbol symbol, Element elm,
+        public static FamilyInstance CreateFamilyInstance(this Document doc, XYZ location, FamilySymbol symbol, Element elm,
             Level lvl, StructuralType type)
         {
             return doc.Create.NewFamilyInstance(location, symbol, elm, lvl, type);
         }
 
         /// <summary>
-        /// Adds a new family instance.
+        /// Creates a new family instance.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="location"></param>
@@ -115,14 +116,38 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="type"></param>
         /// <param name="direction"></param>
         /// <returns></returns>
-        public static FamilyInstance AddFamilyInstance(this Document doc, XYZ location, FamilySymbol symbol,
+        public static FamilyInstance CreateFamilyInstance(this Document doc, XYZ location, FamilySymbol symbol,
             XYZ direction, Element elm, StructuralType type)
         {
             return doc.Create.NewFamilyInstance(location, symbol, direction, elm, type);
         }
 
         /// <summary>
-        /// Adds a new family symbol.
+        /// Creates a new instance of an adaptive component family.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="symbol"></param>
+        /// <param name="pts"></param>
+        /// <returns></returns>
+        public static FamilyInstance CreateFamilyInstance(this Document doc, FamilySymbol symbol, List<XYZ> pts)
+        {
+            // Creates a new instance of an adaptive component family.
+            var result = AdaptiveComponentInstanceUtils.CreateAdaptiveComponentInstance(doc, symbol);
+
+            // Gets the placement points of this instance.
+            var placePointIds = AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds(result);
+
+            for (var i = 0; i < placePointIds.Count; i++)
+            {
+                if (doc.GetElement(placePointIds[i]) is ReferencePoint point)
+                    point.Position = pts[i];
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a new family symbol.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="rfa"></param>
@@ -130,19 +155,19 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="plane"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static FamilySymbol AddFamilySymbol(this UIApplication uiapp, string rfa, CurveArrArray profile,
+        public static FamilySymbol CreateFamilySymbol(this UIApplication uiapp, string rfa, CurveArrArray profile,
             SketchPlane plane, double end)
         {
             var doc = uiapp.ActiveUIDocument.Document;
             var fdoc = uiapp.Application.NewFamilyDocument(rfa);
 
-            fdoc.AddExtrusion(profile, plane, end);
+            fdoc.CreateExtrusion(profile, plane, end);
 
             return doc.GetElement(fdoc.LoadFamily(doc).GetFamilySymbolIds().FirstOrDefault()) as FamilySymbol;
         }
 
         /// <summary>
-        /// Adds a new family symbol.
+        /// Creates a new family symbol.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="rfa"></param>
@@ -150,24 +175,24 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="path"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static FamilySymbol AddFamilySymbol(this UIApplication uiapp, string rfa, SweepProfile profile,
+        public static FamilySymbol CreateFamilySymbol(this UIApplication uiapp, string rfa, SweepProfile profile,
             ReferenceArray path, int index)
         {
             var doc = uiapp.ActiveUIDocument.Document;
             var fdoc = uiapp.Application.NewFamilyDocument(rfa);
 
-            fdoc.AddSweep(profile, path, index);
+            fdoc.CreateSweep(profile, path, index);
 
             return doc.GetElement(fdoc.LoadFamily(doc).GetFamilySymbolIds().FirstOrDefault()) as FamilySymbol;
         }
 
         /// <summary>
-        /// Adds a new family symbol.
+        /// Creates a new family symbol.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="rfa"></param>
         /// <returns></returns>
-        public static FamilySymbol AddFamilySymbol(this UIApplication uiapp, string rfa)
+        public static FamilySymbol CreateFamilySymbol(this UIApplication uiapp, string rfa)
         {
             var doc = uiapp.ActiveUIDocument.Document;
 
@@ -177,13 +202,13 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Adds a new family symbol.
+        /// Creates a new family symbol.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="rft"></param>
         /// <param name="act"></param>
         /// <returns></returns>
-        public static FamilySymbol AddFamilySymbol(this UIApplication uiapp, string rft, Action<Document> act)
+        public static FamilySymbol CreateFamilySymbol(this UIApplication uiapp, string rft, Action<Document> act)
         {
             var doc = uiapp.ActiveUIDocument.Document;
             var fdoc = uiapp.Application.NewFamilyDocument(rft);

@@ -57,12 +57,12 @@ namespace KeLi.Common.Revit.Builders
     public static class GroupBuilder
     {
         /// <summary>
-        /// Adds a new group.
+        /// Creates a new group.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="elmIds"></param>
         /// <returns></returns>
-        public static Group AddGroup(this Document doc, List<ElementId> elmIds)
+        public static Group CreateGroup(this Document doc, List<ElementId> elmIds)
         {
             return doc.Create.NewGroup(elmIds);
         }

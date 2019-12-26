@@ -56,38 +56,38 @@ namespace KeLi.Common.Revit.Builders
     public static class SweepBuilder
     {
         /// <summary>
-        /// Adds a new sweep.
+        /// Creates a new sweep.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="path"></param>
         /// <param name="profile"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static Sweep AddSweep(this Document doc, SweepProfile profile, ReferenceArray path, int index)
+        public static Sweep CreateSweep(this Document doc, SweepProfile profile, ReferenceArray path, int index)
         {
             return doc.FamilyCreate.NewSweep(true, path, profile, index, ProfilePlaneLocation.Start);
         }
 
         /// <summary>
-        /// Adds a new extrusion.
+        /// Creates a new extrusion.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="profile"></param>
         /// <param name="plane"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static Extrusion AddExtrusion(this Document doc, CurveArrArray profile, SketchPlane plane, double end)
+        public static Extrusion CreateExtrusion(this Document doc, CurveArrArray profile, SketchPlane plane, double end)
         {
             return doc.FamilyCreate.NewExtrusion(true, profile, plane, end);
         }
 
         /// <summary>
-        /// Adds a new profile.
+        /// Creates a new profile.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="profile"></param>
         /// <returns></returns>
-        public static SweepProfile AddProfile(this Document doc, CurveArrArray profile)
+        public static SweepProfile CreateProfile(this Document doc, CurveArrArray profile)
         {
             return doc.Application.Create.NewCurveLoopsProfile(profile);
         }

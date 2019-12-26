@@ -83,7 +83,7 @@ namespace KeLi.Common.Drive.Sql
         /// <param name="text"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static int UpdateData(string text, CommandType ct = CommandType.Text)
+        public static int Update(string text, CommandType ct = CommandType.Text)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
@@ -109,7 +109,7 @@ namespace KeLi.Common.Drive.Sql
         /// <param name="sps"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static int UpdateData(string text, SqlParameter[] sps, CommandType ct = CommandType.Text)
+        public static int Update(string text, SqlParameter[] sps, CommandType ct = CommandType.Text)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
@@ -135,7 +135,7 @@ namespace KeLi.Common.Drive.Sql
         /// <param name="texts"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static int UpdateMultiple(List<string> texts, CommandType ct = CommandType.Text)
+        public static int Update(List<string> texts, CommandType ct = CommandType.Text)
         {
             if (texts == null)
                 throw new ArgumentNullException(nameof(texts));
@@ -181,7 +181,7 @@ namespace KeLi.Common.Drive.Sql
         /// <param name="sps"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static int UpdateMultiple(List<string> texts, SqlParameter[][] sps, CommandType ct = CommandType.Text)
+        public static int Update(List<string> texts, SqlParameter[][] sps, CommandType ct = CommandType.Text)
         {
             if (texts == null)
                 throw new ArgumentNullException(nameof(texts));
@@ -232,7 +232,7 @@ namespace KeLi.Common.Drive.Sql
         /// <param name="text"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static object QueryObject(string text, CommandType ct = CommandType.Text)
+        public static object Query(string text, CommandType ct = CommandType.Text)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
@@ -258,7 +258,7 @@ namespace KeLi.Common.Drive.Sql
         /// <param name="sps"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static object QueryObject(string text, SqlParameter[] sps, CommandType ct = CommandType.Text)
+        public static object Query(string text, SqlParameter[] sps, CommandType ct = CommandType.Text)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
@@ -287,7 +287,7 @@ namespace KeLi.Common.Drive.Sql
         /// <param name="text"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static DataTable QueryData(string text, CommandType ct = CommandType.Text)
+        public static DataTable QueryTable(string text, CommandType ct = CommandType.Text)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
@@ -312,7 +312,7 @@ namespace KeLi.Common.Drive.Sql
         /// <param name="sps"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static DataTable QueryData(string text, SqlParameter[] sps, CommandType ct = CommandType.Text)
+        public static DataTable QueryTable(string text, SqlParameter[] sps, CommandType ct = CommandType.Text)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
