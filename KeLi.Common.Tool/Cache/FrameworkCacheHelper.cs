@@ -124,7 +124,6 @@ namespace KeLi.FrameworkCache.Service
         /// <summary>
         /// Gets the item by key.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
         public object GetItem(string key)
