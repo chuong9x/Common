@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 12/23/2019 13:08:20 PM |  |  |     |         |      |
+     |  |              Creation Time: 12/27/2019 07:13:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,52 +46,57 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    /// Elementy utility.
+    /// Room utility.
     /// </summary>
-    public static class ElementUtil
+    public static class RoomUtil
     {
         /// <summary>
-        /// Gets the element's location point.
+        /// Gets the room's edge list.
         /// </summary>
-        /// <param name="elm"></param>
+        /// <param name="room"></param>
         /// <returns></returns>
-        public static XYZ GetLocationPoint<T>(this T elm) where T: Element
+        public static List<Line> GetEdgeList(this SpatialElement room)
         {
-            return elm.Location is LocationPoint pt ? pt.Point : throw new InvalidCastException(elm.Name);
+            var result = new List<Line>();
+            var option = new SpatialElementBoundaryOptions
+            {
+                StoreFreeBoundaryFaces = true,
+                SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.CoreBoundary
+            };
+            var segments = room.GetBoundarySegments(option).SelectMany(s => s);
+
+            foreach (var seg in segments)
+            {
+                var sp = seg.GetCurve().GetEndPoint(0);
+                var ep = seg.GetCurve().GetEndPoint(1);
+
+                result.Add(Line.CreateBound(sp, ep));
+            }
+
+            return result;
         }
 
         /// <summary>
-        /// Gets the element's location cuve.
+        /// Gets room list.
         /// </summary>
-        /// <param name="elm"></param>
-        /// <returns></returns>
-        public static Curve GetLocationCurve<T>(this T elm) where T : Element
-        {
-            return !(elm.Location is LocationCurve curve) ? throw new InvalidCastException(elm.Name) : curve.Curve;
-        }
-
-        /// <summary>
-        /// Sets the element's color fill pattern.
-        /// </summary>
-        /// <param name="elm"></param>
-        /// <param name="fillPattern"></param>
         /// <param name="doc"></param>
-        /// <param name="color"></param>
-        public static void SetColorFill(this Element elm, Element fillPattern, Document doc, Color color)
+        /// <param name="isValid"></param>
+        /// <returns></returns>
+        public static List<SpatialElement> GetSpatialElementList(Document doc, bool isValid = true)
         {
-            var graSetting = doc.ActiveView.GetElementOverrides(elm.Id);
+            var results = doc.GetTypeElementList<SpatialElement>(false, false);
 
-            if (fillPattern != null)
-                graSetting.SetProjectionFillPatternId(fillPattern.Id);
+            if (isValid)
+                results = results.Where(w => w?.Location != null && w.Area > 1e-6).ToList();
 
-            graSetting.SetProjectionFillColor(color);
-            doc.ActiveView.SetElementOverrides(elm.Id, graSetting);
+            return results;
         }
     }
 }

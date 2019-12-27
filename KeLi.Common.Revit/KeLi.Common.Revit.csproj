@@ -116,6 +116,7 @@
     <Compile Include="Widgets\BoxUtil.cs" />
     <Compile Include="Widgets\NumberUtil.cs" />
     <Compile Include="Widgets\AutoUtil.cs" />
+    <Compile Include="Widgets\RoomUtil.cs" />
     <Compile Include="Widgets\TypeConverter.cs" />
     <Compile Include="Widgets\VisabilityUtil.cs" />
   </ItemGroup>
