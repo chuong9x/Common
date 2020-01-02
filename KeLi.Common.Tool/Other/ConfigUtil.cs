@@ -68,7 +68,7 @@ namespace KeLi.Common.Tool.Other
         /// </summary>
         /// <param name="keyName"></param>
         /// <returns></returns>
-        public static string GetValueByType<T>(string keyName)
+        public static string GetValue<T>(string keyName)
         {
             if (_setting != null)
                 return _setting.Settings[keyName].Value;
