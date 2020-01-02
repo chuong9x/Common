@@ -64,7 +64,7 @@ namespace KeLi.Common.Tool.Other
 
         /// <summary>
         /// Get config file value by key.
-        /// The type is used to get current assembly.
+        /// The type is used to get current assembly location path.
         /// </summary>
         /// <param name="keyName"></param>
         /// <returns></returns>
