@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Configuration;
 using System.Reflection;
 
@@ -63,18 +64,21 @@ namespace KeLi.Common.Tool.Other
 
         /// <summary>
         /// Get config file value by key.
+        /// The type is used to get current assembly.
         /// </summary>
         /// <param name="keyName"></param>
         /// <returns></returns>
-        public static string GetValue(string keyName)
+        public static string GetValueByType<T>(string keyName)
         {
             if (_setting != null)
                 return _setting.Settings[keyName].Value;
 
-            var assemblyName = Assembly.GetExecutingAssembly().Location;
+            var assemblyName = Assembly.GetAssembly(typeof(T)).Location;
             var map = new ExeConfigurationFileMap { ExeConfigFilename = assemblyName + ".config" };
 
             _setting = ConfigurationManager.OpenMappedExeConfiguration(map, 0).AppSettings;
+
+            Console.WriteLine(assemblyName);
 
             return _setting.Settings[keyName].Value;
         }
