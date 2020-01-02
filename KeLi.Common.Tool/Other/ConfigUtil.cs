@@ -58,82 +58,26 @@ namespace KeLi.Common.Tool.Other
     public class ConfigUtil
     {
         /// <summary>
-        /// Gets the assembly information.
+        /// To repeat creating setting instance by single thread.
         /// </summary>
-        /// <param name="className"></param>
-        /// <returns></returns>
-        public static Assembly GetAssemblyType(string className)
-        {
-            if (className == null)
-                throw new ArgumentNullException(nameof(className));
-
-            Assembly result;
-
-            if (string.IsNullOrWhiteSpace(className))
-                result = Assembly.GetAssembly(typeof(object));
-            else
-            {
-                var assemblyName = GetAssemblyName(className);
-
-                result = Assembly.Load(assemblyName).GetType().Assembly;
-            }
-
-            return result;
-        }
+        private static AppSettingsSection _setting;
 
         /// <summary>
-        /// Gets the type declaration.
+        /// Get config file value by key.
         /// </summary>
-        /// <param name="className"></param>
+        /// <param name="keyName"></param>
         /// <returns></returns>
-        public static Type GetClassType(string className)
+        public static string GetValue(string keyName)
         {
-            if (className == null)
-                throw new ArgumentNullException(nameof(className));
+            if (_setting != null)
+                return _setting.Settings[keyName].Value;
 
-            Type result;
+            var assemblyName = Assembly.GetExecutingAssembly().Location;
+            var map = new ExeConfigurationFileMap { ExeConfigFilename = assemblyName + ".config" };
 
-            if (string.IsNullOrWhiteSpace(className))
-                result = typeof(object);
-            else
-            {
-                var assemblyName = GetAssemblyName(className);
+            _setting = ConfigurationManager.OpenMappedExeConfiguration(map, 0).AppSettings;
 
-                className = GetClassName(className);
-                result = Assembly.Load(assemblyName).GetType(className);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Gets the assembly full string in the config file.
-        /// </summary>
-        /// <param name="className"></param>
-        /// <returns></returns>
-        private static string GetAssemblyName(string className)
-        {
-            if (className == null)
-                throw new ArgumentNullException(nameof(className));
-
-            return string.IsNullOrWhiteSpace(className)
-                ? string.Empty
-                : ConfigurationManager.AppSettings[className].Split(',')[1].Substring(1);
-        }
-
-        /// <summary>
-        /// Gets the class full string in the config file.
-        /// </summary>
-        /// <param name="className"></param>
-        /// <returns></returns>
-        private static string GetClassName(string className)
-        {
-            if (className == null)
-                throw new ArgumentNullException(nameof(className));
-
-            return string.IsNullOrWhiteSpace(className)
-                ? string.Empty
-                : ConfigurationManager.AppSettings[className].Split(',')[0];
+            return _setting.Settings[keyName].Value;
         }
     }
 }

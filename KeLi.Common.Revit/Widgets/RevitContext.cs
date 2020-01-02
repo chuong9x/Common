@@ -61,57 +61,48 @@ namespace KeLi.Common.Revit.Widgets
     /// <summary>
     /// Revit context.
     /// </summary>
-    public class RevitContext: IDisposable
+    public class RevitContext : IDisposable
     {
         /// <summary>
-        /// Revit version number.
+        /// Revit product
+        /// Cannot set static variable, if not, throw exception.
         /// </summary>
-        private static int _versionNum;
-
-        /// <summary>
-        /// Revit product.
-        /// </summary>
-        private static Product _product;
+        private Product _product;
 
         /// <summary>
         /// Cannot build an instance.
         /// </summary>
         private RevitContext()
         {
+            SetEnvironmentVariable();
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        }
 
+        /// <summary>
+        /// Creates an instances.
+        /// </summary>
+        /// <returns></returns>
+        public static RevitContext CreateInstance()
+        {
+            return SingletonFactory<RevitContext>.CreateInstance();
         }
 
         /// <summary>
         /// Gets revit application.
         /// </summary>
-        /// <param name="clientName"></param>
-        /// <param name="versionNum"></param>
         /// <returns></returns>
-        public Application GetApplication(string clientName, int versionNum)
+        public Application GetApplication()
         {
-            _versionNum = versionNum;
+            var clientName = ConfigUtil.GetValue("ClientName");
+            var vendorId = ConfigUtil.GetValue("VendorId");
+            var clientId = new ClientApplicationId(Guid.NewGuid(), clientName, vendorId);
 
-            var context = SingletonFactory<RevitContext>.CreateInstance();
-
-            Init(clientName);
-
-            return context.GetApplication(clientName, versionNum);
-        }
-
-        /// <summary>
-        /// Initializes revit context.
-        /// </summary>
-        private static void Init(string clientName)
-        {
-            SetEnvironmentVariable();
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-
-            var clientId = new ClientApplicationId(Guid.NewGuid(), clientName, "ADSK");
+            _product = Product.GetInstalledProduct();
 
             // The string must be this 'I am authorized by Autodesk to use this UI-less functionality.'.
             _product.Init(clientId, "I am authorized by Autodesk to use this UI-less functionality.");
 
-            _product = Product.GetInstalledProduct();
+            return _product.Application;
         }
 
         /// <summary>
@@ -120,11 +111,9 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         private static string GetRevitInstallPath()
         {
+            var version = ConfigUtil.GetValue("RevitVersion");
             var products = RevitProductUtility.GetAllInstalledRevitProducts();
-            var product = products.FirstOrDefault(f => f.Name.Contains(_versionNum.ToString()));
-
-            if (product == null)
-                throw  new ArgumentException(nameof(_versionNum));
+            var product = products.FirstOrDefault(f => f.Name.Contains(version));
 
             return product.InstallLocation;
         }
@@ -134,7 +123,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         private static void SetEnvironmentVariable()
         {
-            var revitPath = new[] { GetRevitInstallPath()};
+            var revitPath = new[] { GetRevitInstallPath() };
             var path = new[] { Environment.GetEnvironmentVariable("PATH") ?? string.Empty };
             var newPath = string.Join(Path.PathSeparator.ToString(), path.Concat(revitPath));
 
@@ -150,7 +139,6 @@ namespace KeLi.Common.Revit.Widgets
         private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             var assemblyName = new AssemblyName(args.Name);
-
             var file = $"{Path.Combine(GetRevitInstallPath(), assemblyName.Name)}.dll";
 
             return File.Exists(file) ? Assembly.LoadFile(file) : null;
