@@ -52,7 +52,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
 
-namespace KeLi.FrameworkCache.Service
+namespace KeLi.Common.Tool.Cache
 {
     /// <summary>
     /// .Net framework cache helper.
@@ -198,15 +198,9 @@ namespace KeLi.FrameworkCache.Service
         /// <returns></returns>
         public object this[string key]
         {
-            get
-            {
-                return _data.Get(key);
-            }
+            get => _data.Get(key);
 
-            set
-            {
-                AddItem(key, value);
-            }
+            set => AddItem(key, value);
         }
     }
 }

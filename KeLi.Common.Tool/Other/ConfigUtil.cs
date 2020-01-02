@@ -58,27 +58,40 @@ namespace KeLi.Common.Tool.Other
     public class ConfigUtil
     {
         /// <summary>
+        /// Local position.
+        /// </summary>
+        private static string _location;
+
+        /// <summary>
         /// To repeat creating setting instance by single thread.
         /// </summary>
         private static AppSettingsSection _setting;
 
         /// <summary>
+        /// Config utility.
+        /// </summary>
+        public static void Init(Type type)
+        {
+            if (_location == null)
+                _location = Assembly.GetAssembly(type).Location;
+
+            if (_setting != null)
+                return;
+
+            var map = new ExeConfigurationFileMap { ExeConfigFilename = _location + ".config" };
+
+            _setting = ConfigurationManager.OpenMappedExeConfiguration(map, 0).AppSettings;
+        }
+
+        /// <summary>
         /// Get config file value by key.
-        /// The type is used to get current assembly location path.
         /// </summary>
         /// <param name="keyName"></param>
         /// <returns></returns>
-        public static string GetValue<T>(string keyName)
+        public static string GetValue(string keyName)
         {
-            if (_setting != null)
-                return _setting.Settings[keyName].Value;
-
-            var assemblyName = Assembly.GetAssembly(typeof(T)).Location;
-            var map = new ExeConfigurationFileMap { ExeConfigFilename = assemblyName + ".config" };
-
-            _setting = ConfigurationManager.OpenMappedExeConfiguration(map, 0).AppSettings;
-
-            Console.WriteLine(assemblyName);
+            if (_setting == null)
+                throw new Exception("Please call static method ConfigUtil.Init() in static program's constructor firstly!");
 
             return _setting.Settings[keyName].Value;
         }

@@ -54,6 +54,7 @@ using Autodesk.Revit;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
 using Autodesk.RevitAddIns;
+using KeLi.Common.Tool;
 using KeLi.Common.Tool.Other;
 
 namespace KeLi.Common.Revit.Widgets
@@ -70,12 +71,38 @@ namespace KeLi.Common.Revit.Widgets
         private Product _product;
 
         /// <summary>
+        /// Client name.
+        /// </summary>
+        private static string _clientName;
+
+        /// <summary>
+        /// Vendor Id.
+        /// </summary>
+        private static string _vendorId;
+
+        /// <summary>
+        /// Revit Version.
+        /// </summary>
+        private static string _version;
+
+        /// <summary>
         /// Cannot build an instance.
         /// </summary>
         private RevitContext()
         {
+            InitConfig();
             SetEnvironmentVariable();
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        }
+
+        /// <summary>
+        /// Sets config object.
+        /// </summary>
+        private static void InitConfig()
+        {
+            _clientName = ConfigUtil.GetValue("ClientName");
+            _vendorId = ConfigUtil.GetValue("VendorId");
+            _version = ConfigUtil.GetValue("RevitVersion");
         }
 
         /// <summary>
@@ -93,9 +120,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public Application GetApplication()
         {
-            var clientName = ConfigUtil.GetValue("ClientName");
-            var vendorId = ConfigUtil.GetValue("VendorId");
-            var clientId = new ClientApplicationId(Guid.NewGuid(), clientName, vendorId);
+            var clientId = new ClientApplicationId(Guid.NewGuid(), _clientName, _vendorId);
 
             _product = Product.GetInstalledProduct();
 
@@ -111,9 +136,8 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         private static string GetRevitInstallPath()
         {
-            var version = ConfigUtil.GetValue("RevitVersion");
             var products = RevitProductUtility.GetAllInstalledRevitProducts();
-            var product = products.FirstOrDefault(f => f.Name.Contains(version));
+            var product = products.FirstOrDefault(f => f.Name.Contains(_version));
 
             return product.InstallLocation;
         }
