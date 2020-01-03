@@ -278,6 +278,16 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
+        /// Gets the box's center point.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <returns></returns>
+        public static XYZ GetBoxCenter(this BoundingBoxXYZ box)
+        {
+            return (box.Max + box.Min) / 2;
+        }
+
+        /// <summary>
         /// Gets the box's length on y axis dreiction.
         /// </summary>
         /// <param name="box"></param>
