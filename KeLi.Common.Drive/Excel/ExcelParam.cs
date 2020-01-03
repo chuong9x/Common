@@ -46,7 +46,6 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System;
 using System.IO;
 
 namespace KeLi.Common.Drive.Excel
@@ -65,14 +64,29 @@ namespace KeLi.Common.Drive.Excel
         /// Excel param.
         /// </summary>
         /// <param name="filePath"></param>
-        /// <param name="templatePath"></param>
-        public ExcelParam(FileInfo filePath, FileInfo templatePath)
+        public ExcelParam(FileInfo filePath)
         {
-            FilePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
-            TemplatePath = templatePath ?? throw new ArgumentNullException(nameof(templatePath));
+            FilePath = filePath;
+            TemplatePath = filePath;
             SheetName = SHEET_NAME;
             RowIndex = 1;
             ColumnIndex = 0;
+        }
+
+        /// <summary>
+        /// Excel param.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="templatePath"></param>
+        public ExcelParam(FileInfo filePath, FileInfo templatePath)
+        {
+            FilePath = filePath;
+            TemplatePath = templatePath;
+            SheetName = SHEET_NAME;
+            RowIndex = 1;
+            ColumnIndex = 0;
+
+            File.Copy(templatePath.FullName, filePath.FullName, true);
         }
 
         /// <summary>
