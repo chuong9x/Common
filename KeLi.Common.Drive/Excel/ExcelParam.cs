@@ -64,19 +64,6 @@ namespace KeLi.Common.Drive.Excel
         /// Excel param.
         /// </summary>
         /// <param name="filePath"></param>
-        public ExcelParam(FileInfo filePath)
-        {
-            FilePath = filePath;
-            TemplatePath = filePath;
-            SheetName = SHEET_NAME;
-            RowIndex = 1;
-            ColumnIndex = 0;
-        }
-
-        /// <summary>
-        /// Excel param.
-        /// </summary>
-        /// <param name="filePath"></param>
         /// <param name="templatePath"></param>
         public ExcelParam(FileInfo filePath, FileInfo templatePath)
         {
