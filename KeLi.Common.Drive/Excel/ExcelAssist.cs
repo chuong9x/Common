@@ -200,6 +200,9 @@ namespace KeLi.Common.Drive.Excel
             if (param.FilePath.Exists)
                 File.Delete(param.FilePath.FullName);
 
+            if (param.TemplatePath == null)
+                throw new Exception("Template File must exist!");
+
             File.Copy(param.TemplatePath.FullName, param.FilePath.FullName);
 
             // Epplus dll write excel file that column index from 1 to end column index and row index from 0 to end row index.
