@@ -82,6 +82,23 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
+        /// Gets the bounding box in plane.
+        /// </summary>
+        /// <param name="elm"></param>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static BoundingBoxXYZ GetPlaneBox(this Element elm, Document doc)
+        {
+            var box = elm.GetBoundingBox(doc);
+
+            return new BoundingBoxXYZ()
+            {
+                Min = box.Min,
+                Max = new XYZ(box.Max.X, box.Max.Y, box.Min.Z)
+            };
+        }
+
+        /// <summary>
         /// Gets the round box.
         /// </summary>
         /// <param name="box"></param>
