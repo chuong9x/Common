@@ -53,7 +53,7 @@ namespace KeLi.Common.Revit.Builders
     /// <summary>
     /// CurtainSystem builder.
     /// </summary>
-    public class CurtainSystemBuilder
+    public static class CurtainSystemBuilder
     {
         /// <summary>
         /// Creates a new CurtainSystem.
@@ -61,7 +61,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="faces"></param>
         /// <returns></returns>
-        public static CurtainSystem CreateCurtainSystem(Document doc, FaceArray faces)
+        public static CurtainSystem CreateCurtainSystem(this Document doc, FaceArray faces)
         {
             var defaultTypeId = doc.GetDefaultElementTypeId(ElementTypeGroup.CurtainSystemType);
             var type = doc.GetElement(defaultTypeId) as CurtainSystemType;

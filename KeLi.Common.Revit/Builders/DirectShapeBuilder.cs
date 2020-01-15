@@ -56,7 +56,7 @@ namespace KeLi.Common.Revit.Builders
     /// <summary>
     /// DirectShape builder.
     /// </summary>
-    public class DirectShapeBuilder
+    public static class DirectShapeBuilder
     {
         /// <summary>
         /// Creates a new DirectShape.
@@ -65,7 +65,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="parm"></param>
         /// <param name="opt"></param>
         /// <returns></returns>
-        public static DirectShape CreateDirectShape(Document doc, ExtrusionParm parm, SolidOptions opt = null)
+        public static DirectShape CreateDirectShape(this Document doc, ExtrusionParm parm, SolidOptions opt = null)
         {
             var solid = CreateExtrusionGeometry(parm.Profile, parm.Direction, parm.Distance);
 
