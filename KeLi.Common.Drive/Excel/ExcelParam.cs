@@ -65,7 +65,7 @@ namespace KeLi.Common.Drive.Excel
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="templatePath"></param>
-        public ExcelParam(FileInfo filePath, FileInfo templatePath)
+        public ExcelParam(FileInfo filePath, FileInfo templatePath = null)
         {
             FilePath = filePath;
             TemplatePath = templatePath;
@@ -73,7 +73,8 @@ namespace KeLi.Common.Drive.Excel
             RowIndex = 1;
             ColumnIndex = 0;
 
-            File.Copy(templatePath.FullName, filePath.FullName, true);
+            if (templatePath != null && templatePath.Exists)
+                File.Copy(templatePath.FullName, filePath.FullName, true);
         }
 
         /// <summary>
