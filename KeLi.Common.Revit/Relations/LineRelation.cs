@@ -65,7 +65,7 @@ namespace KeLi.Common.Revit.Relations
         /// <param name="line2"></param>
         /// <param name="tolerance"></param>
         /// <returns></returns>
-        public static bool IsSpaceVertical(this Line line1, Line line2, double tolerance = 2 * 10e-3)
+        public static bool IsSpaceVertical(this Line line1, Line line2, double tolerance = 2e-2)
         {
             if (line1 == null)
                 throw new ArgumentNullException(nameof(line1));
@@ -83,7 +83,7 @@ namespace KeLi.Common.Revit.Relations
         /// <param name="line2"></param>
         /// <param name="tolerance"></param>
         /// <returns></returns>
-        public static bool IsSpaceParallel(this Line line1, Line line2, double tolerance = 2 * 10e-3)
+        public static bool IsSpaceParallel(this Line line1, Line line2, double tolerance = 2e-2)
         {
             if (line1 == null)
                 throw new ArgumentNullException(nameof(line1));
@@ -120,7 +120,7 @@ namespace KeLi.Common.Revit.Relations
         /// <param name="line2"></param>
         /// <param name="tolerance"></param>
         /// <returns></returns>
-        public static bool IsPlaneParallel(this Line line1, Line line2, double tolerance = 2 * 10e-3)
+        public static bool IsPlaneParallel(this Line line1, Line line2, double tolerance = 2e-2)
         {
             if (line1 == null)
                 throw new ArgumentNullException(nameof(line1));
@@ -144,7 +144,7 @@ namespace KeLi.Common.Revit.Relations
         /// <param name="line2"></param>
         /// <param name="tolerance"></param>
         /// <returns></returns>
-        public static bool IsPlaneVertical(this Line line1, Line line2, double tolerance = 2 * 10e-3)
+        public static bool IsPlaneVertical(this Line line1, Line line2, double tolerance = 2e-2)
         {
             if (line1 == null)
                 throw new ArgumentNullException(nameof(line1));
@@ -166,7 +166,7 @@ namespace KeLi.Common.Revit.Relations
         /// <param name="isTouch"></param>
         /// <param name="tolerance"></param>
         /// <returns></returns>
-        public static XYZ GetPlaneCrossingPoint(this Line line1, Line line2, bool isTouch = true, double tolerance = 2 * 10e-3)
+        public static XYZ GetPlaneCrossingPoint(this Line line1, Line line2, bool isTouch = true, double tolerance = 2e-2)
         {
             if (line1 == null)
                 throw new ArgumentNullException(nameof(line1));

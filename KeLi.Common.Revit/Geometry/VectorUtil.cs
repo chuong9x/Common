@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 01/15/2020 10:22:11 AM |  |  |     |         |      |
+     |  |              Creation Time: 01/15/2020 03:11:11 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -47,48 +47,58 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using Autodesk.Revit.DB;
 
-namespace KeLi.Common.Revit.Builders
+namespace KeLi.Common.Revit.Geometry
 {
     /// <summary>
-    /// Extrusion paramter.
+    /// Vector utility.
     /// </summary>
-    public class ExtrusionParm
+    public static class VectorUtil
     {
         /// <summary>
-        /// Extrusion paramter.
+        /// If true the specified line's direction and the specified direction are same.
         /// </summary>
-        /// <param name="profile"></param>
+        /// <param name="line"></param>
         /// <param name="direction"></param>
-        /// <param name="distance"></param>
-        /// <param name="category"></param>
-        public ExtrusionParm(List<CurveLoop> profile, XYZ direction, double distance, BuiltInCategory category)
+        /// <returns></returns>
+        public static bool IsSameDirection(this Line line, XYZ direction)
         {
-            Profile = profile;
-            Direction = direction;
-            Distance = distance;
-            Category = category;
+            return line.Direction.AngleTo(direction) < 1e-6;
         }
 
         /// <summary>
-        /// Extrusion's profile.
+        /// If true the specified direction set and the line's direction are same.
         /// </summary>
-        public List<CurveLoop> Profile { get; set; }
+        /// <param name="line"></param>
+        /// <param name="directions"></param>
+        /// <returns></returns>
+        public static bool IsSameDirection(this Line line, List<XYZ> directions)
+        {
+            return directions.Any(line.IsSameDirection);
+        }
 
         /// <summary>
-        /// Extrusion's direction.
+        /// If true the line1's direction and the line2's direction are same.
         /// </summary>
-        public XYZ  Direction { get; set; }
+        /// <param name="line1"></param>
+        /// <param name="Line2"></param>
+        /// <returns></returns>
+        public static bool IsSameDirection(this Line line1, Line Line2)
+        {
+            return line1.Direction.AngleTo(Line2.Direction) < 1e-6;
+        }
 
         /// <summary>
-        /// Extrusion's distance.
+        /// If true the direction1 and the direction2 are same.
         /// </summary>
-        public double  Distance { get; set; }
-
-        /// <summary>
-        /// Extrusion's category.
-        /// </summary>
-        public BuiltInCategory Category { get; set; }
+        /// <param name="direction1"></param>
+        /// <param name="direction2"></param>
+        /// <returns></returns>
+        public static bool IsSameDirection(this XYZ direction1, XYZ direction2)
+        {
+            return direction1.AngleTo(direction2) < 1e-6;
+        }
     }
 }
