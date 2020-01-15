@@ -65,7 +65,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="end"></param>
         public FamilySymbolParm(string templateFilePath, CurveArrArray profile, SketchPlane plane, double end)
         {
-            TemplateFilePath = templateFilePath;
+            TemplateFileName = templateFilePath;
             ExtrusionProfile = profile;
             Plane = plane;
             End = end;
@@ -80,16 +80,16 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="index"></param>
         public FamilySymbolParm(string rfa, SweepProfile profile, ReferenceArray path, int index)
         {
-            TemplateFilePath = rfa;
+            TemplateFileName = rfa;
             SweepProfile = profile;
             SweepPath = path;
             Index = index;
         }
 
         /// <summary>
-        /// The family symbol's template file path.
+        /// The family symbol's template file name including file suffix.
         /// </summary>
-        public string TemplateFilePath { get; }
+        public string TemplateFileName { get; }
 
         /// <summary>
         /// The extrusion symbol's profile.

@@ -47,7 +47,9 @@
 */
 
 using System;
+using System.IO;
 using System.Linq;
+using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
@@ -67,7 +69,8 @@ namespace KeLi.Common.Revit.Builders
         public static FamilySymbol CreateExtrusionSymbol(this UIApplication uiapp, FamilySymbolParm parm)
         {
             var doc = uiapp.ActiveUIDocument.Document;
-            var fdoc = uiapp.Application.NewFamilyDocument(parm.TemplateFilePath);
+            var templateFilePath = uiapp.GeTemplateFilePath(parm.TemplateFileName);
+            var fdoc = uiapp.Application.NewFamilyDocument(templateFilePath);
 
             fdoc.FamilyCreate.NewExtrusion(true, parm.ExtrusionProfile, parm.Plane, parm.End);
 
@@ -83,7 +86,8 @@ namespace KeLi.Common.Revit.Builders
         public static FamilySymbol CreateSweepSymbol(this UIApplication uiapp, FamilySymbolParm parm)
         {
             var doc = uiapp.ActiveUIDocument.Document;
-            var fdoc = uiapp.Application.NewFamilyDocument(parm.TemplateFilePath);
+            var templateFilePath = uiapp.GeTemplateFilePath(parm.TemplateFileName);
+            var fdoc = uiapp.Application.NewFamilyDocument(templateFilePath);
 
             fdoc.FamilyCreate.NewSweep(true, parm.SweepPath, parm.SweepProfile, parm.Index, ProfilePlaneLocation.Start);
 
@@ -150,6 +154,28 @@ namespace KeLi.Common.Revit.Builders
                 result.Activate();
 
             return result;
+        }
+
+        /// <summary>
+        /// Gets the template file path.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string GeTemplateFilePath(this Application app, string fileName)
+        {
+            return Path.Combine(app.FamilyTemplatePath, fileName);
+        }
+
+        /// <summary>
+        /// Gets the template file path.
+        /// </summary>
+        /// <param name="uiapp"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string GeTemplateFilePath(this UIApplication uiapp, string fileName)
+        {
+            return Path.Combine(uiapp.Application.FamilyTemplatePath, fileName);
         }
     }
 }
