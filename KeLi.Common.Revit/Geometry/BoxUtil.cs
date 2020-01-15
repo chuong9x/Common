@@ -50,7 +50,6 @@ using System;
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI.Selection;
-using KeLi.Common.Revit.Converters;
 
 namespace KeLi.Common.Revit.Geometry
 {
@@ -323,6 +322,20 @@ namespace KeLi.Common.Revit.Geometry
         public static double GetBoxWidth(this BoundingBoxXYZ box)
         {
             return box.Max.Y - box.Min.Y;
+        }
+
+        /// <summary>
+        /// Gets the round point with custom precision.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="precision"></param>
+        /// <returns></returns>
+        public static XYZ GetRoundPoint(this XYZ point, int precision = 4)
+        {
+            if (point == null)
+                throw new ArgumentNullException(nameof(point));
+
+            return new XYZ(Math.Round(point.X, precision), Math.Round(point.Y, precision), Math.Round(point.Z, precision));
         }
     }
 }

@@ -87,7 +87,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the reference set to the reference array.
+        /// Converts the reference set to the ReferenceArray.
         /// </summary>
         /// <param name="refs"></param>
         /// <returns></returns>
@@ -105,7 +105,25 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the curve array set to the curve arr array.
+        /// Converts the reference set to the ReferenceArray.
+        /// </summary>
+        /// <param name="refs"></param>
+        /// <returns></returns>
+        public static ReferenceArray ToReferArray(this Reference[] refs)
+        {
+            if (refs == null)
+                throw new ArgumentNullException(nameof(refs));
+
+            var results = new ReferenceArray();
+
+            foreach (var refer in refs)
+                results.Append(refer);
+
+            return results;
+        }
+
+        /// <summary>
+        /// Converts the curve array set to the CurveArrArray.
         /// </summary>
         /// <param name="curvess"></param>
         /// <returns></returns>
@@ -123,7 +141,25 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the curve set to the curve array.
+        /// Converts the curve array set to the CurveArrArray.
+        /// </summary>
+        /// <param name="curvess"></param>
+        /// <returns></returns>
+        public static CurveArrArray ToCurveArrArray(this CurveArray[] curvess)
+        {
+            if (curvess == null)
+                throw new ArgumentNullException(nameof(curvess));
+
+            var results = new CurveArrArray();
+
+            foreach (var curves in curvess)
+                results.Append(curves);
+
+            return results;
+        }
+
+        /// <summary>
+        /// Converts the curve set to the CurveArray.
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
@@ -141,17 +177,57 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Gets the round point with custom precision.
+        /// Converts the curve set to the CurveArray.
         /// </summary>
-        /// <param name="point"></param>
-        /// <param name="precision"></param>
+        /// <param name="curves"></param>
         /// <returns></returns>
-        public static XYZ GetRoundPoint(this XYZ point, int precision = 4)
+        public static CurveArray ToCurveArray(this Curve[] curves)
         {
-            if (point == null)
-                throw new ArgumentNullException(nameof(point));
+            if (curves == null)
+                throw new ArgumentNullException(nameof(curves));
 
-            return new XYZ(Math.Round(point.X, precision), Math.Round(point.Y, precision), Math.Round(point.Z, precision));
+            var results = new CurveArray();
+
+            foreach (var curve in curves)
+                results.Append(curve);
+
+            return results;
+        }
+
+        /// <summary>
+        /// Converts the face set to the FaceArray.
+        /// </summary>
+        /// <param name="faces"></param>
+        /// <returns></returns>
+        public static FaceArray ToFaceArray(this List<Face> faces)
+        {
+            if (faces == null)
+                throw new ArgumentNullException(nameof(faces));
+
+            var results = new FaceArray();
+
+            foreach (var face in faces)
+                results.Append(face);
+
+            return results;
+        }
+
+        /// <summary>
+        /// Converts the face set to the FaceArray.
+        /// </summary>
+        /// <param name="faces"></param>
+        /// <returns></returns>
+        public static FaceArray ToFaceArray(this Face[] faces)
+        {
+            if (faces == null)
+                throw new ArgumentNullException(nameof(faces));
+
+            var results = new FaceArray();
+
+            foreach (var face in faces)
+                results.Append(face);
+
+            return results;
         }
     }
 }
