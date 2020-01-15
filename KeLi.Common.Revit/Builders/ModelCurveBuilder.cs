@@ -14,6 +14,39 @@ namespace KeLi.Common.Revit.Builders
         /// Creates a new ModelCurve.
         /// </summary>
         /// <param name="doc"></param>
+        /// <param name="pt"></param>
+        /// <returns></returns>
+        public static ModelCurve CreateModelCurve(this Document doc, XYZ pt)
+        {
+            if (pt == null)
+                throw new ArgumentNullException(nameof(pt));
+
+            var line = Line.CreateBound(XYZ.Zero,pt);
+
+            return doc.CreateModelCurve(line);
+        }
+
+        /// <summary>
+        /// Creates a new ModelCurve.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="pt1"></param>
+        /// <param name="pt2"></param>
+        /// <returns></returns>
+        public static ModelCurve CreateModelCurve(this Document doc, XYZ pt1, XYZ pt2)
+        {
+            if (pt1 == null)
+                throw new ArgumentNullException(nameof(pt1));
+
+            var line = Line.CreateBound(pt1, pt2);
+
+            return doc.CreateModelCurve(line);
+        }
+
+        /// <summary>
+        /// Creates a new ModelCurve.
+        /// </summary>
+        /// <param name="doc"></param>
         /// <param name="line"></param>
         /// <returns></returns>
         public static ModelCurve CreateModelCurve(this Document doc, Line line)
