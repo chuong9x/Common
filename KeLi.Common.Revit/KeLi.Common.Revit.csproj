@@ -83,6 +83,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builders\BaseBuilder.cs" />
+    <Compile Include="Builders\DirectShapeBuilder.cs" />
+    <Compile Include="Entities\ExtrusionParm.cs" />
     <Compile Include="Builders\FamilyInstanceBuilder.cs" />
     <Compile Include="Builders\GroupBuilder.cs" />
     <Compile Include="Builders\MaterialBuilder.cs" />
