@@ -70,6 +70,25 @@ namespace KeLi.Common.Revit.Builders
         /// Creates ModelCurve set.
         /// </summary>
         /// <param name="doc"></param>
+        /// <param name="pts"></param>
+        /// <returns></returns>
+        public static List<ModelCurve> CreateModelCurveList(this Document doc, List<XYZ> pts)
+        {
+            if (pts == null)
+                throw new ArgumentNullException(nameof(pts));
+
+            var results = new List<ModelCurve>();
+
+            foreach (var pt in pts)
+                results.Add(doc.CreateModelCurve(pt));
+
+            return results;
+        }
+
+        /// <summary>
+        /// Creates ModelCurve set.
+        /// </summary>
+        /// <param name="doc"></param>
         /// <param name="lines"></param>
         /// <returns></returns>
         public static List<ModelCurve> CreateModelCurveList(this Document doc, List<Line> lines)
