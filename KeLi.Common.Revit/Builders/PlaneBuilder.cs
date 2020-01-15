@@ -47,6 +47,8 @@
 */
 
 using Autodesk.Revit.DB;
+using System;
+using KeLi.Common.Revit.Geometry;
 
 namespace KeLi.Common.Revit.Builders
 {
@@ -56,50 +58,37 @@ namespace KeLi.Common.Revit.Builders
     public static class PlaneBuilder
     {
         /// <summary>
-        /// Creates a new reference plane.
+        /// Creates a new plane.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="bubble"></param>
-        /// <param name="free"></param>
-        /// <param name="vector"></param>
-        /// <param name="view"></param>
+        /// <param name="line"></param>
         /// <returns></returns>
-        public static ReferencePlane CreateReferencePlane(this Document doc, XYZ bubble, XYZ free, XYZ vector, View view)
+        public static Plane CreatePlane(this Line line)
         {
-            return doc.Create.NewReferencePlane(bubble, free, vector, doc.ActiveView);
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
+
+            var refAsix = XYZ.BasisZ;
+
+            if (line.IsSameDirection(XYZ.BasisZ, -XYZ.BasisZ))
+                refAsix = XYZ.BasisX;
+
+            var normal = line.Direction.CrossProduct(refAsix).Normalize();
+
+            return Plane.CreateByNormalAndOrigin(normal, line.Origin);
         }
 
         /// <summary>
         /// Creates a new sketch plane.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="datumId"></param>
+        /// <param name="line"></param>
         /// <returns></returns>
-        public static SketchPlane CreateSketchPlane(this Document doc, ElementId datumId)
+        public static SketchPlane CreateSketchPlane(this Document doc, Line line)
         {
-            return SketchPlane.Create(doc, datumId);
-        }
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
 
-        /// <summary>
-        /// Creates a new sketch plane.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="plane"></param>
-        /// <returns></returns>
-        public static SketchPlane CreateSketchPlane(this Document doc, Plane plane)
-        {
-            return SketchPlane.Create(doc, plane);
-        }
-
-        /// <summary>
-        /// Creates a new sketch plane.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="refer"></param>
-        /// <returns></returns>
-        public static SketchPlane CreateSketchPlane(this Document doc, Reference refer)
-        {
-            return SketchPlane.Create(doc, refer);
+            return SketchPlane.Create(doc, line.CreatePlane());
         }
     }
 }

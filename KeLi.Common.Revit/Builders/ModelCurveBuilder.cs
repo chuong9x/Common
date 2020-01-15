@@ -103,14 +103,17 @@ namespace KeLi.Common.Revit.Builders
             if (line == null)
                 throw new ArgumentNullException(nameof(line));
 
-            var basicZ = XYZ.BasisZ;
+            var refAsix = XYZ.BasisZ;
 
             if (line.IsSameDirection(new List<XYZ> { XYZ.BasisZ, -XYZ.BasisZ }))
-                basicZ = XYZ.BasisY;
+                refAsix = XYZ.BasisX;
 
-            var normal = basicZ.CrossProduct(line.Direction).Normalize();
-            var plane = Plane.CreateByNormalAndOrigin(normal, line.GetEndPoint(0));
+            var normal = line.Direction.CrossProduct(refAsix).Normalize();
+            var plane = Plane.CreateByNormalAndOrigin(normal, line.Origin);
             var sketchPlane = SketchPlane.Create(doc, plane);
+
+            if (doc.IsFamilyDocument)
+                return doc.FamilyCreate.NewModelCurve(line, sketchPlane);
 
             return doc.Create.NewModelCurve(line, sketchPlane);
         }

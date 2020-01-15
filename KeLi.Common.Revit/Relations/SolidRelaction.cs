@@ -53,7 +53,6 @@ using System.Linq;
 using Autodesk.Revit.DB;
 using KeLi.Common.Revit.Converters;
 using KeLi.Common.Revit.Geometry;
-using KeLi.Common.Revit.Widgets;
 
 namespace KeLi.Common.Revit.Relations
 {

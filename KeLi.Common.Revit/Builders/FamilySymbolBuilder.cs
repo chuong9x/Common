@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/15/2020 07:39:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,50 +46,110 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
+using System.Linq;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Sweep builder.
+    /// FamilySymbol builder.
     /// </summary>
-    public static class SweepBuilder
+    public static class FamilySymbolBuilder
     {
         /// <summary>
-        /// Creates a new sweep.
+        /// Creates a new extrusion symbol.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="path"></param>
-        /// <param name="profile"></param>
-        /// <param name="index"></param>
+        /// <param name="uiapp"></param>
+        /// <param name="parm"></param>
         /// <returns></returns>
-        public static Sweep CreateSweep(this Document doc, SweepProfile profile, ReferenceArray path, int index)
+        public static FamilySymbol CreateExtrusionSymbol(this UIApplication uiapp, FamilySymbolParm parm)
         {
-            return doc.FamilyCreate.NewSweep(true, path, profile, index, ProfilePlaneLocation.Start);
+            var doc = uiapp.ActiveUIDocument.Document;
+            var fdoc = uiapp.Application.NewFamilyDocument(parm.TemplateFilePath);
+
+            fdoc.FamilyCreate.NewExtrusion(true, parm.ExtrusionProfile, parm.Plane, parm.End);
+
+            return doc.GetFamilySymbol(fdoc);
         }
 
         /// <summary>
-        /// Creates a new extrusion.
+        /// Creates a new sweep symbol.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="profile"></param>
-        /// <param name="plane"></param>
-        /// <param name="end"></param>
+        /// <param name="uiapp"></param>
+        /// <param name="parm"></param>
         /// <returns></returns>
-        public static Extrusion CreateExtrusion(this Document doc, CurveArrArray profile, SketchPlane plane, double end)
+        public static FamilySymbol CreateSweepSymbol(this UIApplication uiapp, FamilySymbolParm parm)
         {
-            return doc.FamilyCreate.NewExtrusion(true, profile, plane, end);
+            var doc = uiapp.ActiveUIDocument.Document;
+            var fdoc = uiapp.Application.NewFamilyDocument(parm.TemplateFilePath);
+
+            fdoc.FamilyCreate.NewSweep(true, parm.SweepPath, parm.SweepProfile, parm.Index, ProfilePlaneLocation.Start);
+
+            return doc.GetFamilySymbol(fdoc);
         }
 
         /// <summary>
-        /// Creates a new profile.
+        /// Creates a new family symbol.
+        /// </summary>
+        /// <param name="uiapp"></param>
+        /// <param name="rfaPath"></param>
+        /// <returns></returns>
+        public static FamilySymbol CreateFamilySymbol(this UIApplication uiapp, string rfaPath)
+        {
+            var doc = uiapp.ActiveUIDocument.Document;
+
+            doc.LoadFamily(rfaPath, out var family);
+
+            return doc.GetFamilySymbol(family);
+        }
+
+        /// <summary>
+        /// Creates a new family symbol.
+        /// </summary>
+        /// <param name="uiapp"></param>
+        /// <param name="templateFilePath"></param>
+        /// <param name="act"></param>
+        /// <returns></returns>
+        public static FamilySymbol CreateFamilySymbol(this UIApplication uiapp, string templateFilePath, Action<Document> act)
+        {
+            var doc = uiapp.ActiveUIDocument.Document;
+            var fdoc = uiapp.Application.NewFamilyDocument(templateFilePath);
+
+            act.Invoke(fdoc);
+
+            return doc.GetFamilySymbol(fdoc);
+        }
+
+        /// <summary>
+        /// Gets the first family symbol from family document.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="profile"></param>
+        /// <param name="fdoc"></param>
         /// <returns></returns>
-        public static SweepProfile CreateProfile(this Document doc, CurveArrArray profile)
+        public static FamilySymbol GetFamilySymbol(this Document doc, Document fdoc)
         {
-            return doc.Application.Create.NewCurveLoopsProfile(profile);
+            var family = fdoc.LoadFamily(doc);
+
+            return doc.GetFamilySymbol(family);
+        }
+
+        /// <summary>
+        /// Gets the first family symbol from family document.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="family"></param>
+        /// <returns></returns>
+        public static FamilySymbol GetFamilySymbol(this Document doc, Family family)
+        {
+            var symbolId = family.GetFamilySymbolIds().FirstOrDefault();
+            var result = doc.GetElement(symbolId) as FamilySymbol;
+
+            if (result != null && !result.IsActive)
+                result.Activate();
+
+            return result;
         }
     }
 }

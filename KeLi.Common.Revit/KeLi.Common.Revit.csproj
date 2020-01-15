@@ -82,17 +82,18 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Builders\BaseBuilder.cs" />
     <Compile Include="Builders\CurtainSystemBuilder.cs" />
     <Compile Include="Builders\DirectShapeBuilder.cs" />
     <Compile Include="Builders\ExtrusionParm.cs" />
     <Compile Include="Builders\FamilyInstanceBuilder.cs" />
+    <Compile Include="Builders\FamilyInstanceParm.cs" />
+    <Compile Include="Builders\FamilySymbolBuilder.cs" />
+    <Compile Include="Builders\FamilySymbolParm.cs" />
     <Compile Include="Builders\GroupBuilder.cs" />
     <Compile Include="Builders\MaterialBuilder.cs" />
     <Compile Include="Builders\ModelCurveBuilder.cs" />
     <Compile Include="Builders\PipeBuilder.cs" />
     <Compile Include="Builders\PlaneBuilder.cs" />
-    <Compile Include="Builders\SweepBuilder.cs" />
     <Compile Include="Builders\ViewBuilder.cs" />
     <Compile Include="Geometry\VectorUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

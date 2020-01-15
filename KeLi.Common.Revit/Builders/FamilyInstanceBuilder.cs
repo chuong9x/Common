@@ -46,12 +46,8 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Structure;
-using Autodesk.Revit.UI;
 
 namespace KeLi.Common.Revit.Builders
 {
@@ -61,65 +57,17 @@ namespace KeLi.Common.Revit.Builders
     public static class FamilyInstanceBuilder
     {
         /// <summary>
-        /// Creates a new family instance.
+        ///  Creates a new family instance.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="location"></param>
-        /// <param name="symbol"></param>
-        /// <param name="lvl"></param>
-        /// <param name="type"></param>
+        /// <param name="parm"></param>
         /// <returns></returns>
-        public static FamilyInstance CreateFamilyInstance(this Document doc, XYZ location, FamilySymbol symbol, Level lvl,
-            StructuralType type)
+        public static FamilyInstance CreateFamilyInstance(this Document doc, FamilyInstanceParm parm)
         {
-            return doc.Create.NewFamilyInstance(location, symbol, lvl, type);
-        }
+            if (doc.IsFamilyDocument)
+                return doc.FamilyCreate.NewFamilyInstance(parm.Location, parm.Symbol, parm.Level, parm.Type);
 
-        /// <summary>
-        /// Creates a new family instance.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="location"></param>
-        /// <param name="symbol"></param>
-        /// <param name="elm"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static FamilyInstance CreateFamilyInstance(this Document doc, XYZ location, FamilySymbol symbol, Element elm,
-            StructuralType type)
-        {
-            return doc.Create.NewFamilyInstance(location, symbol, elm, type);
-        }
-
-        /// <summary>
-        /// Creates a new family instance.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="location"></param>
-        /// <param name="symbol"></param>
-        /// <param name="elm"></param>
-        /// <param name="lvl"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static FamilyInstance CreateFamilyInstance(this Document doc, XYZ location, FamilySymbol symbol, Element elm,
-            Level lvl, StructuralType type)
-        {
-            return doc.Create.NewFamilyInstance(location, symbol, elm, lvl, type);
-        }
-
-        /// <summary>
-        /// Creates a new family instance.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="location"></param>
-        /// <param name="symbol"></param>
-        /// <param name="elm"></param>
-        /// <param name="type"></param>
-        /// <param name="direction"></param>
-        /// <returns></returns>
-        public static FamilyInstance CreateFamilyInstance(this Document doc, XYZ location, FamilySymbol symbol,
-            XYZ direction, Element elm, StructuralType type)
-        {
-            return doc.Create.NewFamilyInstance(location, symbol, direction, elm, type);
+            return doc.Create.NewFamilyInstance(parm.Location, parm.Symbol, parm.Level, parm.Type);
         }
 
         /// <summary>
@@ -144,78 +92,6 @@ namespace KeLi.Common.Revit.Builders
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Creates a new family symbol.
-        /// </summary>
-        /// <param name="uiapp"></param>
-        /// <param name="rfa"></param>
-        /// <param name="profile"></param>
-        /// <param name="plane"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-        public static FamilySymbol CreateFamilySymbol(this UIApplication uiapp, string rfa, CurveArrArray profile,
-            SketchPlane plane, double end)
-        {
-            var doc = uiapp.ActiveUIDocument.Document;
-            var fdoc = uiapp.Application.NewFamilyDocument(rfa);
-
-            fdoc.CreateExtrusion(profile, plane, end);
-
-            return doc.GetElement(fdoc.LoadFamily(doc).GetFamilySymbolIds().FirstOrDefault()) as FamilySymbol;
-        }
-
-        /// <summary>
-        /// Creates a new family symbol.
-        /// </summary>
-        /// <param name="uiapp"></param>
-        /// <param name="rfa"></param>
-        /// <param name="profile"></param>
-        /// <param name="path"></param>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public static FamilySymbol CreateFamilySymbol(this UIApplication uiapp, string rfa, SweepProfile profile,
-            ReferenceArray path, int index)
-        {
-            var doc = uiapp.ActiveUIDocument.Document;
-            var fdoc = uiapp.Application.NewFamilyDocument(rfa);
-
-            fdoc.CreateSweep(profile, path, index);
-
-            return doc.GetElement(fdoc.LoadFamily(doc).GetFamilySymbolIds().FirstOrDefault()) as FamilySymbol;
-        }
-
-        /// <summary>
-        /// Creates a new family symbol.
-        /// </summary>
-        /// <param name="uiapp"></param>
-        /// <param name="rfa"></param>
-        /// <returns></returns>
-        public static FamilySymbol CreateFamilySymbol(this UIApplication uiapp, string rfa)
-        {
-            var doc = uiapp.ActiveUIDocument.Document;
-
-            doc.LoadFamily(rfa, out var family);
-
-            return doc.GetElement(family.GetFamilySymbolIds().FirstOrDefault()) as FamilySymbol;
-        }
-
-        /// <summary>
-        /// Creates a new family symbol.
-        /// </summary>
-        /// <param name="uiapp"></param>
-        /// <param name="rft"></param>
-        /// <param name="act"></param>
-        /// <returns></returns>
-        public static FamilySymbol CreateFamilySymbol(this UIApplication uiapp, string rft, Action<Document> act)
-        {
-            var doc = uiapp.ActiveUIDocument.Document;
-            var fdoc = uiapp.Application.NewFamilyDocument(rft);
-
-            act.Invoke(fdoc);
-
-            return doc.GetElement(fdoc.LoadFamily(doc).GetFamilySymbolIds().FirstOrDefault()) as FamilySymbol;
         }
     }
 }

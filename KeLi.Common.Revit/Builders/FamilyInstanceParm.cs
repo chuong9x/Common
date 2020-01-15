@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 01/15/2020 03:11:11 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/15/2020 07:39:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,59 +46,49 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System.Collections.Generic;
-using System.Linq;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Structure;
 
-namespace KeLi.Common.Revit.Geometry
+namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Vector utility.
+    /// Family instance parameter.
     /// </summary>
-    public static class VectorUtil
+    public class FamilyInstanceParm
     {
         /// <summary>
-        /// If true the specified line's direction and the specified directions are same.
+        /// Family instance parameter.
         /// </summary>
-        /// <param name="line"></param>
-        /// <param name="directions"></param>
-        /// <returns></returns>
-        public static bool IsSameDirection(this Line line, params XYZ[] directions)
+        /// <param name="location"></param>
+        /// <param name="symbol"></param>
+        /// <param name="lvl"></param>
+        /// <param name="type"></param>
+        public FamilyInstanceParm(XYZ location, FamilySymbol symbol, Level lvl, StructuralType type)
         {
-            return directions.Any(a => line.Direction.AngleTo(a) < 1e-6);
+            Location = location;
+            Symbol = symbol;
+            Level = lvl;
+            Type = type;
         }
 
         /// <summary>
-        /// If true the specified direction set and the line's direction are same.
+        /// The family instance's location.
         /// </summary>
-        /// <param name="line"></param>
-        /// <param name="directions"></param>
-        /// <returns></returns>
-        public static bool IsSameDirection(this Line line, List<XYZ> directions)
-        {
-            return directions.Any(a => line.IsSameDirection(a));
-        }
+        public XYZ Location { get; set; }
 
         /// <summary>
-        /// If true the line1's direction and the line2's direction are same.
+        /// The family instance's Symbol.
         /// </summary>
-        /// <param name="line1"></param>
-        /// <param name="Line2"></param>
-        /// <returns></returns>
-        public static bool IsSameDirection(this Line line1, Line Line2)
-        {
-            return line1.Direction.AngleTo(Line2.Direction) < 1e-6;
-        }
+        public FamilySymbol Symbol { get; set; }
 
         /// <summary>
-        /// If true the direction1 and the direction2 are same.
+        /// The family instance's level.
         /// </summary>
-        /// <param name="direction1"></param>
-        /// <param name="direction2"></param>
-        /// <returns></returns>
-        public static bool IsSameDirection(this XYZ direction1, XYZ direction2)
-        {
-            return direction1.AngleTo(direction2) < 1e-6;
-        }
+        public Level Level { get; set; }
+
+        /// <summary>
+        /// The family instance's type.
+        /// </summary>
+        public StructuralType Type { get; set; }
     }
 }
