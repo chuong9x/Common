@@ -60,37 +60,37 @@ namespace KeLi.Common.Revit.Widgets
         /// <summary>
         /// The hook id.
         /// </summary>
-        public static IntPtr HookId { get; set; }
+        private static IntPtr HookId { get; set; }
 
         /// <summary>
         /// The key board message.
         /// </summary>
-        public static int WhKeyboardLl => 13;
+        private static int WhKeyboardLl => 13;
 
         /// <summary>
         /// The key down message.
         /// </summary>
-        public static int WmKeydown => 0x0100;
+        private static int WmKeydown => 0x0100;
 
         /// <summary>
         /// The system key down message.
         /// </summary>
-        public static int WmSyskeydown => 0x0104;
+        private static int WmSyskeydown => 0x0104;
 
         /// <summary>
         /// The key up message.
         /// </summary>
-        public static int WmKeyup => 0x0101;
+        private static int WmKeyup => 0x0101;
 
         /// <summary>
         /// The system key up message.
         /// </summary>
-        public static int WmSyskeyup => 0x0105;
+        private static int WmSyskeyup => 0x0105;
 
         /// <summary>
         /// The hook handler.
         /// </summary>
-        public static HookHandler Handler { get; set; }
+        private static HookHandler Handler { get; set; }
 
         /// <summary>
         /// The key down event.
@@ -101,11 +101,6 @@ namespace KeLi.Common.Revit.Widgets
         /// The key up event.
         /// </summary>
         private static Action<int> KeyUpEvent { get; set; }
-
-        /// <summary>
-        /// The key code.
-        /// </summary>
-        public static int KeyCode { get; set; }
 
         /// <summary>
         /// Starts hook the program.
@@ -140,12 +135,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="wParam"></param>
         /// <param name="lParam"></param>
         /// <returns></returns>
-        public static IntPtr Callback(int nCode, IntPtr wParam, ref int lParam)
+        private static IntPtr Callback(int nCode, IntPtr wParam, ref int lParam)
         {
             if (wParam == null)
                 throw new ArgumentNullException(nameof(wParam));
-
-            KeyCode = lParam;
 
             if (nCode >= 0 && wParam == (IntPtr)WmKeydown || wParam == (IntPtr)WmSyskeydown)
                 KeyDownEvent?.Invoke(lParam);
@@ -164,7 +157,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="dwThreadId"></param>
         /// <returns></returns>
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern IntPtr SetWindowsHookEx(int idHook, HookHandler lpfn, IntPtr hMod, uint dwThreadId);
+        private static extern IntPtr SetWindowsHookEx(int idHook, HookHandler lpfn, IntPtr hMod, uint dwThreadId);
 
         /// <summary>
         /// Uninstall the hook.
@@ -173,7 +166,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool UnhookWindowsHookEx(IntPtr hhk);
+        private static extern bool UnhookWindowsHookEx(IntPtr hhk);
 
         /// <summary>
         /// Gets the next hook.
@@ -184,7 +177,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="lParam"></param>
         /// <returns></returns>
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, ref int lParam);
+        private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, ref int lParam);
 
         /// <summary>
         /// Gets the module handle.
@@ -192,6 +185,6 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="lpModuleName"></param>
         /// <returns></returns>
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern IntPtr GetModuleHandle(string lpModuleName);
+        private static extern IntPtr GetModuleHandle(string lpModuleName);
     }
 }

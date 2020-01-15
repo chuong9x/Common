@@ -59,7 +59,7 @@ namespace KeLi.Common.Revit.Builders
     public class DirectShapeBuilder
     {
         /// <summary>
-        /// Creates DirectShape.
+        /// Creates a new DirectShape.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="parm"></param>

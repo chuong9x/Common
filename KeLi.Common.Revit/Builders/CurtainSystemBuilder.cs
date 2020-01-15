@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/15/2020 13:21:11 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,21 +46,27 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-namespace KeLi.Common.Revit.Entities
+using Autodesk.Revit.DB;
+
+namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Key code enum.
+    /// CurtainSystem builder.
     /// </summary>
-    public enum KeyCodeEnum
+    public class CurtainSystemBuilder
     {
         /// <summary>
-        /// Left shift key code.
+        /// Creates a new CurtainSystem.
         /// </summary>
-        LeftShift = 160,
+        /// <param name="doc"></param>
+        /// <param name="faces"></param>
+        /// <returns></returns>
+        public static CurtainSystem CreateCurtainSystem(Document doc, FaceArray faces)
+        {
+            var defaultTypeId = doc.GetDefaultElementTypeId(ElementTypeGroup.CurtainSystemType);
+            var type = doc.GetElement(defaultTypeId) as CurtainSystemType;
 
-        /// <summary>
-        /// Right shift key code.
-        /// </summary>
-        RightShift = 161
+            return doc.Create.NewCurtainSystem(faces, type);
+        }
     }
 }

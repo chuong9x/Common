@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builders\BaseBuilder.cs" />
+    <Compile Include="Builders\CurtainSystemBuilder.cs" />
     <Compile Include="Builders\DirectShapeBuilder.cs" />
     <Compile Include="Entities\ExtrusionParm.cs" />
     <Compile Include="Builders\FamilyInstanceBuilder.cs" />
@@ -99,7 +100,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Entities\CalcType.cs" />
-    <Compile Include="Entities\KeyCodeEnum.cs" />
     <Compile Include="Widgets\ElementUtil.cs" />
     <Compile Include="Widgets\ExtendInfoUtil.cs" />
     <Compile Include="Widgets\MeshUtil.cs" />
