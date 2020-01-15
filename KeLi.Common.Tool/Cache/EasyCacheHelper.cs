@@ -127,10 +127,10 @@ namespace KeLi.Common.Tool.Cache
             if (string.IsNullOrWhiteSpace(key))
                 return default;
 
-            else if (!_data.ContainsKey(key))
+            if (!_data.ContainsKey(key))
                 return  default;
 
-            else if (_data[key].Value < DateTime.Now.AddSeconds(-_timeout))
+            if (_data[key].Value < DateTime.Now.AddSeconds(-_timeout))
                 return default;
 
             return _data[key].Key;
