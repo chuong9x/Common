@@ -175,7 +175,7 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static string GeTemplateFilePath(this UIApplication uiapp, string fileName)
         {
-            return Path.Combine(uiapp.Application.FamilyTemplatePath, fileName);
+            return uiapp.Application.GeTemplateFilePath(fileName);
         }
     }
 }
