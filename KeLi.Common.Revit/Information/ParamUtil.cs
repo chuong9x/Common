@@ -54,7 +54,7 @@ using System.Linq;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
-namespace KeLi.Common.Revit.Widgets
+namespace KeLi.Common.Revit.Information
 {
     /// <summary>
     /// Parameter utility.

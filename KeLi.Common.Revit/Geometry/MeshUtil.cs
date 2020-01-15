@@ -50,8 +50,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
+using KeLi.Common.Revit.Converters;
+using KeLi.Common.Revit.Widgets;
 
-namespace KeLi.Common.Revit.Widgets
+namespace KeLi.Common.Revit.Geometry
 {
     /// <summary>
     /// Mesh utility.
@@ -170,6 +172,46 @@ namespace KeLi.Common.Revit.Widgets
             var results = new List<Face>();
 
             elm.GetValidSolidList().ForEach(f => results.AddRange(f.Faces.Cast<Face>()));
+
+            return results;
+        }
+
+        /// <summary>
+        /// Gets the element's face set for the specified direction.
+        /// </summary>
+        /// <param name="elm"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public static List<Face> GetFaceList(this Element elm, XYZ direction)
+        {
+            var faces = elm.GetFaceList();
+            var results = new List<Face>();
+
+            foreach (var face in faces)
+            {
+                var box = face.GetBoundingBox();
+                var min = box.Min;
+                var noraml = face.ComputeNormal(min);
+
+                if (noraml.AngleTo(direction) < 1e-6)
+                    results.Add(face);
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Gets the element's face set for the specified direction list.
+        /// </summary>
+        /// <param name="elm"></param>
+        /// <param name="directions"></param>
+        /// <returns></returns>
+        public static List<Face> GetFaceList(this Element elm, List<XYZ> directions)
+        {
+            var results = new List<Face>();
+
+            foreach (var direction in directions)
+                results.AddRange(elm.GetFaceList(direction));
 
             return results;
         }

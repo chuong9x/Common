@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 12/27/2019 07:13:20 PM |  |  |     |         |      |
+     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,57 +46,112 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using Autodesk.Revit.DB;
 
-namespace KeLi.Common.Revit.Widgets
+namespace KeLi.Common.Revit.Converters
 {
     /// <summary>
-    /// Room utility.
+    /// Type converter.
     /// </summary>
-    public static class RoomUtil
+    public static class TypeConverter
     {
         /// <summary>
-        /// Gets the room's edge list.
+        /// Convers the space curve to the plane line.
         /// </summary>
-        /// <param name="room"></param>
+        /// <param name="line"></param>
         /// <returns></returns>
-        public static List<Line> GetEdgeList(this SpatialElement room)
+        public static Line ToPlaneLine(this Curve line)
         {
-            var result = new List<Line>();
-            var option = new SpatialElementBoundaryOptions
-            {
-                StoreFreeBoundaryFaces = true,
-                SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.CoreBoundary
-            };
-            var segments = room.GetBoundarySegments(option).SelectMany(s => s);
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
 
-            foreach (var seg in segments)
-            {
-                var sp = seg.GetCurve().GetEndPoint(0);
-                var ep = seg.GetCurve().GetEndPoint(1);
+            var p1 = line.GetEndPoint(0).ToPlanePoint();
+            var p2 = line.GetEndPoint(1).ToPlanePoint();
 
-                result.Add(Line.CreateBound(sp, ep));
-            }
-
-            return result;
+            return Line.CreateBound(p1, p2);
         }
 
         /// <summary>
-        /// Gets room list.
+        /// Convers the space point to the plane point.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="isValid"></param>
+        /// <param name="pt"></param>
         /// <returns></returns>
-        public static List<SpatialElement> GetSpatialElementList(Document doc, bool isValid = true)
+        public static XYZ ToPlanePoint(this XYZ pt)
         {
-            var results = doc.GetTypeElementList<SpatialElement>(false, false);
+            if (pt == null)
+                throw new ArgumentNullException(nameof(pt));
 
-            if (isValid)
-                results = results.Where(w => w?.Location != null && w.Area > 1e-6).ToList();
+            return new XYZ(pt.X, pt.Y, 0);
+        }
+
+        /// <summary>
+        /// Converts the reference set to the reference array.
+        /// </summary>
+        /// <param name="refs"></param>
+        /// <returns></returns>
+        public static ReferenceArray ToReferArray(this List<Reference> refs)
+        {
+            if (refs == null)
+                throw new ArgumentNullException(nameof(refs));
+
+            var results = new ReferenceArray();
+
+            foreach (var refer in refs)
+                results.Append(refer);
 
             return results;
+        }
+
+        /// <summary>
+        /// Converts the curve array set to the curve arr array.
+        /// </summary>
+        /// <param name="curvess"></param>
+        /// <returns></returns>
+        public static CurveArrArray ToCurveArrArray(this List<CurveArray> curvess)
+        {
+            if (curvess == null)
+                throw new ArgumentNullException(nameof(curvess));
+
+            var results = new CurveArrArray();
+
+            foreach (var curves in curvess)
+                results.Append(curves);
+
+            return results;
+        }
+
+        /// <summary>
+        /// Converts the curve set to the curve array.
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static CurveArray ToCurveArray(this List<Curve> curves)
+        {
+            if (curves == null)
+                throw new ArgumentNullException(nameof(curves));
+
+            var results = new CurveArray();
+
+            foreach (var curve in curves)
+                results.Append(curve);
+
+            return results;
+        }
+
+        /// <summary>
+        /// Gets the round point with custom precision.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="precision"></param>
+        /// <returns></returns>
+        public static XYZ GetRoundPoint(this XYZ point, int precision = 4)
+        {
+            if (point == null)
+                throw new ArgumentNullException(nameof(point));
+
+            return new XYZ(Math.Round(point.X, precision), Math.Round(point.Y, precision), Math.Round(point.Z, precision));
         }
     }
 }

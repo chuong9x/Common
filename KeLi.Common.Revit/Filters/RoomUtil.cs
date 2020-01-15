@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 12/27/2019 07:13:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,63 +46,57 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System;
+using System.Collections.Generic;
+using System.Linq;
+using Autodesk.Revit.DB;
 
-namespace KeLi.Common.Revit.Widgets
+namespace KeLi.Common.Revit.Filters
 {
     /// <summary>
-    /// Number utility.
+    /// Room utility.
     /// </summary>
-    public static class NumberUtil
+    public static class RoomUtil
     {
         /// <summary>
-        /// Millimeter to inch.
+        /// Gets the room's edge list.
         /// </summary>
-        private const double MM_TO_INCH = 0.0393700787;
-
-        /// <summary>
-        /// Millimeter to foot.
-        /// </summary>
-        private const double MM_TO_FT = 0.0032808399;
-
-        /// <summary>
-        /// Millimeter to foot.
-        /// </summary>
-        /// <param name="mm"></param>
+        /// <param name="room"></param>
         /// <returns></returns>
-        public static double ToFoot(double mm)
+        public static List<Line> GetEdgeList(this SpatialElement room)
         {
-            return MM_TO_FT * mm;
+            var result = new List<Line>();
+            var option = new SpatialElementBoundaryOptions
+            {
+                StoreFreeBoundaryFaces = true,
+                SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.CoreBoundary
+            };
+            var segments = room.GetBoundarySegments(option).SelectMany(s => s);
+
+            foreach (var seg in segments)
+            {
+                var sp = seg.GetCurve().GetEndPoint(0);
+                var ep = seg.GetCurve().GetEndPoint(1);
+
+                result.Add(Line.CreateBound(sp, ep));
+            }
+
+            return result;
         }
 
         /// <summary>
-        /// Millimeter to inch.
+        /// Gets room list.
         /// </summary>
-        /// <param name="mm"></param>
+        /// <param name="doc"></param>
+        /// <param name="isValid"></param>
         /// <returns></returns>
-        public static double ToInch(double mm)
+        public static List<SpatialElement> GetSpatialElementList(Document doc, bool isValid = true)
         {
-            return MM_TO_INCH * mm;
-        }
+            var results = doc.GetTypeElementList<SpatialElement>(false, false);
 
-        /// <summary>
-        /// The radian to the angle.
-        /// </summary>
-        /// <param name="radian"></param>
-        /// <returns></returns>
-        public static double ToAngle(double radian)
-        {
-            return radian * 180 / Math.PI;
-        }
+            if (isValid)
+                results = results.Where(w => w?.Location != null && w.Area > 1e-6).ToList();
 
-        /// <summary>
-        /// The angle to the radian.
-        /// </summary>
-        /// <param name="angle"></param>
-        /// <returns></returns>
-        public static double ToRadian(double angle)
-        {
-            return angle / 180 * Math.PI;
+            return results;
         }
     }
 }

@@ -48,7 +48,6 @@
 
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
-using KeLi.Common.Revit.Entities;
 using static Autodesk.Revit.DB.GeometryCreationUtilities;
 
 namespace KeLi.Common.Revit.Builders

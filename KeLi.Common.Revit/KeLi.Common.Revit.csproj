@@ -85,7 +85,7 @@
     <Compile Include="Builders\BaseBuilder.cs" />
     <Compile Include="Builders\CurtainSystemBuilder.cs" />
     <Compile Include="Builders\DirectShapeBuilder.cs" />
-    <Compile Include="Entities\ExtrusionParm.cs" />
+    <Compile Include="Builders\ExtrusionParm.cs" />
     <Compile Include="Builders\FamilyInstanceBuilder.cs" />
     <Compile Include="Builders\GroupBuilder.cs" />
     <Compile Include="Builders\MaterialBuilder.cs" />
@@ -99,27 +99,27 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Entities\CalcType.cs" />
+    <Compile Include="Filters\CalcType.cs" />
     <Compile Include="Widgets\ElementUtil.cs" />
-    <Compile Include="Widgets\ExtendInfoUtil.cs" />
-    <Compile Include="Widgets\MeshUtil.cs" />
-    <Compile Include="Widgets\FilterAssist.cs" />
-    <Compile Include="Widgets\HookHandler.cs" />
-    <Compile Include="Widgets\HookUtil.cs" />
+    <Compile Include="Information\ExtendInfoUtil.cs" />
+    <Compile Include="Geometry\MeshUtil.cs" />
+    <Compile Include="Filters\FilterAssist.cs" />
+    <Compile Include="Hook\HookHandler.cs" />
+    <Compile Include="Hook\HookUtil.cs" />
     <Compile Include="Widgets\LinkUtil.cs" />
     <Compile Include="Relations\LineRelation.cs" />
     <Compile Include="Relations\PointLineRelation.cs" />
     <Compile Include="Relations\PointPlaneRelation.cs" />
     <Compile Include="Relations\SolidRelaction.cs" />
-    <Compile Include="Widgets\ParamUtil.cs" />
+    <Compile Include="Information\ParamUtil.cs" />
     <Compile Include="Widgets\RevitContext.cs" />
     <Compile Include="Widgets\RibbonUtil.cs" />
     <Compile Include="Widgets\AreaUtil.cs" />
-    <Compile Include="Widgets\BoxUtil.cs" />
-    <Compile Include="Widgets\NumberUtil.cs" />
+    <Compile Include="Geometry\BoxUtil.cs" />
+    <Compile Include="Converters\NumberUtil.cs" />
     <Compile Include="Widgets\AutoUtil.cs" />
-    <Compile Include="Widgets\RoomUtil.cs" />
-    <Compile Include="Widgets\TypeConverter.cs" />
+    <Compile Include="Filters\RoomUtil.cs" />
+    <Compile Include="Converters\TypeConverter.cs" />
     <Compile Include="Widgets\VisabilityUtil.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -138,5 +138,6 @@
       <Name>KeLi.Common.Tool</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -47,111 +47,62 @@
 */
 
 using System;
-using System.Collections.Generic;
-using Autodesk.Revit.DB;
 
-namespace KeLi.Common.Revit.Widgets
+namespace KeLi.Common.Revit.Converters
 {
     /// <summary>
-    /// Type converter.
+    /// Number utility.
     /// </summary>
-    public static class TypeConverter
+    public static class NumberUtil
     {
         /// <summary>
-        /// Convers the space curve to the plane line.
+        /// Millimeter to inch.
         /// </summary>
-        /// <param name="line"></param>
+        private const double MM_TO_INCH = 0.0393700787;
+
+        /// <summary>
+        /// Millimeter to foot.
+        /// </summary>
+        private const double MM_TO_FT = 0.0032808399;
+
+        /// <summary>
+        /// Millimeter to foot.
+        /// </summary>
+        /// <param name="mm"></param>
         /// <returns></returns>
-        public static Line ToPlaneLine(this Curve line)
+        public static double ToFoot(double mm)
         {
-            if (line == null)
-                throw new ArgumentNullException(nameof(line));
-
-            var p1 = line.GetEndPoint(0).ToPlanePoint();
-            var p2 = line.GetEndPoint(1).ToPlanePoint();
-
-            return Line.CreateBound(p1, p2);
+            return MM_TO_FT * mm;
         }
 
         /// <summary>
-        /// Convers the space point to the plane point.
+        /// Millimeter to inch.
         /// </summary>
-        /// <param name="pt"></param>
+        /// <param name="mm"></param>
         /// <returns></returns>
-        public static XYZ ToPlanePoint(this XYZ pt)
+        public static double ToInch(double mm)
         {
-            if (pt == null)
-                throw new ArgumentNullException(nameof(pt));
-
-            return new XYZ(pt.X, pt.Y, 0);
+            return MM_TO_INCH * mm;
         }
 
         /// <summary>
-        /// Converts the reference set to the reference array.
+        /// The radian to the angle.
         /// </summary>
-        /// <param name="refs"></param>
+        /// <param name="radian"></param>
         /// <returns></returns>
-        public static ReferenceArray ToReferArray(this List<Reference> refs)
+        public static double ToAngle(double radian)
         {
-            if (refs == null)
-                throw new ArgumentNullException(nameof(refs));
-
-            var results = new ReferenceArray();
-
-            foreach (var refer in refs)
-                results.Append(refer);
-
-            return results;
+            return radian * 180 / Math.PI;
         }
 
         /// <summary>
-        /// Converts the curve array set to the curve arr array.
+        /// The angle to the radian.
         /// </summary>
-        /// <param name="curvess"></param>
+        /// <param name="angle"></param>
         /// <returns></returns>
-        public static CurveArrArray ToCurveArrArray(this List<CurveArray> curvess)
+        public static double ToRadian(double angle)
         {
-            if (curvess == null)
-                throw new ArgumentNullException(nameof(curvess));
-
-            var results = new CurveArrArray();
-
-            foreach (var curves in curvess)
-                results.Append(curves);
-
-            return results;
-        }
-
-        /// <summary>
-        /// Converts the curve set to the curve array.
-        /// </summary>
-        /// <param name="curves"></param>
-        /// <returns></returns>
-        public static CurveArray ToCurveArray(this List<Curve> curves)
-        {
-            if (curves == null)
-                throw new ArgumentNullException(nameof(curves));
-
-            var results = new CurveArray();
-
-            foreach (var curve in curves)
-                results.Append(curve);
-
-            return results;
-        }
-
-        /// <summary>
-        /// Gets the round point with custom precision.
-        /// </summary>
-        /// <param name="point"></param>
-        /// <param name="precision"></param>
-        /// <returns></returns>
-        public static XYZ GetRoundPoint(this XYZ point, int precision = 4)
-        {
-            if (point == null)
-                throw new ArgumentNullException(nameof(point));
-
-            return new XYZ(Math.Round(point.X, precision), Math.Round(point.Y, precision), Math.Round(point.Z, precision));
+            return angle / 180 * Math.PI;
         }
     }
 }

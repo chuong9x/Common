@@ -49,7 +49,7 @@
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
-namespace KeLi.Common.Revit.Entities
+namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
     /// Extrusion paramter.

@@ -50,8 +50,9 @@ using System;
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI.Selection;
+using KeLi.Common.Revit.Converters;
 
-namespace KeLi.Common.Revit.Widgets
+namespace KeLi.Common.Revit.Geometry
 {
     /// <summary>
     /// Box utility.

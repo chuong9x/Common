@@ -52,7 +52,7 @@ using System.Linq;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.ExtensibleStorage;
 
-namespace KeLi.Common.Revit.Widgets
+namespace KeLi.Common.Revit.Information
 {
     /// <summary>
     /// Extend info utility.

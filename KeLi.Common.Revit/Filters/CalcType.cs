@@ -46,16 +46,26 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System;
-
-namespace KeLi.Common.Revit.Widgets
+namespace KeLi.Common.Revit.Filters
 {
     /// <summary>
-    /// Hook handler.
+    /// Calc type.
     /// </summary>
-    /// <param name="nCode"></param>
-    /// <param name="wParam"></param>
-    /// <param name="lParam"></param>
-    /// <returns></returns>
-    public delegate IntPtr HookHandler(int nCode, IntPtr wParam, ref int lParam);
+    public enum CalcType
+    {
+        /// <summary>
+        /// Base face to calc.
+        /// </summary>
+        FaceNum,
+
+        /// <summary>
+        /// Base point on face to calc.
+        /// </summary>
+        FacePointNum,
+
+        /// <summary>
+        /// Base point on solid to calc.
+        /// </summary>
+        SolidPointNum
+    }
 }

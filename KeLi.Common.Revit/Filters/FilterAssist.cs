@@ -50,9 +50,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
-using KeLi.Common.Revit.Entities;
+using KeLi.Common.Revit.Geometry;
 
-namespace KeLi.Common.Revit.Widgets
+namespace KeLi.Common.Revit.Filters
 {
     /// <summary>
     /// Filter Assist.
