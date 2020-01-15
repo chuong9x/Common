@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Autodesk.Revit.DB;
 using KeLi.Common.Revit.Geometry;
 
@@ -21,7 +22,7 @@ namespace KeLi.Common.Revit.Builders
             if (pt == null)
                 throw new ArgumentNullException(nameof(pt));
 
-            var line = Line.CreateBound(XYZ.Zero,pt);
+            var line = Line.CreateBound(XYZ.Zero, pt);
 
             return doc.CreateModelCurve(line);
         }
@@ -77,12 +78,21 @@ namespace KeLi.Common.Revit.Builders
             if (pts == null)
                 throw new ArgumentNullException(nameof(pts));
 
-            var results = new List<ModelCurve>();
+            return pts.Select(doc.CreateModelCurve).ToList();
+        }
 
-            foreach (var pt in pts)
-                results.Add(doc.CreateModelCurve(pt));
+        /// <summary>
+        /// Creates ModelCurve set.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="pts"></param>
+        /// <returns></returns>
+        public static List<ModelCurve> CreateModelCurveList(this Document doc, params XYZ[] pts)
+        {
+            if (pts == null)
+                throw new ArgumentNullException(nameof(pts));
 
-            return results;
+            return pts.Select(doc.CreateModelCurve).ToList();
         }
 
         /// <summary>
@@ -96,12 +106,21 @@ namespace KeLi.Common.Revit.Builders
             if (lines == null)
                 throw new ArgumentNullException(nameof(lines));
 
-            var results = new List<ModelCurve>();
+            return lines.Select(doc.CreateModelCurve).ToList();
+        }
 
-            foreach (var line in lines)
-                results.Add(doc.CreateModelCurve(line));
+        /// <summary>
+        /// Creates ModelCurve set.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="lines"></param>
+        /// <returns></returns>
+        public static List<ModelCurve> CreateModelCurveList(this Document doc, params Line[] lines)
+        {
+            if (lines == null)
+                throw new ArgumentNullException(nameof(lines));
 
-            return results;
+            return lines.Select(doc.CreateModelCurve).ToList();
         }
     }
 }
