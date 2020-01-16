@@ -71,6 +71,9 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static FamilySymbol CreateExtrusionSymbol(this UIApplication uiapp, FamilySymbolParm symbolParm, FamilyParm familyParm = null)
         {
+            if (symbolParm == null)
+                throw new ArgumentNullException(nameof(symbolParm));
+
             var doc = uiapp.ActiveUIDocument.Document;
             var templateFilePath = uiapp.GeTemplateFilePath(symbolParm.TemplateFileName);
             var fdoc = uiapp.Application.NewFamilyDocument(templateFilePath);
@@ -83,10 +86,7 @@ namespace KeLi.Common.Revit.Builders
                 ElementTransformUtils.MoveElement(fdoc, extrusion.Id, -extrusion.GetBoundingBox(fdoc).Min);
             });
 
-            if (familyParm != null)
-                fdoc.SaveAsAndClose(uiapp, familyParm.RfaPath, familyParm.TmpPath);
-
-            return doc.GetFamilySymbol(fdoc);
+            return doc.GetFamilySymbol(uiapp, fdoc, familyParm);
         }
 
         /// <summary>
@@ -96,8 +96,11 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="symbolParm"></param>
         /// <param name="familyParm"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateSweepSymbol(this UIApplication uiapp, FamilySymbolParm symbolParm, FamilyParm familyParm)
+        public static FamilySymbol CreateSweepSymbol(this UIApplication uiapp, FamilySymbolParm symbolParm, FamilyParm familyParm = null)
         {
+            if (symbolParm == null)
+                throw new ArgumentNullException(nameof(symbolParm));
+
             var doc = uiapp.ActiveUIDocument.Document;
             var templateFilePath = uiapp.GeTemplateFilePath(symbolParm.TemplateFileName);
             var fdoc = uiapp.Application.NewFamilyDocument(templateFilePath);
@@ -109,9 +112,7 @@ namespace KeLi.Common.Revit.Builders
                 ElementTransformUtils.MoveElement(fdoc, sweep.Id, -sweep.GetBoundingBox(fdoc).Min);
             });
 
-            fdoc.SaveAsAndClose(uiapp, familyParm.RfaPath, familyParm.TmpPath);
-
-            return doc.GetFamilySymbol(fdoc);
+            return doc.GetFamilySymbol(uiapp, fdoc, familyParm);
         }
 
         /// <summary>
@@ -122,6 +123,9 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static FamilySymbol CreateFamilySymbol(this UIApplication uiapp, string rfaPath)
         {
+            if (rfaPath == null)
+                throw new ArgumentNullException(nameof(rfaPath));
+
             var doc = uiapp.ActiveUIDocument.Document;
 
             doc.LoadFamily(rfaPath, out var family);
@@ -133,28 +137,49 @@ namespace KeLi.Common.Revit.Builders
         /// Creates a new family symbol.
         /// </summary>
         /// <param name="uiapp"></param>
-        /// <param name="templateFilePath"></param>
+        /// <param name="templateFileName"></param>
+        /// <param name="familyParm"></param>
         /// <param name="act"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateFamilySymbol(this UIApplication uiapp, string templateFilePath, Action<Document> act)
+        public static FamilySymbol CreateFamilySymbol(this UIApplication uiapp, string templateFileName, FamilyParm familyParm, Action<Document> act)
         {
+            if (templateFileName == null)
+                throw new ArgumentNullException(nameof(templateFileName));
+
+            if (familyParm == null)
+                throw new ArgumentNullException(nameof(familyParm));
+
+            if (act == null)
+                throw new ArgumentNullException(nameof(act));
+
             var doc = uiapp.ActiveUIDocument.Document;
+            var templateFilePath = uiapp.GeTemplateFilePath(templateFileName); 
             var fdoc = uiapp.Application.NewFamilyDocument(templateFilePath);
 
             fdoc.AutoTransaction(() => act.Invoke(fdoc));
 
-            return doc.GetFamilySymbol(fdoc);
+            return doc.GetFamilySymbol(uiapp, fdoc, familyParm);
         }
 
         /// <summary>
         /// Gets the first family symbol from family document.
         /// </summary>
         /// <param name="doc"></param>
+        /// <param name="uiapp"></param>
         /// <param name="fdoc"></param>
+        /// <param name="familyParm"></param>
         /// <returns></returns>
-        public static FamilySymbol GetFamilySymbol(this Document doc, Document fdoc)
+        public static FamilySymbol GetFamilySymbol(this Document doc, UIApplication uiapp, Document fdoc, FamilyParm familyParm)
         {
+            if (fdoc == null)
+                throw new ArgumentNullException(nameof(fdoc));
+
+            if (familyParm == null)
+                throw new ArgumentNullException(nameof(familyParm));
+
             var family = fdoc.LoadFamily(doc);
+
+            fdoc.SaveAsAndClose(uiapp, familyParm.RfaPath, familyParm.TmpPath);
 
             return doc.GetFamilySymbol(family);
         }
@@ -167,6 +192,9 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static FamilySymbol GetFamilySymbol(this Document doc, Family family)
         {
+            if (family == null)
+                throw new ArgumentNullException(nameof(family));
+
             var symbolId = family.GetFamilySymbolIds().FirstOrDefault();
             var result = doc.GetElement(symbolId) as FamilySymbol;
 
@@ -187,6 +215,9 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static string GeTemplateFilePath(this Application app, string fileName)
         {
+            if (fileName == null)
+                throw new ArgumentNullException(nameof(fileName));
+
             return Path.Combine(app.FamilyTemplatePath, fileName);
         }
 
@@ -198,6 +229,9 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static string GeTemplateFilePath(this UIApplication uiapp, string fileName)
         {
+            if (fileName == null)
+                throw new ArgumentNullException(nameof(fileName));
+
             return uiapp.Application.GeTemplateFilePath(fileName);
         }
     }

@@ -66,7 +66,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="end"></param>
         public FamilySymbolParm(string templateFileName, CurveArrArray profile, Plane plane, double end)
         {
-            TemplateFileName = templateFileName ?? throw new ArgumentNullException(nameof(templateFileName));
+            TemplateFileName = templateFileName;
             ExtrusionProfile = profile ?? throw new ArgumentNullException(nameof(profile));
             Plane = plane ?? throw new ArgumentNullException(nameof(plane));
             End = end;
@@ -81,7 +81,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="index"></param>
         public FamilySymbolParm(string templateFileName, SweepProfile profile, ReferenceArray path, int index)
         {
-            TemplateFileName = templateFileName ?? throw new ArgumentNullException(nameof(templateFileName));
+            TemplateFileName = templateFileName;
             SweepProfile = profile ?? throw new ArgumentNullException(nameof(profile));
             SweepPath = path ?? throw new ArgumentNullException(nameof(path));
             Index = index;
