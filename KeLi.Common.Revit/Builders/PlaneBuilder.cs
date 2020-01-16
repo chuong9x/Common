@@ -121,5 +121,19 @@ namespace KeLi.Common.Revit.Builders
 
             return SketchPlane.Create(doc, line.CreatePlane());
         }
+
+        /// <summary>
+        /// Creates a new sketch plane.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="plane"></param>
+        /// <returns></returns>
+        public static SketchPlane CreateSketchPlane(this Document doc, Plane plane)
+        {
+            if (plane == null)
+                throw new ArgumentNullException(nameof(plane));
+
+            return SketchPlane.Create(doc, plane);
+        }
     }
 }
