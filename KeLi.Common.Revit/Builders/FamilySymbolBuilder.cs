@@ -86,7 +86,7 @@ namespace KeLi.Common.Revit.Builders
                 ElementTransformUtils.MoveElement(fdoc, extrusion.Id, -extrusion.GetBoundingBox(fdoc).Min);
             });
 
-            return doc.GetFamilySymbol(uiapp, fdoc, familyParm);
+            return doc.GetFamilySymbol(fdoc, familyParm);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace KeLi.Common.Revit.Builders
                 ElementTransformUtils.MoveElement(fdoc, sweep.Id, -sweep.GetBoundingBox(fdoc).Min);
             });
 
-            return doc.GetFamilySymbol(uiapp, fdoc, familyParm);
+            return doc.GetFamilySymbol(fdoc, familyParm);
         }
 
         /// <summary>
@@ -158,18 +158,17 @@ namespace KeLi.Common.Revit.Builders
 
             fdoc.AutoTransaction(() => act.Invoke(fdoc));
 
-            return doc.GetFamilySymbol(uiapp, fdoc, familyParm);
+            return doc.GetFamilySymbol(fdoc, familyParm);
         }
 
         /// <summary>
         /// Gets the first family symbol from family document.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="uiapp"></param>
         /// <param name="fdoc"></param>
         /// <param name="familyParm"></param>
         /// <returns></returns>
-        public static FamilySymbol GetFamilySymbol(this Document doc, UIApplication uiapp, Document fdoc, FamilyParm familyParm)
+        public static FamilySymbol GetFamilySymbol(this Document doc, Document fdoc, FamilyParm familyParm)
         {
             if (fdoc == null)
                 throw new ArgumentNullException(nameof(fdoc));
@@ -179,7 +178,7 @@ namespace KeLi.Common.Revit.Builders
 
             var family = fdoc.LoadFamily(doc);
 
-            fdoc.SaveAsAndClose(uiapp, familyParm.RfaPath, familyParm.TmpPath);
+            fdoc.SaveNewFileAndClose(familyParm.RfaPath, familyParm.TmpPath);
 
             return doc.GetFamilySymbol(family);
         }

@@ -84,7 +84,7 @@
   <ItemGroup>
     <Compile Include="Builders\CurtainSystemBuilder.cs" />
     <Compile Include="Builders\DirectShapeBuilder.cs" />
-    <Compile Include="Builders\ExtrusionParm.cs" />
+    <Compile Include="Builders\DirectShapeParm.cs" />
     <Compile Include="Builders\FamilyInstanceBuilder.cs" />
     <Compile Include="Builders\FamilyInstanceParm.cs" />
     <Compile Include="Builders\FamilyParm.cs" />

@@ -64,23 +64,22 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="uiapp"></param>
         /// <param name="tmpRvt"></param>
         /// <param name="saveModified"></param>
-        public static void SaveAndClose(this UIApplication uiapp, string tmpRvt, bool saveModified = true)
+        public static void SaveExistedFileAndClose(this UIApplication uiapp, string tmpRvt, bool saveModified = true)
         {
             if (tmpRvt == null)
                 throw new ArgumentNullException(nameof(tmpRvt));
 
-            uiapp.ActiveUIDocument.Document.SaveAndClose(uiapp, tmpRvt, saveModified);
+            uiapp.ActiveUIDocument.Document.SaveExistedFileAndClose(uiapp, tmpRvt, saveModified);
         }
 
         /// <summary>
         /// Saves and closes the document.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="uiapp"></param>
         /// <param name="modelPath"></param>
         /// <param name="tmpRvt"></param>
         /// <param name="saveModified"></param>
-        public static void SaveAsAndClose(this Document doc, UIApplication uiapp, string modelPath, string tmpRvt, bool saveModified = true)
+        public static void SaveNewFileAndClose(this Document doc, string modelPath, string tmpRvt, bool saveModified = true)
         {
             if (modelPath == null)
                 throw new ArgumentNullException(nameof(modelPath));
@@ -92,7 +91,7 @@ namespace KeLi.Common.Revit.Widgets
                 File.Delete(modelPath);
 
             doc.SaveAs(modelPath);
-            doc.SafelyClose(uiapp, tmpRvt, saveModified);
+            doc.Close(saveModified);
         }
 
         /// <summary>
@@ -102,7 +101,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="uiapp"></param>
         /// <param name="tmpRvt"></param>
         /// <param name="saveModified"></param>
-        public static void SaveAndClose(this Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
+        public static void SaveExistedFileAndClose(this Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
         {
             if (tmpRvt == null)
                 throw new ArgumentNullException(nameof(tmpRvt));
