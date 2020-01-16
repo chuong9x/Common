@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
@@ -65,8 +66,8 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="category"></param>
         public ExtrusionParm(List<CurveLoop> profile, XYZ direction, double distance, BuiltInCategory category)
         {
-            Profile = profile;
-            Direction = direction;
+            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
+            Direction = direction ?? throw new ArgumentNullException(nameof(direction));
             Distance = distance;
             Category = category;
         }

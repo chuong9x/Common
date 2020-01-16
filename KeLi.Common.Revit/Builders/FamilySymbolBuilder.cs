@@ -66,23 +66,25 @@ namespace KeLi.Common.Revit.Builders
         /// Creates a new extrusion symbol.
         /// </summary>
         /// <param name="uiapp"></param>
-        /// <param name="parm"></param>
+        /// <param name="symbolParm"></param>
+        /// <param name="familyParm"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateExtrusionSymbol(this UIApplication uiapp, FamilySymbolParm parm)
+        public static FamilySymbol CreateExtrusionSymbol(this UIApplication uiapp, FamilySymbolParm symbolParm, FamilyParm familyParm = null)
         {
             var doc = uiapp.ActiveUIDocument.Document;
-            var templateFilePath = uiapp.GeTemplateFilePath(parm.TemplateFileName);
+            var templateFilePath = uiapp.GeTemplateFilePath(symbolParm.TemplateFileName);
             var fdoc = uiapp.Application.NewFamilyDocument(templateFilePath);
 
             fdoc.AutoTransaction(() =>
             {
-                var skectchPlane = fdoc.CreateSketchPlane(parm.Plane);
-                var extrusion = fdoc.FamilyCreate.NewExtrusion(true, parm.ExtrusionProfile, skectchPlane, parm.End);
+                var skectchPlane = fdoc.CreateSketchPlane(symbolParm.Plane);
+                var extrusion = fdoc.FamilyCreate.NewExtrusion(true, symbolParm.ExtrusionProfile, skectchPlane, symbolParm.End);
 
                 ElementTransformUtils.MoveElement(fdoc, extrusion.Id, -extrusion.GetBoundingBox(fdoc).Min);
             });
 
-            fdoc.SaveAsAndClose(uiapp, parm.FamilyParm.RfaPath, parm.FamilyParm.TmpPath);
+            if (familyParm != null)
+                fdoc.SaveAsAndClose(uiapp, familyParm.RfaPath, familyParm.TmpPath);
 
             return doc.GetFamilySymbol(fdoc);
         }
@@ -91,22 +93,23 @@ namespace KeLi.Common.Revit.Builders
         /// Creates a new sweep symbol.
         /// </summary>
         /// <param name="uiapp"></param>
-        /// <param name="parm"></param>
+        /// <param name="symbolParm"></param>
+        /// <param name="familyParm"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateSweepSymbol(this UIApplication uiapp, FamilySymbolParm parm)
+        public static FamilySymbol CreateSweepSymbol(this UIApplication uiapp, FamilySymbolParm symbolParm, FamilyParm familyParm)
         {
             var doc = uiapp.ActiveUIDocument.Document;
-            var templateFilePath = uiapp.GeTemplateFilePath(parm.TemplateFileName);
+            var templateFilePath = uiapp.GeTemplateFilePath(symbolParm.TemplateFileName);
             var fdoc = uiapp.Application.NewFamilyDocument(templateFilePath);
 
             fdoc.AutoTransaction(() =>
             {
-                var sweep = fdoc.FamilyCreate.NewSweep(true, parm.SweepPath, parm.SweepProfile, parm.Index, ProfilePlaneLocation.Start);
+                var sweep = fdoc.FamilyCreate.NewSweep(true, symbolParm.SweepPath, symbolParm.SweepProfile, symbolParm.Index, ProfilePlaneLocation.Start);
 
                 ElementTransformUtils.MoveElement(fdoc, sweep.Id, -sweep.GetBoundingBox(fdoc).Min);
             });
 
-            fdoc.SaveAsAndClose(uiapp, parm.FamilyParm.RfaPath, parm.FamilyParm.TmpPath);
+            fdoc.SaveAsAndClose(uiapp, familyParm.RfaPath, familyParm.TmpPath);
 
             return doc.GetFamilySymbol(fdoc);
         }

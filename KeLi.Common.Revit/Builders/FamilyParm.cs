@@ -46,6 +46,8 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
+
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
@@ -60,8 +62,8 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="tmpPath"></param>
         public FamilyParm(string rfaPath, string tmpPath)
         {
-            RfaPath = rfaPath;
-            TmpPath = tmpPath;
+            RfaPath = rfaPath ?? throw new ArgumentNullException(nameof(rfaPath));
+            TmpPath = tmpPath ?? throw new ArgumentNullException(nameof(tmpPath));
         }
 
         /// <summary>

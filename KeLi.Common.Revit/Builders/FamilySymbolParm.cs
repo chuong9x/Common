@@ -48,6 +48,7 @@
 */
 
 using Autodesk.Revit.DB;
+using System;
 
 namespace KeLi.Common.Revit.Builders
 {
@@ -63,14 +64,12 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="profile"></param>
         /// <param name="plane"></param>
         /// <param name="end"></param>
-        /// <param name="parm"></param>
-        public FamilySymbolParm(string templateFileName, CurveArrArray profile, Plane plane, double end, FamilyParm parm = null)
+        public FamilySymbolParm(string templateFileName, CurveArrArray profile, Plane plane, double end)
         {
-            TemplateFileName = templateFileName;
-            ExtrusionProfile = profile;
-            Plane = plane;
+            TemplateFileName = templateFileName ?? throw new ArgumentNullException(nameof(templateFileName));
+            ExtrusionProfile = profile ?? throw new ArgumentNullException(nameof(profile));
+            Plane = plane ?? throw new ArgumentNullException(nameof(plane));
             End = end;
-            FamilyParm = parm;
         }
 
         /// <summary>
@@ -80,14 +79,12 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="profile"></param>
         /// <param name="path"></param>
         /// <param name="index"></param>
-        /// <param name="parm"></param>
-        public FamilySymbolParm(string templateFileName, SweepProfile profile, ReferenceArray path, int index, FamilyParm parm = null)
+        public FamilySymbolParm(string templateFileName, SweepProfile profile, ReferenceArray path, int index)
         {
-            TemplateFileName = templateFileName;
-            SweepProfile = profile;
-            SweepPath = path;
+            TemplateFileName = templateFileName ?? throw new ArgumentNullException(nameof(templateFileName));
+            SweepProfile = profile ?? throw new ArgumentNullException(nameof(profile));
+            SweepPath = path ?? throw new ArgumentNullException(nameof(path));
             Index = index;
-            FamilyParm = parm;
         }
 
         /// <summary>
@@ -124,10 +121,5 @@ namespace KeLi.Common.Revit.Builders
         /// The sweep symbol's index.
         /// </summary>
         public int Index { get; set; }
-
-        /// <summary>
-        /// The file info of family symbol.
-        /// </summary>
-        public FamilyParm FamilyParm { get; set; }
     }
 }
