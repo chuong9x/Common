@@ -61,20 +61,6 @@ namespace KeLi.Common.Revit.Widgets
         /// <summary>
         /// Saves and closes the document.
         /// </summary>
-        /// <param name="uiapp"></param>
-        /// <param name="tmpRvt"></param>
-        /// <param name="saveModified"></param>
-        public static void SaveExistedFileAndClose(this UIApplication uiapp, string tmpRvt, bool saveModified = true)
-        {
-            if (tmpRvt == null)
-                throw new ArgumentNullException(nameof(tmpRvt));
-
-            uiapp.ActiveUIDocument.Document.SaveExistedFileAndClose(uiapp, tmpRvt, saveModified);
-        }
-
-        /// <summary>
-        /// Saves and closes the document.
-        /// </summary>
         /// <param name="doc"></param>
         /// <param name="modelPath"></param>
         /// <param name="saveModified"></param>
@@ -88,6 +74,20 @@ namespace KeLi.Common.Revit.Widgets
 
             doc.SaveAs(modelPath);
             doc.Close(saveModified);
+        }
+
+        /// <summary>
+        /// Saves and closes the document.
+        /// </summary>
+        /// <param name="uiapp"></param>
+        /// <param name="tmpRvt"></param>
+        /// <param name="saveModified"></param>
+        public static void SaveExistedFileAndClose(this UIApplication uiapp, string tmpRvt, bool saveModified = true)
+        {
+            if (tmpRvt == null)
+                throw new ArgumentNullException(nameof(tmpRvt));
+
+            uiapp.ActiveUIDocument.Document.SaveExistedFileAndClose(uiapp, tmpRvt, saveModified);
         }
 
         /// <summary>
