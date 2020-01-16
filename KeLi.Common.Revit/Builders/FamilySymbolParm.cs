@@ -63,12 +63,14 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="profile"></param>
         /// <param name="plane"></param>
         /// <param name="end"></param>
-        public FamilySymbolParm(string templateFileName, CurveArrArray profile, SketchPlane plane, double end)
+        /// <param name="parm"></param>
+        public FamilySymbolParm(string templateFileName, CurveArrArray profile, Plane plane, double end, FamilyParm parm = null)
         {
             TemplateFileName = templateFileName;
             ExtrusionProfile = profile;
             Plane = plane;
             End = end;
+            FamilyParm = parm;
         }
 
         /// <summary>
@@ -78,12 +80,14 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="profile"></param>
         /// <param name="path"></param>
         /// <param name="index"></param>
-        public FamilySymbolParm(string templateFileName, SweepProfile profile, ReferenceArray path, int index)
+        /// <param name="parm"></param>
+        public FamilySymbolParm(string templateFileName, SweepProfile profile, ReferenceArray path, int index, FamilyParm parm = null)
         {
             TemplateFileName = templateFileName;
             SweepProfile = profile;
             SweepPath = path;
             Index = index;
+            FamilyParm = parm;
         }
 
         /// <summary>
@@ -97,9 +101,9 @@ namespace KeLi.Common.Revit.Builders
         public CurveArrArray ExtrusionProfile { get; }
 
         /// <summary>
-        /// The family symbol's sketch plane.
+        /// The family symbol's reference plane.
         /// </summary>
-        public SketchPlane Plane { get; }
+        public Plane Plane { get; }
 
         /// <summary>
         /// The family symbol's end length.
@@ -120,5 +124,10 @@ namespace KeLi.Common.Revit.Builders
         /// The sweep symbol's index.
         /// </summary>
         public int Index { get; set; }
+
+        /// <summary>
+        /// The file info of family symbol.
+        /// </summary>
+        public FamilyParm FamilyParm { get; set; }
     }
 }

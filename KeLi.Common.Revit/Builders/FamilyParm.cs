@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 01/16/2020 03:33:20 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/16/2020 07:33:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,94 +46,32 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System;
-using System.IO;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-
-namespace KeLi.Common.Revit.Widgets
+namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Document utility.
+    /// Family parameter.
     /// </summary>
-    public static class DocumentUtil
+    public class FamilyParm
     {
         /// <summary>
-        /// Saves and closes the document.
+        /// Family parameter.
         /// </summary>
-        /// <param name="uiapp"></param>
-        /// <param name="tmpRvt"></param>
-        /// <param name="saveModified"></param>
-        public static void SaveAndClose(this UIApplication uiapp, string tmpRvt, bool saveModified = true)
+        /// <param name="rfaPath"></param>
+        /// <param name="tmpPath"></param>
+        public FamilyParm(string rfaPath, string tmpPath)
         {
-            if (tmpRvt == null)
-                throw new ArgumentNullException(nameof(tmpRvt));
-
-            uiapp.ActiveUIDocument.Document.SaveAndClose(uiapp, tmpRvt, saveModified);
+            RfaPath = rfaPath;
+            TmpPath = tmpPath;
         }
 
         /// <summary>
-        /// Saves and closes the document.
+        /// The family's file path.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="uiapp"></param>
-        /// <param name="modelPath"></param>
-        /// <param name="tmpRvt"></param>
-        /// <param name="saveModified"></param>
-        public static void SaveAsAndClose(this Document doc, UIApplication uiapp, string modelPath, string tmpRvt, bool saveModified = true)
-        {
-            if (modelPath == null)
-                throw new ArgumentNullException(nameof(modelPath));
-
-            if (tmpRvt == null)
-                throw new ArgumentNullException(nameof(tmpRvt));
-
-            if (File.Exists(modelPath))
-                File.Delete(modelPath);
-
-            doc.SaveAs(modelPath);
-            doc.SafelyClose(uiapp, tmpRvt, saveModified);
-        }
+        public string RfaPath { get; set; }
 
         /// <summary>
-        /// Saves and closes the document.
+        /// Temp file path.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="uiapp"></param>
-        /// <param name="tmpRvt"></param>
-        /// <param name="saveModified"></param>
-        public static void SaveAndClose(this Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
-        {
-            if (tmpRvt == null)
-                throw new ArgumentNullException(nameof(tmpRvt));
-
-            if (string.IsNullOrWhiteSpace(doc.PathName))
-                throw new Exception("The document file doesn't exist, please copy template file and open it!");
-
-            doc.SafelyClose(uiapp, tmpRvt, saveModified);
-        }
-
-        /// <summary>
-        /// Safely closes document.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="uiapp"></param>
-        /// <param name="tmpRvt"></param>
-        /// <param name="saveModified"></param>
-        private static void SafelyClose(this Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
-        {
-            if (tmpRvt == null)
-                throw new ArgumentNullException(nameof(tmpRvt));
-
-            if (Equals(uiapp.ActiveUIDocument.Document, doc))
-            {
-                var modelPath = new FilePath(tmpRvt);
-                var opt = new OpenOptions();
-
-                uiapp.OpenAndActivateDocument(modelPath, opt, false);
-            }
-
-            doc.Close(saveModified);
-        }
+        public string TmpPath { get; set; }
     }
 }

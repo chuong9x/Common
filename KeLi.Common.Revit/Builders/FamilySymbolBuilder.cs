@@ -52,6 +52,8 @@ using System.Linq;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using KeLi.Common.Revit.Geometry;
+using KeLi.Common.Revit.Widgets;
 
 namespace KeLi.Common.Revit.Builders
 {
@@ -72,7 +74,15 @@ namespace KeLi.Common.Revit.Builders
             var templateFilePath = uiapp.GeTemplateFilePath(parm.TemplateFileName);
             var fdoc = uiapp.Application.NewFamilyDocument(templateFilePath);
 
-            fdoc.FamilyCreate.NewExtrusion(true, parm.ExtrusionProfile, parm.Plane, parm.End);
+            fdoc.AutoTransaction(() =>
+            {
+                var skectchPlane = fdoc.CreateSketchPlane(parm.Plane);
+                var extrusion = fdoc.FamilyCreate.NewExtrusion(true, parm.ExtrusionProfile, skectchPlane, parm.End);
+
+                ElementTransformUtils.MoveElement(fdoc, extrusion.Id, -extrusion.GetBoundingBox(fdoc).Min);
+            });
+
+            fdoc.SaveAsAndClose(uiapp, parm.FamilyParm.RfaPath, parm.FamilyParm.TmpPath);
 
             return doc.GetFamilySymbol(fdoc);
         }
@@ -89,7 +99,14 @@ namespace KeLi.Common.Revit.Builders
             var templateFilePath = uiapp.GeTemplateFilePath(parm.TemplateFileName);
             var fdoc = uiapp.Application.NewFamilyDocument(templateFilePath);
 
-            fdoc.FamilyCreate.NewSweep(true, parm.SweepPath, parm.SweepProfile, parm.Index, ProfilePlaneLocation.Start);
+            fdoc.AutoTransaction(() =>
+            {
+                var sweep = fdoc.FamilyCreate.NewSweep(true, parm.SweepPath, parm.SweepProfile, parm.Index, ProfilePlaneLocation.Start);
+
+                ElementTransformUtils.MoveElement(fdoc, sweep.Id, -sweep.GetBoundingBox(fdoc).Min);
+            });
+
+            fdoc.SaveAsAndClose(uiapp, parm.FamilyParm.RfaPath, parm.FamilyParm.TmpPath);
 
             return doc.GetFamilySymbol(fdoc);
         }
@@ -121,7 +138,7 @@ namespace KeLi.Common.Revit.Builders
             var doc = uiapp.ActiveUIDocument.Document;
             var fdoc = uiapp.Application.NewFamilyDocument(templateFilePath);
 
-            act.Invoke(fdoc);
+            fdoc.AutoTransaction(() => act.Invoke(fdoc));
 
             return doc.GetFamilySymbol(fdoc);
         }
@@ -150,8 +167,11 @@ namespace KeLi.Common.Revit.Builders
             var symbolId = family.GetFamilySymbolIds().FirstOrDefault();
             var result = doc.GetElement(symbolId) as FamilySymbol;
 
-            if (result != null && !result.IsActive)
-                result.Activate();
+            doc.AutoTransaction(() =>
+            {
+                if (result != null && !result.IsActive)
+                    result.Activate();
+            });
 
             return result;
         }
