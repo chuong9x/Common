@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
  * MIT License
  *
  * Copyright(c) 2019 KeLi
@@ -34,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 01/15/2020 08:05:20 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/16/2020 03:33:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -47,78 +46,49 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 
-namespace KeLi.Common.Revit.Builders
+namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    /// Family symbol parmater.
+    /// Document utility.
     /// </summary>
-    public class FamilySymbolParm
+    public static class DocumentUtil
     {
         /// <summary>
-        /// Family symbol parmater.
+        /// Saves and closes the document.
         /// </summary>
-        /// <param name="templateFileName"></param>
-        /// <param name="profile"></param>
-        /// <param name="plane"></param>
-        /// <param name="end"></param>
-        public FamilySymbolParm(string templateFileName, CurveArrArray profile, SketchPlane plane, double end)
+        /// <param name="uiapp"></param>
+        /// <param name="tmpRvt"></param>
+        /// <param name="saveModified"></param>
+        public static void SaveAndClose(this UIApplication uiapp, string tmpRvt, bool saveModified = true)
         {
-            TemplateFileName = templateFileName;
-            ExtrusionProfile = profile;
-            Plane = plane;
-            End = end;
+             uiapp.ActiveUIDocument.Document.SaveAndClose(uiapp, tmpRvt, saveModified);
         }
 
         /// <summary>
-        /// Family symbol parmater.
+        /// Saves and closes the document.
         /// </summary>
-        /// <param name="templateFileName"></param>
-        /// <param name="profile"></param>
-        /// <param name="path"></param>
-        /// <param name="index"></param>
-        public FamilySymbolParm(string templateFileName, SweepProfile profile, ReferenceArray path, int index)
+        /// <param name="doc"></param>
+        /// <param name="uiapp"></param>
+        /// <param name="tmpRvt"></param>
+        /// <param name="saveModified"></param>
+        public static void SaveAndClose(this Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
         {
-            TemplateFileName = templateFileName;
-            SweepProfile = profile;
-            SweepPath = path;
-            Index = index;
+            if (string.IsNullOrWhiteSpace(doc.PathName))
+                throw new Exception("The document file doesn't exist, please copy template file and open it!");
+
+            if (Equals(uiapp.ActiveUIDocument.Document, doc))
+            {
+                var modelPath = new FilePath(tmpRvt);
+                var opt = new OpenOptions();
+
+                uiapp.OpenAndActivateDocument(modelPath, opt, false);
+            }
+
+            doc.Close(saveModified);
         }
-
-        /// <summary>
-        /// The family symbol's template file name including file suffix.
-        /// </summary>
-        public string TemplateFileName { get; }
-
-        /// <summary>
-        /// The extrusion symbol's profile.
-        /// </summary>
-        public CurveArrArray ExtrusionProfile { get; }
-
-        /// <summary>
-        /// The family symbol's sketch plane.
-        /// </summary>
-        public SketchPlane Plane { get; }
-
-        /// <summary>
-        /// The family symbol's end length.
-        /// </summary>
-        public double End { get; }
-
-        /// <summary>
-        /// The sweep symbol's profile.
-        /// </summary>
-        public SweepProfile SweepProfile { get; set; }
-
-        /// <summary>
-        /// The sweep symbol's path.
-        /// </summary>
-        public ReferenceArray SweepPath { get; set; }
-
-        /// <summary>
-        /// The sweep symbol's index.
-        /// </summary>
-        public int Index { get; set; }
     }
 }
