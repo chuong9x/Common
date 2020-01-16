@@ -77,15 +77,11 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="modelPath"></param>
-        /// <param name="tmpRvt"></param>
         /// <param name="saveModified"></param>
-        public static void SaveNewFileAndClose(this Document doc, string modelPath, string tmpRvt, bool saveModified = true)
+        public static void SaveNewFileAndClose(this Document doc, string modelPath, bool saveModified = true)
         {
             if (modelPath == null)
                 throw new ArgumentNullException(nameof(modelPath));
-
-            if (tmpRvt == null)
-                throw new ArgumentNullException(nameof(tmpRvt));
 
             if (File.Exists(modelPath))
                 File.Delete(modelPath);

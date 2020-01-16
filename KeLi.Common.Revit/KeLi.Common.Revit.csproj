@@ -87,7 +87,6 @@
     <Compile Include="Builders\DirectShapeParm.cs" />
     <Compile Include="Builders\FamilyInstanceBuilder.cs" />
     <Compile Include="Builders\FamilyInstanceParm.cs" />
-    <Compile Include="Builders\FamilyParm.cs" />
     <Compile Include="Builders\FamilySymbolBuilder.cs" />
     <Compile Include="Builders\FamilySymbolParm.cs" />
     <Compile Include="Builders\GroupBuilder.cs" />

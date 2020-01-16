@@ -67,9 +67,9 @@ namespace KeLi.Common.Revit.Builders
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="symbolParm"></param>
-        /// <param name="familyParm"></param>
+        /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateExtrusionSymbol(this UIApplication uiapp, FamilySymbolParm symbolParm, FamilyParm familyParm = null)
+        public static FamilySymbol CreateExtrusionSymbol(this UIApplication uiapp, FamilySymbolParm symbolParm, string rfaPath = null)
         {
             if (symbolParm == null)
                 throw new ArgumentNullException(nameof(symbolParm));
@@ -86,7 +86,7 @@ namespace KeLi.Common.Revit.Builders
                 ElementTransformUtils.MoveElement(fdoc, extrusion.Id, -extrusion.GetBoundingBox(fdoc).Min);
             });
 
-            return doc.GetFamilySymbol(fdoc, familyParm);
+            return doc.GetFamilySymbol(fdoc, rfaPath);
         }
 
         /// <summary>
@@ -94,9 +94,9 @@ namespace KeLi.Common.Revit.Builders
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="symbolParm"></param>
-        /// <param name="familyParm"></param>
+        /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateSweepSymbol(this UIApplication uiapp, FamilySymbolParm symbolParm, FamilyParm familyParm = null)
+        public static FamilySymbol CreateSweepSymbol(this UIApplication uiapp, FamilySymbolParm symbolParm, string rfaPath = null)
         {
             if (symbolParm == null)
                 throw new ArgumentNullException(nameof(symbolParm));
@@ -112,7 +112,7 @@ namespace KeLi.Common.Revit.Builders
                 ElementTransformUtils.MoveElement(fdoc, sweep.Id, -sweep.GetBoundingBox(fdoc).Min);
             });
 
-            return doc.GetFamilySymbol(fdoc, familyParm);
+            return doc.GetFamilySymbol(fdoc, rfaPath);
         }
 
         /// <summary>
@@ -138,16 +138,16 @@ namespace KeLi.Common.Revit.Builders
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="templateFileName"></param>
-        /// <param name="familyParm"></param>
+        /// <param name="rfaPath"></param>
         /// <param name="act"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateFamilySymbol(this UIApplication uiapp, string templateFileName, FamilyParm familyParm, Action<Document> act)
+        public static FamilySymbol CreateFamilySymbol(this UIApplication uiapp, string templateFileName, string rfaPath, Action<Document> act)
         {
             if (templateFileName == null)
                 throw new ArgumentNullException(nameof(templateFileName));
 
-            if (familyParm == null)
-                throw new ArgumentNullException(nameof(familyParm));
+            if (rfaPath == null)
+                throw new ArgumentNullException(nameof(rfaPath));
 
             if (act == null)
                 throw new ArgumentNullException(nameof(act));
@@ -158,7 +158,7 @@ namespace KeLi.Common.Revit.Builders
 
             fdoc.AutoTransaction(() => act.Invoke(fdoc));
 
-            return doc.GetFamilySymbol(fdoc, familyParm);
+            return doc.GetFamilySymbol(fdoc, rfaPath);
         }
 
         /// <summary>
@@ -166,19 +166,17 @@ namespace KeLi.Common.Revit.Builders
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="fdoc"></param>
-        /// <param name="familyParm"></param>
+        /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol GetFamilySymbol(this Document doc, Document fdoc, FamilyParm familyParm)
+        public static FamilySymbol GetFamilySymbol(this Document doc, Document fdoc, string rfaPath = null)
         {
             if (fdoc == null)
                 throw new ArgumentNullException(nameof(fdoc));
 
-            if (familyParm == null)
-                throw new ArgumentNullException(nameof(familyParm));
-
             var family = fdoc.LoadFamily(doc);
 
-            fdoc.SaveNewFileAndClose(familyParm.RfaPath, familyParm.TmpPath);
+            if (rfaPath != null)
+                fdoc.SaveNewFileAndClose(rfaPath);
 
             return doc.GetFamilySymbol(family);
         }
