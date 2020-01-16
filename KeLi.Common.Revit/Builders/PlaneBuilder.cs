@@ -47,8 +47,9 @@
 */
 
 using Autodesk.Revit.DB;
-using System;
 using KeLi.Common.Revit.Geometry;
+using ArgumentException = System.ArgumentException;
+using ArgumentNullException = System.ArgumentNullException;
 
 namespace KeLi.Common.Revit.Builders
 {
@@ -57,6 +58,22 @@ namespace KeLi.Common.Revit.Builders
     /// </summary>
     public static class PlaneBuilder
     {
+        /// <summary>
+        /// Creates a new plane.
+        /// </summary>
+        /// <param name="pt"></param>
+        /// <returns></returns>
+        public static Plane CreatePlane(this XYZ pt)
+        {
+            if (pt == null)
+                throw new ArgumentNullException(nameof(pt));
+
+            if(pt == XYZ.Zero)
+                throw  new ArgumentException("The point cannot be zero point!");
+
+            return Line.CreateBound(XYZ.Zero, pt).CreatePlane();
+        }
+
         /// <summary>
         /// Creates a new plane.
         /// </summary>
@@ -75,6 +92,20 @@ namespace KeLi.Common.Revit.Builders
             var normal = line.Direction.CrossProduct(refAsix).Normalize();
 
             return Plane.CreateByNormalAndOrigin(normal, line.Origin);
+        }
+
+        /// <summary>
+        /// Creates a new sketch plane.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="pt"></param>
+        /// <returns></returns>
+        public static SketchPlane CreateSketchPlane(this Document doc, XYZ pt)
+        {
+            if (pt == null)
+                throw new ArgumentNullException(nameof(pt));
+
+            return SketchPlane.Create(doc, pt.CreatePlane());
         }
 
         /// <summary>
