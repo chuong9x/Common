@@ -103,7 +103,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Filters\CalcType.cs" />
-    <Compile Include="Widgets\DocumentUtil.cs" />
+    <Compile Include="Widgets\StorageUtil.cs" />
     <Compile Include="Widgets\ElementUtil.cs" />
     <Compile Include="Information\ExtendInfoUtil.cs" />
     <Compile Include="Geometry\MeshUtil.cs" />

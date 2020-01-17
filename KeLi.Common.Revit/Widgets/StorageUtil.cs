@@ -54,12 +54,12 @@ using Autodesk.Revit.UI;
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    /// Document utility.
+    /// Storage utility.
     /// </summary>
-    public static class DocumentUtil
+    public static class StorageUtil
     {
         /// <summary>
-        /// Saves and closes the document.
+        /// Saves as a new file and closes it.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="modelPath"></param>
@@ -77,7 +77,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Saves and closes the document.
+        /// Saves to the file of current active document path by only covered mode, then closes it.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="tmpRvt"></param>
@@ -91,7 +91,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Saves and closes the document.
+        /// Saves to the file of current active document path by only covered mode, then closes it.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="uiapp"></param>
@@ -109,7 +109,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Safely closes document.
+        /// Closes the document safely.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="uiapp"></param>
