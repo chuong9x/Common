@@ -105,7 +105,7 @@ namespace KeLi.Common.Revit.Widgets
             if (string.IsNullOrWhiteSpace(doc.PathName))
                 throw new Exception("The document file doesn't exist, please copy template file and open it!");
 
-            doc.SafelyClose(uiapp, tmpRvt, saveModified);
+            SafelyClose(doc, uiapp, tmpRvt, saveModified);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="uiapp"></param>
         /// <param name="tmpRvt"></param>
         /// <param name="saveModified"></param>
-        private static void SafelyClose(this Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
+        private static void SafelyClose(Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
         {
             if (tmpRvt == null)
                 throw new ArgumentNullException(nameof(tmpRvt));

@@ -248,16 +248,16 @@ namespace KeLi.Common.Revit.Relations
         /// <summary>
         /// Gets the distinct vectors of the lines.
         /// </summary>
-        /// <param name="lines"></param>
+        /// <param name="curves"></param>
         /// <returns></returns>
-        public static List<XYZ> GetDistinctPointList(this List<Line> lines)
+        public static List<XYZ> GetDistinctPointList(this List<Curve> curves)
         {
-            if (lines == null)
-                throw new ArgumentNullException(nameof(lines));
+            if (curves == null)
+                throw new ArgumentNullException(nameof(curves));
 
             var results = new List<XYZ>();
 
-            foreach (var line in lines)
+            foreach (var line in curves)
             {
                 results.Add(line.GetEndPoint(0));
                 results.Add(line.GetEndPoint(1));
@@ -284,22 +284,22 @@ namespace KeLi.Common.Revit.Relations
         /// <summary>
         /// Gets points of the boundary.
         /// </summary>
-        /// <param name="lines"></param>
+        /// <param name="curves"></param>
         /// <returns></returns>
-        public static List<XYZ> GetBoundaryPointList(this List<Line> lines)
+        public static List<XYZ> GetBoundaryPointList(this List<Curve> curves)
         {
-            if (lines == null)
-                throw new ArgumentNullException(nameof(lines));
+            if (curves == null)
+                throw new ArgumentNullException(nameof(curves));
 
             var results = new List<XYZ>();
 
-            foreach (var line in lines)
+            foreach (var line in curves)
                 results.Add(line.GetEndPoint(0));
 
-            var endPoint = lines[lines.Count - 1].GetEndPoint(1);
+            var endPoint = curves[curves.Count - 1].GetEndPoint(1);
 
             // If no closed, the last line's end point is different from the first line's start point.
-            if (!lines[0].GetEndPoint(0).IsAlmostEqualTo(endPoint))
+            if (!curves[0].GetEndPoint(0).IsAlmostEqualTo(endPoint))
                 results.Add(endPoint);
 
             return results;

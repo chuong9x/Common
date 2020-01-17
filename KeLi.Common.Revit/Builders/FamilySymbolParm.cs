@@ -67,7 +67,7 @@ namespace KeLi.Common.Revit.Builders
         public FamilySymbolParm(string templateFileName, CurveArrArray profile, Plane plane, double end)
         {
             TemplateFileName = templateFileName;
-            ExtrusionProfile = profile ?? throw new ArgumentNullException(nameof(profile));
+            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
             Plane = plane ?? throw new ArgumentNullException(nameof(plane));
             End = end;
         }
@@ -78,12 +78,14 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="templateFileName"></param>
         /// <param name="profile"></param>
         /// <param name="path"></param>
+        /// <param name="location"></param>
         /// <param name="index"></param>
-        public FamilySymbolParm(string templateFileName, SweepProfile profile, ReferenceArray path, int index)
+        public FamilySymbolParm(string templateFileName, SweepProfile profile, ReferenceArray path, ProfilePlaneLocation location = ProfilePlaneLocation.Start, int index = 0)
         {
             TemplateFileName = templateFileName;
             SweepProfile = profile ?? throw new ArgumentNullException(nameof(profile));
             SweepPath = path ?? throw new ArgumentNullException(nameof(path));
+            Location = location;
             Index = index;
         }
 
@@ -95,7 +97,7 @@ namespace KeLi.Common.Revit.Builders
         /// <summary>
         /// The extrusion symbol's profile.
         /// </summary>
-        public CurveArrArray ExtrusionProfile { get; }
+        public CurveArrArray Profile { get; }
 
         /// <summary>
         /// The family symbol's reference plane.
@@ -116,6 +118,11 @@ namespace KeLi.Common.Revit.Builders
         /// The sweep symbol's path.
         /// </summary>
         public ReferenceArray SweepPath { get; set; }
+
+        /// <summary>
+        /// The sweep symbol's profile plane location.
+        /// </summary>
+        public ProfilePlaneLocation Location { get; set; }
 
         /// <summary>
         /// The sweep symbol's index.
