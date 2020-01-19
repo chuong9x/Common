@@ -87,11 +87,11 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the reference set to the ReferenceArray.
+        /// Converts the Reference set to the ReferenceArray.
         /// </summary>
         /// <param name="refs"></param>
         /// <returns></returns>
-        public static ReferenceArray ToReferArray(this List<Reference> refs)
+        public static ReferenceArray ToReferArray(this IList<Reference> refs)
         {
             if (refs == null)
                 throw new ArgumentNullException(nameof(refs));
@@ -123,11 +123,11 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the curve array set to the CurveArrArray.
+        /// Converts the CurveArray set to the CurveArrArray.
         /// </summary>
         /// <param name="curvess"></param>
         /// <returns></returns>
-        public static CurveArrArray ToCurveArrArray(this List<CurveArray> curvess)
+        public static CurveArrArray ToCurveArrArray(this IList<CurveArray> curvess)
         {
             if (curvess == null)
                 throw new ArgumentNullException(nameof(curvess));
@@ -136,6 +136,78 @@ namespace KeLi.Common.Revit.Converters
 
             foreach (var curves in curvess)
                 results.Append(curves);
+
+            return results;
+        }
+
+        /// <summary>
+        /// Converts the CurveLoop set to the CurveArrArray.
+        /// </summary>
+        /// <param name="curveLoops"></param>
+        /// <returns></returns>
+        public static CurveArrArray ToCurveArrArray(this IList<CurveLoop> curveLoops)
+        {
+            if (curveLoops == null)
+                throw new ArgumentNullException(nameof(curveLoops));
+
+            var results = new CurveArrArray();
+
+            foreach (var curveLoop in curveLoops)
+                results.Append(curveLoop.ToCurveArray());
+
+            return results;
+        }
+
+        /// <summary>
+        /// Converts the CurveArrArray to the CurveLoop list.
+        /// </summary>
+        /// <param name="curvess"></param>
+        /// <returns></returns>
+        public static List<CurveLoop> ToCurveLoopList(this CurveArrArray curvess)
+        {
+            if (curvess == null)
+                throw new ArgumentNullException(nameof(curvess));
+
+            var results = new List<CurveLoop>();
+
+            foreach (CurveArray curves in curvess)
+                results.Add(curves.ToCurveLoop());
+
+            return results;
+        }
+
+        /// <summary>
+        /// Converts the CurveLoop to the CurveArray.
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static CurveArray ToCurveArray(this CurveLoop curves)
+        {
+            if (curves == null)
+                throw new ArgumentNullException(nameof(curves));
+
+            var results = new CurveArray();
+
+            foreach (Curve curve in curves)
+                results.Append(curve);
+
+            return results;
+        }
+
+        /// <summary>
+        /// Converts the CurveArray to the CurveLoop.
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static CurveLoop ToCurveLoop(this CurveArray curves)
+        {
+            if (curves == null)
+                throw new ArgumentNullException(nameof(curves));
+
+            var results = new CurveLoop();
+
+            foreach (Curve curve in curves)
+                results.Append(curve);
 
             return results;
         }
@@ -163,7 +235,7 @@ namespace KeLi.Common.Revit.Converters
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
-        public static CurveArray ToCurveArray(this List<Curve> curves)
+        public static CurveArray ToCurveArray(this IList<Curve> curves)
         {
             if (curves == null)
                 throw new ArgumentNullException(nameof(curves));
@@ -199,7 +271,7 @@ namespace KeLi.Common.Revit.Converters
         /// </summary>
         /// <param name="faces"></param>
         /// <returns></returns>
-        public static FaceArray ToFaceArray(this List<Face> faces)
+        public static FaceArray ToFaceArray(this IList<Face> faces)
         {
             if (faces == null)
                 throw new ArgumentNullException(nameof(faces));
