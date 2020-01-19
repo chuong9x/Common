@@ -1,4 +1,4 @@
-﻿/*
+/*
  * MIT License
  *
  * Copyright(c) 2019 KeLi
@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 12/27/2019 07:13:20 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/19/2020 04:31:25 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,57 +46,27 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System.Collections.Generic;
-using System.Linq;
-using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Filters
 {
     /// <summary>
-    /// Room utility.
+    /// Filter type.
     /// </summary>
-    public static class RoomUtil
+    public enum FilterType
     {
         /// <summary>
-        /// Gets the room's edge list.
+        /// Instance elements.
         /// </summary>
-        /// <param name="room"></param>
-        /// <returns></returns>
-        public static List<Line> GetEdgeList(this SpatialElement room)
-        {
-            var result = new List<Line>();
-            var option = new SpatialElementBoundaryOptions
-            {
-                StoreFreeBoundaryFaces = true,
-                SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.CoreBoundary
-            };
-            var segments = room.GetBoundarySegments(option).SelectMany(s => s);
-
-            foreach (var seg in segments)
-            {
-                var sp = seg.GetCurve().GetEndPoint(0);
-                var ep = seg.GetCurve().GetEndPoint(1);
-
-                result.Add(Line.CreateBound(sp, ep));
-            }
-
-            return result;
-        }
+        Instance,
 
         /// <summary>
-        /// Gets room list.
+        /// Type elements.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="isValid"></param>
-        /// <returns></returns>
-        public static List<SpatialElement> GetSpatialElementList(Document doc, bool isValid = true)
-        {
-            var results = doc.GetTypeElementList<SpatialElement>();
+        Type,
 
-            if (isValid)
-                results = results.Where(w => w?.Location != null && w.Area > 1e-6).ToList();
-
-            return results;
-        }
+        /// <summary>
+        /// All elements.
+        /// </summary>
+        All
     }
 }

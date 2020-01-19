@@ -316,7 +316,7 @@ namespace KeLi.Common.Revit.Geometry
 
                     case GeometryInstance gi:
                         {
-                            var ge2 = gi.GetInstanceGeometry().GetTransformed(gi.Transform);
+                            var ge2 = gi.GetInstanceGeometry();
 
                             if (ge2 != null)
                                 results = results.Union(ge2.GetValidSolidList()).ToList();

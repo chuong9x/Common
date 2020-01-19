@@ -49,11 +49,10 @@
 using System;
 using System.IO;
 using System.Linq;
-using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
-using KeLi.Common.Revit.Geometry;
 using KeLi.Common.Revit.Relations;
 using KeLi.Common.Revit.Widgets;
+using Application = Autodesk.Revit.ApplicationServices.Application;
 
 namespace KeLi.Common.Revit.Builders
 {
@@ -80,11 +79,10 @@ namespace KeLi.Common.Revit.Builders
 
             fdoc.AutoTransaction(() =>
             {
+                var profile = ResetCurveArrArray(symbolParm.Profile);
                 var skectchPlane = fdoc.CreateSketchPlane(symbolParm.Plane);
-                var extrusion = fdoc.FamilyCreate.NewExtrusion(true, symbolParm.Profile, skectchPlane, symbolParm.End);
-                var rawLocation = GetLocationPoint(symbolParm.Profile);
 
-                ElementTransformUtils.MoveElement(fdoc, extrusion.Id, -rawLocation);
+               fdoc.FamilyCreate.NewExtrusion(true, profile, skectchPlane, symbolParm.End);
             });
 
             return doc.GetFamilySymbol(fdoc, rfaPath);
@@ -108,11 +106,10 @@ namespace KeLi.Common.Revit.Builders
 
             fdoc.AutoTransaction(() =>
             {
-                var profile = app.Create.NewCurveLoopsProfile(symbolParm.Profile);
-                var sweep = fdoc.FamilyCreate.NewSweep(true, symbolParm.SweepPath, profile, symbolParm.Index, symbolParm.Location);
-                var rawLocation = GetLocationPoint(symbolParm.Profile);
+                var profileArrArray = ResetCurveArrArray(symbolParm.Profile);
+                var profile = app.Create.NewCurveLoopsProfile(profileArrArray);
 
-                ElementTransformUtils.MoveElement(fdoc, sweep.Id, -rawLocation);
+                fdoc.FamilyCreate.NewSweep(true, symbolParm.SweepPath, profile, symbolParm.Index, symbolParm.Location);
             });
 
             return doc.GetFamilySymbol(fdoc, rfaPath);
@@ -217,6 +214,35 @@ namespace KeLi.Common.Revit.Builders
                 throw new ArgumentNullException(nameof(fileName));
 
             return Path.Combine(app.FamilyTemplatePath, fileName);
+        }
+
+        /// <summary>
+        /// Resets the family symbol profile's location to zero point.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <returns></returns>
+        private static CurveArrArray ResetCurveArrArray(CurveArrArray profile)
+        {
+            var results = new CurveArrArray();
+            var location = GetLocationPoint(profile);
+
+            foreach (CurveArray lines in profile)
+            {
+                var tmpLines = new CurveArray();
+
+                foreach (var line in lines.Cast<Line>())
+                {
+                    var pt1 = line.GetEndPoint(0) - location;
+                    var pt2 = line.GetEndPoint(1) - location;
+                    var newLine = Line.CreateBound(pt1, pt2);
+
+                    tmpLines.Append(newLine);
+                }
+
+                results.Append(tmpLines);
+            }
+
+            return results;
         }
 
         /// <summary>

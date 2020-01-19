@@ -72,6 +72,8 @@ namespace KeLi.Common.Revit.Builders
             End = end;
         }
 
+
+
         /// <summary>
         /// Family symbol parmater.
         /// </summary>
@@ -80,10 +82,10 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="path"></param>
         /// <param name="location"></param>
         /// <param name="index"></param>
-        public FamilySymbolParm(string templateFileName, SweepProfile profile, ReferenceArray path, ProfilePlaneLocation location = ProfilePlaneLocation.Start, int index = 0)
+        public FamilySymbolParm(string templateFileName, CurveArrArray profile, ReferenceArray path, ProfilePlaneLocation location = ProfilePlaneLocation.Start, int index = 0)
         {
             TemplateFileName = templateFileName;
-            SweepProfile = profile ?? throw new ArgumentNullException(nameof(profile));
+            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
             SweepPath = path ?? throw new ArgumentNullException(nameof(path));
             Location = location;
             Index = index;
@@ -108,11 +110,6 @@ namespace KeLi.Common.Revit.Builders
         /// The family symbol's end length.
         /// </summary>
         public double End { get; }
-
-        /// <summary>
-        /// The sweep symbol's profile.
-        /// </summary>
-        public SweepProfile SweepProfile { get; set; }
 
         /// <summary>
         /// The sweep symbol's path.
