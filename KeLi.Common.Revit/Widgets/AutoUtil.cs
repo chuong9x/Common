@@ -71,14 +71,13 @@ namespace KeLi.Common.Revit.Widgets
             if (act == null)
                 throw new ArgumentNullException(nameof(act));
 
-            using (var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name))
-            {
-                trans.Start();
-                act.Invoke();
+            using var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name);
 
-                if (trans.Commit() != TransactionStatus.Committed)
-                    trans.RollBack();
-            }
+            trans.Start();
+            act.Invoke();
+
+            if (trans.Commit() != TransactionStatus.Committed)
+                trans.RollBack();
         }
 
         /// <summary>
