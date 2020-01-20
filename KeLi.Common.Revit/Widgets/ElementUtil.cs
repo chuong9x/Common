@@ -74,7 +74,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static List<Wall> GetWallList(Document doc)
+        public static List<Wall> GetWallList(this Document doc)
         {
             return doc.GetInstanceElementList<Wall>();
         }
