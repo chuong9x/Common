@@ -51,9 +51,9 @@ using Autodesk.Revit.DB;
 namespace KeLi.Common.Revit.Converters
 {
     /// <summary>
-    /// Number utility.
+    /// Unit utility.
     /// </summary>
-    public static class UtilConverter
+    public static class UnitConverter
     {
         /// <summary>
         /// Millimeter to inch.
