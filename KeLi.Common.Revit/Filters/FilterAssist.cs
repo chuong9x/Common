@@ -55,7 +55,7 @@ using KeLi.Common.Revit.Geometry;
 namespace KeLi.Common.Revit.Filters
 {
     /// <summary>
-    /// Filter Assist.
+    /// Filter assist.
     /// </summary>
     public static class FilterAssist
     {
