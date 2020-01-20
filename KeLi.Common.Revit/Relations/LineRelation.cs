@@ -59,7 +59,7 @@ namespace KeLi.Common.Revit.Relations
     public static class LineRelation
     {
         /// <summary>
-        /// Gets the result of whether the line line1 and the line line2 is space vertical.
+        /// Gets the result of whether the Line line1 and the Line line2 is space vertical.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -77,7 +77,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of whether the line line1 and the line line2 is space parallel.
+        /// Gets the result of whether the Line line1 and the Line line2 is space parallel.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -114,7 +114,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of whether the line line1 and the line line2 is plane parallel.
+        /// Gets the result of whether the Line line1 and the Line line2 is plane parallel.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -138,7 +138,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of whether the line line1 and the line line2 is plane vertical.
+        /// Gets the result of whether the Line line1 and the Line line2 is plane vertical.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -159,7 +159,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the intersection of the line line1 and the line line2 on plane.
+        /// Gets the intersection of the Line line1 and the Line line2 on plane.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -224,7 +224,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the intersections of the line and the lines on plane.
+        /// Gets the intersections of the Line and the lines on plane.
         /// </summary>
         /// <param name="line"></param>
         /// <param name="lines"></param>
@@ -246,7 +246,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the distinct vectors of the lines.
+        /// Gets the distinct vectors of the Curve set.
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
@@ -307,27 +307,27 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the max point of the line.
+        /// Gets the max point of the Curve.
         /// </summary>
-        /// <param name="line"></param>
+        /// <param name="curve"></param>
         /// <returns></returns>
-        public static XYZ GetMaxPoint(this Line line)
+        public static XYZ GetMaxPoint(this Curve curve)
         {
-            if (line == null)
-                throw new ArgumentNullException(nameof(line));
+            if (curve == null)
+                throw new ArgumentNullException(nameof(curve));
 
-            var pt1 = line.GetEndPoint(0);
-            var pt2 = line.GetEndPoint(1);
+            var pt1 = curve.GetEndPoint(0);
+            var pt2 = curve.GetEndPoint(1);
 
             return new XYZ(Math.Max(pt1.X, pt2.X), Math.Max(pt1.Y, pt2.Y), Math.Max(pt1.Z, pt2.Z));
         }
 
         /// <summary>
-        /// Gets the min point of the lines.
+        /// Gets the min point of the Curve set.
         /// </summary>
         /// <param name="lines"></param>
         /// <returns></returns>
-        public static XYZ GetMaxPoint(this IEnumerable<Line> lines)
+        public static XYZ GetMaxPoint(this IEnumerable<Curve> lines)
         {
             if (lines == null)
                 throw new ArgumentNullException(nameof(lines));
@@ -351,11 +351,11 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the min point of the line.
+        /// Gets the min point of the Curve.
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
-        public static XYZ GetMinPoint(this Line line)
+        public static XYZ GetMinPoint(this Curve line)
         {
             if (line == null)
                 throw new ArgumentNullException(nameof(line));
@@ -367,18 +367,18 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the min point of the lines.
+        /// Gets the min point of the Curve set.
         /// </summary>
-        /// <param name="lines"></param>
+        /// <param name="curves"></param>
         /// <returns></returns>
-        public static XYZ GetMinPoint(this IEnumerable<Line> lines)
+        public static XYZ GetMinPoint(this IEnumerable<Curve> curves)
         {
-            if (lines == null)
-                throw new ArgumentNullException(nameof(lines));
+            if (curves == null)
+                throw new ArgumentNullException(nameof(curves));
 
             var pts = new List<XYZ>();
 
-            foreach (var line in lines)
+            foreach (var line in curves)
             {
                 var pt1 = line.GetEndPoint(0);
                 var pt2 = line.GetEndPoint(1);
@@ -404,7 +404,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the middle point of the two lines in nearest area.
+        /// Gets the middle point of the two Line in nearest area.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
