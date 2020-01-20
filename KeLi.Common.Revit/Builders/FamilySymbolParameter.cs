@@ -1,4 +1,5 @@
-﻿/*
+﻿
+/*
  * MIT License
  *
  * Copyright(c) 2019 KeLi
@@ -33,7 +34,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/15/2020 08:05:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,63 +47,81 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using Autodesk.Revit.DB;
 using System;
 
-namespace KeLi.Common.Revit.Converters
+namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Number utility.
+    /// Family symbol parmater.
     /// </summary>
-    public static class NumberUtil
+    public class FamilySymbolParameter
     {
         /// <summary>
-        /// Millimeter to inch.
+        /// Family symbol parameter.
         /// </summary>
-        private const double MM_TO_INCH = 0.0393700787;
-
-        /// <summary>
-        /// Millimeter to foot.
-        /// </summary>
-        private const double MM_TO_FT = 0.0032808399;
-
-        /// <summary>
-        /// Millimeter to foot.
-        /// </summary>
-        /// <param name="mm"></param>
-        /// <returns></returns>
-        public static double ToFoot(double mm)
+        /// <param name="templateFileName"></param>
+        /// <param name="profile"></param>
+        /// <param name="plane"></param>
+        /// <param name="end"></param>
+        public FamilySymbolParameter(string templateFileName, CurveArrArray profile, Plane plane, double end)
         {
-            return MM_TO_FT * mm;
+            TemplateFileName = templateFileName;
+            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
+            Plane = plane ?? throw new ArgumentNullException(nameof(plane));
+            End = end;
         }
 
         /// <summary>
-        /// Millimeter to inch.
+        /// Family symbol parameter.
         /// </summary>
-        /// <param name="mm"></param>
-        /// <returns></returns>
-        public static double ToInch(double mm)
+        /// <param name="templateFileName"></param>
+        /// <param name="profile"></param>
+        /// <param name="path"></param>
+        /// <param name="location"></param>
+        /// <param name="index"></param>
+        public FamilySymbolParameter(string templateFileName, CurveArrArray profile, ReferenceArray path, ProfilePlaneLocation location = ProfilePlaneLocation.Start, int index = 0)
         {
-            return MM_TO_INCH * mm;
+            TemplateFileName = templateFileName;
+            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
+            SweepPath = path ?? throw new ArgumentNullException(nameof(path));
+            Location = location;
+            Index = index;
         }
 
         /// <summary>
-        /// The radian to the angle.
+        /// The family symbol's template file name including file suffix.
         /// </summary>
-        /// <param name="radian"></param>
-        /// <returns></returns>
-        public static double ToAngle(double radian)
-        {
-            return radian * 180 / Math.PI;
-        }
+        public string TemplateFileName { get; }
 
         /// <summary>
-        /// The angle to the radian.
+        /// The extrusion symbol's profile.
         /// </summary>
-        /// <param name="angle"></param>
-        /// <returns></returns>
-        public static double ToRadian(double angle)
-        {
-            return angle / 180 * Math.PI;
-        }
+        public CurveArrArray Profile { get; }
+
+        /// <summary>
+        /// The family symbol's reference plane.
+        /// </summary>
+        public Plane Plane { get; }
+
+        /// <summary>
+        /// The family symbol's end length.
+        /// </summary>
+        public double End { get; }
+
+        /// <summary>
+        /// The sweep symbol's path.
+        /// </summary>
+        public ReferenceArray SweepPath { get; set; }
+
+        /// <summary>
+        /// The sweep symbol's profile plane location.
+        /// </summary>
+        public ProfilePlaneLocation Location { get; set; }
+
+        /// <summary>
+        /// The sweep symbol's index.
+        /// </summary>
+        public int Index { get; set; }
     }
 }

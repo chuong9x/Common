@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 01/15/2020 10:22:11 AM |  |  |     |         |      |
+     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,41 +46,52 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Autodesk.Revit.DB;
-using static Autodesk.Revit.DB.GeometryCreationUtilities;
 
-namespace KeLi.Common.Revit.Builders
+namespace KeLi.Common.Revit.Information
 {
     /// <summary>
-    /// DirectShape builder.
+    /// Element parameter.
     /// </summary>
-    public static class DirectShapeBuilder
+    public class ElementParameter
     {
         /// <summary>
-        /// Creates a new DirectShape.
+        /// Returns the guid of the element's parameter.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="parm"></param>
-        /// <param name="opt"></param>
-        /// <returns></returns>
-        public static DirectShape CreateDirectShape(this Document doc, DirectShapeParameter parm, SolidOptions opt = null)
-        {
-            if (parm == null)
-                throw new ArgumentNullException(nameof(parm));
+        public string Guid { get; set; }
 
-            var solid = CreateExtrusionGeometry(parm.Profile.ToList(), parm.Direction, parm.Distance);
+        /// <summary>
+        /// Returns the name of the element's parameter.
+        /// </summary>
+        public string ParamName { get; set; }
 
-            if (opt != null)
-                solid = CreateExtrusionGeometry(parm.Profile.ToList(), parm.Direction, parm.Distance, opt);
+        /// <summary>
+        /// Returns the data type of the element's parameter.
+        /// </summary>
+        public string DataType { get; set; }
 
-            var result = DirectShape.CreateElement(doc, new ElementId(parm.Category));
+        /// <summary>
+        /// Returns the data category of the element's parameter.
+        /// </summary>
+        public string DataCatetory { get; set; }
 
-            result?.AppendShape(new List<GeometryObject> { solid });
+        /// <summary>
+        /// Returns the group id of the element's parameter.
+        /// </summary>
+        public string GroupId { get; set; }
 
-            return result;
-        }
+        /// <summary>
+        /// Returns the visible of element's parameter.
+        /// </summary>
+        public bool Visible { get; set; }
+
+        /// <summary>
+        /// Returns the description of element's parameter.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Returns the can edit of element's parameter.
+        /// </summary>
+        public bool CanEdit { get; set; }
     }
 }

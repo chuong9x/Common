@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
  * MIT License
  *
  * Copyright(c) 2019 KeLi
@@ -34,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 01/15/2020 08:05:20 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/15/2020 07:39:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -48,82 +47,49 @@
 */
 
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Structure;
 using System;
 
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Family symbol parmater.
+    /// Family instance parameter.
     /// </summary>
-    public class FamilySymbolParm
+    public class FamilyInstanceParameter
     {
         /// <summary>
-        /// Family symbol parmater.
+        /// Family instance parameter.
         /// </summary>
-        /// <param name="templateFileName"></param>
-        /// <param name="profile"></param>
-        /// <param name="plane"></param>
-        /// <param name="end"></param>
-        public FamilySymbolParm(string templateFileName, CurveArrArray profile, Plane plane, double end)
-        {
-            TemplateFileName = templateFileName;
-            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
-            Plane = plane ?? throw new ArgumentNullException(nameof(plane));
-            End = end;
-        }
-
-
-
-        /// <summary>
-        /// Family symbol parmater.
-        /// </summary>
-        /// <param name="templateFileName"></param>
-        /// <param name="profile"></param>
-        /// <param name="path"></param>
         /// <param name="location"></param>
-        /// <param name="index"></param>
-        public FamilySymbolParm(string templateFileName, CurveArrArray profile, ReferenceArray path, ProfilePlaneLocation location = ProfilePlaneLocation.Start, int index = 0)
+        /// <param name="symbol"></param>
+        /// <param name="lvl"></param>
+        /// <param name="type"></param>
+        public FamilyInstanceParameter(XYZ location, FamilySymbol symbol, Level lvl, StructuralType type)
         {
-            TemplateFileName = templateFileName;
-            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
-            SweepPath = path ?? throw new ArgumentNullException(nameof(path));
-            Location = location;
-            Index = index;
+            Location = location ?? throw new ArgumentNullException(nameof(location));
+            Symbol = symbol ?? throw new ArgumentNullException(nameof(symbol));
+            Level = lvl ?? throw new ArgumentNullException(nameof(lvl));
+            Type = type;
         }
 
         /// <summary>
-        /// The family symbol's template file name including file suffix.
+        /// The family instance's location.
         /// </summary>
-        public string TemplateFileName { get; }
+        public XYZ Location { get; set; }
 
         /// <summary>
-        /// The extrusion symbol's profile.
+        /// The family instance's Symbol.
         /// </summary>
-        public CurveArrArray Profile { get; }
+        public FamilySymbol Symbol { get; set; }
 
         /// <summary>
-        /// The family symbol's reference plane.
+        /// The family instance's level.
         /// </summary>
-        public Plane Plane { get; }
+        public Level Level { get; set; }
 
         /// <summary>
-        /// The family symbol's end length.
+        /// The family instance's type.
         /// </summary>
-        public double End { get; }
-
-        /// <summary>
-        /// The sweep symbol's path.
-        /// </summary>
-        public ReferenceArray SweepPath { get; set; }
-
-        /// <summary>
-        /// The sweep symbol's profile plane location.
-        /// </summary>
-        public ProfilePlaneLocation Location { get; set; }
-
-        /// <summary>
-        /// The sweep symbol's index.
-        /// </summary>
-        public int Index { get; set; }
+        public StructuralType Type { get; set; }
     }
 }

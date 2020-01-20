@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 01/15/2020 07:39:20 PM |  |  |     |         |      |
+     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -47,49 +47,42 @@
 */
 
 using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Structure;
-using System;
 
-namespace KeLi.Common.Revit.Builders
+namespace KeLi.Common.Revit.Converters
 {
     /// <summary>
-    /// Family instance parameter.
+    /// Number utility.
     /// </summary>
-    public class FamilyInstanceParm
+    public static class UtilConverter
     {
         /// <summary>
-        /// Family instance parameter.
+        /// Millimeter to inch.
         /// </summary>
-        /// <param name="location"></param>
-        /// <param name="symbol"></param>
-        /// <param name="lvl"></param>
-        /// <param name="type"></param>
-        public FamilyInstanceParm(XYZ location, FamilySymbol symbol, Level lvl, StructuralType type)
+        public const double MM_TO_INCH = 0.0393700787;
+
+        /// <summary>
+        /// Millimeter to foot.
+        /// </summary>
+        public const double MM_TO_FT = 0.0032808399;
+
+        /// <summary>
+        /// Converts feet unit value to mm unit value.
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static double ConvertFeetToMm(double num)
         {
-            Location = location ?? throw new ArgumentNullException(nameof(location));
-            Symbol = symbol ?? throw new ArgumentNullException(nameof(symbol));
-            Level = lvl ?? throw new ArgumentNullException(nameof(lvl));
-            Type = type;
+            return UnitUtils.Convert(num, DisplayUnitType.DUT_DECIMAL_FEET, DisplayUnitType.DUT_MILLIMETERS);
         }
 
         /// <summary>
-        /// The family instance's location.
+        /// Converts mm unit value to feet unit value.
         /// </summary>
-        public XYZ Location { get; set; }
-
-        /// <summary>
-        /// The family instance's Symbol.
-        /// </summary>
-        public FamilySymbol Symbol { get; set; }
-
-        /// <summary>
-        /// The family instance's level.
-        /// </summary>
-        public Level Level { get; set; }
-
-        /// <summary>
-        /// The family instance's type.
-        /// </summary>
-        public StructuralType Type { get; set; }
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static double ConvertMmToFeet(double num)
+        {
+            return UnitUtils.Convert(num, DisplayUnitType.DUT_MILLIMETERS, DisplayUnitType.DUT_DECIMAL_FEET);
+        }
     }
 }

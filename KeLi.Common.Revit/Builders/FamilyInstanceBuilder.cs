@@ -50,6 +50,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Structure;
 
 namespace KeLi.Common.Revit.Builders
 {
@@ -59,12 +60,12 @@ namespace KeLi.Common.Revit.Builders
     public static class FamilyInstanceBuilder
     {
         /// <summary>
-        ///  Creates a new family instance.
+        /// Creates a new family instance.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="parm"></param>
         /// <returns></returns>
-        public static FamilyInstance CreateFamilyInstance(this Document doc, FamilyInstanceParm parm)
+        public static FamilyInstance CreateFamilyInstance(this Document doc, FamilyInstanceParameter parm)
         {
             if (parm == null)
                 throw new ArgumentNullException(nameof(parm));
@@ -73,6 +74,33 @@ namespace KeLi.Common.Revit.Builders
                 return doc.FamilyCreate.NewFamilyInstance(parm.Location, parm.Symbol, parm.Level, parm.Type);
 
             return doc.Create.NewFamilyInstance(parm.Location, parm.Symbol, parm.Level, parm.Type);
+        }
+
+        /// <summary>
+        /// Creates a new family instance with NonStructural type.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="location"></param>
+        /// <param name="symbol"></param>
+        /// <param name="lvl"></param>
+        /// <returns></returns>
+        public static FamilyInstance CreateNonStructuralInstance(this Document doc, XYZ location, FamilySymbol symbol, Level lvl)
+        {
+            if (symbol == null)
+                throw new ArgumentNullException(nameof(symbol));
+
+            if (location == null)
+                throw new ArgumentNullException(nameof(location));
+
+            if (symbol == null)
+                throw new ArgumentNullException(nameof(symbol));
+
+            if (lvl == null)
+                throw new ArgumentNullException(nameof(lvl));
+
+            var parm = new FamilyInstanceParameter(location, symbol, lvl, StructuralType.NonStructural);
+
+            return doc.CreateFamilyInstance(parm);
         }
 
         /// <summary>

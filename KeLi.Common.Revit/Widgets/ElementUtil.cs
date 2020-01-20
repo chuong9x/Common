@@ -47,7 +47,10 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Autodesk.Revit.DB;
+using KeLi.Common.Revit.Filters;
 
 namespace KeLi.Common.Revit.Widgets
 {
@@ -56,6 +59,97 @@ namespace KeLi.Common.Revit.Widgets
     /// </summary>
     public static class ElementUtil
     {
+        /// <summary>
+        /// Gets FamilySymbol list.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static List<FamilySymbol> GetFamilySymbolList(this Document doc)
+        {
+            return doc.GetTypeElementList<FamilySymbol>();
+        }
+
+        /// <summary>
+        /// Gets FamilyInstance list.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static List<Wall> GetWallList(Document doc)
+        {
+            return doc.GetInstanceElementList<Wall>();
+        }
+
+        /// <summary>
+        /// Gets FamilyInstance list.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="symbolName"></param>
+        /// <returns></returns>
+        public static List<FamilyInstance> GetFamilyInstanceList(this Document doc, string symbolName)
+        {
+            return GetFamilyInstanceList(doc).Where(w => w.Symbol.Name == symbolName).ToList();
+        }
+
+        /// <summary>
+        /// Gets FamilyInstance list.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static List<FamilyInstance> GetFamilyInstanceList(this Document doc)
+        {
+            return doc.GetInstanceElementList<FamilyInstance>();
+        }
+
+        /// <summary>
+        /// Gets PanelType list.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static List<SpatialElement> GetSpatialElementList(this Document doc)
+        {
+            return doc.GetInstanceElementList<SpatialElement>();
+        }
+
+        /// <summary>
+        /// Gets PanelType list.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static List<PanelType> GetPanelTypeList(this Document doc)
+        {
+            return doc.GetTypeElementList<PanelType>().ToList();
+        }
+
+        /// <summary>
+        /// Gets WallType list.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static List<WallType> GetWallTypeList(this Document doc)
+        {
+            return doc.GetTypeElementList<WallType>();
+        }
+
+        /// <summary>
+        /// Gets the bottom level.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static Level GetBottomLevel(this Document doc)
+        {
+            return GetLevelList(doc).OrderBy(o => o.Elevation).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets Level list.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static List<Level> GetLevelList(this Document doc)
+        {
+            return doc.GetInstanceElementList<Level>();
+        }
+
         /// <summary>
         /// Gets the element's location point.
         /// </summary>

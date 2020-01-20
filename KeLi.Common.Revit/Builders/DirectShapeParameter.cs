@@ -55,7 +55,7 @@ namespace KeLi.Common.Revit.Builders
     /// <summary>
     /// DirectShape paramter.
     /// </summary>
-    public class DirectShapeParm
+    public class DirectShapeParameter
     {
         /// <summary>
         /// DirectShape paramter.
@@ -64,7 +64,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="direction"></param>
         /// <param name="distance"></param>
         /// <param name="category"></param>
-        public DirectShapeParm(IEnumerable<CurveLoop> profile, XYZ direction, double distance, BuiltInCategory category)
+        public DirectShapeParameter(IEnumerable<CurveLoop> profile, XYZ direction, double distance, BuiltInCategory category)
         {
             Profile = profile ?? throw new ArgumentNullException(nameof(profile));
             Direction = direction ?? throw new ArgumentNullException(nameof(direction));

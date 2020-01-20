@@ -69,7 +69,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="symbolParm"></param>
         /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateExtrusionSymbol(this Document doc, Application app, FamilySymbolParm symbolParm, string rfaPath = null)
+        public static FamilySymbol CreateExtrusionSymbol(this Document doc, Application app, FamilySymbolParameter symbolParm, string rfaPath = null)
         {
             if (symbolParm == null)
                 throw new ArgumentNullException(nameof(symbolParm));
@@ -96,7 +96,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="symbolParm"></param>
         /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateSweepSymbol(this Document doc, Application app, FamilySymbolParm symbolParm, string rfaPath = null)
+        public static FamilySymbol CreateSweepSymbol(this Document doc, Application app, FamilySymbolParameter symbolParm, string rfaPath = null)
         {
             if (symbolParm == null)
                 throw new ArgumentNullException(nameof(symbolParm));

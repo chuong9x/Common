@@ -84,11 +84,11 @@
   <ItemGroup>
     <Compile Include="Builders\CurtainSystemBuilder.cs" />
     <Compile Include="Builders\DirectShapeBuilder.cs" />
-    <Compile Include="Builders\DirectShapeParm.cs" />
+    <Compile Include="Builders\DirectShapeParameter.cs" />
     <Compile Include="Builders\FamilyInstanceBuilder.cs" />
-    <Compile Include="Builders\FamilyInstanceParm.cs" />
+    <Compile Include="Builders\FamilyInstanceParameter.cs" />
     <Compile Include="Builders\FamilySymbolBuilder.cs" />
-    <Compile Include="Builders\FamilySymbolParm.cs" />
+    <Compile Include="Builders\FamilySymbolParameter.cs" />
     <Compile Include="Builders\GroupBuilder.cs" />
     <Compile Include="Builders\MaterialBuilder.cs" />
     <Compile Include="Builders\ModelCurveBuilder.cs" />
@@ -97,6 +97,8 @@
     <Compile Include="Builders\ViewBuilder.cs" />
     <Compile Include="Filters\FilterType.cs" />
     <Compile Include="Geometry\VectorUtil.cs" />
+    <Compile Include="Information\ElementParameter.cs" />
+    <Compile Include="Information\GroupParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -114,12 +116,12 @@
     <Compile Include="Widgets\LinkUtil.cs" />
     <Compile Include="Relations\LineRelation.cs" />
     <Compile Include="Relations\SolidRelaction.cs" />
-    <Compile Include="Information\ParamUtil.cs" />
+    <Compile Include="Information\ParameterUtil.cs" />
     <Compile Include="Widgets\RevitContext.cs" />
     <Compile Include="Widgets\RibbonUtil.cs" />
     <Compile Include="Widgets\AreaUtil.cs" />
     <Compile Include="Geometry\BoxUtil.cs" />
-    <Compile Include="Converters\NumberUtil.cs" />
+    <Compile Include="Converters\UtilConverter.cs" />
     <Compile Include="Widgets\AutoUtil.cs" />
     <Compile Include="Filters\RoomUtil.cs" />
     <Compile Include="Converters\TypeConverter.cs" />
