@@ -48,6 +48,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Converters
@@ -105,7 +106,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the ReferenceArray to the Reference set.
+        /// Converts the ReferenceArray to the Reference list.
         /// </summary>
         /// <param name="refs"></param>
         /// <returns></returns>
@@ -123,7 +124,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the CurveLoop set to the CurveArrArray.
+        /// Converts the CurveLoop list to the CurveArrArray.
         /// </summary>
         /// <param name="curveLoops"></param>
         /// <returns></returns>
@@ -138,6 +139,32 @@ namespace KeLi.Common.Revit.Converters
                 results.Append(curveLoop.ToCurveArray());
 
             return results;
+        }
+
+        /// <summary>
+        /// Converts the CurveLoop list to the CurveArray list.
+        /// </summary>
+        /// <param name="curveLoops"></param>
+        /// <returns></returns>
+        public static List<CurveArray> ToCurveArrayList(this IEnumerable<CurveLoop> curveLoops)
+        {
+            if (curveLoops == null)
+                throw new ArgumentNullException(nameof(curveLoops));
+
+            return curveLoops.Select(s => s.ToCurveArray()).ToList();
+        }
+
+        /// <summary>
+        /// Converts the CurveLoop list to the Curve list.
+        /// </summary>
+        /// <param name="curveLoops"></param>
+        /// <returns></returns>
+        public static List<Curve> ToCurveList(this IEnumerable<CurveLoop> curveLoops)
+        {
+            if (curveLoops == null)
+                throw new ArgumentNullException(nameof(curveLoops));
+
+            return curveLoops.SelectMany(s => s).ToList();
         }
 
         /// <summary>
@@ -177,7 +204,25 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the CurveArray set to the CurveArrArray.
+        /// Converts the CurveArrArray to the Curve list.
+        /// </summary>
+        /// <param name="curveArrArray"></param>
+        /// <returns></returns>
+        public static List<Curve> ToCurveList(this CurveArrArray curveArrArray)
+        {
+            if (curveArrArray == null)
+                throw new ArgumentNullException(nameof(curveArrArray));
+
+            var results = new List<Curve>();
+
+            foreach (CurveArray curves in curveArrArray)
+                results.AddRange(curves.ToCurveList());
+
+            return results;
+        }
+
+        /// <summary>
+        /// Converts the CurveArray list to the CurveArrArray.
         /// </summary>
         /// <param name="curveArrays"></param>
         /// <returns></returns>
@@ -206,8 +251,26 @@ namespace KeLi.Common.Revit.Converters
 
             var results = new CurveArray();
 
-            foreach (Curve curve in curveLoop)
+            foreach (var curve in curveLoop)
                 results.Append(curve);
+
+            return results;
+        }
+
+        /// <summary>
+        /// Converts the CurveLoop to the Curve list.
+        /// </summary>
+        /// <param name="curveLoop"></param>
+        /// <returns></returns>
+        public static List<Curve> ToCurveList(this CurveLoop curveLoop)
+        {
+            if (curveLoop == null)
+                throw new ArgumentNullException(nameof(curveLoop));
+
+            var results = new List<Curve>();
+
+            foreach (var curve in curveLoop)
+                results.Add(curve);
 
             return results;
         }
@@ -231,25 +294,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the Curve set to the CurveArray.
-        /// </summary>
-        /// <param name="curves"></param>
-        /// <returns></returns>
-        public static CurveArray ToCurveArray(this IEnumerable<Curve> curves)
-        {
-            if (curves == null)
-                throw new ArgumentNullException(nameof(curves));
-
-            var results = new CurveArray();
-
-            foreach (var curve in curves)
-                results.Append(curve);
-
-            return results;
-        }
-
-        /// <summary>
-        /// Converts the CurveArray to the Curve set.
+        /// Converts the CurveArray to the Curve list.
         /// </summary>
         /// <param name="curveArray"></param>
         /// <returns></returns>
@@ -267,7 +312,43 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the Face set to the FaceArray.
+        /// Converts the Curve list to the CurveArray.
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static CurveArray ToCurveArray(this IEnumerable<Curve> curves)
+        {
+            if (curves == null)
+                throw new ArgumentNullException(nameof(curves));
+
+            var results = new CurveArray();
+
+            foreach (var curve in curves)
+                results.Append(curve);
+
+            return results;
+        }
+
+        /// <summary>
+        /// Converts the Curve list to the CurveLoop.
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static CurveLoop ToCurveLoop(this IEnumerable<Curve> curves)
+        {
+            if (curves == null)
+                throw new ArgumentNullException(nameof(curves));
+
+            var results = new CurveLoop();
+
+            foreach (var curve in curves)
+                results.Append(curve);
+
+            return results;
+        }
+
+        /// <summary>
+        /// Converts the Face list to the FaceArray.
         /// </summary>
         /// <param name="faces"></param>
         /// <returns></returns>
@@ -285,7 +366,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the FaceArray to the Face set.
+        /// Converts the FaceArray to the Face list.
         /// </summary>
         /// <param name="faces"></param>
         /// <returns></returns>
