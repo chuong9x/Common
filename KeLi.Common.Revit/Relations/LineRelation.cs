@@ -307,7 +307,40 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the max point of the Curve.
+        /// Gets the true point order by right(x), front(y) and top(z) point of the Curve set.
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static XYZ GetMinPoint(this IEnumerable<Curve> curves)
+        {
+            return curves.Select(m => m.GetMinPoint()).GetMinPoint();
+        }
+
+        /// <summary>
+        /// Gets the true point order by top(z), front(y) and right(x) in the Curve set.
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static XYZ GetMaxPoint(this IEnumerable<Curve> curves)
+        {
+            return curves.Select(m => m.GetMaxPoint()).GetMaxPoint();
+        }
+
+        /// <summary>
+        /// Gets the true point order by right(x), front(y) and top(z) point of the Curve.
+        /// </summary>
+        /// <param name="curve"></param>
+        /// <returns></returns>
+        public static XYZ GetMinPoint(this Curve curve)
+        {
+            if (curve == null)
+                throw new ArgumentNullException(nameof(curve));
+
+            return curve.GetEndPoints().GetMinPoint();
+        }
+
+        /// <summary>
+        /// Gets the true point order by top(z), front(y) and right(x) in the Curve.
         /// </summary>
         /// <param name="curve"></param>
         /// <returns></returns>
@@ -316,134 +349,96 @@ namespace KeLi.Common.Revit.Relations
             if (curve == null)
                 throw new ArgumentNullException(nameof(curve));
 
+            return curve.GetEndPoints().GetMaxPoint();
+        }
+
+        /// <summary>
+        /// Gets the two end points of the Curve.
+        /// </summary>
+        /// <param name="curve"></param>
+        /// <returns></returns>
+        public static List<XYZ> GetEndPoints(this Curve curve)
+        {
+            if (curve == null)
+                throw new ArgumentNullException(nameof(curve));
+
             var pt1 = curve.GetEndPoint(0);
             var pt2 = curve.GetEndPoint(1);
 
-            return new XYZ(Math.Max(pt1.X, pt2.X), Math.Max(pt1.Y, pt2.Y), Math.Max(pt1.Z, pt2.Z));
+            return new List<XYZ> { pt1, pt2 };
         }
 
         /// <summary>
-        /// Gets the min point of the Curve set.
+        /// Gets the true point order by top(z), front(y) and right(x) in the XYZ set.
         /// </summary>
-        /// <param name="lines"></param>
+        /// <param name="pts"></param>
         /// <returns></returns>
-        public static XYZ GetMaxPoint(this IEnumerable<Curve> lines)
+        public static XYZ GetMaxPoint(this IEnumerable<XYZ> pts)
         {
-            if (lines == null)
-                throw new ArgumentNullException(nameof(lines));
+            if (pts == null)
+                throw new ArgumentNullException(nameof(pts));
 
-            var pts = new List<XYZ>();
-
-            foreach (var line in lines)
-            {
-                var pt1 = line.GetEndPoint(0);
-                var pt2 = line.GetEndPoint(1);
-
-                pts.Add(pt1);
-                pts.Add(pt2);
-            }
-
-            var x = pts.Select(s => s.X).Max();
-            var y = pts.Select(s => s.Y).Max();
-            var z = pts.Select(s => s.Z).Max();
-
-            return new XYZ(x, y, z);
+            return pts.OrderBy(o => o.X).ThenBy(o => o.Y).ThenBy(o => o.Z).FirstOrDefault();
         }
 
         /// <summary>
-        /// Gets the min point of the Curve.
+        /// Gets the true point order by right(x), front(y) and top(z) in the XYZ set.
         /// </summary>
-        /// <param name="line"></param>
+        /// <param name="pts"></param>
         /// <returns></returns>
-        public static XYZ GetMinPoint(this Curve line)
+        public static XYZ GetMinPoint(this IEnumerable<XYZ> pts)
         {
-            if (line == null)
-                throw new ArgumentNullException(nameof(line));
+            if (pts == null)
+                throw new ArgumentNullException(nameof(pts));
 
-            var pt1 = line.GetEndPoint(0);
-            var pt2 = line.GetEndPoint(1);
-
-            return new XYZ(Math.Min(pt1.X, pt2.X), Math.Min(pt1.Y, pt2.Y), Math.Min(pt1.Z, pt2.Z));
+            return pts.OrderBy(o => o.Z).ThenBy(o => o.Y).ThenBy(o => o.X).FirstOrDefault();
         }
 
         /// <summary>
-        /// Gets the min point of the Curve set.
+        /// Gets the result of whether the point is in the plane direction polygon.
         /// </summary>
-        /// <param name="curves"></param>
+        /// <param name="pt"></param>
+        /// <param name="polygon"></param>
         /// <returns></returns>
-        public static XYZ GetMinPoint(this IEnumerable<Curve> curves)
+        public static bool InPlanePolygon(this XYZ pt, IEnumerable<Line> polygon)
         {
-            if (curves == null)
-                throw new ArgumentNullException(nameof(curves));
+            if (pt == null)
+                throw new ArgumentNullException(nameof(pt));
 
-            var pts = new List<XYZ>();
+            if (polygon == null)
+                throw new ArgumentNullException(nameof(polygon));
 
-            foreach (var line in curves)
+            var x = pt.X;
+            var y = pt.Y;
+            var xs = new List<double>();
+            var ys = new List<double>();
+
+            foreach (var line in polygon)
             {
-                var pt1 = line.GetEndPoint(0);
-                var pt2 = line.GetEndPoint(1);
-
-                pts.Add(pt1);
-                pts.Add(pt2);
+                xs.Add(line.GetEndPoint(0).X);
+                ys.Add(line.GetEndPoint(0).Y);
             }
 
-            return pts.GetMinPoint();
-        }
+            var minX = xs.Min();
+            var maxX = xs.Max();
+            var minY = ys.Min();
+            var maxY = ys.Max();
 
-        /// <summary>
-        /// Gets the middle point of the line.
-        /// </summary>
-        /// <param name="line"></param>
-        /// <returns></returns>
-        public static XYZ GetMidPoint(this Line line)
-        {
-            if (line == null)
-                throw new ArgumentNullException(nameof(line));
+            var tmpPolygon = polygon.ToList();
 
-            return (line.GetEndPoint(0) + line.GetEndPoint(1)) * 0.5;
-        }
+            if (tmpPolygon.Count == 0 || x < minX || x > maxX || y < minY || y > maxY)
+                return false;
 
-        /// <summary>
-        /// Gets the middle point of the two Line in nearest area.
-        /// </summary>
-        /// <param name="line1"></param>
-        /// <param name="line2"></param>
-        /// <returns></returns>
-        public static XYZ GetMidPoint(this Line line1, Line line2)
-        {
-            if (line1 == null)
-                throw new ArgumentNullException(nameof(line1));
+            var result = false;
 
-            if (line2 == null)
-                throw new ArgumentNullException(nameof(line2));
-
-            var pt1 = line1.GetEndPoint(0);
-            var pt2 = line1.GetEndPoint(1);
-            var pt3 = line2.GetEndPoint(0);
-            var pt4 = line2.GetEndPoint(1);
-            var distance = double.MaxValue;
-            XYZ result = null;
-
-            if (pt1.DistanceTo(pt3) < distance)
+            for (int i = 0, j = tmpPolygon.Count - 1; i < tmpPolygon.Count; j = i++)
             {
-                distance = pt1.DistanceTo(pt3);
-                result = (pt1 + pt3) * 0.5;
-            }
+                var dxji = xs[j] - xs[i];
+                var dyji = ys[j] - ys[i];
 
-            if (pt1.DistanceTo(pt4) < distance)
-            {
-                distance = pt1.DistanceTo(pt4);
-                result = (pt1 + pt4) * 0.5;
+                if (ys[i] > y != ys[j] > y && x < dxji * (y - ys[i]) / dyji + xs[i])
+                    result = !result;
             }
-
-            if (pt2.DistanceTo(pt3) < distance)
-            {
-                distance = pt2.DistanceTo(pt3);
-                result = (pt2 + pt3) * 0.5;
-            }
-
-            if (pt2.DistanceTo(pt4) < distance)
-                result = (pt2 + pt4) * 0.5;
 
             return result;
         }

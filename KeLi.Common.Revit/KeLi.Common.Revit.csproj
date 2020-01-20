@@ -113,8 +113,6 @@
     <Compile Include="Hook\HookUtil.cs" />
     <Compile Include="Widgets\LinkUtil.cs" />
     <Compile Include="Relations\LineRelation.cs" />
-    <Compile Include="Relations\PointLineRelation.cs" />
-    <Compile Include="Relations\PointPlaneRelation.cs" />
     <Compile Include="Relations\SolidRelaction.cs" />
     <Compile Include="Information\ParamUtil.cs" />
     <Compile Include="Widgets\RevitContext.cs" />
