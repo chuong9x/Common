@@ -64,7 +64,7 @@ namespace KeLi.Common.Revit.Relations
         /// <param name="pt"></param>
         /// <param name="polygon"></param>
         /// <returns></returns>
-        public static bool InPlanePolygon(this XYZ pt, List<Line> polygon)
+        public static bool InPlanePolygon(this XYZ pt, IEnumerable<Line> polygon)
         {
             if (pt == null)
                 throw new ArgumentNullException(nameof(pt));
@@ -88,12 +88,14 @@ namespace KeLi.Common.Revit.Relations
             var minY = ys.Min();
             var maxY = ys.Max();
 
-            if (polygon.Count == 0 || x < minX || x > maxX || y < minY || y > maxY)
+            var tmpPolygon = polygon.ToList();
+
+            if (tmpPolygon.Count == 0 || x < minX || x > maxX || y < minY || y > maxY)
                 return false;
 
             var result = false;
 
-            for (int i = 0, j = polygon.Count - 1; i < polygon.Count; j = i++)
+            for (int i = 0, j = tmpPolygon.Count - 1; i < tmpPolygon.Count; j = i++)
             {
                 var dxji = xs[j] - xs[i];
                 var dyji = ys[j] - ys[i];
@@ -111,7 +113,7 @@ namespace KeLi.Common.Revit.Relations
         /// <param name="pt"></param>
         /// <param name="polygon"></param>
         /// <returns></returns>
-        public static bool InSpacePolygon(this XYZ pt, List<Line> polygon)
+        public static bool InSpacePolygon(this XYZ pt, IEnumerable<Line> polygon)
         {
             if (pt == null)
                 throw new ArgumentNullException(nameof(pt));

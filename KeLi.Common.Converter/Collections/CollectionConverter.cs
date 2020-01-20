@@ -236,13 +236,14 @@ namespace KeLi.Common.Converter.Collections
         /// <typeparam name="T"></typeparam>
         /// <param name="ts"></param>
         /// <returns></returns>
-        public static DataTable ToTable<T>(List<T> ts)
+        public static DataTable ToTable<T>(IEnumerable<T> ts)
         {
             if (ts == null)
                 throw new ArgumentNullException(nameof(ts));
 
+            var tmpTs = ts.ToList();
             var results = new DataTable();
-            var props = ts[0].GetType().GetProperties();
+            var props = tmpTs[0].GetType().GetProperties();
 
             foreach (var prop in props)
                 results.Columns.Add(prop.Name, prop.PropertyType);

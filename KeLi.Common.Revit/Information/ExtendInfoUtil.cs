@@ -182,19 +182,7 @@ namespace KeLi.Common.Revit.Information
         /// <param name="entity"></param>
         /// <param name="fieldName"></param>
         /// <param name="value"></param>
-        public static void SetFieldListValue<T>(this Entity entity, string fieldName, List<T> value)
-        {
-            entity.Set(fieldName, value);
-        }
-
-        /// <summary>
-        /// Sets the array type field's value.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        /// <param name="fieldName"></param>
-        /// <param name="value"></param>
-        public static void SetArrayFieldValue<T>(this Entity entity, string fieldName, T[] value)
+        public static void SetFieldListValue<T>(this Entity entity, string fieldName, IEnumerable<T> value)
         {
             entity.Set(fieldName, value);
         }
@@ -207,7 +195,7 @@ namespace KeLi.Common.Revit.Information
         /// <param name="entity"></param>
         /// <param name="fieldName"></param>
         /// <param name="value"></param>
-        public static void SetDictFieldValue<K, V>(this Entity entity, string fieldName, Dictionary<K, V> value)
+        public static void SetDictFieldValue<K, V>(this Entity entity, string fieldName, IDictionary<K, V> value)
         {
             entity.Set(fieldName, value);
         }

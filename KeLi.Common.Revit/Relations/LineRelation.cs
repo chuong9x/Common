@@ -230,7 +230,7 @@ namespace KeLi.Common.Revit.Relations
         /// <param name="lines"></param>
         /// <param name="isTouch"></param>
         /// <returns></returns>
-        public static List<XYZ> GetPlaneCrossingPointList(this Line line, List<Line> lines, bool isTouch = true)
+        public static List<XYZ> GetPlaneCrossingPointList(this Line line, IEnumerable<Line> lines, bool isTouch = true)
         {
             if (line == null)
                 throw new ArgumentNullException(nameof(line));
@@ -240,7 +240,7 @@ namespace KeLi.Common.Revit.Relations
 
             var results = new List<XYZ>();
 
-            lines.ForEach(f => results.Add(line.GetPlaneCrossingPoint(f, isTouch)));
+            lines.ToList().ForEach(f => results.Add(line.GetPlaneCrossingPoint(f, isTouch)));
 
             return results.Where(w => w != null).ToList();
         }
@@ -250,7 +250,7 @@ namespace KeLi.Common.Revit.Relations
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
-        public static List<XYZ> GetDistinctPointList(this List<Curve> curves)
+        public static List<XYZ> GetDistinctPointList(this IEnumerable<Curve> curves)
         {
             if (curves == null)
                 throw new ArgumentNullException(nameof(curves));
@@ -286,20 +286,21 @@ namespace KeLi.Common.Revit.Relations
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
-        public static List<XYZ> GetBoundaryPointList(this List<Curve> curves)
+        public static List<XYZ> GetBoundaryPointList(this IEnumerable<Curve> curves)
         {
             if (curves == null)
                 throw new ArgumentNullException(nameof(curves));
 
             var results = new List<XYZ>();
+            var tmpCurves = curves.ToList();
 
-            foreach (var line in curves)
+            foreach (var line in tmpCurves)
                 results.Add(line.GetEndPoint(0));
 
-            var endPoint = curves[curves.Count - 1].GetEndPoint(1);
+            var endPoint = tmpCurves[tmpCurves.Count - 1].GetEndPoint(1);
 
             // If no closed, the last line's end point is different from the first line's start point.
-            if (!curves[0].GetEndPoint(0).IsAlmostEqualTo(endPoint))
+            if (!tmpCurves[0].GetEndPoint(0).IsAlmostEqualTo(endPoint))
                 results.Add(endPoint);
 
             return results;
@@ -326,7 +327,7 @@ namespace KeLi.Common.Revit.Relations
         /// </summary>
         /// <param name="lines"></param>
         /// <returns></returns>
-        public static XYZ GetMaxPoint(this List<Line> lines)
+        public static XYZ GetMaxPoint(this IEnumerable<Line> lines)
         {
             if (lines == null)
                 throw new ArgumentNullException(nameof(lines));
@@ -370,7 +371,7 @@ namespace KeLi.Common.Revit.Relations
         /// </summary>
         /// <param name="lines"></param>
         /// <returns></returns>
-        public static XYZ GetMinPoint(this List<Line> lines)
+        public static XYZ GetMinPoint(this IEnumerable<Line> lines)
         {
             if (lines == null)
                 throw new ArgumentNullException(nameof(lines));

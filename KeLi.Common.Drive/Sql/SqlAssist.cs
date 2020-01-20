@@ -135,7 +135,7 @@ namespace KeLi.Common.Drive.Sql
         /// <param name="texts"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static int Update(List<string> texts, CommandType ct = CommandType.Text)
+        public static int Update(IEnumerable<string> texts, CommandType ct = CommandType.Text)
         {
             if (texts == null)
                 throw new ArgumentNullException(nameof(texts));
@@ -181,7 +181,7 @@ namespace KeLi.Common.Drive.Sql
         /// <param name="sps"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static int Update(List<string> texts, SqlParameter[][] sps, CommandType ct = CommandType.Text)
+        public static int Update(IEnumerable<string> texts, SqlParameter[][] sps, CommandType ct = CommandType.Text)
         {
             if (texts == null)
                 throw new ArgumentNullException(nameof(texts));

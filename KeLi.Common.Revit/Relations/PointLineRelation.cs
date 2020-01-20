@@ -63,7 +63,7 @@ namespace KeLi.Common.Revit.Relations
         /// </summary>
         /// <param name="pts"></param>
         /// <returns></returns>
-        public static XYZ GetMaxPoint(this List<XYZ> pts)
+        public static XYZ GetMaxPoint(this IEnumerable<XYZ> pts)
         {
             if (pts == null)
                 throw new ArgumentNullException(nameof(pts));
@@ -76,7 +76,7 @@ namespace KeLi.Common.Revit.Relations
         /// </summary>
         /// <param name="pts"></param>
         /// <returns></returns>
-        public static XYZ GetMinPoint(this List<XYZ> pts)
+        public static XYZ GetMinPoint(this IEnumerable<XYZ> pts)
         {
             if (pts == null)
                 throw new ArgumentNullException(nameof(pts));

@@ -88,7 +88,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="pnl"></param>
         /// <param name="pbds"></param>
         /// <returns></returns>
-        public static List<PushButton> AddButtonList(this RibbonPanel pnl, List<PushButtonData> pbds)
+        public static List<PushButton> AddButtonList(this RibbonPanel pnl, IEnumerable<PushButtonData> pbds)
         {
             if (pnl == null)
                 throw new ArgumentNullException(nameof(pnl));
@@ -98,7 +98,7 @@ namespace KeLi.Common.Revit.Widgets
 
             var results = new List<PushButton>();
 
-            pbds.ForEach(f => results.Add(pnl.AddButton(f)));
+            pbds.ToList().ForEach(f => results.Add(pnl.AddButton(f)));
 
             return results;
         }
@@ -110,7 +110,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="pbd"></param>
         /// <param name="pbds"></param>
         /// <returns></returns>
-        public static PulldownButton AddPushButton(this RibbonPanel pnl, PulldownButtonData pbd, List<PushButtonData> pbds)
+        public static PulldownButton AddPushButton(this RibbonPanel pnl, PulldownButtonData pbd, IEnumerable<PushButtonData> pbds)
         {
             if (pnl == null)
                 throw new ArgumentNullException(nameof(pnl));
@@ -150,7 +150,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="pbd"></param>
         /// <param name="pbds"></param>
         /// <returns></returns>
-        public static SplitButton AddPushButton(this RibbonPanel pnl, SplitButtonData pbd, List<PushButtonData> pbds)
+        public static SplitButton AddPushButton(this RibbonPanel pnl, SplitButtonData pbd, IEnumerable<PushButtonData> pbds)
         {
             if (pnl == null)
                 throw new ArgumentNullException(nameof(pnl));

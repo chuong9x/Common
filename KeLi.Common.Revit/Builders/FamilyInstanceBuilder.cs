@@ -46,7 +46,9 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Builders
@@ -64,6 +66,9 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static FamilyInstance CreateFamilyInstance(this Document doc, FamilyInstanceParm parm)
         {
+            if (parm == null)
+                throw new ArgumentNullException(nameof(parm));
+
             if (doc.IsFamilyDocument)
                 return doc.FamilyCreate.NewFamilyInstance(parm.Location, parm.Symbol, parm.Level, parm.Type);
 
@@ -77,8 +82,16 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="symbol"></param>
         /// <param name="pts"></param>
         /// <returns></returns>
-        public static FamilyInstance CreateFamilyInstance(this Document doc, FamilySymbol symbol, List<XYZ> pts)
+        public static FamilyInstance CreateFamilyInstance(this Document doc, FamilySymbol symbol, IEnumerable<XYZ> pts)
         {
+            if (symbol == null)
+                throw new ArgumentNullException(nameof(symbol));
+
+            if (pts == null)
+                throw new ArgumentNullException(nameof(pts));
+
+            var tmpPts = pts.ToList();
+
             // Creates a new instance of an adaptive component family.
             var result = AdaptiveComponentInstanceUtils.CreateAdaptiveComponentInstance(doc, symbol);
 
@@ -88,7 +101,7 @@ namespace KeLi.Common.Revit.Builders
             for (var i = 0; i < placePointIds.Count; i++)
             {
                 if (doc.GetElement(placePointIds[i]) is ReferencePoint point)
-                    point.Position = pts[i];
+                    point.Position = tmpPts[i];
             }
 
             return result;

@@ -51,6 +51,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using O2S.Components.PDFRender4NET;
@@ -260,7 +261,7 @@ namespace KeLi.Common.Drive.Pdf
         /// <param name="sourcePdf"></param>
         /// <param name="targetPdf"></param>
         /// <param name="extractPages"></param>
-        public static void ExtractPdf(FileInfo sourcePdf, FileInfo targetPdf, List<int> extractPages)
+        public static void ExtractPdf(FileInfo sourcePdf, FileInfo targetPdf, IEnumerable<int> extractPages)
         {
             if (sourcePdf == null)
                 throw new ArgumentNullException(nameof(sourcePdf));
@@ -271,8 +272,9 @@ namespace KeLi.Common.Drive.Pdf
             if (extractPages == null)
                 throw new ArgumentNullException(nameof(extractPages));
 
+            var tmpExtractPages = extractPages.ToList();
             var reader = new PdfReader(sourcePdf.FullName);
-            var doc = new Document(reader.GetPageSizeWithRotation(extractPages[0]));
+            var doc = new Document(reader.GetPageSizeWithRotation(tmpExtractPages[0]));
             var copy = new PdfCopy(doc, new FileStream(targetPdf.FullName, FileMode.Create));
 
             doc.Open();

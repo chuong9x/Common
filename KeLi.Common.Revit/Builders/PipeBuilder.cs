@@ -47,6 +47,7 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Electrical;
 using Autodesk.Revit.DB.Plumbing;
@@ -129,9 +130,9 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="start"></param>
         /// <returns></returns>
         public static FlexPipe CreateFlexPipe(this Document doc, ElementId systemId, ElementId typeId, ElementId lvlId,
-            XYZ start, XYZ end, List<XYZ> points)
+            XYZ start, XYZ end, IEnumerable<XYZ> points)
         {
-            return FlexPipe.Create(doc, systemId, typeId, lvlId, start, end, points);
+            return FlexPipe.Create(doc, systemId, typeId, lvlId, start, end, points.ToList());
         }
 
         /// <summary>

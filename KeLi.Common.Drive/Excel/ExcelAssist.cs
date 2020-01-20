@@ -188,7 +188,7 @@ namespace KeLi.Common.Drive.Excel
         /// <param name="objs"></param>
         /// <param name="param"></param>
         /// <param name="createHeader"></param>
-        public static void ToExcel<T>(this ExcelParam param, List<T> objs, bool createHeader = true)
+        public static void ToExcel<T>(this ExcelParam param, IEnumerable<T> objs, bool createHeader = true)
         {
             if (param == null)
                 throw new ArgumentNullException(nameof(param));
@@ -213,10 +213,12 @@ namespace KeLi.Common.Drive.Excel
                 for (var i = 0; i < ps.Length; i++)
                     sheet.Cells[param.RowIndex, i + param.ColumnIndex].Value = ps[i].GetDcrp();
 
+            var tmpObjs = objs.ToList();
+
             // The content row.
-            for (var i = 0; i < objs.Count; i++)
+            for (var i = 0; i < tmpObjs.Count; i++)
                 for (var j = 0; j < ps.Length; j++)
-                    sheet.Cells[i + param.RowIndex + 1, j + param.ColumnIndex].Value = ps[j].GetValue(objs[i]);
+                    sheet.Cells[i + param.RowIndex + 1, j + param.ColumnIndex].Value = ps[j].GetValue(tmpObjs[i]);
 
             sheet.SetExcelStyle();
             excel.Save();

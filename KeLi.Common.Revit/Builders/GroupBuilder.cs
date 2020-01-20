@@ -47,6 +47,7 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Builders
@@ -62,9 +63,9 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="elmIds"></param>
         /// <returns></returns>
-        public static Group CreateGroup(this Document doc, List<ElementId> elmIds)
+        public static Group CreateGroup(this Document doc, IEnumerable<ElementId> elmIds)
         {
-            return doc.Create.NewGroup(elmIds);
+            return doc.Create.NewGroup(elmIds.ToList());
         }
     }
 }

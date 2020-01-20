@@ -73,39 +73,6 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
-        /// Gets the dispersed line set.
-        /// </summary>
-        /// <param name="points"></param>
-        /// <param name="gapNum"></param>
-        /// <returns></returns>
-        public static List<Line> GetDispersedLineList(this IList<XYZ> points, int gapNum = 0)
-        {
-            if (points == null)
-                throw new ArgumentNullException(nameof(points));
-
-            var results = new List<Line>();
-
-            for (var i = 0; i < points.Count - 1; i++)
-            {
-                var endIndex = i + gapNum + 1;
-
-                if (endIndex > points.Count - 2)
-                    throw new ArgumentOutOfRangeException();
-
-                if (endIndex >= points.Count)
-                    break;
-
-                var line = Line.CreateBound(points[i], points[endIndex]);
-
-                results.Add(line);
-
-                i = endIndex - 1;
-            }
-
-            return results;
-        }
-
-        /// <summary>
         /// Gets the element's triange set.
         /// </summary>
         /// <returns></returns>
@@ -204,7 +171,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <param name="elm"></param>
         /// <param name="directions"></param>
         /// <returns></returns>
-        public static List<Face> GetFaceList(this Element elm, List<XYZ> directions)
+        public static List<Face> GetFaceList(this Element elm, IEnumerable<XYZ> directions)
         {
             var results = new List<Face>();
 
@@ -333,6 +300,36 @@ namespace KeLi.Common.Revit.Geometry
                         results = results.Union(ge4.GetValidSolidList()).ToList();
                         break;
                 }
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Gets the dispersed line set.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="gapNum"></param>
+        /// <returns></returns>
+        private static List<Line> GetDispersedLineList(this IEnumerable<XYZ> points, int gapNum = 0)
+        {
+            if (points == null)
+                throw new ArgumentNullException(nameof(points));
+
+            var tmpPoints = points.ToList();
+            var results = new List<Line>();
+
+            for (var i = 0; i < tmpPoints.Count - 1; i++)
+            {
+                var endIndex = i + gapNum + 1;
+
+                if (endIndex >= tmpPoints.Count)
+                    break;
+
+                var line = Line.CreateBound(tmpPoints[i], tmpPoints[endIndex]);
+
+                results.Add(line);
+                i = endIndex - 1;
             }
 
             return results;
