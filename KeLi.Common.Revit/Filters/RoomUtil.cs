@@ -120,9 +120,11 @@ namespace KeLi.Common.Revit.Filters
             {
                 foreach (var segment in loop)
                 {
+                    // It's invalid!
                     if (segment.ElementId.IntegerValue == -1)
                         continue;
 
+                    // Because base room boundary to do, so one wall maybe be picked up some times.
                     if(results.FirstOrDefault(f => f.Id == segment.ElementId) != null)
                         continue;
 
