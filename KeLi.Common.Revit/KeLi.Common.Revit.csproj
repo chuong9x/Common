@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builders\CurtainSystemBuilder.cs" />
+    <Compile Include="Builders\CurtainSystemParameter.cs" />
     <Compile Include="Builders\DirectShapeBuilder.cs" />
     <Compile Include="Builders\DirectShapeParameter.cs" />
     <Compile Include="Builders\FamilyInstanceBuilder.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Builders\PlaneBuilder.cs" />
     <Compile Include="Builders\ViewBuilder.cs" />
     <Compile Include="Filters\FilterType.cs" />
+    <Compile Include="Filters\LineDirection.cs" />
     <Compile Include="Geometry\VectorUtil.cs" />
     <Compile Include="Information\ElementParameter.cs" />
     <Compile Include="Information\GroupParameter.cs" />

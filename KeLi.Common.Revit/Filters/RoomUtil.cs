@@ -50,6 +50,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
+using KeLi.Common.Revit.Geometry;
 
 namespace KeLi.Common.Revit.Filters
 {
@@ -131,6 +132,83 @@ namespace KeLi.Common.Revit.Filters
             }
 
             return results.Where(w => Convert.ToDouble(w.WallType.get_Parameter(parmEnum).AsValueString()) < maxThickness).ToList();
+        }
+
+        /// <summary>
+        /// Gets inner face of wall.
+        /// </summary>
+        /// <param name="wall"></param>
+        /// <param name="refPt"></param>
+        /// <returns></returns>
+        public static Face GetInnerFace(this Wall wall, XYZ refPt)
+        {
+            var line = wall.GetLocationCurve() as Line;
+
+            if (line == null)
+                throw new Exception("Curve wall isn't supported!");
+
+            var wdir = GetLineDirection(line, refPt);
+            var innerNormal = GetInnerNormal(wdir);
+
+            return wall.GetFaceList(innerNormal).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets inner direction noraml.
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <returns></returns>
+        public static XYZ GetInnerNormal(this LineDirection dir)
+        {
+            switch (dir)
+            {
+                case LineDirection.East:
+                    return -XYZ.BasisX;
+                case LineDirection.West:
+                    return XYZ.BasisX;
+                case LineDirection.South:
+                    return XYZ.BasisY;
+                case LineDirection.North:
+                    return -XYZ.BasisY;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
+            }
+        }
+
+        /// <summary>
+        /// Gets direction of the line by a reference specified point.
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="refPt"></param>
+        /// <returns></returns>
+        public static LineDirection GetLineDirection(this Line line, XYZ refPt)
+        {
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
+
+            // X axis direction.
+            if (Math.Abs(line.Direction.Y) < 1e-6)
+            {
+                // South
+                if (line.Origin.Y < refPt.Y)
+                    return LineDirection.South;
+
+                // North
+                return LineDirection.North;
+            }
+
+            // Y axis direction.
+            if (Math.Abs(line.Direction.X) < 1e-6)
+            {
+                // West
+                if (line.Origin.X < refPt.X)
+                    return LineDirection.West;
+
+                // East
+                return LineDirection.East;
+            }
+
+            throw new Exception("The wall location's direction isn't supported!");
         }
     }
 }
