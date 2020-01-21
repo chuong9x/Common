@@ -124,7 +124,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="pts"></param>
         /// <returns></returns>
-        public static List<ModelCurve> CreateModelCurveList(this Document doc, List<XYZ> pts)
+        public static List<ModelCurve> CreateModelCurveList(this Document doc, IEnumerable<XYZ> pts)
         {
             if (pts == null)
                 throw new ArgumentNullException(nameof(pts));
@@ -152,7 +152,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="lines"></param>
         /// <returns></returns>
-        public static List<ModelCurve> CreateModelCurveList(this Document doc, List<Line> lines)
+        public static List<ModelCurve> CreateModelCurveList(this Document doc, IEnumerable<Line> lines)
         {
             if (lines == null)
                 throw new ArgumentNullException(nameof(lines));
