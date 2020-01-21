@@ -90,11 +90,11 @@ namespace KeLi.Common.Revit.Builders
         public static void CreateCurtainSystemList(this Document doc, SpatialElement room, Application app, PanelType pnlType, string tplName)
         {
             var roomc = room.GetBoundingBox(doc).GetBoxCenter();
-            var roomWalls = room.GetBoundaryWallList(doc);
+            var walls = room.GetBoundaryWallList(doc);
 
-            foreach (var roomWall in roomWalls)
+            foreach (var wall in walls)
             {
-                var parm = new CurtainSystemParameter(roomWall, roomc, pnlType, tplName);
+                var parm = new CurtainSystemParameter(wall, roomc, pnlType, tplName);
 
                 doc.CreateCurtainSystem(app, parm);
             }
