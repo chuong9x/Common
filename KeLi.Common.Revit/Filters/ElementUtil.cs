@@ -50,9 +50,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
-using KeLi.Common.Revit.Filters;
 
-namespace KeLi.Common.Revit.Widgets
+namespace KeLi.Common.Revit.Filters
 {
     /// <summary>
     /// Elementy utility.
@@ -168,6 +167,46 @@ namespace KeLi.Common.Revit.Widgets
         public static Curve GetLocationCurve<T>(this T elm) where T : Element
         {
             return !(elm.Location is LocationCurve curve) ? throw new InvalidCastException(elm.Name) : curve.Curve;
+        }
+
+        /// <summary>
+        /// Gets intersect element list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="room"></param>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static List<T> GetIntersectElements<T>(this SpatialElement room, Document doc) where T: Element
+        {
+            var results = new List<T>();
+            var elms = room.GetIntersectElements(doc);
+
+            foreach (var elm in elms)
+            {
+                if (elm is T t)
+                    results.Add(t);
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Gets intersect element list.
+        /// </summary>
+        /// <param name="room"></param>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static List<Element> GetIntersectElements(this SpatialElement room, Document doc)
+        {
+            var opt = new SpatialElementBoundaryOptions
+            {
+                SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Center
+            };
+            var calc = new SpatialElementGeometryCalculator(doc, opt);
+            var solid = calc.CalculateSpatialElementGeometry(room).GetGeometry();
+            var intersectFilter = new ElementIntersectsSolidFilter(solid);
+
+            return new FilteredElementCollector(doc).WhereElementIsNotElementType().WherePasses(intersectFilter).ToList();
         }
 
         /// <summary>

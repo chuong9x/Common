@@ -61,16 +61,18 @@ namespace KeLi.Common.Revit.Filters
         /// Gets the room's edge list.
         /// </summary>
         /// <param name="room"></param>
+        /// <param name="boundary"></param>
         /// <returns></returns>
-        public static List<Line> GetEdgeList(this SpatialElement room)
+        public static List<Line> GetEdgeList(this SpatialElement room, SpatialElementBoundaryLocation boundary)
         {
             var result = new List<Line>();
-            var option = new SpatialElementBoundaryOptions
+            var opt = new SpatialElementBoundaryOptions
             {
                 StoreFreeBoundaryFaces = true,
-                SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.CoreBoundary
+                SpatialElementBoundaryLocation = boundary
+
             };
-            var segments = room.GetBoundarySegments(option).SelectMany(s => s);
+            var segments = room.GetBoundarySegments(opt).SelectMany(s => s);
 
             foreach (var seg in segments)
             {
