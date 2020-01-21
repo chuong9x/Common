@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
@@ -106,9 +107,11 @@ namespace KeLi.Common.Revit.Filters
         /// </summary>
         /// <param name="room"></param>
         /// <param name="doc"></param>
+        /// <param name="maxThickness"></param>
         /// <returns></returns>
-        public static List<Wall> GetBoundaryWallList(this SpatialElement room, Document doc)
+        public static List<Wall> GetBoundaryWallList(this SpatialElement room, Document doc, double maxThickness = 80)
         {
+            const BuiltInParameter parmEnum = BuiltInParameter.WALL_ATTR_WIDTH_PARAM;
             var results = new List<Wall>();
             var loops = room.GetBoundarySegments(new SpatialElementBoundaryOptions());
 
@@ -124,7 +127,7 @@ namespace KeLi.Common.Revit.Filters
                 }
             }
 
-            return results;
+            return results.Where(w => Convert.ToDouble(w.WallType.get_Parameter(parmEnum).AsValueString()) < maxThickness).ToList();
         }
     }
 }
