@@ -122,6 +122,9 @@ namespace KeLi.Common.Revit.Filters
                     if (segment.ElementId.IntegerValue == -1)
                         continue;
 
+                    if(results.FirstOrDefault(f => f.Id == segment.ElementId) != null)
+                        continue;
+
                     if (doc.GetElement(segment.ElementId) is Wall wall)
                         results.Add(wall);
                 }
