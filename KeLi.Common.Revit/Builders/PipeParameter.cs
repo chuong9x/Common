@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/22/2020 11:22:30 AM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,60 +46,42 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System.IO;
+using System;
+using Autodesk.Revit.DB;
 
-namespace KeLi.Common.Drive.Excel
+namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Excel param.
+    ///     Pipe parameter.
     /// </summary>
-    public class ExcelParam
+    public class PipeParameter
     {
         /// <summary>
-        /// This is a excel default sheet name.
+        ///     Pipe parameter.
         /// </summary>
-        private const string SHEET_NAME = "Sheet1";
-
-        /// <summary>
-        /// Excel param.
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="templatePath"></param>
-        public ExcelParam(FileInfo filePath, FileInfo templatePath = null)
+        /// <param name="systemId"></param>
+        /// <param name="typeId"></param>
+        /// <param name="lvlId"></param>
+        public PipeParameter(ElementId systemId, ElementId typeId, ElementId lvlId)
         {
-            FilePath = filePath;
-            TemplatePath = templatePath;
-            SheetName = SHEET_NAME;
-            RowIndex = 1;
-            ColumnIndex = 0;
-
-            if (templatePath != null && templatePath.Exists)
-                File.Copy(templatePath.FullName, filePath.FullName, true);
+            SystemId = systemId ?? throw new ArgumentNullException(nameof(systemId));
+            TypeId = typeId ?? throw new ArgumentNullException(nameof(typeId));
+            LevelId = lvlId ?? throw new ArgumentNullException(nameof(lvlId));
         }
 
         /// <summary>
-        /// The template path.
+        ///     System id.
         /// </summary>
-        public FileInfo TemplatePath { get; set; }
+        public ElementId SystemId { get; set; }
 
         /// <summary>
-        /// The file path.
+        ///     Type id.
         /// </summary>
-        public FileInfo FilePath { get; set; }
+        public ElementId TypeId { get; set; }
 
         /// <summary>
-        /// The sheet name.
+        ///     Level id.
         /// </summary>
-        public string SheetName { get; set; }
-
-        /// <summary>
-        /// The start row index.
-        /// </summary>
-        public int RowIndex { get; set; }
-
-        /// <summary>
-        /// The start column index.
-        /// </summary>
-        public int ColumnIndex { get; set; }
+        public ElementId LevelId { get; set; }
     }
 }

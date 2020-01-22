@@ -50,22 +50,22 @@
 namespace KeLi.Common.Revit.Filters
 {
     /// <summary>
-    /// Filter type.
+    ///     Filter type.
     /// </summary>
     public enum FilterType
     {
         /// <summary>
-        /// Instance elements.
+        ///     Instance elements.
         /// </summary>
         Instance,
 
         /// <summary>
-        /// Type elements.
+        ///     Type elements.
         /// </summary>
         Type,
 
         /// <summary>
-        /// All elements.
+        ///     All elements.
         /// </summary>
         All
     }

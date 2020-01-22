@@ -57,23 +57,29 @@ using Autodesk.Revit.UI;
 namespace KeLi.Common.Revit.Information
 {
     /// <summary>
-    /// Parameter utility.
+    ///     Parameter utility.
     /// </summary>
     public static class ParameterUtil
     {
         /// <summary>
-        /// Gets the element's specified parameter.
+        ///     Gets the element's specified parameter.
         /// </summary>
         /// <param name="elm"></param>
         /// <param name="parameterName"></param>
         /// <returns></returns>
         public static Parameter GetParameter(this Element elm, string parameterName)
         {
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (parameterName is null)
+                throw new ArgumentNullException(nameof(parameterName));
+
             return elm.GetParameters(parameterName).FirstOrDefault(f => !f.IsReadOnly);
         }
 
         /// <summary>
-        /// Gets the value of the element's parameter.
+        ///     Gets the value of the element's parameter.
         /// </summary>
         /// <param name="elm"></param>
         /// <param name="parmName"></param>
@@ -118,7 +124,7 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        /// Gets definition by sharing parameter file path.
+        ///     Gets definition by sharing parameter file path.
         /// </summary>
         /// <param name="group"></param>
         /// <param name="paramName"></param>
@@ -137,13 +143,13 @@ namespace KeLi.Common.Revit.Information
             if (definition != null)
                 return definition;
 
-            var opt = new ExternalDefinitionCreationOptions(paramName, ParameterType.Text) { UserModifiable = canEdit };
+            var opt = new ExternalDefinitionCreationOptions(paramName, ParameterType.Text) {UserModifiable = canEdit};
 
             return group.Definitions.Create(opt);
         }
 
         /// <summary>
-        /// Gets definition groups by sharing parameter file path.
+        ///     Gets definition groups by sharing parameter file path.
         /// </summary>
         /// <param name="groups"></param>
         /// <param name="groupName"></param>
@@ -160,7 +166,7 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        /// Gets definition groups by sharing parameter file path.
+        ///     Gets definition groups by sharing parameter file path.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="paramPath"></param>
@@ -182,7 +188,7 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        /// Initializes element or type parameter binding.
+        ///     Initializes element or type parameter binding.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="elm"></param>
@@ -218,7 +224,9 @@ namespace KeLi.Common.Revit.Information
                     if (!paramGroup.Name.Contains("Group"))
                     {
                         if (binding is InstanceBinding instanceBinding)
+                        {
                             bindingMap.ReInsert(definition, instanceBinding);
+                        }
                         else
                         {
                             instanceBinding = uiapp.Application.Create.NewInstanceBinding(elmCtgs);
@@ -228,7 +236,9 @@ namespace KeLi.Common.Revit.Information
                     else
                     {
                         if (binding is TypeBinding typeBinding)
+                        {
                             bindingMap.ReInsert(definition, typeBinding);
+                        }
                         else
                         {
                             typeBinding = uiapp.Application.Create.NewTypeBinding(elmCtgs);
@@ -240,7 +250,7 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        /// Getting group list by sharing parameter file path.
+        ///     Getting group list by sharing parameter file path.
         /// </summary>
         /// <returns></returns>
         public static List<GroupParameter> GetGroups(string paramPath)
@@ -278,9 +288,9 @@ namespace KeLi.Common.Revit.Information
             }
 
             foreach (var group in groups)
-                foreach (var para in paras)
-                    if (para.GroupId == group.Id)
-                        group.Params.Add(para);
+            foreach (var para in paras)
+                if (para.GroupId == group.Id)
+                    group.Params.Add(para);
 
             return groups;
         }

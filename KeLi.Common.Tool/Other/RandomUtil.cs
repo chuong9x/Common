@@ -54,22 +54,22 @@ using System.Security.Cryptography;
 namespace KeLi.Common.Tool.Other
 {
     /// <summary>
-    /// Random utilty.
+    ///     Random utilty.
     /// </summary>
     public class RandomUtil
     {
         /// <summary>
-        /// The random number generator.
+        ///     The random number generator.
         /// </summary>
         public static readonly RNGCryptoServiceProvider Rscp = new RNGCryptoServiceProvider();
 
         /// <summary>
-        /// The random container.
+        ///     The random container.
         /// </summary>
         private static readonly byte[] Bytes = new byte[4];
 
         /// <summary>
-        /// Generates a random number.
+        ///     Generates a random number.
         /// </summary>
         public static int GenerateRandomNum()
         {
@@ -84,7 +84,7 @@ namespace KeLi.Common.Tool.Other
         }
 
         /// <summary>
-        /// Generates a random nonnegative number.
+        ///     Generates a random nonnegative number.
         /// </summary>
         /// <param name="max"></param>
         /// <returns></returns>
@@ -93,7 +93,9 @@ namespace KeLi.Common.Tool.Other
             int result;
 
             if (max <= 0)
+            {
                 result = 0;
+            }
             else
             {
                 Rscp.GetBytes(Bytes);
@@ -107,7 +109,7 @@ namespace KeLi.Common.Tool.Other
         }
 
         /// <summary>
-        /// Generates a confused random nonnegative number.
+        ///     Generates a confused random nonnegative number.
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
@@ -126,7 +128,7 @@ namespace KeLi.Common.Tool.Other
         }
 
         /// <summary>
-        /// Generates a random number rely on array sort.
+        ///     Generates a random number rely on array sort.
         /// </summary>
         /// <param name="num"></param>
         /// <param name="min"></param>
@@ -137,13 +139,21 @@ namespace KeLi.Common.Tool.Other
             var results = new int[num];
 
             if (num <= 0)
+            {
                 results = new int[num];
+            }
             else if (min <= 0)
+            {
                 results = new int[num];
+            }
             else if (max <= 0)
+            {
                 results = new int[num];
+            }
             else if (max - min < num)
+            {
                 results = new int[num];
+            }
             else
             {
                 var random = new Random();
@@ -165,7 +175,7 @@ namespace KeLi.Common.Tool.Other
         }
 
         /// <summary>
-        /// Generates some numbers rely on index.
+        ///     Generates some numbers rely on index.
         /// </summary>
         /// <param name="num"></param>
         /// <param name="min"></param>
@@ -176,13 +186,21 @@ namespace KeLi.Common.Tool.Other
             var results = new int[num];
 
             if (num <= 0)
+            {
                 results = new int[num];
+            }
             else if (min <= 0)
+            {
                 results = new int[num];
+            }
             else if (max <= 0)
+            {
                 results = new int[num];
+            }
             else if (max - min < num)
+            {
                 results = new int[num];
+            }
             else
             {
                 // Default not set the max number.
@@ -213,7 +231,7 @@ namespace KeLi.Common.Tool.Other
         }
 
         /// <summary>
-        /// Generates some numbers rely on detection.
+        ///     Generates some numbers rely on detection.
         /// </summary>
         /// <param name="num"></param>
         /// <param name="min"></param>
@@ -224,13 +242,21 @@ namespace KeLi.Common.Tool.Other
             int[] results;
 
             if (num <= 0)
+            {
                 results = new int[num];
+            }
             else if (min <= 0)
+            {
                 results = new int[num];
+            }
             else if (max <= 0)
+            {
                 results = new int[num];
+            }
             else if (max - min < num)
+            {
                 results = new int[num];
+            }
             else
             {
                 results = new int[num];
@@ -256,7 +282,7 @@ namespace KeLi.Common.Tool.Other
         }
 
         /// <summary>
-        /// Generates some numbers rely on array list.
+        ///     Generates some numbers rely on array list.
         /// </summary>
         /// <param name="num"></param>
         /// <param name="min"></param>
@@ -267,13 +293,21 @@ namespace KeLi.Common.Tool.Other
             int[] results;
 
             if (num <= 0)
+            {
                 results = new int[num];
+            }
             else if (min <= 0)
+            {
                 results = new int[num];
+            }
             else if (max <= 0)
+            {
                 results = new int[num];
+            }
             else if (max - min < num)
+            {
                 results = new int[num];
+            }
             else
             {
                 var list = new ArrayList();
@@ -287,14 +321,14 @@ namespace KeLi.Common.Tool.Other
                         list.Add(temp);
                 }
 
-                results = (int[])list.ToArray(typeof(int));
+                results = (int[]) list.ToArray(typeof(int));
             }
 
             return results;
         }
 
         /// <summary>
-        /// Generates some numbers rely on hash table.
+        ///     Generates some numbers rely on hash table.
         /// </summary>
         /// <param name="num"></param>
         /// <param name="min"></param>
@@ -305,13 +339,21 @@ namespace KeLi.Common.Tool.Other
             Hashtable results;
 
             if (num <= 0)
+            {
                 results = new Hashtable();
+            }
             else if (min <= 0)
+            {
                 results = new Hashtable();
+            }
             else if (max <= 0)
+            {
                 results = new Hashtable();
+            }
             else if (max - min < num)
+            {
                 results = new Hashtable();
+            }
             else
             {
                 results = new Hashtable();

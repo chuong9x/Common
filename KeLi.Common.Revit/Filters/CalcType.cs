@@ -49,22 +49,22 @@
 namespace KeLi.Common.Revit.Filters
 {
     /// <summary>
-    /// Calc type.
+    ///     Calc type.
     /// </summary>
     public enum CalcType
     {
         /// <summary>
-        /// Base face to calc.
+        ///     Base face to calc.
         /// </summary>
         FaceNum,
 
         /// <summary>
-        /// Base point on face to calc.
+        ///     Base point on face to calc.
         /// </summary>
         FacePointNum,
 
         /// <summary>
-        /// Base point on solid to calc.
+        ///     Base point on solid to calc.
         /// </summary>
         SolidPointNum
     }

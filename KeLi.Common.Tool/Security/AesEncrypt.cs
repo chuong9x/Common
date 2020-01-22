@@ -53,22 +53,22 @@ using System.Security.Cryptography;
 namespace KeLi.Common.Tool.Security
 {
     /// <summary>
-    /// AES encrypt.
+    ///     AES encrypt.
     /// </summary>
     public class AesEncrypt
     {
         /// <summary>
-        /// The secret key.
+        ///     The secret key.
         /// </summary>
-        private static readonly byte[] Keys = { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
+        private static readonly byte[] Keys = {0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF};
 
         /// <summary>
-        /// The vectors
+        ///     The vectors
         /// </summary>
-        private static readonly byte[] Ivs = { 0xEF, 0xCD, 0xAB, 0x90, 0x78, 0x56, 0x34, 0x12 };
+        private static readonly byte[] Ivs = {0xEF, 0xCD, 0xAB, 0x90, 0x78, 0x56, 0x34, 0x12};
 
         /// <summary>
-        /// Encrypts the content.
+        ///     Encrypts the content.
         /// </summary>
         /// <param name="content"></param>
         /// <param name="keys"></param>
@@ -99,12 +99,12 @@ namespace KeLi.Common.Tool.Security
                 cs.FlushFinalBlock();
                 ms.Flush();
 
-                return Convert.ToBase64String(ms.GetBuffer(), 0, (int)ms.Length);
+                return Convert.ToBase64String(ms.GetBuffer(), 0, (int) ms.Length);
             }
         }
 
         /// <summary>
-        /// Decrypts the ciphertext.
+        ///     Decrypts the ciphertext.
         /// </summary>
         /// <param name="ciphertext"></param>
         /// <param name="keys"></param>
@@ -130,7 +130,9 @@ namespace KeLi.Common.Tool.Security
             using (var ms = new MemoryStream(context))
             using (var cs = new CryptoStream(ms, dcsp.CreateDecryptor(keys, ivs), CryptoStreamMode.Read))
             using (var sr = new StreamReader(cs))
+            {
                 return sr.ReadToEnd();
+            }
         }
     }
 }

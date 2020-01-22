@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
@@ -53,18 +54,24 @@ using Autodesk.Revit.DB;
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Group builder.
+    ///     Group builder.
     /// </summary>
     public static class GroupBuilder
     {
         /// <summary>
-        /// Creates a new group.
+        ///     Creates a new group.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="elmIds"></param>
         /// <returns></returns>
         public static Group CreateGroup(this Document doc, IEnumerable<ElementId> elmIds)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (elmIds == null)
+                throw new ArgumentNullException(nameof(elmIds));
+
             return doc.Create.NewGroup(elmIds.ToList());
         }
     }

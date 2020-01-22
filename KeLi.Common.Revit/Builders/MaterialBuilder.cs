@@ -46,23 +46,30 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Material builder.
+    ///     Material builder.
     /// </summary>
     public static class MaterialBuilder
     {
         /// <summary>
-        /// Creates a new material.
+        ///     Creates a new material.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="name"></param>
         /// <returns></returns>
         public static Material CreateMaterial(this Document doc, string name)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
             return doc.GetElement(Material.Create(doc, name)) as Material;
         }
     }

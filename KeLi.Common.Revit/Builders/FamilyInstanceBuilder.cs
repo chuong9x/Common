@@ -55,12 +55,12 @@ using Autodesk.Revit.DB.Structure;
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Family instance builder.
+    ///     Family instance builder.
     /// </summary>
     public static class FamilyInstanceBuilder
     {
         /// <summary>
-        /// Creates a new family instance.
+        ///     Creates a new family instance.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="parm"></param>
@@ -77,17 +77,18 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Creates a new family instance with NonStructural type.
+        ///     Creates a new family instance with NonStructural type.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="location"></param>
         /// <param name="symbol"></param>
         /// <param name="lvl"></param>
         /// <returns></returns>
-        public static FamilyInstance CreateNonStructuralInstance(this Document doc, XYZ location, FamilySymbol symbol, Level lvl)
+        public static FamilyInstance CreateNonStructuralInstance(this Document doc, XYZ location, FamilySymbol symbol,
+            Level lvl)
         {
-            if (symbol == null)
-                throw new ArgumentNullException(nameof(symbol));
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
 
             if (location == null)
                 throw new ArgumentNullException(nameof(location));
@@ -104,7 +105,7 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Creates a new instance of an adaptive component family.
+        ///     Creates a new instance of an adaptive component family.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="symbol"></param>
@@ -112,6 +113,9 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static FamilyInstance CreateFamilyInstance(this Document doc, FamilySymbol symbol, IEnumerable<XYZ> pts)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             if (symbol == null)
                 throw new ArgumentNullException(nameof(symbol));
 
@@ -127,10 +131,8 @@ namespace KeLi.Common.Revit.Builders
             var placePointIds = AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds(result);
 
             for (var i = 0; i < placePointIds.Count; i++)
-            {
                 if (doc.GetElement(placePointIds[i]) is ReferencePoint point)
                     point.Position = tmpPts[i];
-            }
 
             return result;
         }

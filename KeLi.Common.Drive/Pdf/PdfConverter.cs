@@ -59,46 +59,47 @@ using O2S.Components.PDFRender4NET;
 namespace KeLi.Common.Drive.Pdf
 {
     /// <summary>
-    /// A pdf converter.
+    ///     A pdf converter.
     /// </summary>
     public static class PdfConverter
     {
         /// <summary>
-        /// Convers pdf to images.
+        ///     Convers pdf to images.
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="parm"></param>
         /// <exception cref="FileNotFoundException"></exception>
-        public static List<string> ToImageList(this PdfParam param)
+        public static List<string> ToImageList(this PdfParameter parm)
         {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm == null)
+                throw new ArgumentNullException(nameof(parm));
 
             var results = new List<string>();
-            var pdfFile = PDFFile.Open(param.PdfPath.FullName);
+            var pdfFile = PDFFile.Open(parm.PdfPath.FullName);
 
-            if (param.StartPage <= 0)
-                param.StartPage = 1;
+            if (parm.StartPage <= 0)
+                parm.StartPage = 1;
 
-            if (param.EndPage > pdfFile.PageCount)
-                param.EndPage = pdfFile.PageCount;
+            if (parm.EndPage > pdfFile.PageCount)
+                parm.EndPage = pdfFile.PageCount;
 
-            if (param.StartPage > param.EndPage)
+            if (parm.StartPage > parm.EndPage)
             {
-                param.StartPage = param.EndPage;
-                param.EndPage = param.StartPage;
+                parm.StartPage = parm.EndPage;
+                parm.EndPage = parm.StartPage;
             }
 
-            for (var i = param.StartPage; i <= param.EndPage; i++)
+            for (var i = parm.StartPage; i <= parm.EndPage; i++)
             {
                 var withNum = i.ToString().PadLeft(pdfFile.PageCount.ToString().Length, '0');
 
-                withNum = param.StartPage == param.EndPage ? null : "_" + withNum;
+                withNum = parm.StartPage == parm.EndPage ? null : "_" + withNum;
 
-                var imgPage = pdfFile.GetPageImage(i - 1, 56 * param.Resolution);
-                var filePath = Path.Combine(param.PdfPath.DirectoryName ?? throw new InvalidOperationException(), param.ImgName + withNum + "." + param.Format.ToString().ToLower());
+                var imgPage = pdfFile.GetPageImage(i - 1, 56 * parm.Resolution);
+                var filePath = Path.Combine(parm.PdfPath.DirectoryName ?? throw new InvalidOperationException(),
+                    parm.ImgName + withNum + "." + parm.Format.ToString().ToLower());
 
                 results.Add(filePath);
-                imgPage.Save(filePath, param.Format);
+                imgPage.Save(filePath, parm.Format);
                 imgPage.Dispose();
             }
 
@@ -108,7 +109,7 @@ namespace KeLi.Common.Drive.Pdf
         }
 
         /// <summary>
-        /// Gets file page's size.
+        ///     Gets file page's size.
         /// </summary>
         /// <param name="pdfPath"></param>
         /// <returns></returns>
@@ -127,21 +128,21 @@ namespace KeLi.Common.Drive.Pdf
         }
 
         /// <summary>
-        /// Splits the pdf file to the multi pdf files.
+        ///     Splits the pdf file to the multi pdf files.
         /// </summary>
-        /// <param name="sourcePdf"></param>
-        public static List<FileInfo> SplitedPdfList(FileInfo sourcePdf)
+        /// <param name="srcPdf"></param>
+        public static List<FileInfo> SplitedPdfList(FileInfo srcPdf)
         {
-            if (sourcePdf == null)
-                throw new ArgumentNullException(nameof(sourcePdf));
+            if (srcPdf == null)
+                throw new ArgumentNullException(nameof(srcPdf));
 
             var results = new List<FileInfo>();
-            var reader = new PdfReader(sourcePdf.FullName);
+            var reader = new PdfReader(srcPdf.FullName);
             var titled = GetPageMark(reader);
 
             if (reader.NumberOfPages == 1)
             {
-                results = new List<FileInfo> { sourcePdf };
+                results = new List<FileInfo> {srcPdf};
                 reader.Close();
 
                 return results;
@@ -149,42 +150,43 @@ namespace KeLi.Common.Drive.Pdf
 
             for (var i = 1; i <= reader.NumberOfPages; i++)
             {
-                var targetPath = Path.GetDirectoryName(sourcePdf.FullName);
-                var targetName = Path.GetFileNameWithoutExtension(sourcePdf.FullName);
+                var tgtPath = Path.GetDirectoryName(srcPdf.FullName);
+                var tgtName = Path.GetFileNameWithoutExtension(srcPdf.FullName);
 
                 if (titled.ContainsKey(i))
-                    targetName += "_" + titled[i] + Path.GetExtension(sourcePdf.FullName);
+                    tgtName += "_" + titled[i] + Path.GetExtension(srcPdf.FullName);
                 else
-                    targetName += "_" + i + Path.GetExtension(sourcePdf.FullName);
+                    tgtName += "_" + i + Path.GetExtension(srcPdf.FullName);
 
-                var targetPdf = new FileInfo(Path.Combine(targetPath ?? throw new InvalidOperationException(), targetName));
+                var targetPdf = new FileInfo(Path.Combine(tgtPath ?? throw new InvalidOperationException(), tgtName));
 
-                CopyPdf(sourcePdf, targetPdf, i, i);
+                CopyPdf(srcPdf, targetPdf, i, i);
                 results.Add(targetPdf);
             }
+
             reader.Close();
 
             return results;
         }
 
         /// <summary>
-        /// Copys the pdf range content to the new pdf file.
+        ///     Copys the pdf range content to the new pdf file.
         /// </summary>
-        /// <param name="sourcePdf"></param>
-        /// <param name="targetPdf"></param>
+        /// <param name="srcPdf"></param>
+        /// <param name="tgtPdf"></param>
         /// <param name="startPage"></param>
         /// <param name="endPage"></param>
-        public static void CopyPdf(FileInfo sourcePdf, FileInfo targetPdf, int startPage, int endPage)
+        public static void CopyPdf(FileInfo srcPdf, FileInfo tgtPdf, int startPage, int endPage)
         {
-            if (sourcePdf == null)
-                throw new ArgumentNullException(nameof(sourcePdf));
+            if (srcPdf == null)
+                throw new ArgumentNullException(nameof(srcPdf));
 
-            if (targetPdf == null)
-                throw new ArgumentNullException(nameof(targetPdf));
+            if (tgtPdf == null)
+                throw new ArgumentNullException(nameof(tgtPdf));
 
-            var reader = new PdfReader(sourcePdf.FullName);
+            var reader = new PdfReader(srcPdf.FullName);
             var doc = new Document(reader.GetPageSizeWithRotation(startPage));
-            var writer = PdfWriter.GetInstance(doc, new FileStream(targetPdf.FullName, FileMode.Create));
+            var writer = PdfWriter.GetInstance(doc, new FileStream(tgtPdf.FullName, FileMode.Create));
 
             doc.Open();
 
@@ -201,7 +203,6 @@ namespace KeLi.Common.Drive.Pdf
                 if (rotation != 90 && rotation != 270)
                     content.AddTemplate(page, 1f, 0, 0, 1f, 0, 0);
                 else
-                {
                     switch (rotation)
                     {
                         case 90:
@@ -214,7 +215,6 @@ namespace KeLi.Common.Drive.Pdf
                                 reader.GetPageSizeWithRotation(startPage).Width, 0);
                             break;
                     }
-                }
 
                 startPage++;
             }
@@ -224,23 +224,23 @@ namespace KeLi.Common.Drive.Pdf
         }
 
         /// <summary>
-        /// Extracts the pdf range content to new pdf file.
+        ///     Extracts the pdf range content to new pdf file.
         /// </summary>
-        /// <param name="sourcePdf"></param>
-        /// <param name="targetPdf"></param>
+        /// <param name="srcPdf"></param>
+        /// <param name="tgtPdf"></param>
         /// <param name="startPage"></param>
         /// <param name="endPage"></param>
-        public static void ExtractPdf(FileInfo sourcePdf, FileInfo targetPdf, int startPage, int endPage)
+        public static void ExtractPdf(FileInfo srcPdf, FileInfo tgtPdf, int startPage, int endPage)
         {
-            if (sourcePdf == null)
-                throw new ArgumentNullException(nameof(sourcePdf));
+            if (srcPdf == null)
+                throw new ArgumentNullException(nameof(srcPdf));
 
-            if (targetPdf == null)
-                throw new ArgumentNullException(nameof(targetPdf));
+            if (tgtPdf == null)
+                throw new ArgumentNullException(nameof(tgtPdf));
 
-            var reader = new PdfReader(sourcePdf.FullName);
+            var reader = new PdfReader(srcPdf.FullName);
             var doc = new Document(reader.GetPageSizeWithRotation(startPage));
-            var copy = new PdfCopy(doc, new FileStream(targetPdf.FullName, FileMode.Create));
+            var copy = new PdfCopy(doc, new FileStream(tgtPdf.FullName, FileMode.Create));
 
             doc.Open();
 
@@ -256,26 +256,26 @@ namespace KeLi.Common.Drive.Pdf
         }
 
         /// <summary>
-        /// Extracts the pdf pages content to new pdf file.
+        ///     Extracts the pdf pages content to new pdf file.
         /// </summary>
-        /// <param name="sourcePdf"></param>
-        /// <param name="targetPdf"></param>
+        /// <param name="srcPdf"></param>
+        /// <param name="tgtPdf"></param>
         /// <param name="extractPages"></param>
-        public static void ExtractPdf(FileInfo sourcePdf, FileInfo targetPdf, IEnumerable<int> extractPages)
+        public static void ExtractPdf(FileInfo srcPdf, FileInfo tgtPdf, IEnumerable<int> extractPages)
         {
-            if (sourcePdf == null)
-                throw new ArgumentNullException(nameof(sourcePdf));
+            if (srcPdf == null)
+                throw new ArgumentNullException(nameof(srcPdf));
 
-            if (targetPdf == null)
-                throw new ArgumentNullException(nameof(targetPdf));
+            if (tgtPdf == null)
+                throw new ArgumentNullException(nameof(tgtPdf));
 
             if (extractPages == null)
                 throw new ArgumentNullException(nameof(extractPages));
 
             var tmpExtractPages = extractPages.ToList();
-            var reader = new PdfReader(sourcePdf.FullName);
+            var reader = new PdfReader(srcPdf.FullName);
             var doc = new Document(reader.GetPageSizeWithRotation(tmpExtractPages[0]));
-            var copy = new PdfCopy(doc, new FileStream(targetPdf.FullName, FileMode.Create));
+            var copy = new PdfCopy(doc, new FileStream(tgtPdf.FullName, FileMode.Create));
 
             doc.Open();
 
@@ -287,7 +287,7 @@ namespace KeLi.Common.Drive.Pdf
         }
 
         /// <summary>
-        /// Gets the pdf page bookmark.
+        ///     Gets the pdf page bookmark.
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
@@ -302,7 +302,6 @@ namespace KeLi.Common.Drive.Pdf
                 var page = 0;
 
                 foreach (DictionaryEntry kv in mark)
-                {
                     switch (kv.Key.ToString())
                     {
                         case "Action":
@@ -315,7 +314,6 @@ namespace KeLi.Common.Drive.Pdf
                             page = Convert.ToInt32(kv.Value.ToString().Split(' ')[0]);
                             break;
                     }
-                }
 
                 results.Add(page, title);
             }

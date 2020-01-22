@@ -46,17 +46,18 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// View builder.
+    ///     View builder.
     /// </summary>
     public static class ViewBuilder
     {
         /// <summary>
-        /// Creates a new view section.
+        ///     Creates a new view section.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="elmId"></param>
@@ -64,6 +65,15 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static ViewSection CreateViewSection(this Document doc, ElementId elmId, BoundingBoxXYZ box)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (elmId == null)
+                throw new ArgumentNullException(nameof(elmId));
+
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             return doc.GetElement(elmId) == null ? null : ViewSection.CreateSection(doc, elmId, box);
         }
     }

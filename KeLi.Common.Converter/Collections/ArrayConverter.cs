@@ -51,12 +51,12 @@ using System;
 namespace KeLi.Common.Converter.Collections
 {
     /// <summary>
-    /// A arrary converter.
+    ///     A arrary converter.
     /// </summary>
     public static class ArrayConverter
     {
         /// <summary>
-        /// Coverts the two dimension array to the cross array.
+        ///     Coverts the two dimension array to the cross array.
         /// </summary>
         /// <param name="array"></param>
         /// <returns></returns>
@@ -68,14 +68,14 @@ namespace KeLi.Common.Converter.Collections
             var results = new object[array.GetLength(0)][];
 
             for (var i = 0; i < array.GetLength(0); i++)
-                for (var j = 0; j < array.GetLength(1); j++)
-                    results[i][j] = array[i, j];
+            for (var j = 0; j < array.GetLength(1); j++)
+                results[i][j] = array[i, j];
 
             return results;
         }
 
         /// <summary>
-        /// Converts the cross array to the two dimension array.
+        ///     Converts the cross array to the two dimension array.
         /// </summary>
         /// <param name="array"></param>
         /// <returns></returns>
@@ -87,8 +87,8 @@ namespace KeLi.Common.Converter.Collections
             var results = new object[array.Length, array[0].Length];
 
             for (var i = 0; i < array.Length; i++)
-                for (var j = 0; j < array[i].Length; j++)
-                    results[i, j] = array[i][j];
+            for (var j = 0; j < array[i].Length; j++)
+                results[i, j] = array[i][j];
 
             return results;
         }

@@ -47,76 +47,62 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Autodesk.Revit.DB;
+using System.Drawing.Imaging;
+using System.IO;
 
-namespace KeLi.Common.Revit.Widgets
+namespace KeLi.Common.Drive.Pdf
 {
     /// <summary>
-    /// Area utility.
+    ///     Pdf parameter.
     /// </summary>
-    /// <remarks>
-    /// About implementation:
-    /// First of all, to project the element;
-    /// then, calculate the projection area;
-    /// last, add up to the result variable.
-    /// </remarks>
-    public static class AreaUtil
+    public class PdfParameter
     {
         /// <summary>
-        /// Square foot to spaure meter.
+        ///     Pdf parameter.
         /// </summary>
-        private const double FT2_TO_M2 = 0.092903;
+        /// <param name="pdfPath"></param>
+        /// <param name="imgName"></param>
+        public PdfParameter(string pdfPath, string imgName = null)
+        {
+            if (pdfPath == null)
+                throw new ArgumentNullException(nameof(pdfPath));
+
+            PdfPath = new FileInfo(pdfPath);
+            ImgName = imgName ?? Path.GetFileNameWithoutExtension(pdfPath);
+            StartPage = 1;
+            EndPage = 1;
+            Format = ImageFormat.Jpeg;
+            Resolution = 5;
+        }
 
         /// <summary>
-        /// Gets the element's projection area.
+        ///     The pdf path.
         /// </summary>
-        /// <param name="elm">A element</param>
-        /// <remarks>Returns projection area, that area unit is square meter.</remarks>
-        /// <exception cref="T:Autodesk.Revit.Exceptions.ArgumentNullException">The input element is invalid.</exception>
-        /// <returns>Returns projection area.</returns>
-        public static double GetShadowArea(this Element elm)
-        {
-            if (elm == null)
-                throw new ArgumentNullException(nameof(elm));
+        public FileInfo PdfPath { get; set; }
 
-            var areas = new List<double>();
-            var geo = elm.get_Geometry(new Options());
+        /// <summary>
+        ///     The image name.
+        /// </summary>
+        public string ImgName { get; set; }
 
-            foreach (var instance in geo.Select(s => s as GeometryInstance))
-            {
-                if (instance == null)
-                    continue;
+        /// <summary>
+        ///     The start page num.
+        /// </summary>
+        public int StartPage { get; set; }
 
-                foreach (var item in instance.GetInstanceGeometry())
-                {
-                    var solid = item as Solid;
+        /// <summary>
+        ///     The end page num.
+        /// </summary>
+        public int EndPage { get; set; }
 
-                    if (null == solid || solid.Faces.Size <= 0)
-                        continue;
+        /// <summary>
+        ///     The image format.
+        /// </summary>
+        public ImageFormat Format { get; set; }
 
-                    var plane = Plane.CreateByOriginAndBasis(XYZ.Zero, XYZ.BasisX, XYZ.BasisY);
-
-                    ExtrusionAnalyzer analyzer;
-
-                    try
-                    {
-                        analyzer = ExtrusionAnalyzer.Create(solid, plane, XYZ.BasisZ);
-                    }
-                    catch
-                    {
-                        continue;
-                    }
-
-                    if (analyzer == null)
-                        continue;
-
-                    areas.Add(analyzer.GetExtrusionBase().Area * FT2_TO_M2);
-                }
-            }
-
-            return areas.Max();
-        }
+        /// <summary>
+        ///     The image's resolution[1-10].
+        /// </summary>
+        public int Resolution { get; set; }
     }
 }

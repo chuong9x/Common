@@ -52,43 +52,43 @@ using Autodesk.Revit.DB;
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Curtain system parameter.
+    ///     Curtain system parameter.
     /// </summary>
     public class CurtainSystemParameter
     {
         /// <summary>
-        /// Curtain system parameter.
+        ///     Curtain system parameter.
         /// </summary>
         /// <param name="refWall"></param>
         /// <param name="refCenter"></param>
-        /// <param name="panelType"></param>
-        /// <param name="tplName"></param>
-        public CurtainSystemParameter(Wall refWall, XYZ refCenter, PanelType panelType, string tplName)
+        /// <param name="pnlType"></param>
+        /// <param name="tplFileName"></param>
+        public CurtainSystemParameter(Wall refWall, XYZ refCenter, PanelType pnlType, string tplFileName)
         {
             RefWall = refWall ?? throw new ArgumentNullException(nameof(refWall));
             RefCenter = refCenter ?? throw new ArgumentNullException(nameof(refCenter));
-            PanelType = panelType;
-            TemplateName = tplName ?? throw new ArgumentNullException(nameof(tplName));
+            PanelType = pnlType ?? throw new ArgumentNullException(nameof(pnlType));
+            TemplateFileName = tplFileName ?? throw new ArgumentNullException(nameof(tplFileName));
         }
 
         /// <summary>
-        /// Reference wall.
+        ///     Reference wall.
         /// </summary>
         public Wall RefWall { get; set; }
 
         /// <summary>
-        /// Reference point, such as, room center.
+        ///     Reference point, such as, room center.
         /// </summary>
         public XYZ RefCenter { get; set; }
 
         /// <summary>
-        /// Panel type.
+        ///     Panel type.
         /// </summary>
         public PanelType PanelType { get; set; }
 
         /// <summary>
-        /// 
+        ///     Template file name.
         /// </summary>
-        public string TemplateName { get; set; }
+        public string TemplateFileName { get; set; }
     }
 }

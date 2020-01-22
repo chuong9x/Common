@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 01/21/2019 06:49:20 PM |  |  |     |         |      |
+     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,31 +46,60 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-namespace KeLi.Common.Revit.Filters
+using System.IO;
+
+namespace KeLi.Common.Drive.Excel
 {
     /// <summary>
-    ///     Line direction.
+    ///     Excel parameter.
     /// </summary>
-    public enum LineDirection
+    public class ExcelParameter
     {
         /// <summary>
-        ///     South direction wall.
+        ///     This is a excel default sheet name.
         /// </summary>
-        South,
+        private const string SHEET_NAME = "Sheet1";
 
         /// <summary>
-        ///     North direction wall.
+        ///     Excel parameter.
         /// </summary>
-        North,
+        /// <param name="filePath"></param>
+        /// <param name="tplPath"></param>
+        public ExcelParameter(FileInfo filePath, FileInfo tplPath = null)
+        {
+            FilePath = filePath;
+            TemplatePath = tplPath;
+            SheetName = SHEET_NAME;
+            RowIndex = 1;
+            ColumnIndex = 0;
+
+            if (tplPath != null && tplPath.Exists)
+                File.Copy(tplPath.FullName, filePath.FullName, true);
+        }
 
         /// <summary>
-        ///     West direction wall.
+        ///     The template path.
         /// </summary>
-        West,
+        public FileInfo TemplatePath { get; set; }
 
         /// <summary>
-        ///     East direction wall.
+        ///     The file path.
         /// </summary>
-        East
+        public FileInfo FilePath { get; set; }
+
+        /// <summary>
+        ///     The sheet name.
+        /// </summary>
+        public string SheetName { get; set; }
+
+        /// <summary>
+        ///     The start row index.
+        /// </summary>
+        public int RowIndex { get; set; }
+
+        /// <summary>
+        ///     The start column index.
+        /// </summary>
+        public int ColumnIndex { get; set; }
     }
 }

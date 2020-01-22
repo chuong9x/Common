@@ -55,19 +55,23 @@ using static Autodesk.Revit.DB.GeometryCreationUtilities;
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// DirectShape builder.
+    ///     DirectShape builder.
     /// </summary>
     public static class DirectShapeBuilder
     {
         /// <summary>
-        /// Creates a new DirectShape.
+        ///     Creates a new DirectShape.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="parm"></param>
         /// <param name="opt"></param>
         /// <returns></returns>
-        public static DirectShape CreateDirectShape(this Document doc, DirectShapeParameter parm, SolidOptions opt = null)
+        public static DirectShape CreateDirectShape(this Document doc, DirectShapeParameter parm,
+            SolidOptions opt = null)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             if (parm == null)
                 throw new ArgumentNullException(nameof(parm));
 
@@ -78,7 +82,7 @@ namespace KeLi.Common.Revit.Builders
 
             var result = DirectShape.CreateElement(doc, new ElementId(parm.Category));
 
-            result?.AppendShape(new List<GeometryObject> { solid });
+            result?.AppendShape(new List<GeometryObject> {solid});
 
             return result;
         }

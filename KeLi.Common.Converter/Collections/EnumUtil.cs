@@ -55,12 +55,12 @@ using System.Linq;
 namespace KeLi.Common.Converter.Collections
 {
     /// <summary>
-    /// Enum Utility.
+    ///     Enum Utility.
     /// </summary>
     public static class EnumUtil
     {
         /// <summary>
-        /// Trys parse the value to enum value by display attribute.
+        ///     Trys parse the value to enum value by display attribute.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="result"></param>
@@ -79,7 +79,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Trys parse the value to enum value by description attribute.
+        ///     Trys parse the value to enum value by description attribute.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="result"></param>
@@ -98,7 +98,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Gets a dictionary composed of display name and enum item value from enum type.
+        ///     Gets a dictionary composed of display name and enum item value from enum type.
         /// </summary>
         /// <returns></returns>
         public static Dictionary<string, T> GetDisplayEnumDict<T>() where T : Enum
@@ -120,7 +120,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Gets a dictionary composed of description and enum item value from enum type.
+        ///     Gets a dictionary composed of description and enum item value from enum type.
         /// </summary>
         /// <returns></returns>
         public static Dictionary<string, T> GetDescriptionEnumDict<T>() where T : Enum

@@ -52,12 +52,12 @@ using System.Text;
 namespace KeLi.Common.Tool.Web
 {
     /// <summary>
-    /// Response parameter.
+    ///     Response parameter.
     /// </summary>
     public class ResponseParam
     {
         /// <summary>
-        /// Response parameter.
+        ///     Response parameter.
         /// </summary>
         /// <param name="url"></param>
         /// <param name="type"></param>
@@ -68,67 +68,67 @@ namespace KeLi.Common.Tool.Web
         }
 
         /// <summary>
-        /// The Url.
+        ///     The Url.
         /// </summary>
         public string Url { get; set; }
 
         /// <summary>
-        /// Request type.
+        ///     Request type.
         /// </summary>
         public RequestType Type { get; set; }
 
         /// <summary>
-        /// The timout.
+        ///     The timout.
         /// </summary>
         public int? Timeout { get; } = 300;
 
         /// <summary>
-        /// The user agent.
+        ///     The user agent.
         /// </summary>
         public string UserAgent { get; } = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)";
 
         /// <summary>
-        /// The content type.
+        ///     The content type.
         /// </summary>
         public string ContentType { get; } = "application/x-www-form-urlencoded";
 
         /// <summary>
-        /// The encode type.
+        ///     The encode type.
         /// </summary>
         public Encoding EncodeType { get; } = Encoding.UTF8;
 
         /// <summary>
-        /// The cookies.
+        ///     The cookies.
         /// </summary>
         public CookieCollection Cookies { get; set; } = new CookieCollection();
 
         /// <summary>
-        /// The referer.
+        ///     The referer.
         /// </summary>
         public string Referer { get; set; }
 
         /// <summary>
-        /// The proxy.
+        ///     The proxy.
         /// </summary>
         public WebProxy Proxy { get; set; } = new WebProxy();
 
         /// <summary>
-        /// The x-authentication-token.
+        ///     The x-authentication-token.
         /// </summary>
         public string Token { get; set; }
 
         /// <summary>
-        /// The x-coral-tenant.
+        ///     The x-coral-tenant.
         /// </summary>
         public string TenantId { get; set; }
 
         /// <summary>
-        /// The x-auth-id.
+        ///     The x-auth-id.
         /// </summary>
         public string AuthId { get; set; }
 
         /// <summary>
-        /// The x-authorization.
+        ///     The x-authorization.
         /// </summary>
         public string Authorization { get; set; }
     }

@@ -51,21 +51,21 @@ using System;
 namespace KeLi.Common.Drive.Excel
 {
     /// <summary>
-    /// The reference attribute.
+    ///     The reference attribute.
     /// </summary>
     public class ReferenceAttribute : Attribute
     {
         /// <summary>
-        /// The reference attribute.
+        ///     The reference attribute.
         /// </summary>
-        /// <param name="columnName"></param>
-        public ReferenceAttribute(string columnName)
+        /// <param name="colName"></param>
+        public ReferenceAttribute(string colName)
         {
-            ColumnName = columnName ?? throw new ArgumentNullException(nameof(columnName));
+            ColumnName = colName ?? throw new ArgumentNullException(nameof(colName));
         }
 
         /// <summary>
-        /// The column name.
+        ///     The column name.
         /// </summary>
         public string ColumnName { get; set; }
     }

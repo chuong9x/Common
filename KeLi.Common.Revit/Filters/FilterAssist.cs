@@ -55,12 +55,12 @@ using KeLi.Common.Revit.Geometry;
 namespace KeLi.Common.Revit.Filters
 {
     /// <summary>
-    /// Filter assist.
+    ///     Filter assist.
     /// </summary>
     public static class FilterAssist
     {
         /// <summary>
-        /// Checkouts all elements in the document.
+        ///     Checkouts all elements in the document.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="type"></param>
@@ -92,7 +92,7 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        /// Gets the specified type of the element set.
+        ///     Gets the specified type of the element list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="viewId"></param>
@@ -111,13 +111,14 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        /// Gets the specified type and category of the element set.
+        ///     Gets the specified type and category of the element list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="category"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static List<T> GetTypeElementList<T>(this Document doc, BuiltInCategory category, ElementId viewId = null) where T : Element
+        public static List<T> GetTypeElementList<T>(this Document doc, BuiltInCategory category,
+            ElementId viewId = null) where T : Element
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -131,7 +132,7 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        /// Gets the specified type of the element set.
+        ///     Gets the specified type of the element list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="viewId"></param>
@@ -150,13 +151,14 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        /// Gets the specified type and category of the element set.
+        ///     Gets the specified type and category of the element list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="category"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static List<T> GetInstanceElementList<T>(this Document doc, BuiltInCategory category, ElementId viewId = null) where T : Element
+        public static List<T> GetInstanceElementList<T>(this Document doc, BuiltInCategory category,
+            ElementId viewId = null) where T : Element
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -170,7 +172,7 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        /// Gets the element set that filter the max number of points.
+        ///     Gets the element set that filter the max number of points.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="maxNum"></param>
@@ -178,7 +180,8 @@ namespace KeLi.Common.Revit.Filters
         /// <param name="type"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static List<Element> GetElementList(this Document doc, CalcType type, int maxNum, bool moreThan, ElementId viewId)
+        public static List<Element> GetElementList(this Document doc, CalcType type, int maxNum, bool moreThan,
+            ElementId viewId)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -220,7 +223,7 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        /// Gets the max number of points element and the number.
+        ///     Gets the max number of points element and the number.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="type"></param>

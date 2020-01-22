@@ -49,80 +49,97 @@
 using System;
 using System.IO;
 using System.Linq;
+using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
 using KeLi.Common.Revit.Relations;
 using KeLi.Common.Revit.Widgets;
-using Application = Autodesk.Revit.ApplicationServices.Application;
 
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// FamilySymbol builder.
+    ///     FamilySymbol builder.
     /// </summary>
     public static class FamilySymbolBuilder
     {
         /// <summary>
-        /// Creates a new extrusion symbol.
+        ///     Creates a new extrusion symbol.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="app"></param>
-        /// <param name="symbolParm"></param>
+        /// <param name="parm"></param>
         /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateExtrusionSymbol(this Document doc, Application app, FamilySymbolParameter symbolParm, string rfaPath = null)
+        public static FamilySymbol CreateExtrusionSymbol(this Document doc, Application app, FamilySymbolParameter parm,
+            string rfaPath = null)
         {
-            if (symbolParm == null)
-                throw new ArgumentNullException(nameof(symbolParm));
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
 
-            var templateFilePath = app.GeTemplateFilePath(symbolParm.TemplateFileName);
+            if (app == null)
+                throw new ArgumentNullException(nameof(app));
+
+            if (parm == null)
+                throw new ArgumentNullException(nameof(parm));
+
+            var templateFilePath = app.GeTemplateFilePath(parm.TemplateFileName);
             var fdoc = app.NewFamilyDocument(templateFilePath);
 
             fdoc.AutoTransaction(() =>
             {
-                var profile = ResetCurveArrArray(symbolParm.Profile);
-                var skectchPlane = fdoc.CreateSketchPlane(symbolParm.Plane);
+                var profile = ResetCurveArrArray(parm.Profile);
+                var skectchPlane = fdoc.CreateSketchPlane(parm.Plane);
 
-               fdoc.FamilyCreate.NewExtrusion(true, profile, skectchPlane, symbolParm.End);
+                fdoc.FamilyCreate.NewExtrusion(true, profile, skectchPlane, parm.End);
             });
 
             return doc.GetFamilySymbol(fdoc, rfaPath);
         }
 
         /// <summary>
-        /// Creates a new sweep symbol.
+        ///     Creates a new sweep symbol.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="app"></param>
-        /// <param name="symbolParm"></param>
+        /// <param name="parm"></param>
         /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateSweepSymbol(this Document doc, Application app, FamilySymbolParameter symbolParm, string rfaPath = null)
+        public static FamilySymbol CreateSweepSymbol(this Document doc, Application app, FamilySymbolParameter parm,
+            string rfaPath = null)
         {
-            if (symbolParm == null)
-                throw new ArgumentNullException(nameof(symbolParm));
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
 
-            var templateFilePath = app.GeTemplateFilePath(symbolParm.TemplateFileName);
+            if (app == null)
+                throw new ArgumentNullException(nameof(app));
+
+            if (parm == null)
+                throw new ArgumentNullException(nameof(parm));
+
+            var templateFilePath = app.GeTemplateFilePath(parm.TemplateFileName);
             var fdoc = app.NewFamilyDocument(templateFilePath);
 
             fdoc.AutoTransaction(() =>
             {
-                var profileArrArray = ResetCurveArrArray(symbolParm.Profile);
+                var profileArrArray = ResetCurveArrArray(parm.Profile);
                 var profile = app.Create.NewCurveLoopsProfile(profileArrArray);
 
-                fdoc.FamilyCreate.NewSweep(true, symbolParm.SweepPath, profile, symbolParm.Index, symbolParm.Location);
+                fdoc.FamilyCreate.NewSweep(true, parm.SweepPath, profile, parm.Index, parm.Location);
             });
 
             return doc.GetFamilySymbol(fdoc, rfaPath);
         }
 
         /// <summary>
-        /// Creates a new family symbol.
+        ///     Creates a new family symbol.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="rfaPath"></param>
         /// <returns></returns>
         public static FamilySymbol CreateFamilySymbol(this Document doc, string rfaPath)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             if (rfaPath == null)
                 throw new ArgumentNullException(nameof(rfaPath));
 
@@ -132,18 +149,25 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Creates a new family symbol.
+        ///     Creates a new family symbol.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="app"></param>
-        /// <param name="templateFileName"></param>
+        /// <param name="tplFileName"></param>
         /// <param name="rfaPath"></param>
         /// <param name="act"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateFamilySymbol(this Document doc, Application app, string templateFileName, string rfaPath, Action<Document> act)
+        public static FamilySymbol CreateFamilySymbol(this Document doc, Application app, string tplFileName,
+            string rfaPath, Action<Document> act)
         {
-            if (templateFileName == null)
-                throw new ArgumentNullException(nameof(templateFileName));
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (app == null)
+                throw new ArgumentNullException(nameof(app));
+
+            if (tplFileName == null)
+                throw new ArgumentNullException(nameof(tplFileName));
 
             if (rfaPath == null)
                 throw new ArgumentNullException(nameof(rfaPath));
@@ -151,7 +175,7 @@ namespace KeLi.Common.Revit.Builders
             if (act == null)
                 throw new ArgumentNullException(nameof(act));
 
-            var templateFilePath = app.GeTemplateFilePath(templateFileName); 
+            var templateFilePath = app.GeTemplateFilePath(tplFileName);
             var fdoc = app.NewFamilyDocument(templateFilePath);
 
             fdoc.AutoTransaction(() => act.Invoke(fdoc));
@@ -160,7 +184,7 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Gets the first family symbol from family document.
+        ///     Gets the first family symbol from family document.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="fdoc"></param>
@@ -168,6 +192,9 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static FamilySymbol GetFamilySymbol(this Document doc, Document fdoc, string rfaPath = null)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             if (fdoc == null)
                 throw new ArgumentNullException(nameof(fdoc));
 
@@ -180,13 +207,16 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Gets the first family symbol from family document.
+        ///     Gets the first family symbol from family document.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="family"></param>
         /// <returns></returns>
         public static FamilySymbol GetFamilySymbol(this Document doc, Family family)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             if (family == null)
                 throw new ArgumentNullException(nameof(family));
 
@@ -203,13 +233,16 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Gets the template file path.
+        ///     Gets the template file path.
         /// </summary>
         /// <param name="app"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
         public static string GeTemplateFilePath(this Application app, string fileName)
         {
+            if (app == null)
+                throw new ArgumentNullException(nameof(app));
+
             if (fileName == null)
                 throw new ArgumentNullException(nameof(fileName));
 
@@ -217,12 +250,15 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Resets the family symbol profile's location to zero point.
+        ///     Resets the family symbol profile's location to zero point.
         /// </summary>
         /// <param name="profile"></param>
         /// <returns></returns>
         private static CurveArrArray ResetCurveArrArray(CurveArrArray profile)
         {
+            if (profile == null)
+                throw new ArgumentNullException(nameof(profile));
+
             var results = new CurveArrArray();
             var location = GetLocationPoint(profile);
 
@@ -246,12 +282,15 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Gets the family symbol's raw location, it's for moving zero point.
+        ///     Gets the family symbol's raw location, it's for moving zero point.
         /// </summary>
         /// <param name="profile"></param>
         /// <returns></returns>
         private static XYZ GetLocationPoint(CurveArrArray profile)
         {
+            if (profile == null)
+                throw new ArgumentNullException(nameof(profile));
+
             var curves = profile.Cast<CurveArray>().SelectMany(s => s.Cast<Curve>()).ToList();
             var pts = curves.GetDistinctPointList()
                 .OrderBy(o => o.Z).ThenBy(o => o.Y).ThenBy(o => o.X).ToList();

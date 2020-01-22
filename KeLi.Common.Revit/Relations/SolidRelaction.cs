@@ -57,12 +57,12 @@ using KeLi.Common.Revit.Geometry;
 namespace KeLi.Common.Revit.Relations
 {
     /// <summary>
-    /// About a solid and a solid relationship.
+    ///     About a solid and a solid relationship.
     /// </summary>
     public static class SolidRelaction
     {
         /// <summary>
-        /// Gets the result of fast plane rejection of the box.
+        ///     Gets the result of fast plane rejection of the box.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="elm1"></param>
@@ -90,7 +90,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of fast plane rejection of the box.
+        ///     Gets the result of fast plane rejection of the box.
         /// </summary>
         /// <param name="box1"></param>
         /// <param name="box2"></param>
@@ -115,7 +115,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of fast space rejection of the box.
+        ///     Gets the result of fast space rejection of the box.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="elm1"></param>
@@ -145,7 +145,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of fast space rejection of the box.
+        ///     Gets the result of fast space rejection of the box.
         /// </summary>
         /// <param name="box1"></param>
         /// <param name="box2"></param>
@@ -172,7 +172,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of plane cross of the box.
+        ///     Gets the result of plane cross of the box.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="elm1"></param>
@@ -202,7 +202,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of plane cross of the box.
+        ///     Gets the result of plane cross of the box.
         /// </summary>
         /// <param name="box1"></param>
         /// <param name="box2"></param>
@@ -229,7 +229,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of space cross of the box.
+        ///     Gets the result of space cross of the box.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="elm1"></param>
@@ -259,7 +259,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        ///  Gets the result of space cross of the box.
+        ///     Gets the result of space cross of the box.
         /// </summary>
         /// <param name="box1"></param>
         /// <param name="box2"></param>
@@ -284,7 +284,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of between the two elements can cut.
+        ///     Gets the result of between the two elements can cut.
         /// </summary>
         /// <param name="elm1"></param>
         /// <param name="elm2"></param>
@@ -299,13 +299,13 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(elm2));
 
             if (!Enum.IsDefined(typeof(CutFailureReason), reason))
-                throw new InvalidEnumArgumentException(nameof(reason), (int)reason, typeof(CutFailureReason));
+                throw new InvalidEnumArgumentException(nameof(reason), (int) reason, typeof(CutFailureReason));
 
             return SolidSolidCutUtils.CanElementCutElement(elm1, elm2, out _);
         }
 
         /// <summary>
-        /// Gets the result of between the two elements cross.
+        ///     Gets the result of between the two elements cross.
         /// </summary>
         /// <param name="elm1"></param>
         /// <param name="elm2"></param>
@@ -322,7 +322,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of between valid geometry of the two elements cross.
+        ///     Gets the result of between valid geometry of the two elements cross.
         /// </summary>
         /// <param name="ge1"></param>
         /// <param name="ge2"></param>
@@ -339,7 +339,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of between some solids and others cross.
+        ///     Gets the result of between some solids and others cross.
         /// </summary>
         /// <param name="solid1s"></param>
         /// <param name="solid2s"></param>
@@ -356,7 +356,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of between a solid and some solids cross.
+        ///     Gets the result of between a solid and some solids cross.
         /// </summary>
         /// <param name="solid"></param>
         /// <param name="solids"></param>
@@ -373,7 +373,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of between a solid and a solid cross.
+        ///     Gets the result of between a solid and a solid cross.
         /// </summary>
         /// <param name="solid1"></param>
         /// <param name="solid2"></param>
@@ -386,7 +386,8 @@ namespace KeLi.Common.Revit.Relations
             if (solid2 == null)
                 throw new ArgumentNullException(nameof(solid2));
 
-            return BooleanOperationsUtils.ExecuteBooleanOperation(solid1, solid2, BooleanOperationsType.Intersect).Volume > 0;
+            return BooleanOperationsUtils.ExecuteBooleanOperation(solid1, solid2, BooleanOperationsType.Intersect)
+                       .Volume > 0;
         }
     }
 }

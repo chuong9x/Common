@@ -53,57 +53,57 @@ using System.Runtime.InteropServices;
 namespace KeLi.Common.Revit.Hook
 {
     /// <summary>
-    /// Hook utility.
+    ///     Hook utility.
     /// </summary>
     public class HookUtil
     {
         /// <summary>
-        /// The hook id.
+        ///     The hook id.
         /// </summary>
         private static IntPtr HookId { get; set; }
 
         /// <summary>
-        /// The key board message.
+        ///     The key board message.
         /// </summary>
         private static int WhKeyboardLl => 13;
 
         /// <summary>
-        /// The key down message.
+        ///     The key down message.
         /// </summary>
         private static int WmKeydown => 0x0100;
 
         /// <summary>
-        /// The system key down message.
+        ///     The system key down message.
         /// </summary>
         private static int WmSyskeydown => 0x0104;
 
         /// <summary>
-        /// The key up message.
+        ///     The key up message.
         /// </summary>
         private static int WmKeyup => 0x0101;
 
         /// <summary>
-        /// The system key up message.
+        ///     The system key up message.
         /// </summary>
         private static int WmSyskeyup => 0x0105;
 
         /// <summary>
-        /// The hook handler.
+        ///     The hook handler.
         /// </summary>
         private static HookHandler Handler { get; set; }
 
         /// <summary>
-        /// The key down event.
+        ///     The key down event.
         /// </summary>
         private static Action<int> KeyDownEvent { get; set; }
 
         /// <summary>
-        /// The key up event.
+        ///     The key up event.
         /// </summary>
         private static Action<int> KeyUpEvent { get; set; }
 
         /// <summary>
-        /// Starts hook the program.
+        ///     Starts hook the program.
         /// </summary>
         public static void Hook(Action<int> keyDownEvent = null, Action<int> keyUpEvent = null)
         {
@@ -120,7 +120,7 @@ namespace KeLi.Common.Revit.Hook
         }
 
         /// <summary>
-        /// Stops hook the program.
+        ///     Stops hook the program.
         /// </summary>
         public static void Unhook()
         {
@@ -129,7 +129,7 @@ namespace KeLi.Common.Revit.Hook
         }
 
         /// <summary>
-        /// Returns callback method result.
+        ///     Returns callback method result.
         /// </summary>
         /// <param name="nCode"></param>
         /// <param name="wParam"></param>
@@ -140,16 +140,16 @@ namespace KeLi.Common.Revit.Hook
             if (wParam == null)
                 throw new ArgumentNullException(nameof(wParam));
 
-            if (nCode >= 0 && wParam == (IntPtr)WmKeydown || wParam == (IntPtr)WmSyskeydown)
+            if (nCode >= 0 && wParam == (IntPtr) WmKeydown || wParam == (IntPtr) WmSyskeydown)
                 KeyDownEvent?.Invoke(lParam);
-            else if (nCode >= 0 && wParam == (IntPtr)WmKeyup || wParam == (IntPtr)WmSyskeyup)
+            else if (nCode >= 0 && wParam == (IntPtr) WmKeyup || wParam == (IntPtr) WmSyskeyup)
                 KeyUpEvent?.Invoke(lParam);
 
             return CallNextHookEx(HookId, nCode, wParam, ref lParam);
         }
 
         /// <summary>
-        /// Installs the hook.
+        ///     Installs the hook.
         /// </summary>
         /// <param name="idHook"></param>
         /// <param name="lpfn"></param>
@@ -160,7 +160,7 @@ namespace KeLi.Common.Revit.Hook
         private static extern IntPtr SetWindowsHookEx(int idHook, HookHandler lpfn, IntPtr hMod, uint dwThreadId);
 
         /// <summary>
-        /// Uninstall the hook.
+        ///     Uninstall the hook.
         /// </summary>
         /// <param name="hhk"></param>
         /// <returns></returns>
@@ -169,7 +169,7 @@ namespace KeLi.Common.Revit.Hook
         private static extern bool UnhookWindowsHookEx(IntPtr hhk);
 
         /// <summary>
-        /// Gets the next hook.
+        ///     Gets the next hook.
         /// </summary>
         /// <param name="hhk"></param>
         /// <param name="nCode"></param>
@@ -180,7 +180,7 @@ namespace KeLi.Common.Revit.Hook
         private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, ref int lParam);
 
         /// <summary>
-        /// Gets the module handle.
+        ///     Gets the module handle.
         /// </summary>
         /// <param name="lpModuleName"></param>
         /// <returns></returns>

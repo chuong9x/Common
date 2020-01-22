@@ -47,39 +47,40 @@
 */
 
 
+using System;
 using System.Collections.Generic;
 
 namespace KeLi.Common.Revit.Information
 {
     /// <summary>
-    /// Group parameter.
+    ///     Group parameter.
     /// </summary>
     public class GroupParameter
     {
         /// <summary>
-        /// Initializing parameter's group.
+        ///     Initializing parameter's group.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="groupName"></param>
         public GroupParameter(string id, string groupName)
         {
-            Id = id;
-            GroupName = groupName;
+            Id = id ?? throw new ArgumentNullException(nameof(id));
+            GroupName = groupName ?? throw new ArgumentNullException(nameof(groupName));
             Params = new List<ElementParameter>();
         }
 
         /// <summary>
-        /// Returns the id of the parameter's group.
+        ///     Returns the id of the parameter's group.
         /// </summary>
         public string Id { get; set; }
 
         /// <summary>
-        /// Returns the name of the parameter's group.
+        ///     Returns the name of the parameter's group.
         /// </summary>
         public string GroupName { get; set; }
 
         /// <summary>
-        /// Returns the parameter list of the parameter's group.
+        ///     Returns the parameter list of the parameter's group.
         /// </summary>
         public List<ElementParameter> Params { get; set; }
     }

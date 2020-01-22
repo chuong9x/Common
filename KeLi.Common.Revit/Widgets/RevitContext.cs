@@ -59,33 +59,33 @@ using KeLi.Common.Tool.Other;
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    /// Revit context.
+    ///     Revit context.
     /// </summary>
     public class RevitContext : IDisposable
     {
         /// <summary>
-        /// Revit product
-        /// Cannot set static variable, if not, throw exception.
-        /// </summary>
-        private Product _product;
-
-        /// <summary>
-        /// Client name.
+        ///     Client name.
         /// </summary>
         private static string _clientName;
 
         /// <summary>
-        /// Vendor Id.
+        ///     Vendor Id.
         /// </summary>
         private static string _vendorId;
 
         /// <summary>
-        /// Revit Version.
+        ///     Revit Version.
         /// </summary>
         private static string _version;
 
         /// <summary>
-        /// Cannot build an instance.
+        ///     Revit product
+        ///     Cannot set static variable, if not, throw exception.
+        /// </summary>
+        private Product _product;
+
+        /// <summary>
+        ///     Cannot build an instance.
         /// </summary>
         private RevitContext()
         {
@@ -95,7 +95,15 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Sets config object.
+        ///     Disponses the revit.
+        /// </summary>
+        public void Dispose()
+        {
+            _product?.Exit();
+        }
+
+        /// <summary>
+        ///     Sets config object.
         /// </summary>
         private static void InitConfig()
         {
@@ -105,7 +113,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Creates an instances.
+        ///     Creates an instances.
         /// </summary>
         /// <returns></returns>
         public static RevitContext CreateInstance()
@@ -114,7 +122,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Gets revit application.
+        ///     Gets revit application.
         /// </summary>
         /// <returns></returns>
         public Application GetApplication()
@@ -130,7 +138,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Gets revit install path by version number.
+        ///     Gets revit install path by version number.
         /// </summary>
         /// <returns></returns>
         private static string GetRevitInstallPath()
@@ -138,23 +146,23 @@ namespace KeLi.Common.Revit.Widgets
             var products = RevitProductUtility.GetAllInstalledRevitProducts();
             var product = products.FirstOrDefault(f => f.Name.Contains(_version));
 
-            return product.InstallLocation;
+            return product?.InstallLocation;
         }
 
         /// <summary>
-        /// Sets environment veriable path.
+        ///     Sets environment veriable path.
         /// </summary>
         private static void SetEnvironmentVariable()
         {
-            var revitPath = new[] { GetRevitInstallPath() };
-            var path = new[] { Environment.GetEnvironmentVariable("PATH") ?? string.Empty };
+            var revitPath = new[] {GetRevitInstallPath()};
+            var path = new[] {Environment.GetEnvironmentVariable("PATH") ?? string.Empty};
             var newPath = string.Join(Path.PathSeparator.ToString(), path.Concat(revitPath));
 
             Environment.SetEnvironmentVariable("PATH", newPath);
         }
 
         /// <summary>
-        /// Loads dependent dlls.
+        ///     Loads dependent dlls.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
@@ -165,14 +173,6 @@ namespace KeLi.Common.Revit.Widgets
             var file = $"{Path.Combine(GetRevitInstallPath(), assemblyName.Name)}.dll";
 
             return File.Exists(file) ? Assembly.LoadFile(file) : null;
-        }
-
-        /// <summary>
-        /// Disponses the revit.
-        /// </summary>
-        public void Dispose()
-        {
-            _product?.Exit();
         }
     }
 }

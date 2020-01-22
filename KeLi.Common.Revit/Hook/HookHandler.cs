@@ -51,7 +51,7 @@ using System;
 namespace KeLi.Common.Revit.Hook
 {
     /// <summary>
-    /// Hook handler.
+    ///     Hook handler.
     /// </summary>
     /// <param name="nCode"></param>
     /// <param name="wParam"></param>

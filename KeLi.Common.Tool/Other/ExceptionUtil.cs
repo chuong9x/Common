@@ -53,12 +53,12 @@ using System.Windows.Forms;
 namespace KeLi.Common.Tool.Other
 {
     /// <summary>
-    /// Exception utility.
+    ///     Exception utility.
     /// </summary>
     public static class ExceptionUtil
     {
         /// <summary>
-        /// Auto try action.
+        ///     Auto try action.
         /// </summary>
         /// <param name="act"></param>
         /// <param name="name"></param>

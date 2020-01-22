@@ -50,47 +50,47 @@
 namespace KeLi.Common.Revit.Information
 {
     /// <summary>
-    /// Element parameter.
+    ///     Element parameter.
     /// </summary>
     public class ElementParameter
     {
         /// <summary>
-        /// Returns the guid of the element's parameter.
+        ///     Returns the guid of the element's parameter.
         /// </summary>
         public string Guid { get; set; }
 
         /// <summary>
-        /// Returns the name of the element's parameter.
+        ///     Returns the name of the element's parameter.
         /// </summary>
         public string ParamName { get; set; }
 
         /// <summary>
-        /// Returns the data type of the element's parameter.
+        ///     Returns the data type of the element's parameter.
         /// </summary>
         public string DataType { get; set; }
 
         /// <summary>
-        /// Returns the data category of the element's parameter.
+        ///     Returns the data category of the element's parameter.
         /// </summary>
         public string DataCatetory { get; set; }
 
         /// <summary>
-        /// Returns the group id of the element's parameter.
+        ///     Returns the group id of the element's parameter.
         /// </summary>
         public string GroupId { get; set; }
 
         /// <summary>
-        /// Returns the visible of element's parameter.
+        ///     Returns the visible of element's parameter.
         /// </summary>
         public bool Visible { get; set; }
 
         /// <summary>
-        /// Returns the description of element's parameter.
+        ///     Returns the description of element's parameter.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// Returns the can edit of element's parameter.
+        ///     Returns the can edit of element's parameter.
         /// </summary>
         public bool CanEdit { get; set; }
     }

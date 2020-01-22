@@ -54,150 +54,201 @@ using Autodesk.Revit.DB;
 namespace KeLi.Common.Revit.Filters
 {
     /// <summary>
-    /// Elementy utility.
+    ///     Elementy utility.
     /// </summary>
     public static class ElementUtil
     {
         /// <summary>
-        /// Gets FamilySymbol list.
+        ///     Square foot to spaure meter.
+        /// </summary>
+        private const double FT2_TO_M2 = 0.092903;
+
+        /// <summary>
+        ///     Gets FamilySymbol list.
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
         public static List<FamilySymbol> GetFamilySymbolList(this Document doc)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             return doc.GetTypeElementList<FamilySymbol>();
         }
 
         /// <summary>
-        /// Gets FamilyInstance list.
+        ///     Gets FamilyInstance list.
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
         public static List<Wall> GetWallList(this Document doc)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             return doc.GetInstanceElementList<Wall>();
         }
 
         /// <summary>
-        /// Gets FamilyInstance list.
+        ///     Gets FamilyInstance list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="symbolName"></param>
         /// <returns></returns>
         public static List<FamilyInstance> GetFamilyInstanceList(this Document doc, string symbolName)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (symbolName == null)
+                throw new ArgumentNullException(nameof(symbolName));
+
             return GetFamilyInstanceList(doc).Where(w => w.Symbol.Name == symbolName).ToList();
         }
 
         /// <summary>
-        /// Gets FamilyInstance list.
+        ///     Gets FamilyInstance list.
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
         public static List<FamilyInstance> GetFamilyInstanceList(this Document doc)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             return doc.GetInstanceElementList<FamilyInstance>();
         }
 
         /// <summary>
-        /// Gets PanelType list.
+        ///     Gets PanelType list.
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
         public static List<SpatialElement> GetSpatialElementList(this Document doc)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             return doc.GetInstanceElementList<SpatialElement>();
         }
 
         /// <summary>
-        /// Gets PanelType list.
+        ///     Gets PanelType list.
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
         public static List<PanelType> GetPanelTypeList(this Document doc)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             return doc.GetTypeElementList<PanelType>().ToList();
         }
 
         /// <summary>
-        /// Gets WallType list.
+        ///     Gets WallType list.
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
         public static List<WallType> GetWallTypeList(this Document doc)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             return doc.GetTypeElementList<WallType>();
         }
 
         /// <summary>
-        /// Gets the bottom level.
+        ///     Gets the bottom level.
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
         public static Level GetBottomLevel(this Document doc)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             return GetLevelList(doc).OrderBy(o => o.Elevation).FirstOrDefault();
         }
 
         /// <summary>
-        /// Gets Level list.
+        ///     Gets Level list.
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
         public static List<Level> GetLevelList(this Document doc)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             return doc.GetInstanceElementList<Level>();
         }
 
         /// <summary>
-        /// Gets the element's location point.
+        ///     Gets the element's location point.
         /// </summary>
         /// <param name="elm"></param>
         /// <returns></returns>
-        public static XYZ GetLocationPoint<T>(this T elm) where T: Element
+        public static XYZ GetLocationPoint<T>(this T elm) where T : Element
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
             return elm.Location is LocationPoint pt ? pt.Point : throw new InvalidCastException(elm.Name);
         }
 
         /// <summary>
-        /// Gets the element's location cuve.
+        ///     Gets the element's location cuve.
         /// </summary>
         /// <param name="elm"></param>
         /// <returns></returns>
         public static Curve GetLocationCurve<T>(this T elm) where T : Element
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
             return !(elm.Location is LocationCurve curve) ? throw new InvalidCastException(elm.Name) : curve.Curve;
         }
 
         /// <summary>
-        /// Gets intersect element list.
+        ///     Gets intersect element list.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="room"></param>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static List<T> GetIntersectElements<T>(this SpatialElement room, Document doc) where T: Element
+        public static List<T> GetIntersectElements<T>(this SpatialElement room, Document doc) where T : Element
         {
+            if (room == null)
+                throw new ArgumentNullException(nameof(room));
+
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             var results = new List<T>();
             var elms = room.GetIntersectElements(doc);
 
             foreach (var elm in elms)
-            {
                 if (elm is T t)
                     results.Add(t);
-            }
 
             return results;
         }
 
         /// <summary>
-        /// Gets intersect element list.
+        ///     Gets intersect element list.
         /// </summary>
         /// <param name="room"></param>
         /// <param name="doc"></param>
         /// <returns></returns>
         public static List<Element> GetIntersectElements(this SpatialElement room, Document doc)
         {
+            if (room == null)
+                throw new ArgumentNullException(nameof(room));
+
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             var opt = new SpatialElementBoundaryOptions
             {
                 SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Center
@@ -206,11 +257,12 @@ namespace KeLi.Common.Revit.Filters
             var solid = calc.CalculateSpatialElementGeometry(room).GetGeometry();
             var intersectFilter = new ElementIntersectsSolidFilter(solid);
 
-            return new FilteredElementCollector(doc).WhereElementIsNotElementType().WherePasses(intersectFilter).ToList();
+            return new FilteredElementCollector(doc).WhereElementIsNotElementType().WherePasses(intersectFilter)
+                .ToList();
         }
 
         /// <summary>
-        /// Sets the element's color fill pattern.
+        ///     Sets the element's color fill pattern.
         /// </summary>
         /// <param name="elm"></param>
         /// <param name="fillPattern"></param>
@@ -218,13 +270,73 @@ namespace KeLi.Common.Revit.Filters
         /// <param name="color"></param>
         public static void SetColorFill(this Element elm, Element fillPattern, Document doc, Color color)
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (fillPattern == null)
+                throw new ArgumentNullException(nameof(fillPattern));
+
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (color == null)
+                throw new ArgumentNullException(nameof(color));
+
             var graSetting = doc.ActiveView.GetElementOverrides(elm.Id);
 
-            if (fillPattern != null)
-                graSetting.SetProjectionFillPatternId(fillPattern.Id);
-
+            graSetting.SetProjectionFillPatternId(fillPattern.Id);
             graSetting.SetProjectionFillColor(color);
             doc.ActiveView.SetElementOverrides(elm.Id, graSetting);
+        }
+
+        /// <summary>
+        ///     Gets the element's projection area.
+        /// </summary>
+        /// <param name="elm">A element</param>
+        /// <remarks>Returns projection area, that area unit is square meter.</remarks>
+        /// <exception cref="T:Autodesk.Revit.Exceptions.ArgumentNullException">The input element is invalid.</exception>
+        /// <returns>Returns projection area.</returns>
+        public static double GetShadowArea(this Element elm)
+        {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
+            var areas = new List<double>();
+            var geo = elm.get_Geometry(new Options());
+
+            foreach (var instance in geo.Select(s => s as GeometryInstance))
+            {
+                if (instance == null)
+                    continue;
+
+                foreach (var item in instance.GetInstanceGeometry())
+                {
+                    var solid = item as Solid;
+
+                    if (null == solid || solid.Faces.Size <= 0)
+                        continue;
+
+                    var plane = Plane.CreateByOriginAndBasis(XYZ.Zero, XYZ.BasisX, XYZ.BasisY);
+
+                    ExtrusionAnalyzer analyzer;
+
+                    try
+                    {
+                        analyzer = ExtrusionAnalyzer.Create(solid, plane, XYZ.BasisZ);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+
+                    if (analyzer == null)
+                        continue;
+
+                    areas.Add(analyzer.GetExtrusionBase().Area * FT2_TO_M2);
+                }
+            }
+
+            return areas.Max();
         }
     }
 }

@@ -56,12 +56,12 @@ using System.Windows.Media.Imaging;
 namespace KeLi.Common.Tool.Other
 {
     /// <summary>
-    /// Image utility.
+    ///     Image utility.
     /// </summary>
     public static class ImageUtil
     {
         /// <summary>
-        /// Converts the bit map to the bitmap image.
+        ///     Converts the bit map to the bitmap image.
         /// </summary>
         /// <param name="bitmap"></param>
         /// <returns></returns>
@@ -87,7 +87,7 @@ namespace KeLi.Common.Tool.Other
         }
 
         /// <summary>
-        /// Gets the embeded image.
+        ///     Gets the embeded image.
         /// </summary>
         /// <param name="resName"></param>
         /// <returns></returns>

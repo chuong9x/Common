@@ -55,24 +55,26 @@ using KeLi.Common.Revit.Geometry;
 namespace KeLi.Common.Revit.Filters
 {
     /// <summary>
-    /// Room utility.
+    ///     Room utility.
     /// </summary>
     public static class RoomUtil
     {
         /// <summary>
-        /// Gets the room's edge list.
+        ///     Gets the room's edge list.
         /// </summary>
         /// <param name="room"></param>
         /// <param name="boundary"></param>
         /// <returns></returns>
         public static List<Line> GetEdgeList(this SpatialElement room, SpatialElementBoundaryLocation boundary)
         {
+            if (room == null)
+                throw new ArgumentNullException(nameof(room));
+
             var result = new List<Line>();
             var opt = new SpatialElementBoundaryOptions
             {
                 StoreFreeBoundaryFaces = true,
                 SpatialElementBoundaryLocation = boundary
-
             };
             var segments = room.GetBoundarySegments(opt).SelectMany(s => s);
 
@@ -88,13 +90,16 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        /// Gets room list.
+        ///     Gets room list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="isValid"></param>
         /// <returns></returns>
         public static List<SpatialElement> GetSpatialElementList(this Document doc, bool isValid = true)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             var results = doc.GetTypeElementList<SpatialElement>();
 
             if (isValid)
@@ -104,7 +109,7 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        /// Gets boundary wall list of the room.
+        ///     Gets boundary wall list of the room.
         /// </summary>
         /// <param name="room"></param>
         /// <param name="doc"></param>
@@ -112,38 +117,50 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static List<Wall> GetBoundaryWallList(this SpatialElement room, Document doc, double maxThickness = 80)
         {
+            if (room == null)
+                throw new ArgumentNullException(nameof(room));
+
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             const BuiltInParameter parmEnum = BuiltInParameter.WALL_ATTR_WIDTH_PARAM;
             var results = new List<Wall>();
             var loops = room.GetBoundarySegments(new SpatialElementBoundaryOptions());
 
             foreach (var loop in loops)
+            foreach (var segment in loop)
             {
-                foreach (var segment in loop)
-                {
-                    // It's invalid!
-                    if (segment.ElementId.IntegerValue == -1)
-                        continue;
+                // It's invalid!
+                if (segment.ElementId.IntegerValue == -1)
+                    continue;
 
-                    // Because base room boundary to do, so one wall maybe be picked up some times.
-                    if(results.FirstOrDefault(f => f.Id == segment.ElementId) != null)
-                        continue;
+                // Because base room boundary to do, so one wall maybe be picked up some times.
+                if (results.FirstOrDefault(f => f.Id == segment.ElementId) != null)
+                    continue;
 
-                    if (doc.GetElement(segment.ElementId) is Wall wall)
-                        results.Add(wall);
-                }
+                if (doc.GetElement(segment.ElementId) is Wall wall)
+                    results.Add(wall);
             }
 
-            return results.Where(w => Convert.ToDouble(w.WallType.get_Parameter(parmEnum).AsValueString()) < maxThickness).ToList();
+            return results
+                .Where(w => Convert.ToDouble(w.WallType.get_Parameter(parmEnum).AsValueString()) < maxThickness)
+                .ToList();
         }
 
         /// <summary>
-        /// Gets inner face of wall.
+        ///     Gets inner face of wall.
         /// </summary>
         /// <param name="wall"></param>
         /// <param name="refPt"></param>
         /// <returns></returns>
         public static Face GetInnerFace(this Wall wall, XYZ refPt)
         {
+            if (wall == null)
+                throw new ArgumentNullException(nameof(wall));
+
+            if (refPt == null)
+                throw new ArgumentNullException(nameof(refPt));
+
             var line = wall.GetLocationCurve() as Line;
 
             if (line == null)
@@ -156,7 +173,7 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        /// Gets inner direction noraml.
+        ///     Gets inner direction noraml.
         /// </summary>
         /// <param name="dir"></param>
         /// <returns></returns>
@@ -178,7 +195,7 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        /// Gets direction of the line by a reference specified point.
+        ///     Gets direction of the line by a reference specified point.
         /// </summary>
         /// <param name="line"></param>
         /// <param name="refPt"></param>
@@ -187,6 +204,9 @@ namespace KeLi.Common.Revit.Filters
         {
             if (line == null)
                 throw new ArgumentNullException(nameof(line));
+
+            if (refPt == null)
+                throw new ArgumentNullException(nameof(refPt));
 
             // X axis direction.
             if (Math.Abs(line.Direction.Y) < 1e-6)

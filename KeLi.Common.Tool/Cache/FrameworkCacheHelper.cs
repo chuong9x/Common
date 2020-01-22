@@ -55,17 +55,41 @@ using System.Text.RegularExpressions;
 namespace KeLi.Common.Tool.Cache
 {
     /// <summary>
-    /// .Net framework cache helper.
+    ///     .Net framework cache helper.
     /// </summary>
     public sealed class FrameworkCacheHelper
     {
         /// <summary>
-        /// Restores cache data.
+        ///     Restores cache data.
         /// </summary>
         private readonly ObjectCache _data = MemoryCache.Default;
 
         /// <summary>
-        /// Adds an item.
+        ///     Gets cache's item by index.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public object this[string key]
+        {
+            get
+            {
+                if (key is null)
+                    throw new ArgumentNullException(nameof(key));
+
+                return _data.Get(key);
+            }
+
+            set
+            {
+                if (key is null)
+                    throw new ArgumentNullException(nameof(key));
+
+                AddItem(key, value);
+            }
+        }
+
+        /// <summary>
+        ///     Adds an item.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="data"></param>
@@ -73,17 +97,27 @@ namespace KeLi.Common.Tool.Cache
         /// <returns></returns>
         public bool AddItem(string key, object data, int timeout = 30)
         {
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
+
+            if (data is null)
+                throw new ArgumentNullException(nameof(data));
+
             bool result;
 
             if (string.IsNullOrWhiteSpace(key))
+            {
                 result = false;
+            }
 
-            else if (data == null || string.IsNullOrWhiteSpace(data.ToString()))
+            else if (string.IsNullOrWhiteSpace(data.ToString()))
+            {
                 result = false;
+            }
 
             else
             {
-                var cip = new CacheItemPolicy { AbsoluteExpiration = DateTime.Now.AddMinutes(timeout) };
+                var cip = new CacheItemPolicy {AbsoluteExpiration = DateTime.Now.AddMinutes(timeout)};
 
                 result = _data.Add(new CacheItem(key, data), cip);
             }
@@ -92,7 +126,7 @@ namespace KeLi.Common.Tool.Cache
         }
 
         /// <summary>
-        /// Clears cache data.
+        ///     Clears cache data.
         /// </summary>
         public void Clear()
         {
@@ -101,12 +135,15 @@ namespace KeLi.Common.Tool.Cache
         }
 
         /// <summary>
-        /// Removes the item by key.
+        ///     Removes the item by key.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         public object RemoveItem(string key)
         {
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
+
             object result;
 
             if (string.IsNullOrWhiteSpace(key))
@@ -122,29 +159,35 @@ namespace KeLi.Common.Tool.Cache
         }
 
         /// <summary>
-        /// Gets the item by key.
+        ///     Gets the item by key.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         public object GetItem(string key)
         {
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
+
             if (string.IsNullOrWhiteSpace(key))
                 return default;
 
-            else if (!_data.Contains(key))
+            if (!_data.Contains(key))
                 return default;
 
             return _data[key];
         }
 
         /// <summary>
-        /// Gets the item by key.
+        ///     Gets the item by key.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
         public T GetItem<T>(string key)
         {
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
+
             T result;
 
             if (string.IsNullOrWhiteSpace(key))
@@ -154,24 +197,29 @@ namespace KeLi.Common.Tool.Cache
                 result = default;
 
             else
-                result = (T)_data[key];
+                result = (T) _data[key];
 
             return result;
         }
 
         /// <summary>
-        /// Gets the item by pattern.
+        ///     Gets the item by pattern.
         /// </summary>
         /// <param name="pattern"></param>
         /// <returns></returns>
         public List<object> GetItemList(string pattern)
         {
+            if (pattern is null)
+                throw new ArgumentNullException(nameof(pattern));
+
             List<object> results;
             var regex = new Regex(pattern);
             var keys = _data.Where(w => regex.IsMatch(w.Key)).Select(s => s.Key).ToList();
 
             if (keys.Count == 0)
+            {
                 results = null;
+            }
 
             else
             {
@@ -183,24 +231,12 @@ namespace KeLi.Common.Tool.Cache
         }
 
         /// <summary>
-        /// Gets cache's item count.
+        ///     Gets cache's item count.
         /// </summary>
         /// <returns></returns>
         public long GetCount()
         {
             return _data.GetCount();
-        }
-
-        /// <summary>
-        /// Gets cache's item by index.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public object this[string key]
-        {
-            get => _data.Get(key);
-
-            set => AddItem(key, value);
         }
     }
 }

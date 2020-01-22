@@ -58,22 +58,23 @@ using Newtonsoft.Json;
 namespace KeLi.Common.Tool.Web
 {
     /// <summary>
-    /// Http Assist.
+    ///     Http Assist.
     /// </summary>
     public static class HttpAssist
     {
         /// <summary>
-        /// The cookies.
+        ///     The cookies.
         /// </summary>
         public static CookieCollection Cookies { get; } = new CookieCollection();
 
         /// <summary>
-        /// Gets all type request data.
+        ///     Gets all type request data.
         /// </summary>
         /// <param name="param"></param>
         /// <param name="postParamDict"></param>
         /// <returns></returns>
-        public static string GetRequestResult(this ResponseParam param, IDictionary<string, string> postParamDict = null)
+        public static string GetRequestResult(this ResponseParam param,
+            IDictionary<string, string> postParamDict = null)
         {
             if (param == null)
                 throw new ArgumentNullException(nameof(param));
@@ -86,11 +87,13 @@ namespace KeLi.Common.Tool.Web
             var response = param.CreateHttpResponse(postData);
 
             using (var reader = new StreamReader(response.GetResponseStream(), param.EncodeType))
+            {
                 return reader.ReadToEnd();
+            }
         }
 
         /// <summary>
-        /// Gets all type request model data.
+        ///     Gets all type request model data.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="param"></param>
@@ -107,7 +110,7 @@ namespace KeLi.Common.Tool.Web
         }
 
         /// <summary>
-        /// Downloads the file.
+        ///     Downloads the file.
         /// </summary>
         /// <param name="param"></param>
         /// <param name="filePath"></param>
@@ -131,7 +134,7 @@ namespace KeLi.Common.Tool.Web
         }
 
         /// <summary>
-        /// Uploads the file.
+        ///     Uploads the file.
         /// </summary>
         /// <param name="param"></param>
         /// <param name="filePath"></param>
@@ -144,16 +147,24 @@ namespace KeLi.Common.Tool.Web
             var response = param.CreateHttpResponse(string.Empty, filePath);
 
             using (var reader = new StreamReader(response.GetResponseStream(), param.EncodeType))
+            {
                 return reader.ReadToEnd();
+            }
         }
 
         /// <summary>
-        /// Sets the request's stream.
+        ///     Sets the request's stream.
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="request"></param>
         private static void SetFileStream(FileSystemInfo filePath, WebRequest request)
         {
+            if (filePath is null)
+                throw new ArgumentNullException(nameof(filePath));
+
+            if (request is null)
+                throw new ArgumentNullException(nameof(request));
+
             using (var fs = new FileStream(filePath.FullName, FileMode.Open, FileAccess.Read))
             {
                 var boundary = $"----------{DateTime.Now.Ticks:x}";
@@ -193,13 +204,14 @@ namespace KeLi.Common.Tool.Web
         }
 
         /// <summary>
-        /// Creates http request data.
+        ///     Creates http request data.
         /// </summary>
         /// <param name="param"></param>
         /// <param name="postData"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        private static HttpWebResponse CreateHttpResponse(this ResponseParam param, string postData = null, FileSystemInfo filePath = null)
+        private static HttpWebResponse CreateHttpResponse(this ResponseParam param, string postData = null,
+            FileSystemInfo filePath = null)
         {
             if (param == null)
                 throw new ArgumentNullException(nameof(param));
@@ -219,7 +231,10 @@ namespace KeLi.Common.Tool.Web
                 request = WebRequest.Create(param.Url) as HttpWebRequest;
             }
 
-            if (param.Proxy != null && request != null)
+            if (request == null)
+                throw new NullReferenceException(nameof(request));
+
+            if (param.Proxy != null)
                 request.Proxy = param.Proxy;
 
             switch (param.Type)
@@ -284,7 +299,9 @@ namespace KeLi.Common.Tool.Web
                 var data = param.EncodeType.GetBytes(postData);
 
                 using (var stream = request.GetRequestStream())
+                {
                     stream.Write(data, 0, data.Length);
+                }
             }
 
             var result = request.GetResponse() as HttpWebResponse;
@@ -297,7 +314,7 @@ namespace KeLi.Common.Tool.Web
         }
 
         /// <summary>
-        /// Creates the parameter.
+        ///     Creates the parameter.
         /// </summary>
         /// <param name="postParameterDict"></param>
         /// <returns></returns>
@@ -315,14 +332,15 @@ namespace KeLi.Common.Tool.Web
         }
 
         /// <summary>
-        /// Checks the result vaildation.
+        ///     Checks the result vaildation.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="certificate"></param>
         /// <param name="chain"></param>
         /// <param name="errors"></param>
         /// <returns></returns>
-        private static bool CheckResultValidation(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
+        private static bool CheckResultValidation(object sender, X509Certificate certificate, X509Chain chain,
+            SslPolicyErrors errors)
         {
             if (sender == null)
                 throw new ArgumentNullException(nameof(sender));

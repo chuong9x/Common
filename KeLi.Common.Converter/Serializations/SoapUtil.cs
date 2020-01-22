@@ -55,31 +55,33 @@ using System.Runtime.Serialization.Formatters.Soap;
 namespace KeLi.Common.Converter.Serializations
 {
     /// <summary>
-    /// A soap data serialization.
+    ///     A soap data serialization.
     /// </summary>
     public static class SoapUtil
     {
         /// <summary>
-        ///  Serializes the list.
+        ///     Serializes the list.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="ts"></param>
         /// <param name="filePath"></param>
         public static void Serialize<T>(FileInfo filePath, IEnumerable<T> ts)
         {
-            if (ts == null)
-                throw new ArgumentNullException(nameof(ts));
-
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
 
+            if (ts == null)
+                throw new ArgumentNullException(nameof(ts));
+
             // Not support generic list, must convert to T type array.
             using (var fs = new FileStream(filePath.FullName, FileMode.Create))
+            {
                 new SoapFormatter().Serialize(fs, ts.ToArray());
+            }
         }
 
         /// <summary>
-        /// Deserializes the file text to the list.
+        ///     Deserializes the file text to the list.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="filePath"></param>
@@ -90,7 +92,9 @@ namespace KeLi.Common.Converter.Serializations
                 throw new ArgumentNullException(nameof(filePath));
 
             using (var fs = new FileStream(filePath.FullName, FileMode.Open))
-                return ((T[])new SoapFormatter().Deserialize(fs)).ToList();
+            {
+                return ((T[]) new SoapFormatter().Deserialize(fs)).ToList();
+            }
         }
     }
 }

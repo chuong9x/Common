@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
  * MIT License
  *
  * Copyright(c) 2019 KeLi
@@ -47,80 +46,81 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using Autodesk.Revit.DB;
 using System;
+using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Family symbol parmater.
+    ///     Family symbol parmater.
     /// </summary>
     public class FamilySymbolParameter
     {
         /// <summary>
-        /// Family symbol parameter.
+        ///     Family symbol parameter.
         /// </summary>
-        /// <param name="templateFileName"></param>
+        /// <param name="tplFileName"></param>
         /// <param name="profile"></param>
         /// <param name="plane"></param>
         /// <param name="end"></param>
-        public FamilySymbolParameter(string templateFileName, CurveArrArray profile, Plane plane, double end)
+        public FamilySymbolParameter(string tplFileName, CurveArrArray profile, Plane plane, double end)
         {
-            TemplateFileName = templateFileName;
+            TemplateFileName = tplFileName ?? throw new ArgumentNullException(nameof(tplFileName));
             Profile = profile ?? throw new ArgumentNullException(nameof(profile));
             Plane = plane ?? throw new ArgumentNullException(nameof(plane));
             End = end;
         }
 
         /// <summary>
-        /// Family symbol parameter.
+        ///     Family symbol parameter.
         /// </summary>
-        /// <param name="templateFileName"></param>
+        /// <param name="tplFileName"></param>
         /// <param name="profile"></param>
-        /// <param name="path"></param>
+        /// <param name="profilePath"></param>
         /// <param name="location"></param>
         /// <param name="index"></param>
-        public FamilySymbolParameter(string templateFileName, CurveArrArray profile, ReferenceArray path, ProfilePlaneLocation location = ProfilePlaneLocation.Start, int index = 0)
+        public FamilySymbolParameter(string tplFileName, CurveArrArray profile, ReferenceArray profilePath,
+            ProfilePlaneLocation location = ProfilePlaneLocation.Start, int index = 0)
         {
-            TemplateFileName = templateFileName;
+            TemplateFileName = tplFileName ?? throw new ArgumentNullException(nameof(tplFileName));
             Profile = profile ?? throw new ArgumentNullException(nameof(profile));
-            SweepPath = path ?? throw new ArgumentNullException(nameof(path));
+            SweepPath = profilePath ?? throw new ArgumentNullException(nameof(profilePath));
             Location = location;
             Index = index;
         }
 
         /// <summary>
-        /// The family symbol's template file name including file suffix.
+        ///     The family symbol's template file name including file suffix.
         /// </summary>
         public string TemplateFileName { get; }
 
         /// <summary>
-        /// The extrusion symbol's profile.
+        ///     The extrusion symbol's profile.
         /// </summary>
         public CurveArrArray Profile { get; }
 
         /// <summary>
-        /// The family symbol's reference plane.
+        ///     The family symbol's reference plane.
         /// </summary>
         public Plane Plane { get; }
 
         /// <summary>
-        /// The family symbol's end length.
+        ///     The family symbol's end length.
         /// </summary>
         public double End { get; }
 
         /// <summary>
-        /// The sweep symbol's path.
+        ///     The sweep symbol's path.
         /// </summary>
         public ReferenceArray SweepPath { get; set; }
 
         /// <summary>
-        /// The sweep symbol's profile plane location.
+        ///     The sweep symbol's profile plane location.
         /// </summary>
         public ProfilePlaneLocation Location { get; set; }
 
         /// <summary>
-        /// The sweep symbol's index.
+        ///     The sweep symbol's index.
         /// </summary>
         public int Index { get; set; }
     }

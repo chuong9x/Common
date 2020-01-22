@@ -54,18 +54,21 @@ using Autodesk.Revit.UI;
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    /// Storage utility.
+    ///     Storage utility.
     /// </summary>
     public static class StorageUtil
     {
         /// <summary>
-        /// Saves as a new file and closes it.
+        ///     Saves as a new file and closes it.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="modelPath"></param>
         /// <param name="saveModified"></param>
         public static void SaveNewFileAndClose(this Document doc, string modelPath, bool saveModified = true)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             if (modelPath == null)
                 throw new ArgumentNullException(nameof(modelPath));
 
@@ -77,13 +80,16 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Saves to the file of current active document path by only covered mode, then closes it.
+        ///     Saves to the file of current active document path by only covered mode, then closes it.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="tmpRvt"></param>
         /// <param name="saveModified"></param>
         public static void SaveExistedFileAndClose(this UIApplication uiapp, string tmpRvt, bool saveModified = true)
         {
+            if (uiapp == null)
+                throw new ArgumentNullException(nameof(uiapp));
+
             if (tmpRvt == null)
                 throw new ArgumentNullException(nameof(tmpRvt));
 
@@ -91,14 +97,21 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Saves to the file of current active document path by only covered mode, then closes it.
+        ///     Saves to the file of current active document path by only covered mode, then closes it.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="uiapp"></param>
         /// <param name="tmpRvt"></param>
         /// <param name="saveModified"></param>
-        public static void SaveExistedFileAndClose(this Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
+        public static void SaveExistedFileAndClose(this Document doc, UIApplication uiapp, string tmpRvt,
+            bool saveModified = true)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (uiapp == null)
+                throw new ArgumentNullException(nameof(uiapp));
+
             if (tmpRvt == null)
                 throw new ArgumentNullException(nameof(tmpRvt));
 
@@ -109,7 +122,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Closes the document safely.
+        ///     Closes the document safely.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="uiapp"></param>
@@ -117,6 +130,12 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="saveModified"></param>
         private static void SafelyClose(Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (uiapp == null)
+                throw new ArgumentNullException(nameof(uiapp));
+
             if (tmpRvt == null)
                 throw new ArgumentNullException(nameof(tmpRvt));
 

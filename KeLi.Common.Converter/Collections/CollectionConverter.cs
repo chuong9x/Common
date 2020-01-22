@@ -59,12 +59,12 @@ using System.Text.RegularExpressions;
 namespace KeLi.Common.Converter.Collections
 {
     /// <summary>
-    /// A data conllection converter.
+    ///     A data conllection converter.
     /// </summary>
     public static class CollectionConverter
     {
         /// <summary>
-        /// Converts the data table to the list.
+        ///     Converts the data table to the list.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="dt"></param>
@@ -102,7 +102,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the data table to the ilist.
+        ///     Converts the data table to the ilist.
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="type"></param>
@@ -152,7 +152,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the sql data reader to the list.
+        ///     Converts the sql data reader to the list.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
@@ -184,7 +184,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the sql data reader to the ilist.
+        ///     Converts the sql data reader to the ilist.
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="type"></param>
@@ -197,12 +197,12 @@ namespace KeLi.Common.Converter.Collections
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
 
-            var listType = typeof(List<>).MakeGenericType(type);
+            var types = typeof(List<>).MakeGenericType(type);
 
             if (!reader.HasRows)
-                return Activator.CreateInstance(listType) as IList;
+                return Activator.CreateInstance(types) as IList;
 
-            var results = Activator.CreateInstance(listType) as IList;
+            var results = Activator.CreateInstance(types) as IList;
             var constructor = type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .OrderBy(c => c.GetParameters().Length).First();
             var parameters = constructor.GetParameters();
@@ -231,7 +231,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the list to the data table.
+        ///     Converts the list to the data table.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="ts"></param>
@@ -250,19 +250,19 @@ namespace KeLi.Common.Converter.Collections
 
             foreach (var t in ts)
             {
-                var temps = new ArrayList();
+                var tmps = new ArrayList();
 
                 foreach (var prop in props)
-                    temps.Add(prop.GetValue(t, null));
+                    tmps.Add(prop.GetValue(t, null));
 
-                results.LoadDataRow(temps.ToArray(), true);
+                results.LoadDataRow(tmps.ToArray(), true);
             }
 
             return results;
         }
 
         /// <summary>
-        /// Converts the sql data reader to the data table.
+        ///     Converts the sql data reader to the data table.
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
@@ -279,13 +279,13 @@ namespace KeLi.Common.Converter.Collections
             // Adds the data table's columns.
             for (var i = 0; i < reader.FieldCount; i++)
             {
-                var column = new DataColumn
+                var col = new DataColumn
                 {
                     DataType = reader.GetFieldType(i),
                     ColumnName = reader.GetName(i)
                 };
 
-                results.Columns.Add(column);
+                results.Columns.Add(col);
             }
 
             // Adds the data table's content.
@@ -305,7 +305,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the type t object to the type s object.
+        ///     Converts the type t object to the type s object.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="S"></typeparam>
@@ -317,12 +317,12 @@ namespace KeLi.Common.Converter.Collections
                 throw new ArgumentNullException(nameof(t));
 
             var result = Activator.CreateInstance<S>();
-            var properties = typeof(T).GetProperties();
+            var props = typeof(T).GetProperties();
 
-            foreach (var property in properties)
+            foreach (var prop in props)
             {
-                var value = property.GetValue(t);
-                var info = typeof(S).GetProperty(property.Name);
+                var value = prop.GetValue(t);
+                var info = typeof(S).GetProperty(prop.Name);
 
                 if (value == null || info == null)
                     continue;
@@ -347,7 +347,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Convert the object to the sql db type object.
+        ///     Convert the object to the sql db type object.
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -418,7 +418,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the name value collection to the idictionary.
+        ///     Converts the name value collection to the idictionary.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -431,7 +431,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the name value collection to the ilookup.
+        ///     Converts the name value collection to the ilookup.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -444,7 +444,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the idictionary to the name value collection.
+        ///     Converts the idictionary to the name value collection.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -456,14 +456,14 @@ namespace KeLi.Common.Converter.Collections
             var result = new NameValueCollection();
 
             foreach (var pair in pairs)
-                foreach (var val in pair.Value)
-                    result.Add(pair.Key, val);
+            foreach (var val in pair.Value)
+                result.Add(pair.Key, val);
 
             return result;
         }
 
         /// <summary>
-        /// Converts the ilookup to the name value collection.
+        ///     Converts the ilookup to the name value collection.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -475,14 +475,14 @@ namespace KeLi.Common.Converter.Collections
             var result = new NameValueCollection();
 
             foreach (var pair in pairs)
-                foreach (var item in pair.SelectMany(s => s))
-                    result.Add(pair.Key, item);
+            foreach (var item in pair.SelectMany(s => s))
+                result.Add(pair.Key, item);
 
             return result;
         }
 
         /// <summary>
-        /// Converts the name value collection to the pair string.
+        ///     Converts the name value collection to the pair string.
         /// </summary>
         /// <param name="pairs"></param>
         public static string ToNvcString(this NameValueCollection pairs)
@@ -494,7 +494,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the pair string to the name value collection.
+        ///     Converts the pair string to the name value collection.
         /// </summary>
         /// <param name="pairs"></param>
         public static NameValueCollection ToNvc(string pairs)

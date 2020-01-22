@@ -51,22 +51,22 @@ using Autodesk.Revit.DB;
 namespace KeLi.Common.Revit.Converters
 {
     /// <summary>
-    /// Unit utility.
+    ///     Unit utility.
     /// </summary>
     public static class UnitConverter
     {
         /// <summary>
-        /// Millimeter to inch.
+        ///     Millimeter to inch.
         /// </summary>
         public const double MM_TO_INCH = 0.0393700787;
 
         /// <summary>
-        /// Millimeter to foot.
+        ///     Millimeter to foot.
         /// </summary>
         public const double MM_TO_FT = 0.0032808399;
 
         /// <summary>
-        /// Converts feet unit value to mm unit value.
+        ///     Converts feet unit value to mm unit value.
         /// </summary>
         /// <param name="num"></param>
         /// <returns></returns>
@@ -76,7 +76,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts mm unit value to feet unit value.
+        ///     Converts mm unit value to feet unit value.
         /// </summary>
         /// <param name="num"></param>
         /// <returns></returns>

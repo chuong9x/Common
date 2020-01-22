@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/22/2020 01:15:00 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,63 +46,49 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System;
-using System.Drawing.Imaging;
-using System.IO;
 
-namespace KeLi.Common.Drive.Pdf
+using System;
+
+namespace KeLi.Common.Tool.Email
 {
     /// <summary>
-    /// Pdf parameter.
+    /// Mail information.
     /// </summary>
-    public class PdfParam
+    public class MailInfo
     {
         /// <summary>
-        /// Pdf parameter.
+        /// Mail information.
         /// </summary>
-        /// <param name="pdfPath"></param>
-        /// <param name="imgName"></param>
-        public PdfParam(string pdfPath, string imgName = null)
+        /// <param name="address"></param>
+        /// <param name="subject"></param>
+        /// <param name="body"></param>
+        /// <param name="isHtml"></param>
+        public MailInfo(string address, string subject, string body, bool isHtml = false)
         {
-            if (pdfPath == null)
-                throw new ArgumentNullException(nameof(pdfPath));
-
-            PdfPath = new FileInfo(pdfPath);
-            ImgName = imgName ?? Path.GetFileNameWithoutExtension(pdfPath);
-            StartPage = 1;
-            EndPage = 1;
-            Format = ImageFormat.Jpeg;
-            Resolution = 5;
+            Address = address ?? throw new ArgumentNullException(nameof(address));
+            Subject = subject ?? throw new ArgumentNullException(nameof(subject));
+            Body = body ?? throw new ArgumentNullException(nameof(body));
+            IsHtml = isHtml;
         }
 
         /// <summary>
-        /// The pdf path.
+        /// Mail address.
         /// </summary>
-        public FileInfo PdfPath { get; set; }
+        public string Address { get; }
 
         /// <summary>
-        /// The image name.
+        /// Mail subject.
         /// </summary>
-        public string ImgName { get; set; }
+        public string Subject { get; }
 
         /// <summary>
-        /// The start page num.
+        /// Mail body.
         /// </summary>
-        public int StartPage { get; set; }
+        public string Body { get; }
 
         /// <summary>
-        /// The end page num.
+        /// If true, mail is html.
         /// </summary>
-        public int EndPage { get; set; }
-
-        /// <summary>
-        /// The image format.
-        /// </summary>
-        public ImageFormat Format { get; set; }
-
-        /// <summary>
-        /// The image's resolution[1-10].
-        /// </summary>
-        public int Resolution { get; set; }
+        public bool IsHtml { get; }
     }
 }

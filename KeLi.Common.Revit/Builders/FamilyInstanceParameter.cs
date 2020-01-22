@@ -46,19 +46,19 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Structure;
-using System;
 
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Family instance parameter.
+    ///     Family instance parameter.
     /// </summary>
     public class FamilyInstanceParameter
     {
         /// <summary>
-        /// Family instance parameter.
+        ///     Family instance parameter.
         /// </summary>
         /// <param name="location"></param>
         /// <param name="symbol"></param>
@@ -73,22 +73,22 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// The family instance's location.
+        ///     The family instance's location.
         /// </summary>
         public XYZ Location { get; set; }
 
         /// <summary>
-        /// The family instance's Symbol.
+        ///     The family instance's Symbol.
         /// </summary>
         public FamilySymbol Symbol { get; set; }
 
         /// <summary>
-        /// The family instance's level.
+        ///     The family instance's level.
         /// </summary>
         public Level Level { get; set; }
 
         /// <summary>
-        /// The family instance's type.
+        ///     The family instance's type.
         /// </summary>
         public StructuralType Type { get; set; }
     }

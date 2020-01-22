@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
@@ -55,98 +56,159 @@ using Autodesk.Revit.DB.Plumbing;
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Pipe builder.
+    ///     Pipe builder.
     /// </summary>
     public static class PipeBuilder
     {
         /// <summary>
-        /// Creates a new pipe.
+        ///     Creates a new pipe.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="typeId"></param>
-        /// <param name="lvlId"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
+        /// <param name="parm"></param>
+        /// <param name="startConn"></param>
+        /// <param name="endConn"></param>
         /// <returns></returns>
-        public static Pipe CreatePipe(this Document doc, ElementId typeId, ElementId lvlId, Connector start, Connector end)
+        public static Pipe CreatePipe(this Document doc, PipeParameter parm, Connector startConn, Connector endConn)
         {
-            return Pipe.Create(doc, typeId, lvlId, start, end);
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
+
+            if (startConn is null)
+                throw new ArgumentNullException(nameof(startConn));
+
+            if (endConn is null)
+                throw new ArgumentNullException(nameof(endConn));
+
+            return Pipe.Create(doc, parm.TypeId, parm.LevelId, startConn, endConn);
         }
 
         /// <summary>
-        /// Creates a new pipe.
+        ///     Creates a new pipe.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="typeId"></param>
-        /// <param name="lvlId"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
+        /// <param name="parm"></param>
+        /// <param name="startConn"></param>
+        /// <param name="endPt"></param>
         /// <returns></returns>
-        public static Pipe CreatePipe(this Document doc, ElementId typeId, ElementId lvlId, Connector start, XYZ end)
+        public static Pipe CreatePipe(this Document doc, PipeParameter parm, Connector startConn, XYZ endPt)
         {
-            return Pipe.Create(doc, typeId, lvlId, start, end);
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
+
+            if (startConn is null)
+                throw new ArgumentNullException(nameof(startConn));
+
+            if (endPt is null)
+                throw new ArgumentNullException(nameof(endPt));
+
+            return Pipe.Create(doc, parm.TypeId, parm.LevelId, startConn, endPt);
         }
 
         /// <summary>
-        /// Creates a new pipe.
+        ///     Creates a new pipe.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="systemId"></param>
-        /// <param name="typeId"></param>
-        /// <param name="lvlId"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
+        /// <param name="parm"></param>
+        /// <param name="startPt"></param>
+        /// <param name="endPt"></param>
         /// <returns></returns>
-        public static Pipe CreatePipe(this Document doc, ElementId systemId, ElementId typeId, ElementId lvlId, XYZ start,
-            XYZ end)
+        public static Pipe CreatePipe(this Document doc, PipeParameter parm, XYZ startPt, XYZ endPt)
         {
-            return Pipe.Create(doc, systemId, typeId, lvlId, start, end);
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
+
+            if (startPt is null)
+                throw new ArgumentNullException(nameof(startPt));
+
+            if (endPt is null)
+                throw new ArgumentNullException(nameof(endPt));
+
+            return Pipe.Create(doc, parm.SystemId, parm.TypeId, parm.LevelId, startPt, endPt);
         }
 
         /// <summary>
-        /// Creates a new flex pipe.
+        ///     Creates a new flex pipe.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="systemId"></param>
-        /// <param name="typeId"></param>
-        /// <param name="lvlId"></param>
+        /// <param name="parm"></param>
         /// <param name="points"></param>
         /// <returns></returns>
-        public static FlexPipe CreateFlexPipe(this Document doc, ElementId systemId, ElementId typeId, ElementId lvlId,
-            List<XYZ> points)
+        public static FlexPipe CreateFlexPipe(this Document doc, PipeParameter parm, IEnumerable<XYZ> points)
         {
-            return FlexPipe.Create(doc, systemId, typeId, lvlId, points);
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
+
+            if (points is null)
+                throw new ArgumentNullException(nameof(points));
+
+            return FlexPipe.Create(doc, parm.SystemId, parm.TypeId, parm.LevelId, points.ToList());
         }
 
         /// <summary>
-        /// Creates a new flex pipe.
+        ///     Creates a new flex pipe.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="systemId"></param>
-        /// <param name="typeId"></param>
-        /// <param name="lvlId"></param>
-        /// <param name="end"></param>
+        /// <param name="parm"></param>
+        /// <param name="startPt"></param>
+        /// <param name="endPt"></param>
         /// <param name="points"></param>
-        /// <param name="start"></param>
         /// <returns></returns>
-        public static FlexPipe CreateFlexPipe(this Document doc, ElementId systemId, ElementId typeId, ElementId lvlId,
-            XYZ start, XYZ end, IEnumerable<XYZ> points)
+        public static FlexPipe CreateFlexPipe(this Document doc, PipeParameter parm, XYZ startPt, XYZ endPt,
+            IEnumerable<XYZ> points)
         {
-            return FlexPipe.Create(doc, systemId, typeId, lvlId, start, end, points.ToList());
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
+
+            if (startPt is null)
+                throw new ArgumentNullException(nameof(startPt));
+
+            if (endPt is null)
+                throw new ArgumentNullException(nameof(endPt));
+
+            if (points is null)
+                throw new ArgumentNullException(nameof(points));
+
+            return FlexPipe.Create(doc, parm.SystemId, parm.TypeId, parm.LevelId, startPt, endPt, points.ToList());
         }
 
         /// <summary>
-        /// Creates a new conduit.
+        ///     Creates a new conduit.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="typeId"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="lvlId"></param>
+        /// <param name="parm"></param>
+        /// <param name="startPt"></param>
+        /// <param name="endPt"></param>
         /// <returns></returns>
-        public static Conduit CreateConduit(this Document doc, ElementId typeId, XYZ start, XYZ end, ElementId lvlId)
+        public static Conduit CreateConduit(this Document doc, PipeParameter parm, XYZ startPt, XYZ endPt)
         {
-            return Conduit.Create(doc, typeId, start, end, lvlId);
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
+
+            if (startPt is null)
+                throw new ArgumentNullException(nameof(startPt));
+
+            if (endPt is null)
+                throw new ArgumentNullException(nameof(endPt));
+
+            return Conduit.Create(doc, parm.TypeId, startPt, endPt, parm.LevelId);
         }
     }
 }

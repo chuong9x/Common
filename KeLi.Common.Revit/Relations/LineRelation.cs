@@ -54,12 +54,12 @@ using Autodesk.Revit.DB;
 namespace KeLi.Common.Revit.Relations
 {
     /// <summary>
-    /// About two lines relationship.
+    ///     About two lines relationship.
     /// </summary>
     public static class LineRelation
     {
         /// <summary>
-        /// Gets the result of whether the Line line1 and the Line line2 is space vertical.
+        ///     Gets the result of whether the Line line1 and the Line line2 is space vertical.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -77,7 +77,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of whether the Line line1 and the Line line2 is space parallel.
+        ///     Gets the result of whether the Line line1 and the Line line2 is space parallel.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -98,7 +98,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Converts to plane line.
+        ///     Converts to plane line.
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
@@ -114,7 +114,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of whether the Line line1 and the Line line2 is plane parallel.
+        ///     Gets the result of whether the Line line1 and the Line line2 is plane parallel.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -138,7 +138,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of whether the Line line1 and the Line line2 is plane vertical.
+        ///     Gets the result of whether the Line line1 and the Line line2 is plane vertical.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -159,14 +159,15 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the intersection of the Line line1 and the Line line2 on plane.
+        ///     Gets the intersection of the Line line1 and the Line line2 on plane.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
         /// <param name="isTouch"></param>
         /// <param name="tolerance"></param>
         /// <returns></returns>
-        public static XYZ GetPlaneCrossingPoint(this Line line1, Line line2, bool isTouch = true, double tolerance = 2e-2)
+        public static XYZ GetPlaneCrossingPoint(this Line line1, Line line2, bool isTouch = true,
+            double tolerance = 2e-2)
         {
             if (line1 == null)
                 throw new ArgumentNullException(nameof(line1));
@@ -195,7 +196,9 @@ namespace KeLi.Common.Revit.Relations
 
             // Must quadrature.
             if (line1.IsPlaneVertical(line2) && f1 || f2)
+            {
                 result = f1 ? new XYZ(x1, y3, pt1.Z) : new XYZ(x3, y1, pt1.Z);
+            }
             else
             {
                 var dx12 = x2 - x1;
@@ -224,7 +227,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the intersections of the Line and the lines on plane.
+        ///     Gets the intersections of the Line and the lines on plane.
         /// </summary>
         /// <param name="line"></param>
         /// <param name="lines"></param>
@@ -246,7 +249,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the distinct vectors of the Curve set.
+        ///     Gets the distinct vectors of the Curve list.
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
@@ -282,7 +285,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets points of the boundary.
+        ///     Gets points of the boundary.
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
@@ -307,27 +310,33 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the true point order by right(x), front(y) and top(z) point of the Curve set.
+        ///     Gets the true point order by right(x), front(y) and top(z) point of the Curve list.
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
         public static XYZ GetMinPoint(this IEnumerable<Curve> curves)
         {
+            if (curves is null)
+                throw new ArgumentNullException(nameof(curves));
+
             return curves.Select(m => m.GetMinPoint()).GetMinPoint();
         }
 
         /// <summary>
-        /// Gets the true point order by top(z), front(y) and right(x) in the Curve set.
+        ///     Gets the true point order by top(z), front(y) and right(x) in the Curve list.
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
         public static XYZ GetMaxPoint(this IEnumerable<Curve> curves)
         {
+            if (curves is null)
+                throw new ArgumentNullException(nameof(curves));
+
             return curves.Select(m => m.GetMaxPoint()).GetMaxPoint();
         }
 
         /// <summary>
-        /// Gets the true point order by right(x), front(y) and top(z) point of the Curve.
+        ///     Gets the true point order by right(x), front(y) and top(z) point of the Curve.
         /// </summary>
         /// <param name="curve"></param>
         /// <returns></returns>
@@ -340,7 +349,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the true point order by top(z), front(y) and right(x) in the Curve.
+        ///     Gets the true point order by top(z), front(y) and right(x) in the Curve.
         /// </summary>
         /// <param name="curve"></param>
         /// <returns></returns>
@@ -353,7 +362,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the two end points of the Curve.
+        ///     Gets the two end points of the Curve.
         /// </summary>
         /// <param name="curve"></param>
         /// <returns></returns>
@@ -365,11 +374,11 @@ namespace KeLi.Common.Revit.Relations
             var pt1 = curve.GetEndPoint(0);
             var pt2 = curve.GetEndPoint(1);
 
-            return new List<XYZ> { pt1, pt2 };
+            return new List<XYZ> {pt1, pt2};
         }
 
         /// <summary>
-        /// Gets the true point order by top(z), front(y) and right(x) in the XYZ set.
+        ///     Gets the true point order by top(z), front(y) and right(x) in the XYZ list.
         /// </summary>
         /// <param name="pts"></param>
         /// <returns></returns>
@@ -382,7 +391,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the true point order by right(x), front(y) and top(z) in the XYZ set.
+        ///     Gets the true point order by right(x), front(y) and top(z) in the XYZ list.
         /// </summary>
         /// <param name="pts"></param>
         /// <returns></returns>
@@ -395,7 +404,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of whether the point is in the plane direction polygon.
+        ///     Gets the result of whether the point is in the plane direction polygon.
         /// </summary>
         /// <param name="pt"></param>
         /// <param name="polygon"></param>

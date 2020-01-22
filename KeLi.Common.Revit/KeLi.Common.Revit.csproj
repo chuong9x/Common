@@ -23,7 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\bin\Debug\KeLi.Common.Revit.xml</DocumentationFile>
     <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x64</PlatformTarget>
     <DocumentationFile>..\bin\Release\KeLi.Common.Revit.xml</DocumentationFile>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AdWindows">
@@ -94,6 +94,7 @@
     <Compile Include="Builders\MaterialBuilder.cs" />
     <Compile Include="Builders\ModelCurveBuilder.cs" />
     <Compile Include="Builders\PipeBuilder.cs" />
+    <Compile Include="Builders\PipeParameter.cs" />
     <Compile Include="Builders\PlaneBuilder.cs" />
     <Compile Include="Builders\ViewBuilder.cs" />
     <Compile Include="Filters\FilterType.cs" />
@@ -121,7 +122,6 @@
     <Compile Include="Information\ParameterUtil.cs" />
     <Compile Include="Widgets\RevitContext.cs" />
     <Compile Include="Widgets\RibbonUtil.cs" />
-    <Compile Include="Widgets\AreaUtil.cs" />
     <Compile Include="Geometry\BoxUtil.cs" />
     <Compile Include="Converters\UnitConverter.cs" />
     <Compile Include="Widgets\AutoUtil.cs" />

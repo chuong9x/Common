@@ -54,12 +54,12 @@ using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledEx
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    /// Auto action utility.
+    ///     Auto action utility.
     /// </summary>
     public static class AutoUtil
     {
         /// <summary>
-        /// To auto execute transaction.
+        ///     To auto execute transaction.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="act"></param>
@@ -71,22 +71,26 @@ namespace KeLi.Common.Revit.Widgets
             if (act == null)
                 throw new ArgumentNullException(nameof(act));
 
-            using var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name);
+            using (var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name))
+            {
+                trans.Start();
+                act.Invoke();
 
-            trans.Start();
-            act.Invoke();
-
-            if (trans.Commit() != TransactionStatus.Committed)
-                trans.RollBack();
+                if (trans.Commit() != TransactionStatus.Committed)
+                    trans.RollBack();
+            }
         }
 
         /// <summary>
-        /// To repeat call command.
+        ///     To repeat call command.
         /// </summary>
         /// <param name="act"></param>
         /// <returns></returns>
         public static bool RepeatCommand(this Action act)
         {
+            if (act == null)
+                throw new ArgumentNullException(nameof(act));
+
             try
             {
                 act.Invoke();

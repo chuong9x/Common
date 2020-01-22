@@ -6,46 +6,43 @@ using System.Text;
 namespace KeLi.Common.Tool.Email
 {
     /// <summary>
-    /// Email helper.
+    ///     Email helper.
     /// </summary>
     public static class EmailHelper
     {
         /// <summary>
-        /// Sends mail message.
+        ///     Sends mail message.
         /// </summary>
         /// <param name="former"></param>
-        /// <param name="mailAddress"></param>
-        /// <param name="mailSubject"></param>
-        /// <param name="mailBody"></param>
-        /// <param name="isHtml"></param>
-        public static void SendMail(this FromerInfo former, string mailAddress, string mailSubject, string mailBody, bool isHtml = false)
+        /// <param name="mail"></param>
+        public static void SendMail(this FromerInfo former, MailInfo mail)
         {
             try
             {
-                var mail = new MailMessage
+                var msg = new MailMessage
                 {
                     From = new MailAddress(former.FromAddress, former.DisplayName, Encoding.UTF8),
-                    Subject = mailSubject,
+                    Subject = mail.Subject,
                     SubjectEncoding = Encoding.UTF8,
-                    Body = mailBody,
+                    Body = mail.Body,
                     BodyEncoding = Encoding.UTF8,
-                    IsBodyHtml = isHtml,
+                    IsBodyHtml = mail.IsHtml,
                     Priority = MailPriority.Normal
                 };
 
-                if (mailAddress.IndexOf(',') > -1)
+                if (mail.Address.IndexOf(',') > -1)
                 {
-                    var mailAddresses = mailAddress.Split(',');
+                    var mailAddresses = mail.Address.Split(',');
 
                     foreach (var item in mailAddresses)
-                    {
                         if (item.Trim() != string.Empty)
-                            mail.To.Add(item);
-                    }
+                            msg.To.Add(item);
                 }
 
                 else
-                    mail.To.Add(mailAddress);
+                {
+                    msg.To.Add(mail.Address);
+                }
 
                 var client = new SmtpClient(former.Host, former.Port)
                 {
@@ -53,7 +50,7 @@ namespace KeLi.Common.Tool.Email
                     Credentials = new NetworkCredential(former.FromAddress, former.Password)
                 };
 
-                client.Send(mail);
+                client.Send(msg);
             }
             catch (Exception e)
             {

@@ -53,18 +53,19 @@ using Autodesk.Revit.DB;
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// DirectShape paramter.
+    ///     DirectShape paramter.
     /// </summary>
     public class DirectShapeParameter
     {
         /// <summary>
-        /// DirectShape paramter.
+        ///     DirectShape paramter.
         /// </summary>
         /// <param name="profile"></param>
         /// <param name="direction"></param>
         /// <param name="distance"></param>
         /// <param name="category"></param>
-        public DirectShapeParameter(IEnumerable<CurveLoop> profile, XYZ direction, double distance, BuiltInCategory category)
+        public DirectShapeParameter(IEnumerable<CurveLoop> profile, XYZ direction, double distance,
+            BuiltInCategory category)
         {
             Profile = profile ?? throw new ArgumentNullException(nameof(profile));
             Direction = direction ?? throw new ArgumentNullException(nameof(direction));
@@ -73,22 +74,22 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Extrusion's profile.
+        ///     Extrusion's profile.
         /// </summary>
         public IEnumerable<CurveLoop> Profile { get; set; }
 
         /// <summary>
-        /// Extrusion's direction.
+        ///     Extrusion's direction.
         /// </summary>
-        public XYZ  Direction { get; set; }
+        public XYZ Direction { get; set; }
 
         /// <summary>
-        /// Extrusion's distance.
+        ///     Extrusion's distance.
         /// </summary>
-        public double  Distance { get; set; }
+        public double Distance { get; set; }
 
         /// <summary>
-        /// Extrusion's category.
+        ///     Extrusion's category.
         /// </summary>
         public BuiltInCategory Category { get; set; }
     }

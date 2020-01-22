@@ -51,18 +51,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 using Autodesk.Revit.UI;
-using ArgumentException = System.ArgumentException;
-using ArgumentNullException = System.ArgumentNullException;
 
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    /// Custom ribbon utility.
+    ///     Custom ribbon utility.
     /// </summary>
     public static class RibbonUtil
     {
         /// <summary>
-        /// Creates a button.
+        ///     Creates a button.
         /// </summary>
         /// <param name="pnl"></param>
         /// <param name="pbd"></param>
@@ -83,7 +81,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Creates a button set.
+        ///     Creates a button list.
         /// </summary>
         /// <param name="pnl"></param>
         /// <param name="pbds"></param>
@@ -104,13 +102,14 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Creates a pulldown button.
+        ///     Creates a pulldown button.
         /// </summary>
         /// <param name="pnl"></param>
         /// <param name="pbd"></param>
         /// <param name="pbds"></param>
         /// <returns></returns>
-        public static PulldownButton AddPushButton(this RibbonPanel pnl, PulldownButtonData pbd, IEnumerable<PushButtonData> pbds)
+        public static PulldownButton AddPushButton(this RibbonPanel pnl, PulldownButtonData pbd,
+            IEnumerable<PushButtonData> pbds)
         {
             if (pnl == null)
                 throw new ArgumentNullException(nameof(pnl));
@@ -144,13 +143,14 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Creates a split button.
+        ///     Creates a split button.
         /// </summary>
         /// <param name="pnl"></param>
         /// <param name="pbd"></param>
         /// <param name="pbds"></param>
         /// <returns></returns>
-        public static SplitButton AddPushButton(this RibbonPanel pnl, SplitButtonData pbd, IEnumerable<PushButtonData> pbds)
+        public static SplitButton AddPushButton(this RibbonPanel pnl, SplitButtonData pbd,
+            IEnumerable<PushButtonData> pbds)
         {
             if (pnl == null)
                 throw new ArgumentNullException(nameof(pnl));
@@ -184,12 +184,12 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Creates a push button data.
+        ///     Creates a push button data.
         /// </summary>
         /// <returns></returns>
         public static PushButtonData CreatePushButtonData<T>(string text, ImageSource image, bool isAvailable = false)
         {
-            if (string.IsNullOrEmpty(text))
+            if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
             if (image == null)
@@ -203,12 +203,13 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Creates a push button data.
+        ///     Creates a push button data.
         /// </summary>
         /// <returns></returns>
-        public static PushButtonData CreatePushButtonData(this IExternalCommand cmd, string text, ImageSource image, bool isAvailable = false)
+        public static PushButtonData CreatePushButtonData(this IExternalCommand cmd, string text, ImageSource image,
+            bool isAvailable = false)
         {
-            if (string.IsNullOrEmpty(text))
+            if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
             if (image == null)
@@ -224,13 +225,20 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Creates a push button data.
+        ///     Creates a push button data.
         /// </summary>
         /// <returns></returns>
-        public static PushButtonData CreatePushButtonData(this Type type, string text, ImageSource image, bool isAvailable = false)
+        public static PushButtonData CreatePushButtonData(this Type type, string text, ImageSource image,
+            bool isAvailable = false)
         {
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
+
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
+            if (image == null)
+                throw new ArgumentNullException(nameof(image));
 
             if (type.GetInterfaces().Length == 0 || !type.GetInterfaces().Contains(typeof(IExternalCommand)))
                 throw new ArgumentException("Type error. The type isn't a valid command type!");
@@ -249,21 +257,33 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Creates a pulldown button data.
+        ///     Creates a pulldown button data.
         /// </summary>
         /// <returns></returns>
         public static PulldownButtonData CreatePulldownButtonData(string text, ImageSource image)
         {
-            return new PulldownButtonData(text, text) { LargeImage = image };
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
+            if (image == null)
+                throw new ArgumentNullException(nameof(image));
+
+            return new PulldownButtonData(text, text) {LargeImage = image};
         }
 
         /// <summary>
-        /// Creates a split button data.
+        ///     Creates a split button data.
         /// </summary>
         /// <returns></returns>
         public static SplitButtonData CreateSplitButtonData(string text, ImageSource image)
         {
-            return new SplitButtonData(text, text) { LargeImage = image };
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
+            if (image == null)
+                throw new ArgumentNullException(nameof(image));
+
+            return new SplitButtonData(text, text) {LargeImage = image};
         }
     }
 }

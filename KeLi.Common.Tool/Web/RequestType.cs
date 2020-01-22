@@ -49,32 +49,32 @@
 namespace KeLi.Common.Tool.Web
 {
     /// <summary>
-    /// Request type.
+    ///     Request type.
     /// </summary>
     public enum RequestType
     {
         /// <summary>
-        /// Post type.
+        ///     Post type.
         /// </summary>
         Post,
 
         /// <summary>
-        /// Delete type.
+        ///     Delete type.
         /// </summary>
         Delete,
 
         /// <summary>
-        /// Put type.
+        ///     Put type.
         /// </summary>
         Put,
 
         /// <summary>
-        /// Patch type.
+        ///     Patch type.
         /// </summary>
         Patch,
 
         /// <summary>
-        /// Get type.
+        ///     Get type.
         /// </summary>
         Get
     }

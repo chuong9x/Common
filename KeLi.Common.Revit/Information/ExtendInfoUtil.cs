@@ -55,116 +55,141 @@ using Autodesk.Revit.DB.ExtensibleStorage;
 namespace KeLi.Common.Revit.Information
 {
     /// <summary>
-    /// Extend info utility.
+    ///     Extend info utility.
     /// </summary>
     public static class ExtendInfoUtil
     {
         /// <summary>
-        /// Creates a schema builder by schema name.
+        ///     Creates a schema builder by schema name.
         /// </summary>
         /// <param name="schemaName"></param>
-        /// <param name="decription"></param>
+        /// <param name="desc"></param>
         /// <returns></returns>
-        public static SchemaBuilder CreateSchemaBuilder(string schemaName, string decription = null)
+        public static SchemaBuilder CreateSchemaBuilder(string schemaName, string desc = null)
         {
+            if (schemaName == null)
+                throw new ArgumentNullException(nameof(schemaName));
+
             var result = new SchemaBuilder(Guid.NewGuid());
 
             result.SetReadAccessLevel(AccessLevel.Public);
             result.SetWriteAccessLevel(AccessLevel.Public);
             result.SetSchemaName(schemaName);
 
-            if (decription == null)
-                decription = schemaName;
+            if (desc == null)
+                desc = schemaName;
 
-            result.SetDocumentation(decription);
+            result.SetDocumentation(desc);
 
             return result;
         }
 
         /// <summary>
-        /// Creates a simple type field builder by field name.
+        ///     Creates a simple type field builder by field name.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="schemaBuilder"></param>
         /// <param name="fieldName"></param>
         /// <param name="unitType"></param>
-        /// <param name="decription"></param>
+        /// <param name="desc"></param>
         /// <returns></returns>
-        public static FieldBuilder CreateSimpleField<T>(this SchemaBuilder schemaBuilder, string fieldName, UnitType unitType, string decription = null)
+        public static FieldBuilder CreateSimpleField<T>(this SchemaBuilder schemaBuilder, string fieldName,
+            UnitType unitType, string desc = null)
         {
+            if (schemaBuilder == null)
+                throw new ArgumentNullException(nameof(schemaBuilder));
+
+            if (fieldName == null)
+                throw new ArgumentNullException(nameof(fieldName));
+
             var result = schemaBuilder.AddSimpleField(fieldName, typeof(T));
 
             result.SetUnitType(unitType);
 
-            if (decription == null)
-                decription = fieldName;
+            if (desc == null)
+                desc = fieldName;
 
-            result.SetDocumentation(decription);
+            result.SetDocumentation(desc);
 
             return result;
         }
 
         /// <summary>
-        /// Creates an array type field builder by field name.
+        ///     Creates an array type field builder by field name.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="schemaBuilder"></param>
         /// <param name="fieldName"></param>
         /// <param name="unitType"></param>
-        /// <param name="decription"></param>
+        /// <param name="desc"></param>
         /// <returns></returns>
-        public static FieldBuilder CreateArrayField<T>(this SchemaBuilder schemaBuilder, string fieldName, UnitType unitType, string decription = null)
+        public static FieldBuilder CreateArrayField<T>(this SchemaBuilder schemaBuilder, string fieldName,
+            UnitType unitType, string desc = null)
         {
+            if (schemaBuilder is null)
+                throw new ArgumentNullException(nameof(schemaBuilder));
+
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
+            if (desc is null)
+                throw new ArgumentNullException(nameof(desc));
+
             var result = schemaBuilder.AddArrayField(fieldName, typeof(T));
 
             result.SetUnitType(unitType);
-
-            if (decription == null)
-                decription = fieldName;
-
-            result.SetDocumentation(decription);
+            result.SetDocumentation(desc);
 
             return result;
         }
 
         /// <summary>
-        /// Creates an dictionary type field builder by field name.
+        ///     Creates an dictionary type field builder by field name.
         /// </summary>
         /// <typeparam name="K"></typeparam>
         /// <typeparam name="V"></typeparam>
         /// <param name="schemaBuilder"></param>
         /// <param name="fieldName"></param>
         /// <param name="unitType"></param>
-        /// <param name="decription"></param>
+        /// <param name="desc"></param>
         /// <returns></returns>
-        public static FieldBuilder CreateDictField<K, V>(this SchemaBuilder schemaBuilder, string fieldName, UnitType unitType, string decription = null)
+        public static FieldBuilder CreateDictField<K, V>(this SchemaBuilder schemaBuilder, string fieldName,
+            UnitType unitType, string desc = null)
         {
+            if (schemaBuilder is null)
+                throw new ArgumentNullException(nameof(schemaBuilder));
+
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
+            if (desc is null)
+                throw new ArgumentNullException(nameof(desc));
+
             var result = schemaBuilder.AddMapField(fieldName, typeof(K), typeof(V));
 
             result.SetUnitType(unitType);
-
-            if (decription == null)
-                decription = fieldName;
-
-            result.SetDocumentation(decription);
+            result.SetDocumentation(desc);
 
             return result;
         }
 
         /// <summary>
-        /// Creates an entity by schema builder.
+        ///     Creates an entity by schema builder.
         /// </summary>
         /// <param name="schemaBuilder"></param>
         /// <returns></returns>
         public static Entity CreateEntity(this SchemaBuilder schemaBuilder)
         {
+            if (schemaBuilder is null)
+                throw new ArgumentNullException(nameof(schemaBuilder));
+
             var schema = schemaBuilder.Finish();
 
             return new Entity(schema);
         }
 
         /// <summary>
-        /// Sets the simple type field's value.
+        ///     Sets the simple type field's value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
@@ -172,11 +197,20 @@ namespace KeLi.Common.Revit.Information
         /// <param name="value"></param>
         public static void SetSimpleFieldValue<T>(this Entity entity, string fieldName, T value)
         {
+            if (entity is null)
+                throw new ArgumentNullException(nameof(entity));
+
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+
             entity.Set(fieldName, value);
         }
 
         /// <summary>
-        /// Sets the array type field's value.
+        ///     Sets the array type field's value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
@@ -184,11 +218,20 @@ namespace KeLi.Common.Revit.Information
         /// <param name="value"></param>
         public static void SetFieldListValue<T>(this Entity entity, string fieldName, IEnumerable<T> value)
         {
+            if (entity is null)
+                throw new ArgumentNullException(nameof(entity));
+
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+
             entity.Set(fieldName, value);
         }
 
         /// <summary>
-        /// Sets the dictionary type field's value.
+        ///     Sets the dictionary type field's value.
         /// </summary>
         /// <typeparam name="K"></typeparam>
         /// <typeparam name="V"></typeparam>
@@ -197,11 +240,20 @@ namespace KeLi.Common.Revit.Information
         /// <param name="value"></param>
         public static void SetDictFieldValue<K, V>(this Entity entity, string fieldName, IDictionary<K, V> value)
         {
+            if (entity is null)
+                throw new ArgumentNullException(nameof(entity));
+
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+
             entity.Set(fieldName, value);
         }
 
         /// <summary>
-        /// Gets the dictionary type field's value.
+        ///     Gets the dictionary type field's value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="elm"></param>
@@ -210,6 +262,15 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static T GetSimpleFieldValue<T>(this Element elm, string schemaName, string fieldName)
         {
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (schemaName is null)
+                throw new ArgumentNullException(nameof(schemaName));
+
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
             var schema = GetSchema(elm, schemaName);
             var entity = elm.GetEntity(schema);
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
@@ -218,7 +279,7 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        /// Gets the array type field's value.
+        ///     Gets the array type field's value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="elm"></param>
@@ -227,6 +288,15 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static T[] GetArrayFieldValue<T>(this Element elm, string schemaName, string fieldName)
         {
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (schemaName is null)
+                throw new ArgumentNullException(nameof(schemaName));
+
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
             var schema = GetSchema(elm, schemaName);
             var entity = elm.GetEntity(schema);
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
@@ -235,7 +305,7 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        /// Gets the list type field's value.
+        ///     Gets the list type field's value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="elm"></param>
@@ -244,6 +314,15 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static List<T> GetListFieldValue<T>(this Element elm, string schemaName, string fieldName)
         {
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (schemaName is null)
+                throw new ArgumentNullException(nameof(schemaName));
+
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
             var schema = GetSchema(elm, schemaName);
             var entity = elm.GetEntity(schema);
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
@@ -252,7 +331,7 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        /// Gets the dictionary field's value.
+        ///     Gets the dictionary field's value.
         /// </summary>
         /// <typeparam name="K"></typeparam>
         /// <typeparam name="V"></typeparam>
@@ -262,6 +341,15 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static Dictionary<K, V> GetDictFieldValue<K, V>(this Element elm, string schemaName, string fieldName)
         {
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (schemaName is null)
+                throw new ArgumentNullException(nameof(schemaName));
+
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
             var schema = GetSchema(elm, schemaName);
             var entity = elm.GetEntity(schema);
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
@@ -270,14 +358,17 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        /// Gets the element's schema by schema name.
+        ///     Gets the element's schema by schema name.
         /// </summary>
         /// <param name="elm"></param>
         /// <param name="schemaName"></param>
         /// <returns></returns>
         public static Schema GetSchema(this Element elm, string schemaName)
         {
-            if (string.IsNullOrWhiteSpace(schemaName))
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (schemaName is null)
                 throw new ArgumentNullException(nameof(schemaName));
 
             var guids = elm.GetEntitySchemaGuids();

@@ -54,12 +54,12 @@ using Autodesk.Revit.DB;
 namespace KeLi.Common.Revit.Converters
 {
     /// <summary>
-    /// Type converter.
+    ///     Type converter.
     /// </summary>
     public static class TypeConverter
     {
         /// <summary>
-        /// Convers the space Curve to the plane Line.
+        ///     Convers the space Curve to the plane Line.
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
@@ -75,7 +75,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Convers the space XYZ to the plane XYZ.
+        ///     Convers the space XYZ to the plane XYZ.
         /// </summary>
         /// <param name="pt"></param>
         /// <returns></returns>
@@ -88,7 +88,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the Reference set to the ReferenceArray.
+        ///     Converts the Reference set to the ReferenceArray.
         /// </summary>
         /// <param name="refs"></param>
         /// <returns></returns>
@@ -106,7 +106,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the ReferenceArray to the Reference list.
+        ///     Converts the ReferenceArray to the Reference list.
         /// </summary>
         /// <param name="refs"></param>
         /// <returns></returns>
@@ -124,7 +124,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the CurveLoop list to the CurveArrArray.
+        ///     Converts the CurveLoop list to the CurveArrArray.
         /// </summary>
         /// <param name="curveLoops"></param>
         /// <returns></returns>
@@ -142,7 +142,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the CurveLoop list to the CurveArray list.
+        ///     Converts the CurveLoop list to the CurveArray list.
         /// </summary>
         /// <param name="curveLoops"></param>
         /// <returns></returns>
@@ -155,7 +155,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the CurveLoop list to the Curve list.
+        ///     Converts the CurveLoop list to the Curve list.
         /// </summary>
         /// <param name="curveLoops"></param>
         /// <returns></returns>
@@ -168,7 +168,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the CurveArrArray to the CurveLoop list.
+        ///     Converts the CurveArrArray to the CurveLoop list.
         /// </summary>
         /// <param name="curveArrArray"></param>
         /// <returns></returns>
@@ -186,7 +186,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the CurveArrArray to the CurveArray list.
+        ///     Converts the CurveArrArray to the CurveArray list.
         /// </summary>
         /// <param name="curveArrArray"></param>
         /// <returns></returns>
@@ -204,7 +204,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the CurveArrArray to the Curve list.
+        ///     Converts the CurveArrArray to the Curve list.
         /// </summary>
         /// <param name="curveArrArray"></param>
         /// <returns></returns>
@@ -222,7 +222,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the CurveArray list to the CurveArrArray.
+        ///     Converts the CurveArray list to the CurveArrArray.
         /// </summary>
         /// <param name="curveArrays"></param>
         /// <returns></returns>
@@ -240,7 +240,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the CurveLoop to the CurveArray.
+        ///     Converts the CurveLoop to the CurveArray.
         /// </summary>
         /// <param name="curveLoop"></param>
         /// <returns></returns>
@@ -258,7 +258,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the CurveLoop to the Curve list.
+        ///     Converts the CurveLoop to the Curve list.
         /// </summary>
         /// <param name="curveLoop"></param>
         /// <returns></returns>
@@ -276,7 +276,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the CurveArray to the CurveLoop.
+        ///     Converts the CurveArray to the CurveLoop.
         /// </summary>
         /// <param name="curveArray"></param>
         /// <returns></returns>
@@ -294,7 +294,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the CurveArray to the Curve list.
+        ///     Converts the CurveArray to the Curve list.
         /// </summary>
         /// <param name="curveArray"></param>
         /// <returns></returns>
@@ -312,7 +312,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the Curve list to the CurveArray.
+        ///     Converts the Curve list to the CurveArray.
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
@@ -330,7 +330,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the Curve list to the CurveLoop.
+        ///     Converts the Curve list to the CurveLoop.
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
@@ -348,7 +348,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the Face list to the FaceArray.
+        ///     Converts the Face list to the FaceArray.
         /// </summary>
         /// <param name="faces"></param>
         /// <returns></returns>
@@ -366,7 +366,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the FaceArray to the Face list.
+        ///     Converts the FaceArray to the Face list.
         /// </summary>
         /// <param name="faces"></param>
         /// <returns></returns>
