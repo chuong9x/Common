@@ -51,21 +51,22 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace KeLi.Common.Drive.Sql
 {
     /// <summary>
-    /// Sql assist.
+    ///     Sql assist.
     /// </summary>
     public class SqlAssist
     {
         /// <summary>
-        /// The sql connection string.
+        ///     The sql connection string.
         /// </summary>
         public static string ConnSql => ConfigurationManager.ConnectionStrings["ConnSql"].ConnectionString;
 
         /// <summary>
-        /// Returns connection the database's result.
+        ///     Returns connection the database's result.
         /// </summary>
         /// <returns></returns>
         public bool ConnectSuccess()
@@ -78,7 +79,7 @@ namespace KeLi.Common.Drive.Sql
         }
 
         /// <summary>
-        /// Returns update num by the single sql and no parameters.
+        ///     Returns update num by the single sql and no parameters.
         /// </summary>
         /// <param name="text"></param>
         /// <param name="ct"></param>
@@ -92,7 +93,7 @@ namespace KeLi.Common.Drive.Sql
 
             using (var conn = new SqlConnection(ConnSql))
             {
-                var cmd = new SqlCommand(text, conn) { CommandType = ct };
+                var cmd = new SqlCommand(text, conn) {CommandType = ct};
 
                 conn.Open();
                 result = cmd.ExecuteNonQuery();
@@ -103,25 +104,28 @@ namespace KeLi.Common.Drive.Sql
         }
 
         /// <summary>
-        /// Returns update num by the single sql and parameters.
+        ///     Returns update num by the single sql and parameters.
         /// </summary>
         /// <param name="text"></param>
         /// <param name="sps"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static int Update(string text, SqlParameter[] sps, CommandType ct = CommandType.Text)
+        public static int Update(string text, IEnumerable<SqlParameter> sps, CommandType ct = CommandType.Text)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
+
+            if (sps == null)
+                throw new ArgumentNullException(nameof(sps));
 
             int result;
 
             using (var conn = new SqlConnection(ConnSql))
             {
-                var cmd = new SqlCommand(text, conn) { CommandType = ct };
+                var cmd = new SqlCommand(text, conn) {CommandType = ct};
 
                 conn.Open();
-                cmd.Parameters.AddRange(sps);
+                cmd.Parameters.AddRange(sps.ToArray());
                 result = cmd.ExecuteNonQuery();
                 cmd.Dispose();
             }
@@ -130,12 +134,12 @@ namespace KeLi.Common.Drive.Sql
         }
 
         /// <summary>
-        /// Returns update num by the multi sqls and no parameters.
+        ///     Returns update num by the multi sqls and no parameters.
         /// </summary>
         /// <param name="texts"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static int Update(List<string> texts, CommandType ct = CommandType.Text)
+        public static int Update(IEnumerable<string> texts, CommandType ct = CommandType.Text)
         {
             if (texts == null)
                 throw new ArgumentNullException(nameof(texts));
@@ -175,13 +179,13 @@ namespace KeLi.Common.Drive.Sql
         }
 
         /// <summary>
-        /// Returns update num by the multi sqls and parameters.
+        ///     Returns update num by the multi sqls and parameters.
         /// </summary>
         /// <param name="texts"></param>
         /// <param name="sps"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static int Update(List<string> texts, SqlParameter[][] sps, CommandType ct = CommandType.Text)
+        public static int Update(IEnumerable<string> texts, SqlParameter[][] sps, CommandType ct = CommandType.Text)
         {
             if (texts == null)
                 throw new ArgumentNullException(nameof(texts));
@@ -227,7 +231,7 @@ namespace KeLi.Common.Drive.Sql
         }
 
         /// <summary>
-        /// Querys object by the single sql and no parameters.
+        ///     Querys object by the single sql and no parameters.
         /// </summary>
         /// <param name="text"></param>
         /// <param name="ct"></param>
@@ -241,7 +245,7 @@ namespace KeLi.Common.Drive.Sql
 
             using (var conn = new SqlConnection(ConnSql))
             {
-                var cmd = new SqlCommand(text, conn) { CommandType = ct };
+                var cmd = new SqlCommand(text, conn) {CommandType = ct};
 
                 conn.Open();
                 result = cmd.ExecuteScalar();
@@ -252,13 +256,13 @@ namespace KeLi.Common.Drive.Sql
         }
 
         /// <summary>
-        /// Querys object by the single sql and parameters.
+        ///     Querys object by the single sql and parameters.
         /// </summary>
         /// <param name="text"></param>
         /// <param name="sps"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static object Query(string text, SqlParameter[] sps, CommandType ct = CommandType.Text)
+        public static object Query(string text, IEnumerable<SqlParameter> sps, CommandType ct = CommandType.Text)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
@@ -270,10 +274,10 @@ namespace KeLi.Common.Drive.Sql
 
             using (var conn = new SqlConnection(ConnSql))
             {
-                var cmd = new SqlCommand(text, conn) { CommandType = ct };
+                var cmd = new SqlCommand(text, conn) {CommandType = ct};
 
                 conn.Open();
-                cmd.Parameters.AddRange(sps);
+                cmd.Parameters.AddRange(sps.ToArray());
                 result = cmd.ExecuteScalar();
                 cmd.Dispose();
             }
@@ -282,7 +286,7 @@ namespace KeLi.Common.Drive.Sql
         }
 
         /// <summary>
-        /// Querys the data table by the single sql and no parameters.
+        ///     Querys the data table by the single sql and no parameters.
         /// </summary>
         /// <param name="text"></param>
         /// <param name="ct"></param>
@@ -296,7 +300,7 @@ namespace KeLi.Common.Drive.Sql
 
             using (var conn = new SqlConnection(ConnSql))
             {
-                var cmd = new SqlCommand(text, conn) { CommandType = ct };
+                var cmd = new SqlCommand(text, conn) {CommandType = ct};
 
                 new SqlDataAdapter(cmd).Fill(results);
                 cmd.Dispose();
@@ -306,13 +310,14 @@ namespace KeLi.Common.Drive.Sql
         }
 
         /// <summary>
-        /// Querys the data table by the single sql and parameters.
+        ///     Querys the data table by the single sql and parameters.
         /// </summary>
         /// <param name="text"></param>
         /// <param name="sps"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public static DataTable QueryTable(string text, SqlParameter[] sps, CommandType ct = CommandType.Text)
+        public static DataTable QueryTable(string text, IEnumerable<SqlParameter> sps,
+            CommandType ct = CommandType.Text)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
@@ -324,9 +329,9 @@ namespace KeLi.Common.Drive.Sql
 
             using (var conn = new SqlConnection(ConnSql))
             {
-                var cmd = new SqlCommand(text, conn) { CommandType = ct };
+                var cmd = new SqlCommand(text, conn) {CommandType = ct};
 
-                cmd.Parameters.AddRange(sps);
+                cmd.Parameters.AddRange(sps.ToArray());
                 new SqlDataAdapter(cmd).Fill(results);
                 cmd.Dispose();
             }

@@ -54,7 +54,7 @@ using Autodesk.Revit.UI;
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    /// Storage utility.
+    ///     Storage utility.
     /// </summary>
     public static class StorageUtil
     {
@@ -68,7 +68,7 @@ namespace KeLi.Common.Revit.Widgets
         public static void CloseUnsavedFile(this Document doc, string modelPath, bool saveModified = true)
         {
             if (doc == null)
-                throw new ArgumentNullException(nameof(modelPath));
+                throw new ArgumentNullException(nameof(doc));
 
             if (modelPath == null)
                 throw new ArgumentNullException(nameof(modelPath));
@@ -86,8 +86,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Closes the active document path by only covered mode.
-        /// You can choose whether to save or not.
+        /// Saves to the file of current active document path by only covered mode, then closes it.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="tmpRvt"></param>
@@ -129,7 +128,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Closes the document safely.
+        ///     Closes the document safely.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="uiapp"></param>

@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 01/15/2020 10:22:11 AM |  |  |     |         |      |
+     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -47,49 +47,62 @@
 */
 
 using System;
-using System.Collections.Generic;
-using Autodesk.Revit.DB;
+using System.Drawing.Imaging;
+using System.IO;
 
-namespace KeLi.Common.Revit.Builders
+namespace KeLi.Common.Drive.Pdf
 {
     /// <summary>
-    /// DirectShape paramter.
+    ///     Pdf parameter.
     /// </summary>
-    public class DirectShapeParm
+    public class PdfParameter
     {
         /// <summary>
-        /// DirectShape paramter.
+        ///     Pdf parameter.
         /// </summary>
-        /// <param name="profile"></param>
-        /// <param name="direction"></param>
-        /// <param name="distance"></param>
-        /// <param name="category"></param>
-        public DirectShapeParm(List<CurveLoop> profile, XYZ direction, double distance, BuiltInCategory category)
+        /// <param name="pdfPath"></param>
+        /// <param name="imgName"></param>
+        public PdfParameter(string pdfPath, string imgName = null)
         {
-            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
-            Direction = direction ?? throw new ArgumentNullException(nameof(direction));
-            Distance = distance;
-            Category = category;
+            if (pdfPath == null)
+                throw new ArgumentNullException(nameof(pdfPath));
+
+            PdfPath = new FileInfo(pdfPath);
+            ImgName = imgName ?? Path.GetFileNameWithoutExtension(pdfPath);
+            StartPage = 1;
+            EndPage = 1;
+            Format = ImageFormat.Jpeg;
+            Resolution = 5;
         }
 
         /// <summary>
-        /// Extrusion's profile.
+        ///     The pdf path.
         /// </summary>
-        public List<CurveLoop> Profile { get; set; }
+        public FileInfo PdfPath { get; set; }
 
         /// <summary>
-        /// Extrusion's direction.
+        ///     The image name.
         /// </summary>
-        public XYZ  Direction { get; set; }
+        public string ImgName { get; set; }
 
         /// <summary>
-        /// Extrusion's distance.
+        ///     The start page num.
         /// </summary>
-        public double  Distance { get; set; }
+        public int StartPage { get; set; }
 
         /// <summary>
-        /// Extrusion's category.
+        ///     The end page num.
         /// </summary>
-        public BuiltInCategory Category { get; set; }
+        public int EndPage { get; set; }
+
+        /// <summary>
+        ///     The image format.
+        /// </summary>
+        public ImageFormat Format { get; set; }
+
+        /// <summary>
+        ///     The image's resolution[1-10].
+        /// </summary>
+        public int Resolution { get; set; }
     }
 }

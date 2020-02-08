@@ -46,24 +46,30 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Structure;
 
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Family instance builder.
+    ///     Family instance builder.
     /// </summary>
     public static class FamilyInstanceBuilder
     {
         /// <summary>
-        ///  Creates a new family instance.
+        ///     Creates a new family instance.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="parm"></param>
         /// <returns></returns>
-        public static FamilyInstance CreateFamilyInstance(this Document doc, FamilyInstanceParm parm)
+        public static FamilyInstance CreateFamilyInstance(this Document doc, FamilyInstanceParameter parm)
         {
+            if (parm == null)
+                throw new ArgumentNullException(nameof(parm));
+
             if (doc.IsFamilyDocument)
                 return doc.FamilyCreate.NewFamilyInstance(parm.Location, parm.Symbol, parm.Level, parm.Type);
 
@@ -71,14 +77,53 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Creates a new instance of an adaptive component family.
+        ///     Creates a new family instance with NonStructural type.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="location"></param>
+        /// <param name="symbol"></param>
+        /// <param name="lvl"></param>
+        /// <returns></returns>
+        public static FamilyInstance CreateNonStructuralInstance(this Document doc, XYZ location, FamilySymbol symbol,
+            Level lvl)
+        {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (location == null)
+                throw new ArgumentNullException(nameof(location));
+
+            if (symbol == null)
+                throw new ArgumentNullException(nameof(symbol));
+
+            if (lvl == null)
+                throw new ArgumentNullException(nameof(lvl));
+
+            var parm = new FamilyInstanceParameter(location, symbol, lvl, StructuralType.NonStructural);
+
+            return doc.CreateFamilyInstance(parm);
+        }
+
+        /// <summary>
+        ///     Creates a new instance of an adaptive component family.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="symbol"></param>
         /// <param name="pts"></param>
         /// <returns></returns>
-        public static FamilyInstance CreateFamilyInstance(this Document doc, FamilySymbol symbol, List<XYZ> pts)
+        public static FamilyInstance CreateFamilyInstance(this Document doc, FamilySymbol symbol, IEnumerable<XYZ> pts)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (symbol == null)
+                throw new ArgumentNullException(nameof(symbol));
+
+            if (pts == null)
+                throw new ArgumentNullException(nameof(pts));
+
+            var tmpPts = pts.ToList();
+
             // Creates a new instance of an adaptive component family.
             var result = AdaptiveComponentInstanceUtils.CreateAdaptiveComponentInstance(doc, symbol);
 
@@ -86,10 +131,8 @@ namespace KeLi.Common.Revit.Builders
             var placePointIds = AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds(result);
 
             for (var i = 0; i < placePointIds.Count; i++)
-            {
                 if (doc.GetElement(placePointIds[i]) is ReferencePoint point)
-                    point.Position = pts[i];
-            }
+                    point.Position = tmpPts[i];
 
             return result;
         }

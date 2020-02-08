@@ -1,12 +1,12 @@
 ﻿namespace KeLi.Common.Tool.Email
 {
     /// <summary>
-    /// Fromer info.
+    ///     Fromer info.
     /// </summary>
     public class FromerInfo
     {
         /// <summary>
-        /// News a Fromer info instance.
+        ///     News a Fromer info instance.
         /// </summary>
         /// <param name="fromAddress"></param>
         /// <param name="displayName"></param>
@@ -23,27 +23,27 @@
         }
 
         /// <summary>
-        /// Fromer mail address.
+        ///     Fromer mail address.
         /// </summary>
         public string FromAddress { get; set; }
 
         /// <summary>
-        /// Fromer display name.
+        ///     Fromer display name.
         /// </summary>
         public string DisplayName { get; set; }
 
         /// <summary>
-        /// Fromer password.
+        ///     Fromer password.
         /// </summary>
         public string Password { get; set; }
 
         /// <summary>
-        /// Fromer host.
+        ///     Fromer host.
         /// </summary>
         public string Host { get; set; }
 
         /// <summary>
-        /// Fromer port.
+        ///     Fromer port.
         /// </summary>
         public int Port { get; set; }
     }

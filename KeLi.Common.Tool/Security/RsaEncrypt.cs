@@ -54,17 +54,17 @@ using System.Text;
 namespace KeLi.Common.Tool.Security
 {
     /// <summary>
-    /// RSA Encrypt.
+    ///     RSA Encrypt.
     /// </summary>
     public class RsaEncrypt
     {
         /// <summary>
-        /// The key value pair.
+        ///     The key value pair.
         /// </summary>
         private static readonly KeyValuePair<string, string> Pair = GetKeyPair();
 
         /// <summary>
-        /// Encrypts the content.
+        ///     Encrypts the content.
         /// </summary>
         /// <param name="content"></param>
         /// <param name="key"></param>
@@ -91,7 +91,7 @@ namespace KeLi.Common.Tool.Security
         }
 
         /// <summary>
-        /// Decrypts the ciphertext.
+        ///     Decrypts the ciphertext.
         /// </summary>
         /// <param name="ciphertext"></param>
         /// <param name="value"></param>
@@ -115,7 +115,7 @@ namespace KeLi.Common.Tool.Security
         }
 
         /// <summary>
-        /// Gets key value pair set.
+        ///     Gets key value pair set.
         /// </summary>
         /// <returns></returns>
         private static KeyValuePair<string, string> GetKeyPair()

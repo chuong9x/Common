@@ -58,12 +58,12 @@ using KeLi.Common.Revit.Filters;
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    /// Link utility.
+    ///     Link utility.
     /// </summary>
     public static class LinkUtil
     {
         /// <summary>
-        /// Opens the central file.
+        ///     Opens the central file.
         /// </summary>
         /// <param name="app"></param>
         /// <param name="serverPath"></param>
@@ -94,7 +94,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Compacts the central file.
+        ///     Compacts the central file.
         /// </summary>
         /// <param name="app"></param>
         /// <param name="centralPath"></param>
@@ -107,14 +107,14 @@ namespace KeLi.Common.Revit.Widgets
                 throw new ArgumentNullException(nameof(centralPath));
 
             var doc = app.OpenDocumentFile(centralPath);
-            var option = new SaveOptions { Compact = true };
+            var option = new SaveOptions {Compact = true};
 
             doc.Save(option);
             doc.Close(false);
         }
 
         /// <summary>
-        /// Sets the central file.
+        ///     Sets the central file.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="centralPath"></param>
@@ -127,7 +127,7 @@ namespace KeLi.Common.Revit.Widgets
             if (centralPath == null)
                 throw new ArgumentNullException(nameof(centralPath));
 
-            var saveOption = new SaveAsOptions { OverwriteExistingFile = true };
+            var saveOption = new SaveAsOptions {OverwriteExistingFile = true};
             var sharingOption = new WorksharingSaveAsOptions
             {
                 SaveAsCentral = true,
@@ -139,7 +139,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// syncs the central file.
+        ///     syncs the central file.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="comment"></param>
@@ -168,7 +168,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// detachs from the central file.
+        ///     detachs from the central file.
         /// </summary>
         /// <param name="app"></param>
         /// <param name="centralPath"></param>
@@ -192,7 +192,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Creates a workset.
+        ///     Creates a workset.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="gridLvl"></param>
@@ -216,7 +216,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Creates a cad link.
+        ///     Creates a cad link.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="linkPath"></param>
@@ -228,13 +228,13 @@ namespace KeLi.Common.Revit.Widgets
             if (linkPath == null)
                 throw new ArgumentNullException(nameof(linkPath));
 
-            var options = new DWGImportOptions { OrientToView = true };
+            var options = new DWGImportOptions {OrientToView = true};
 
             doc.Link(linkPath, options, doc.ActiveView, out _);
         }
 
         /// <summary>
-        /// Creates a cad link set.
+        ///     Creates a cad link list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="linkPaths"></param>
@@ -250,7 +250,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Creates a revit link.
+        ///     Creates a revit link.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="linkPath"></param>
@@ -280,7 +280,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Creates a revit link set.
+        ///     Creates a revit link list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="linkPaths"></param>
@@ -296,7 +296,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Deletes the revit link.
+        ///     Deletes the revit link.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="linkPath"></param>
@@ -328,7 +328,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Deletes the revit link set.
+        ///     Deletes the revit link list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="linkPaths"></param>
@@ -345,7 +345,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Sets the revit link set.
+        ///     Sets the revit link list.
         /// </summary>
         /// <param name="centralPath"></param>
         /// <param name="linkPaths"></param>
@@ -378,7 +378,8 @@ namespace KeLi.Common.Revit.Widgets
                 if (linkPath == null)
                     continue;
 
-                transData.SetDesiredReferenceData(extRef.GetReferencingId(), new FilePath(linkPath), PathType.Relative, true);
+                transData.SetDesiredReferenceData(extRef.GetReferencingId(), new FilePath(linkPath), PathType.Relative,
+                    true);
                 flag = true;
             }
 
@@ -390,7 +391,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Sets the revit link set.
+        ///     Sets the revit link list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="filePaths"></param>
@@ -409,7 +410,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Sets the revit link.
+        ///     Sets the revit link.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="filePath"></param>
@@ -425,7 +426,8 @@ namespace KeLi.Common.Revit.Widgets
                 throw new FileNotFoundException(filePath);
 
             // main model modifies repeatedly, so the performance is poor.
-            var type = doc.GetRevitLinkList().FirstOrDefault(w => filePath.Contains(w.Name) || w.Name.Split('-').Length == 5);
+            var type = doc.GetRevitLinkList()
+                .FirstOrDefault(w => filePath.Contains(w.Name) || w.Name.Split('-').Length == 5);
 
             if (type == null)
                 return;
@@ -435,7 +437,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Gets model's link set.
+        ///     Gets model's link list.
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
@@ -448,7 +450,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Saves front model by front end.
+        ///     Saves front model by front end.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="blankPath"></param>
@@ -461,7 +463,7 @@ namespace KeLi.Common.Revit.Widgets
                 throw new ArgumentNullException(nameof(blankPath));
 
             var doc = uiapp.ActiveUIDocument.Document;
-            var saveOption = new SaveOptions { Compact = true };
+            var saveOption = new SaveOptions {Compact = true};
 
             doc.Save(saveOption);
             uiapp.OpenAndActivateDocument(blankPath);
@@ -469,7 +471,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Saves model by back end.
+        ///     Saves model by back end.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="centralPath"></param>
@@ -481,7 +483,7 @@ namespace KeLi.Common.Revit.Widgets
             if (centralPath == null)
                 throw new ArgumentNullException(nameof(centralPath));
 
-            var saveOption = new SaveAsOptions { OverwriteExistingFile = true };
+            var saveOption = new SaveAsOptions {OverwriteExistingFile = true};
             var modelPath = new FilePath(centralPath);
 
             doc.SaveAs(modelPath, saveOption);

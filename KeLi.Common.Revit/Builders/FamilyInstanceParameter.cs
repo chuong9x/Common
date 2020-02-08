@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/15/2020 07:39:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,60 +46,50 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System.IO;
+using System;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Structure;
 
-namespace KeLi.Common.Drive.Excel
+namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Excel param.
+    ///     Family instance parameter.
     /// </summary>
-    public class ExcelParam
+    public class FamilyInstanceParameter
     {
         /// <summary>
-        /// This is a excel default sheet name.
+        ///     Family instance parameter.
         /// </summary>
-        private const string SHEET_NAME = "Sheet1";
-
-        /// <summary>
-        /// Excel param.
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="templatePath"></param>
-        public ExcelParam(FileInfo filePath, FileInfo templatePath = null)
+        /// <param name="location"></param>
+        /// <param name="symbol"></param>
+        /// <param name="lvl"></param>
+        /// <param name="type"></param>
+        public FamilyInstanceParameter(XYZ location, FamilySymbol symbol, Level lvl, StructuralType type)
         {
-            FilePath = filePath;
-            TemplatePath = templatePath;
-            SheetName = SHEET_NAME;
-            RowIndex = 1;
-            ColumnIndex = 0;
-
-            if (templatePath != null && templatePath.Exists)
-                File.Copy(templatePath.FullName, filePath.FullName, true);
+            Location = location ?? throw new ArgumentNullException(nameof(location));
+            Symbol = symbol ?? throw new ArgumentNullException(nameof(symbol));
+            Level = lvl ?? throw new ArgumentNullException(nameof(lvl));
+            Type = type;
         }
 
         /// <summary>
-        /// The template path.
+        ///     The family instance's location.
         /// </summary>
-        public FileInfo TemplatePath { get; set; }
+        public XYZ Location { get; set; }
 
         /// <summary>
-        /// The file path.
+        ///     The family instance's Symbol.
         /// </summary>
-        public FileInfo FilePath { get; set; }
+        public FamilySymbol Symbol { get; set; }
 
         /// <summary>
-        /// The sheet name.
+        ///     The family instance's level.
         /// </summary>
-        public string SheetName { get; set; }
+        public Level Level { get; set; }
 
         /// <summary>
-        /// The start row index.
+        ///     The family instance's type.
         /// </summary>
-        public int RowIndex { get; set; }
-
-        /// <summary>
-        /// The start column index.
-        /// </summary>
-        public int ColumnIndex { get; set; }
+        public StructuralType Type { get; set; }
     }
 }

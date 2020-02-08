@@ -46,31 +46,37 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
+using KeLi.Common.Revit.Geometry;
 
 namespace KeLi.Common.Revit.Filters
 {
     /// <summary>
-    /// Room utility.
+    ///     Room utility.
     /// </summary>
     public static class RoomUtil
     {
         /// <summary>
-        /// Gets the room's edge list.
+        ///     Gets the room's edge list.
         /// </summary>
         /// <param name="room"></param>
+        /// <param name="boundary"></param>
         /// <returns></returns>
-        public static List<Line> GetEdgeList(this SpatialElement room)
+        public static List<Line> GetEdgeList(this SpatialElement room, SpatialElementBoundaryLocation boundary)
         {
+            if (room == null)
+                throw new ArgumentNullException(nameof(room));
+
             var result = new List<Line>();
-            var option = new SpatialElementBoundaryOptions
+            var opt = new SpatialElementBoundaryOptions
             {
                 StoreFreeBoundaryFaces = true,
-                SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.CoreBoundary
+                SpatialElementBoundaryLocation = boundary
             };
-            var segments = room.GetBoundarySegments(option).SelectMany(s => s);
+            var segments = room.GetBoundarySegments(opt).SelectMany(s => s);
 
             foreach (var seg in segments)
             {
@@ -84,19 +90,147 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        /// Gets room list.
+        ///     Gets room list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="isValid"></param>
         /// <returns></returns>
-        public static List<SpatialElement> GetSpatialElementList(Document doc, bool isValid = true)
+        public static List<SpatialElement> GetSpatialElementList(this Document doc, bool isValid = true)
         {
-            var results = doc.GetTypeElementList<SpatialElement>(false, false);
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            var results = doc.GetTypeElementList<SpatialElement>();
 
             if (isValid)
                 results = results.Where(w => w?.Location != null && w.Area > 1e-6).ToList();
 
             return results;
+        }
+
+        /// <summary>
+        ///     Gets boundary wall list of the room.
+        /// </summary>
+        /// <param name="room"></param>
+        /// <param name="doc"></param>
+        /// <param name="maxThickness"></param>
+        /// <returns></returns>
+        public static List<Wall> GetBoundaryWallList(this SpatialElement room, Document doc, double maxThickness = 80)
+        {
+            if (room == null)
+                throw new ArgumentNullException(nameof(room));
+
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            const BuiltInParameter parmEnum = BuiltInParameter.WALL_ATTR_WIDTH_PARAM;
+            var results = new List<Wall>();
+            var loops = room.GetBoundarySegments(new SpatialElementBoundaryOptions());
+
+            foreach (var loop in loops)
+            foreach (var segment in loop)
+            {
+                // It's invalid!
+                if (segment.ElementId.IntegerValue == -1)
+                    continue;
+
+                // Because base room boundary to do, so one wall maybe be picked up some times.
+                if (results.FirstOrDefault(f => f.Id == segment.ElementId) != null)
+                    continue;
+
+                if (doc.GetElement(segment.ElementId) is Wall wall)
+                    results.Add(wall);
+            }
+
+            return results
+                .Where(w => Convert.ToDouble(w.WallType.get_Parameter(parmEnum).AsValueString()) < maxThickness)
+                .ToList();
+        }
+
+        /// <summary>
+        ///     Gets inner face of wall.
+        /// </summary>
+        /// <param name="wall"></param>
+        /// <param name="refPt"></param>
+        /// <returns></returns>
+        public static Face GetInnerFace(this Wall wall, XYZ refPt)
+        {
+            if (wall == null)
+                throw new ArgumentNullException(nameof(wall));
+
+            if (refPt == null)
+                throw new ArgumentNullException(nameof(refPt));
+
+            var line = wall.GetLocationCurve() as Line;
+
+            if (line == null)
+                throw new Exception("Curve wall isn't supported!");
+
+            var wdir = GetLineDirection(line, refPt);
+            var innerNormal = GetInnerNormal(wdir);
+
+            return wall.GetFaceList(innerNormal).FirstOrDefault();
+        }
+
+        /// <summary>
+        ///     Gets inner direction noraml.
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <returns></returns>
+        public static XYZ GetInnerNormal(this LineDirection dir)
+        {
+            switch (dir)
+            {
+                case LineDirection.East:
+                    return -XYZ.BasisX;
+                case LineDirection.West:
+                    return XYZ.BasisX;
+                case LineDirection.South:
+                    return XYZ.BasisY;
+                case LineDirection.North:
+                    return -XYZ.BasisY;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
+            }
+        }
+
+        /// <summary>
+        ///     Gets direction of the line by a reference specified point.
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="refPt"></param>
+        /// <returns></returns>
+        public static LineDirection GetLineDirection(this Line line, XYZ refPt)
+        {
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
+
+            if (refPt == null)
+                throw new ArgumentNullException(nameof(refPt));
+
+            // X axis direction.
+            if (Math.Abs(line.Direction.Y) < 1e-6)
+            {
+                // South
+                if (line.Origin.Y < refPt.Y)
+                    return LineDirection.South;
+
+                // North
+                return LineDirection.North;
+            }
+
+            // Y axis direction.
+            if (Math.Abs(line.Direction.X) < 1e-6)
+            {
+                // West
+                if (line.Origin.X < refPt.X)
+                    return LineDirection.West;
+
+                // East
+                return LineDirection.East;
+            }
+
+            throw new Exception("The wall location's direction isn't supported!");
         }
     }
 }

@@ -46,20 +46,19 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using Autodesk.Revit.DB;
 using KeLi.Common.Revit.Geometry;
-using ArgumentException = System.ArgumentException;
-using ArgumentNullException = System.ArgumentNullException;
 
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Plane builder.
+    ///     Plane builder.
     /// </summary>
     public static class PlaneBuilder
     {
         /// <summary>
-        /// Creates a new plane.
+        ///     Creates a new plane.
         /// </summary>
         /// <param name="pt"></param>
         /// <returns></returns>
@@ -68,14 +67,14 @@ namespace KeLi.Common.Revit.Builders
             if (pt == null)
                 throw new ArgumentNullException(nameof(pt));
 
-            if(pt == XYZ.Zero)
-                throw  new ArgumentException("The point cannot be zero point!");
+            if (pt == XYZ.Zero)
+                throw new ArgumentException("The point cannot be zero point!");
 
             return Line.CreateBound(XYZ.Zero, pt).CreatePlane();
         }
 
         /// <summary>
-        /// Creates a new plane.
+        ///     Creates a new plane.
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
@@ -95,13 +94,16 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Creates a new sketch plane.
+        ///     Creates a new sketch plane.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="pt"></param>
         /// <returns></returns>
         public static SketchPlane CreateSketchPlane(this Document doc, XYZ pt)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             if (pt == null)
                 throw new ArgumentNullException(nameof(pt));
 
@@ -109,13 +111,16 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Creates a new sketch plane.
+        ///     Creates a new sketch plane.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="line"></param>
         /// <returns></returns>
         public static SketchPlane CreateSketchPlane(this Document doc, Line line)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             if (line == null)
                 throw new ArgumentNullException(nameof(line));
 
@@ -123,13 +128,16 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Creates a new sketch plane.
+        ///     Creates a new sketch plane.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="plane"></param>
         /// <returns></returns>
         public static SketchPlane CreateSketchPlane(this Document doc, Plane plane)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             if (plane == null)
                 throw new ArgumentNullException(nameof(plane));
 

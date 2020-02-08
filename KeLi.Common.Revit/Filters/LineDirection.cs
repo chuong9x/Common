@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/21/2019 06:49:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,63 +46,31 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System;
-using System.Drawing.Imaging;
-using System.IO;
-
-namespace KeLi.Common.Drive.Pdf
+namespace KeLi.Common.Revit.Filters
 {
     /// <summary>
-    /// Pdf parameter.
+    ///     Line direction.
     /// </summary>
-    public class PdfParam
+    public enum LineDirection
     {
         /// <summary>
-        /// Pdf parameter.
+        ///     South direction wall.
         /// </summary>
-        /// <param name="pdfPath"></param>
-        /// <param name="imgName"></param>
-        public PdfParam(string pdfPath, string imgName = null)
-        {
-            if (pdfPath == null)
-                throw new ArgumentNullException(nameof(pdfPath));
-
-            PdfPath = new FileInfo(pdfPath);
-            ImgName = imgName ?? Path.GetFileNameWithoutExtension(pdfPath);
-            StartPage = 1;
-            EndPage = 1;
-            Format = ImageFormat.Jpeg;
-            Resolution = 5;
-        }
+        South,
 
         /// <summary>
-        /// The pdf path.
+        ///     North direction wall.
         /// </summary>
-        public FileInfo PdfPath { get; set; }
+        North,
 
         /// <summary>
-        /// The image name.
+        ///     West direction wall.
         /// </summary>
-        public string ImgName { get; set; }
+        West,
 
         /// <summary>
-        /// The start page num.
+        ///     East direction wall.
         /// </summary>
-        public int StartPage { get; set; }
-
-        /// <summary>
-        /// The end page num.
-        /// </summary>
-        public int EndPage { get; set; }
-
-        /// <summary>
-        /// The image format.
-        /// </summary>
-        public ImageFormat Format { get; set; }
-
-        /// <summary>
-        /// The image's resolution[1-10].
-        /// </summary>
-        public int Resolution { get; set; }
+        East
     }
 }

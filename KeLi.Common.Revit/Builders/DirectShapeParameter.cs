@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/15/2020 10:22:11 AM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -47,62 +47,50 @@
 */
 
 using System;
+using System.Collections.Generic;
+using Autodesk.Revit.DB;
 
-namespace KeLi.Common.Revit.Converters
+namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Number utility.
+    ///     DirectShape paramter.
     /// </summary>
-    public static class NumberUtil
+    public class DirectShapeParameter
     {
         /// <summary>
-        /// Millimeter to inch.
+        ///     DirectShape paramter.
         /// </summary>
-        private const double MM_TO_INCH = 0.0393700787;
-
-        /// <summary>
-        /// Millimeter to foot.
-        /// </summary>
-        private const double MM_TO_FT = 0.0032808399;
-
-        /// <summary>
-        /// Millimeter to foot.
-        /// </summary>
-        /// <param name="mm"></param>
-        /// <returns></returns>
-        public static double ToFoot(double mm)
+        /// <param name="profile"></param>
+        /// <param name="direction"></param>
+        /// <param name="distance"></param>
+        /// <param name="category"></param>
+        public DirectShapeParameter(IEnumerable<CurveLoop> profile, XYZ direction, double distance,
+            BuiltInCategory category)
         {
-            return MM_TO_FT * mm;
+            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
+            Direction = direction ?? throw new ArgumentNullException(nameof(direction));
+            Distance = distance;
+            Category = category;
         }
 
         /// <summary>
-        /// Millimeter to inch.
+        ///     Extrusion's profile.
         /// </summary>
-        /// <param name="mm"></param>
-        /// <returns></returns>
-        public static double ToInch(double mm)
-        {
-            return MM_TO_INCH * mm;
-        }
+        public IEnumerable<CurveLoop> Profile { get; set; }
 
         /// <summary>
-        /// The radian to the angle.
+        ///     Extrusion's direction.
         /// </summary>
-        /// <param name="radian"></param>
-        /// <returns></returns>
-        public static double ToAngle(double radian)
-        {
-            return radian * 180 / Math.PI;
-        }
+        public XYZ Direction { get; set; }
 
         /// <summary>
-        /// The angle to the radian.
+        ///     Extrusion's distance.
         /// </summary>
-        /// <param name="angle"></param>
-        /// <returns></returns>
-        public static double ToRadian(double angle)
-        {
-            return angle / 180 * Math.PI;
-        }
+        public double Distance { get; set; }
+
+        /// <summary>
+        ///     Extrusion's category.
+        /// </summary>
+        public BuiltInCategory Category { get; set; }
     }
 }

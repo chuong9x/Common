@@ -61,7 +61,7 @@ using System.Web.Script.Serialization;
 namespace KeLi.Common.Converter.Collections
 {
     /// <summary>
-    /// A data conllection converter.
+    ///     A data conllection converter.
     /// </summary>
     public static class CollectionConverter
     {
@@ -158,7 +158,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the DataTable to the IList.
+        ///     Converts the data table to the ilist.
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="type"></param>
@@ -202,7 +202,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the SqlDataReader to the List.
+        ///     Converts the sql data reader to the list.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
@@ -235,7 +235,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the SqlDataReader to the ilist.
+        ///     Converts the sql data reader to the ilist.
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="type"></param>
@@ -249,16 +249,13 @@ namespace KeLi.Common.Converter.Collections
                 throw new ArgumentNullException(nameof(type));
 
             var listType = typeof(List<>).MakeGenericType(type);
-            var results = Activator.CreateInstance(listType) as IList;
 
             if (!reader.HasRows)
-                return results;
+                return Activator.CreateInstance(listType) as IList;
 
-            var constructor = type.GetConstructors(_flags).OrderBy(c => c.GetParameters().Length).FirstOrDefault();
-
-            if (constructor == null)
-                return results;
-
+            var results = Activator.CreateInstance(listType) as IList;
+            var constructor = type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .OrderBy(c => c.GetParameters().Length).First();
             var parameters = constructor.GetParameters();
             var values = new object[parameters.Length];
 
@@ -285,37 +282,38 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the List to the DataTable.
+        /// Converts the list to the data table.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="ts"></param>
         /// <returns></returns>
-        public static DataTable ToTable<T>(List<T> ts)
+        public static DataTable ToTable<T>(IEnumerable<T> ts)
         {
             if (ts == null)
                 throw new ArgumentNullException(nameof(ts));
 
+            var tmpTs = ts.ToList();
             var results = new DataTable();
-            var props = ts[0].GetType().GetProperties();
+            var props = tmpTs[0].GetType().GetProperties();
 
             foreach (var prop in props)
                 results.Columns.Add(prop.Name, prop.PropertyType);
 
             foreach (var t in ts)
             {
-                var temps = new ArrayList();
+                var tmps = new ArrayList();
 
                 foreach (var prop in props)
-                    temps.Add(prop.GetValue(t, null));
+                    tmps.Add(prop.GetValue(t, null));
 
-                results.LoadDataRow(temps.ToArray(), true);
+                results.LoadDataRow(tmps.ToArray(), true);
             }
 
             return results;
         }
 
         /// <summary>
-        /// Converts the SqlDataReader to the DataTable.
+        /// Converts the sql data reader to the data table.
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
@@ -332,13 +330,13 @@ namespace KeLi.Common.Converter.Collections
             // Adds the DataTable's columns.
             for (var i = 0; i < reader.FieldCount; i++)
             {
-                var column = new DataColumn
+                var col = new DataColumn
                 {
                     DataType = reader.GetFieldType(i),
                     ColumnName = reader.GetName(i)
                 };
 
-                results.Columns.Add(column);
+                results.Columns.Add(col);
             }
 
             // Adds the DataTable's content.
@@ -358,7 +356,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the T to the S.
+        /// Converts the type t object to the type s object.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="S"></typeparam>
@@ -370,12 +368,12 @@ namespace KeLi.Common.Converter.Collections
                 throw new ArgumentNullException(nameof(t));
 
             var result = Activator.CreateInstance<S>();
-            var properties = typeof(T).GetProperties();
+            var props = typeof(T).GetProperties();
 
-            foreach (var property in properties)
+            foreach (var prop in props)
             {
-                var value = property.GetValue(t);
-                var info = typeof(S).GetProperty(property.Name);
+                var value = prop.GetValue(t);
+                var info = typeof(S).GetProperty(prop.Name);
 
                 if (value == null || info == null)
                     continue;
@@ -400,7 +398,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Convert the object to the SqlDbType.
+        /// Convert the object to the sql db type object.
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -471,7 +469,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the NameValueCollection to the Dictionary.
+        /// Converts the name value collection to the idictionary.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -484,7 +482,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the NameValueCollection to the ILookup.
+        /// Converts the name value collection to the ilookup.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -497,7 +495,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the IDictionary to the NameValueCollection.
+        /// Converts the idictionary to the name value collection.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -509,14 +507,14 @@ namespace KeLi.Common.Converter.Collections
             var result = new NameValueCollection();
 
             foreach (var pair in pairs)
-                foreach (var val in pair.Value)
-                    result.Add(pair.Key, val);
+            foreach (var val in pair.Value)
+                result.Add(pair.Key, val);
 
             return result;
         }
 
         /// <summary>
-        /// Converts the ILookup to the NameValueCollection.
+        /// Converts the ilookup to the name value collection.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -528,14 +526,14 @@ namespace KeLi.Common.Converter.Collections
             var result = new NameValueCollection();
 
             foreach (var pair in pairs)
-                foreach (var item in pair.SelectMany(s => s))
-                    result.Add(pair.Key, item);
+            foreach (var item in pair.SelectMany(s => s))
+                result.Add(pair.Key, item);
 
             return result;
         }
 
         /// <summary>
-        /// Converts the NameValueCollection to the pair string.
+        /// Converts the name value collection to the pair string.
         /// </summary>
         /// <param name="pairs"></param>
         public static string ToNvcString(this NameValueCollection pairs)
@@ -547,7 +545,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the pair string to the NameValueCollection.
+        /// Converts the pair string to the name value collection.
         /// </summary>
         /// <param name="pairs"></param>
         public static NameValueCollection ToNvc(string pairs)

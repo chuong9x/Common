@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
  * MIT License
  *
  * Copyright(c) 2019 KeLi
@@ -34,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 01/15/2020 08:05:20 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/22/2020 11:22:30 AM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -47,86 +46,42 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using Autodesk.Revit.DB;
 using System;
+using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Family symbol parmater.
+    ///     Pipe parameter.
     /// </summary>
-    public class FamilySymbolParm
+    public class PipeParameter
     {
         /// <summary>
-        /// Family symbol parmater.
+        ///     Pipe parameter.
         /// </summary>
-        /// <param name="templateFileName"></param>
-        /// <param name="profile"></param>
-        /// <param name="plane"></param>
-        /// <param name="end"></param>
-        public FamilySymbolParm(string templateFileName, CurveArrArray profile, Plane plane, double end)
+        /// <param name="systemId"></param>
+        /// <param name="typeId"></param>
+        /// <param name="lvlId"></param>
+        public PipeParameter(ElementId systemId, ElementId typeId, ElementId lvlId)
         {
-            TemplateFileName = templateFileName;
-            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
-            Plane = plane ?? throw new ArgumentNullException(nameof(plane));
-            End = end;
+            SystemId = systemId ?? throw new ArgumentNullException(nameof(systemId));
+            TypeId = typeId ?? throw new ArgumentNullException(nameof(typeId));
+            LevelId = lvlId ?? throw new ArgumentNullException(nameof(lvlId));
         }
 
         /// <summary>
-        /// Family symbol parmater.
+        ///     System id.
         /// </summary>
-        /// <param name="templateFileName"></param>
-        /// <param name="profile"></param>
-        /// <param name="path"></param>
-        /// <param name="location"></param>
-        /// <param name="index"></param>
-        public FamilySymbolParm(string templateFileName, SweepProfile profile, ReferenceArray path, ProfilePlaneLocation location = ProfilePlaneLocation.Start, int index = 0)
-        {
-            TemplateFileName = templateFileName;
-            SweepProfile = profile ?? throw new ArgumentNullException(nameof(profile));
-            SweepPath = path ?? throw new ArgumentNullException(nameof(path));
-            Location = location;
-            Index = index;
-        }
+        public ElementId SystemId { get; set; }
 
         /// <summary>
-        /// The family symbol's template file name including file suffix.
+        ///     Type id.
         /// </summary>
-        public string TemplateFileName { get; }
+        public ElementId TypeId { get; set; }
 
         /// <summary>
-        /// The extrusion symbol's profile.
+        ///     Level id.
         /// </summary>
-        public CurveArrArray Profile { get; }
-
-        /// <summary>
-        /// The family symbol's reference plane.
-        /// </summary>
-        public Plane Plane { get; }
-
-        /// <summary>
-        /// The family symbol's end length.
-        /// </summary>
-        public double End { get; }
-
-        /// <summary>
-        /// The sweep symbol's profile.
-        /// </summary>
-        public SweepProfile SweepProfile { get; set; }
-
-        /// <summary>
-        /// The sweep symbol's path.
-        /// </summary>
-        public ReferenceArray SweepPath { get; set; }
-
-        /// <summary>
-        /// The sweep symbol's profile plane location.
-        /// </summary>
-        public ProfilePlaneLocation Location { get; set; }
-
-        /// <summary>
-        /// The sweep symbol's index.
-        /// </summary>
-        public int Index { get; set; }
+        public ElementId LevelId { get; set; }
     }
 }

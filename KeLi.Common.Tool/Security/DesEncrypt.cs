@@ -54,14 +54,14 @@ using System.Text;
 namespace KeLi.Common.Tool.Security
 {
     /// <summary>
-    /// DES encrypt.
+    ///     DES encrypt.
     /// </summary>
     public class DesEncrypt
     {
         private static readonly string Key = GenerateKey();
 
         /// <summary>
-        /// Encrypts the content.
+        ///     Encrypts the content.
         /// </summary>
         /// <param name="content"></param>
         /// <param name="key"></param>
@@ -88,7 +88,7 @@ namespace KeLi.Common.Tool.Security
         }
 
         /// <summary>
-        /// Decrypts the content.
+        ///     Decrypts the content.
         /// </summary>
         /// <param name="ciphertext"></param>
         /// <param name="key"></param>
@@ -123,12 +123,12 @@ namespace KeLi.Common.Tool.Security
         }
 
         /// <summary>
-        /// Generates the secret key.
+        ///     Generates the secret key.
         /// </summary>
         /// <returns></returns>
         private static string GenerateKey()
         {
-            var des = (DESCryptoServiceProvider)DES.Create();
+            var des = (DESCryptoServiceProvider) DES.Create();
 
             return Encoding.ASCII.GetString(des.Key);
         }

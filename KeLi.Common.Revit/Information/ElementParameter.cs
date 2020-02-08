@@ -46,36 +46,52 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-namespace KeLi.Common.Tool.Web
+
+namespace KeLi.Common.Revit.Information
 {
     /// <summary>
-    ///     Request type.
+    ///     Element parameter.
     /// </summary>
-    public enum RequestType
+    public class ElementParameter
     {
         /// <summary>
-        ///     Post type.
+        ///     Returns the guid of the element's parameter.
         /// </summary>
-        Post,
+        public string Guid { get; set; }
 
         /// <summary>
-        ///     Delete type.
+        ///     Returns the name of the element's parameter.
         /// </summary>
-        Delete,
+        public string ParamName { get; set; }
 
         /// <summary>
-        ///     Put type.
+        ///     Returns the data type of the element's parameter.
         /// </summary>
-        Put,
+        public string DataType { get; set; }
 
         /// <summary>
-        ///     Patch type.
+        ///     Returns the data category of the element's parameter.
         /// </summary>
-        Patch,
+        public string DataCatetory { get; set; }
 
         /// <summary>
-        ///     Get type.
+        ///     Returns the group id of the element's parameter.
         /// </summary>
-        Get
+        public string GroupId { get; set; }
+
+        /// <summary>
+        ///     Returns the visible of element's parameter.
+        /// </summary>
+        public bool Visible { get; set; }
+
+        /// <summary>
+        ///     Returns the description of element's parameter.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        ///     Returns the can edit of element's parameter.
+        /// </summary>
+        public bool CanEdit { get; set; }
     }
 }

@@ -54,12 +54,12 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace KeLi.Common.Converter.Serializations
 {
     /// <summary>
-    /// A binary data serialization.
+    ///     A binary data serialization.
     /// </summary>
     public static class BinaryUtil
     {
         /// <summary>
-        /// Serializes the list.
+        ///     Serializes the list.
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="obj"></param>
@@ -72,11 +72,13 @@ namespace KeLi.Common.Converter.Serializations
                 throw new ArgumentNullException(nameof(obj));
 
             using (var fs = new FileStream(filePath.FullName, FileMode.Create))
+            {
                 new BinaryFormatter().Serialize(fs, obj);
+            }
         }
 
         /// <summary>
-        /// Deserializes the file text to the list.
+        ///     Deserializes the file text to the list.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="filePath"></param>
@@ -87,7 +89,9 @@ namespace KeLi.Common.Converter.Serializations
                 throw new ArgumentNullException(nameof(filePath));
 
             using (var fs = new FileStream(filePath.FullName, FileMode.Open))
+            {
                 return new BinaryFormatter().Deserialize(fs) as T;
+            }
         }
     }
 }

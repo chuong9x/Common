@@ -52,43 +52,53 @@ using System.Collections.Generic;
 namespace KeLi.Common.Tool.Cache
 {
     /// <summary>
-    /// Easy cache helper.
+    ///     Easy cache helper.
     /// </summary>
     public static class EasyCacheHelper
     {
         /// <summary>
-        /// Restores timeout.
+        ///     Restores timeout.
         /// </summary>
         private static int _timeout = 30;
 
         /// <summary>
-        /// Restores cache data.
+        ///     Restores cache data.
         /// </summary>
         private static readonly Dictionary<string, KeyValuePair<object, DateTime>> _data;
-           
+
         /// <summary>
-        /// Inits cache.
+        ///     Inits cache.
         /// </summary>
         static EasyCacheHelper()
         {
-            _data  = new Dictionary<string, KeyValuePair<object, DateTime>>();
+            _data = new Dictionary<string, KeyValuePair<object, DateTime>>();
         }
 
         /// <summary>
-        /// Adds an item.
+        ///     Adds an item.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="data"></param>
         /// <returns></returns>
         public static bool AddItem(string key, object data)
         {
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
+
+            if (data is null)
+                throw new ArgumentNullException(nameof(data));
+
             bool result;
 
             if (string.IsNullOrWhiteSpace(key))
+            {
                 result = false;
+            }
 
-            else if (string.IsNullOrWhiteSpace(data?.ToString()))
+            else if (string.IsNullOrWhiteSpace(data.ToString()))
+            {
                 result = false;
+            }
 
             else
             {
@@ -100,7 +110,7 @@ namespace KeLi.Common.Tool.Cache
         }
 
         /// <summary>
-        /// Clears cache data.
+        ///     Clears cache data.
         /// </summary>
         public static void Clear()
         {
@@ -108,17 +118,20 @@ namespace KeLi.Common.Tool.Cache
         }
 
         /// <summary>
-        /// Removes the item by key.
+        ///     Removes the item by key.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         public static bool RemoveItem(string key)
         {
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
+
             return !string.IsNullOrWhiteSpace(key) && _data.Remove(key);
         }
 
         /// <summary>
-        /// Gets the item by key.
+        ///     Gets the item by key.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -128,7 +141,7 @@ namespace KeLi.Common.Tool.Cache
                 return default;
 
             if (!_data.ContainsKey(key))
-                return  default;
+                return default;
 
             if (_data[key].Value < DateTime.Now.AddSeconds(-_timeout))
                 return default;
@@ -137,13 +150,16 @@ namespace KeLi.Common.Tool.Cache
         }
 
         /// <summary>
-        /// Gets the item by key.
+        ///     Gets the item by key.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
         public static T GetItem<T>(string key)
         {
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
+
             T result;
 
             if (string.IsNullOrWhiteSpace(key))
@@ -156,13 +172,13 @@ namespace KeLi.Common.Tool.Cache
                 result = default;
 
             else
-                result = (T)_data[key].Key;
+                result = (T) _data[key].Key;
 
             return result;
         }
 
         /// <summary>
-        /// Gets cache's item count.
+        ///     Gets cache's item count.
         /// </summary>
         /// <returns></returns>
         public static int GetCount()
@@ -171,7 +187,7 @@ namespace KeLi.Common.Tool.Cache
         }
 
         /// <summary>
-        /// Sets cache item's timeout.
+        ///     Sets cache item's timeout.
         /// </summary>
         /// <param name="timeout"></param>
         public static void SetTimeout(int timeout = 30)

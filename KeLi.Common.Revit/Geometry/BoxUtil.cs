@@ -54,12 +54,12 @@ using Autodesk.Revit.UI.Selection;
 namespace KeLi.Common.Revit.Geometry
 {
     /// <summary>
-    /// Box utility.
+    ///     Box utility.
     /// </summary>
     public static class BoxUtil
     {
         /// <summary>
-        /// Gets the bounding box.
+        ///     Gets the bounding box.
         /// </summary>
         /// <param name="elm"></param>
         /// <param name="doc"></param>
@@ -82,16 +82,22 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
-        /// Gets the bounding box in plane.
+        ///     Gets the bounding box in plane.
         /// </summary>
         /// <param name="elm"></param>
         /// <param name="doc"></param>
         /// <returns></returns>
         public static BoundingBoxXYZ GetPlaneBox(this Element elm, Document doc)
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
             var box = elm.GetBoundingBox(doc);
 
-            return new BoundingBoxXYZ()
+            return new BoundingBoxXYZ
             {
                 Min = box.Min,
                 Max = new XYZ(box.Max.X, box.Max.Y, box.Min.Z)
@@ -99,7 +105,7 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
-        /// Gets the round box.
+        ///     Gets the round box.
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
@@ -116,7 +122,7 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
-        /// Gets the intersection box between the box1 and the box2.
+        ///     Gets the intersection box between the box1 and the box2.
         /// </summary>
         /// <param name="box1"></param>
         /// <param name="box2"></param>
@@ -148,7 +154,7 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
-        /// Converts to bounding box.
+        ///     Converts to bounding box.
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
@@ -174,7 +180,7 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
-        /// Gets the round box.
+        ///     Gets the round box.
         /// </summary>
         /// <param name="elm"></param>
         /// <param name="doc"></param>
@@ -197,7 +203,7 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
-        /// Gets the plane edge set and z axis value equals no zero.
+        ///     Gets the plane edge set and z axis value equals no zero.
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
@@ -216,11 +222,11 @@ namespace KeLi.Common.Revit.Geometry
             var p34 = Line.CreateBound(p3, p4);
             var p41 = Line.CreateBound(p4, p1);
 
-            return new List<Line> { p12, p23, p34, p41 };
+            return new List<Line> {p12, p23, p34, p41};
         }
 
         /// <summary>
-        /// Gets the box's plane 4 vectors.
+        ///     Gets the box's plane 4 vectors.
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
@@ -234,11 +240,11 @@ namespace KeLi.Common.Revit.Geometry
             var p3 = new XYZ(box.Max.X, box.Max.Y, p1.Z);
             var p4 = new XYZ(p1.X, box.Max.Y, p1.Z);
 
-            return new List<XYZ> { p1, p2, p3, p4 };
+            return new List<XYZ> {p1, p2, p3, p4};
         }
 
         /// <summary>
-        /// Gets the space edge set.
+        ///     Gets the space edge list.
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
@@ -269,11 +275,11 @@ namespace KeLi.Common.Revit.Geometry
             var p67 = Line.CreateBound(p6, p7);
             var p78 = Line.CreateBound(p7, p8);
 
-            return new List<Line> { p12, p14, p15, p23, p24, p34, p37, p48, p56, p58, p67, p78 };
+            return new List<Line> {p12, p14, p15, p23, p24, p34, p37, p48, p56, p58, p67, p78};
         }
 
         /// <summary>
-        /// Gets the box's space 8 vectors.
+        ///     Gets the box's space 8 vectors.
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
@@ -291,41 +297,50 @@ namespace KeLi.Common.Revit.Geometry
             var p7 = new XYZ(p1.X, box.Max.Y, box.Max.Z);
             var p8 = box.Max;
 
-            return new List<XYZ> { p1, p2, p3, p4, p5, p6, p7, p8 };
+            return new List<XYZ> {p1, p2, p3, p4, p5, p6, p7, p8};
         }
 
         /// <summary>
-        /// Gets the box's center point.
+        ///     Gets the box's center point.
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
         public static XYZ GetBoxCenter(this BoundingBoxXYZ box)
         {
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             return (box.Max + box.Min) / 2;
         }
 
         /// <summary>
-        /// Gets the box's length on y axis dreiction.
+        ///     Gets the box's length on y axis dreiction.
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
         public static double GetBoxLength(this BoundingBoxXYZ box)
         {
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             return box.Max.X - box.Min.X;
         }
 
         /// <summary>
-        /// Gets the box's width on x axis direction.
+        ///     Gets the box's width on x axis direction.
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
         public static double GetBoxWidth(this BoundingBoxXYZ box)
         {
+            if (box == null)
+                throw new ArgumentNullException(nameof(box));
+
             return box.Max.Y - box.Min.Y;
         }
 
         /// <summary>
-        /// Gets the round point with custom precision.
+        ///     Gets the round point with custom precision.
         /// </summary>
         /// <param name="point"></param>
         /// <param name="precision"></param>
@@ -335,7 +350,8 @@ namespace KeLi.Common.Revit.Geometry
             if (point == null)
                 throw new ArgumentNullException(nameof(point));
 
-            return new XYZ(Math.Round(point.X, precision), Math.Round(point.Y, precision), Math.Round(point.Z, precision));
+            return new XYZ(Math.Round(point.X, precision), Math.Round(point.Y, precision),
+                Math.Round(point.Z, precision));
         }
     }
 }

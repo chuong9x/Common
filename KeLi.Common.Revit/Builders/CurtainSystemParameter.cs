@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 01/15/2020 07:39:20 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/21/2020 06:53:11 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,50 +46,49 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Structure;
 using System;
+using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Family instance parameter.
+    ///     Curtain system parameter.
     /// </summary>
-    public class FamilyInstanceParm
+    public class CurtainSystemParameter
     {
         /// <summary>
-        /// Family instance parameter.
+        ///     Curtain system parameter.
         /// </summary>
-        /// <param name="location"></param>
-        /// <param name="symbol"></param>
-        /// <param name="lvl"></param>
-        /// <param name="type"></param>
-        public FamilyInstanceParm(XYZ location, FamilySymbol symbol, Level lvl, StructuralType type)
+        /// <param name="refWall"></param>
+        /// <param name="refCenter"></param>
+        /// <param name="pnlType"></param>
+        /// <param name="tplFileName"></param>
+        public CurtainSystemParameter(Wall refWall, XYZ refCenter, PanelType pnlType, string tplFileName)
         {
-            Location = location ?? throw new ArgumentNullException(nameof(location));
-            Symbol = symbol ?? throw new ArgumentNullException(nameof(symbol));
-            Level = lvl ?? throw new ArgumentNullException(nameof(lvl));
-            Type = type;
+            RefWall = refWall ?? throw new ArgumentNullException(nameof(refWall));
+            RefCenter = refCenter ?? throw new ArgumentNullException(nameof(refCenter));
+            PanelType = pnlType ?? throw new ArgumentNullException(nameof(pnlType));
+            TemplateFileName = tplFileName ?? throw new ArgumentNullException(nameof(tplFileName));
         }
 
         /// <summary>
-        /// The family instance's location.
+        ///     Reference wall.
         /// </summary>
-        public XYZ Location { get; set; }
+        public Wall RefWall { get; set; }
 
         /// <summary>
-        /// The family instance's Symbol.
+        ///     Reference point, such as, room center.
         /// </summary>
-        public FamilySymbol Symbol { get; set; }
+        public XYZ RefCenter { get; set; }
 
         /// <summary>
-        /// The family instance's level.
+        ///     Panel type.
         /// </summary>
-        public Level Level { get; set; }
+        public PanelType PanelType { get; set; }
 
         /// <summary>
-        /// The family instance's type.
+        ///     Template file name.
         /// </summary>
-        public StructuralType Type { get; set; }
+        public string TemplateFileName { get; set; }
     }
 }

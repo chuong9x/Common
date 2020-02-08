@@ -53,12 +53,12 @@ using System.Web.Script.Serialization;
 namespace KeLi.Common.Converter.Serializations
 {
     /// <summary>
-    /// A json data serialization.
+    ///     A json data serialization.
     /// </summary>
     public static class JsonUtil
     {
         /// <summary>
-        /// Serializes the list.
+        ///     Serializes the list.
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="obj"></param>
@@ -71,11 +71,13 @@ namespace KeLi.Common.Converter.Serializations
                 throw new ArgumentNullException(nameof(obj));
 
             using (var sw = new StreamWriter(filePath.FullName))
+            {
                 sw.Write(new JavaScriptSerializer().Serialize(obj));
+            }
         }
 
         /// <summary>
-        /// Deserializes the file text to the list.
+        ///     Deserializes the file text to the list.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="filePath"></param>
@@ -86,7 +88,9 @@ namespace KeLi.Common.Converter.Serializations
                 throw new ArgumentNullException(nameof(filePath));
 
             using (var sr = new StreamReader(filePath.FullName))
+            {
                 return new JavaScriptSerializer().Deserialize<T>(sr.ReadToEnd());
+            }
         }
     }
 }

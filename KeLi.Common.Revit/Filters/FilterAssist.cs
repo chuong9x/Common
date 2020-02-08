@@ -55,217 +55,141 @@ using KeLi.Common.Revit.Geometry;
 namespace KeLi.Common.Revit.Filters
 {
     /// <summary>
-    /// Filter Assist.
+    ///     Filter assist.
     /// </summary>
     public static class FilterAssist
     {
         /// <summary>
-        /// Checkouts all elements in the document.
+        ///     Checkouts all elements in the document.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="onlyCurrentView"></param>
-        /// <param name="onlyInstance"></param>
+        /// <param name="type"></param>
+        /// <param name="viewId"></param>
         /// <returns></returns>
-        public static List<Element> Checkout(this Document doc, bool onlyCurrentView = false, bool onlyInstance = true)
+        public static List<Element> Checkout(this Document doc, FilterType type, ElementId viewId = null)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
 
-            var baseCollector = onlyCurrentView ? new FilteredElementCollector(doc, doc.ActiveView.Id)
-                : new FilteredElementCollector(doc);
-            var logicCollector = new LogicalOrFilter(new ElementIsElementTypeFilter(false),
-                new ElementIsElementTypeFilter(true));
-            var results = baseCollector.WherePasses(logicCollector);
+            var filter = new FilteredElementCollector(doc);
 
-            if (onlyInstance)
-                results = results.WhereElementIsNotElementType();
+            if (viewId != null)
+                filter = new FilteredElementCollector(doc, viewId);
 
-            return results.ToList();
+            switch (type)
+            {
+                case FilterType.Instance:
+                    return filter.WhereElementIsNotElementType().ToList();
+
+                case FilterType.Type:
+                    return filter.WhereElementIsNotElementType().ToList();
+
+                case FilterType.All:
+                    return filter.ToList();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
         }
 
         /// <summary>
-        /// Checkouts all elements in the document.
+        ///     Gets the specified type of the element list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="viewId"></param>
-        /// <param name="onlyInstance"></param>
         /// <returns></returns>
-        public static List<Element> Checkout(this Document doc, ElementId viewId, bool onlyInstance = true)
+        public static List<T> GetTypeElementList<T>(this Document doc, ElementId viewId = null) where T : Element
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (viewId == null)
-                throw new ArgumentNullException(nameof(viewId));
+            var filter = new FilteredElementCollector(doc);
 
-            var baseCollector = new FilteredElementCollector(doc, viewId);
-            var logicCollector = new LogicalOrFilter(new ElementIsElementTypeFilter(false),
-                new ElementIsElementTypeFilter(true));
-            var results = baseCollector.WherePasses(logicCollector);
+            if (viewId != null)
+                filter = new FilteredElementCollector(doc, viewId);
 
-            if (onlyInstance)
-                results = results.WhereElementIsNotElementType();
-
-            return results.ToList();
+            return filter.OfClass(typeof(T)).WhereElementIsElementType().Cast<T>().ToList();
         }
 
         /// <summary>
-        /// Gets the specified type of the element set.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="onlyCurrentView"></param>
-        /// <param name="onlyInstance"></param>
-        /// <returns></returns>
-        public static List<T> GetTypeElementList<T>(this Document doc, bool onlyCurrentView = false, bool onlyInstance = true) where T : Element
-        {
-            if (doc == null)
-                throw new ArgumentNullException(nameof(doc));
-
-            var baseCollector = onlyCurrentView ? new FilteredElementCollector(doc, doc.ActiveView.Id)
-                : new FilteredElementCollector(doc);
-            var results = baseCollector.OfClass(typeof(T));
-
-            if (onlyInstance)
-                results = results.WhereElementIsNotElementType();
-
-            return results.Cast<T>().ToList();
-        }
-
-        /// <summary>
-        /// Gets the specified type of the element set.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="viewId"></param>
-        /// <param name="onlyInstance"></param>
-        /// <returns></returns>
-        public static List<T> GetTypeElementList<T>(this Document doc, ElementId viewId, bool onlyInstance = true) where T : Element
-        {
-            if (doc == null)
-                throw new ArgumentNullException(nameof(doc));
-
-            if (viewId == null)
-                throw new ArgumentNullException(nameof(viewId));
-
-            var baseCollector = new FilteredElementCollector(doc, viewId);
-            var results = baseCollector.OfClass(typeof(T));
-
-            if (onlyInstance)
-                results = results.WhereElementIsNotElementType();
-
-            return results.Cast<T>().ToList();
-        }
-
-        /// <summary>
-        /// Gets the specified category of the element set.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="category"></param>
-        /// <param name="onlyCurrentView"></param>
-        /// <param name="onlyInstance"></param>
-        /// <returns></returns>
-        public static List<Element> GetCategoryElementList(this Document doc, BuiltInCategory category, bool onlyCurrentView = false, bool onlyInstance = true)
-        {
-            if (doc == null)
-                throw new ArgumentNullException(nameof(doc));
-
-            var baseCollector = onlyCurrentView ? new FilteredElementCollector(doc, doc.ActiveView.Id)
-                : new FilteredElementCollector(doc);
-            var results = baseCollector.OfCategory(category);
-
-            if (onlyInstance)
-                results = results.WhereElementIsNotElementType();
-
-            return results.ToList();
-        }
-
-        /// <summary>
-        /// Gets the specified category of the element set.
+        ///     Gets the specified type and category of the element list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="category"></param>
         /// <param name="viewId"></param>
-        /// <param name="onlyInstance"></param>
         /// <returns></returns>
-        public static List<Element> GetCategoryElementList(this Document doc, BuiltInCategory category, ElementId viewId, bool onlyInstance = true)
+        public static List<T> GetTypeElementList<T>(this Document doc, BuiltInCategory category,
+            ElementId viewId = null) where T : Element
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (viewId == null)
-                throw new ArgumentNullException(nameof(viewId));
+            var filter = new FilteredElementCollector(doc);
 
-            var baseCollector = new FilteredElementCollector(doc, viewId);
-            var results = baseCollector.OfCategory(category);
+            if (viewId != null)
+                filter = new FilteredElementCollector(doc, viewId);
 
-            if (onlyInstance)
-                results = results.WhereElementIsNotElementType();
-
-            return results.ToList();
+            return filter.OfClass(typeof(T)).OfCategory(category).WhereElementIsElementType().Cast<T>().ToList();
         }
 
         /// <summary>
-        /// Gets the specified type and category of the element set.
+        ///     Gets the specified type of the element list.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="category"></param>
-        /// <param name="onlyCurrentView"></param>
-        /// <param name="onlyInstance"></param>
+        /// <param name="viewId"></param>
         /// <returns></returns>
-        public static List<T> GetTypeElementList<T>(this Document doc, BuiltInCategory category, bool onlyCurrentView = false, bool onlyInstance = true) where T : Element
+        public static List<T> GetInstanceElementList<T>(this Document doc, ElementId viewId = null) where T : Element
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
 
-            var baseCollector = onlyCurrentView ? new FilteredElementCollector(doc, doc.ActiveView.Id)
-                : new FilteredElementCollector(doc);
-            var results = baseCollector.OfClass(typeof(T)).OfCategory(category);
+            var filter = new FilteredElementCollector(doc);
 
-            if (onlyInstance)
-                results = results.WhereElementIsNotElementType();
+            if (viewId != null)
+                filter = new FilteredElementCollector(doc, viewId);
 
-            return results.Cast<T>().ToList();
+            return filter.OfClass(typeof(T)).WhereElementIsNotElementType().Cast<T>().ToList();
         }
 
         /// <summary>
-        /// Gets the specified type and category of the element set.
+        ///     Gets the specified type and category of the element list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="category"></param>
         /// <param name="viewId"></param>
-        /// <param name="onlyInstance"></param>
         /// <returns></returns>
-        public static List<T> GetTypeElementList<T>(this Document doc, BuiltInCategory category, ElementId viewId, bool onlyInstance = true) where T : Element
+        public static List<T> GetInstanceElementList<T>(this Document doc, BuiltInCategory category,
+            ElementId viewId = null) where T : Element
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (viewId == null)
-                throw new ArgumentNullException(nameof(viewId));
+            var filter = new FilteredElementCollector(doc);
 
-            var baseCollector = new FilteredElementCollector(doc, viewId);
-            var results = baseCollector.OfClass(typeof(T)).OfCategory(category);
+            if (viewId != null)
+                filter = new FilteredElementCollector(doc, viewId);
 
-            if (onlyInstance)
-                results = results.WhereElementIsNotElementType();
-
-            return results.Cast<T>().ToList();
+            return filter.OfClass(typeof(T)).OfCategory(category).WhereElementIsNotElementType().Cast<T>().ToList();
         }
 
         /// <summary>
-        /// Gets the element set that filter the max number of points.
+        ///     Gets the element set that filter the max number of points.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="maxNum"></param>
         /// <param name="moreThan"></param>
         /// <param name="type"></param>
-        /// <param name="onlyCurrentView"></param>
+        /// <param name="viewId"></param>
         /// <returns></returns>
-        public static List<Element> GetElementList(this Document doc, CalcType type, int maxNum, bool moreThan, bool onlyCurrentView = false)
+        public static List<Element> GetElementList(this Document doc, CalcType type, int maxNum, bool moreThan,
+            ElementId viewId)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
 
-            var elms = doc.Checkout(onlyCurrentView);
+            if (viewId == null)
+                throw new ArgumentNullException(nameof(viewId));
+
+            var elms = doc.Checkout(FilterType.Instance, viewId);
             var results = new List<Element>();
             var num = 0;
 
@@ -299,101 +223,7 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        /// Gets the element set that filter the max number of points.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="maxNum"></param>
-        /// <param name="moreThan"></param>
-        /// <param name="type"></param>
-        /// <param name="viewId"></param>
-        /// <returns></returns>
-        public static List<Element> GetElementList(this Document doc, CalcType type, int maxNum, bool moreThan, ElementId viewId)
-        {
-            if (doc == null)
-                throw new ArgumentNullException(nameof(doc));
-
-            if (viewId == null)
-                throw new ArgumentNullException(nameof(viewId));
-
-            var elms = doc.Checkout(viewId);
-            var results = new List<Element>();
-            var num = 0;
-
-            foreach (var elm in elms)
-            {
-                switch (type)
-                {
-                    case CalcType.FaceNum:
-                        num = elm.GetFaceList().Count;
-                        break;
-
-                    case CalcType.FacePointNum:
-                        num = elm.GetFacePointList().Count;
-                        break;
-
-                    case CalcType.SolidPointNum:
-                        num = elm.GetSolidPointList().Count;
-                        break;
-                }
-
-                if (moreThan && num <= maxNum)
-                    continue;
-
-                if (!moreThan && num > maxNum)
-                    continue;
-
-                results.Add(elm);
-            }
-
-            return results;
-        }
-
-        /// <summary>
-        /// Gets the max number of points element and the number.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="type"></param>
-        /// <param name="onlyCurrentView"></param>
-        /// <returns></returns>
-        public static (Element, int) GetMaxElementPair(this Document doc, CalcType type, bool onlyCurrentView = false)
-        {
-            if (doc == null)
-                throw new ArgumentNullException(nameof(doc));
-
-            var elms = doc.Checkout(onlyCurrentView);
-            var maxElm = default(Element);
-            var maxNum = int.MinValue;
-            var num = 0;
-
-            foreach (var elm in elms)
-            {
-                switch (type)
-                {
-                    case CalcType.FaceNum:
-                        num = elm.GetFaceList().Count;
-                        break;
-
-                    case CalcType.FacePointNum:
-                        num = elm.GetFacePointList().Count;
-                        break;
-
-                    case CalcType.SolidPointNum:
-                        num = elm.GetSolidPointList().Count;
-                        break;
-                }
-
-                if (num <= maxNum)
-                    continue;
-
-                maxNum = num;
-                maxElm = elm;
-            }
-
-            return (maxElm, maxNum);
-        }
-
-        /// <summary>
-        /// Gets the max number of points element and the number.
+        ///     Gets the max number of points element and the number.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="type"></param>
@@ -407,7 +237,7 @@ namespace KeLi.Common.Revit.Filters
             if (viewId == null)
                 throw new ArgumentNullException(nameof(viewId));
 
-            var elms = doc.Checkout(viewId);
+            var elms = doc.Checkout(FilterType.Instance, viewId);
             var maxElm = default(Element);
             var maxNum = int.MinValue;
             var num = 0;

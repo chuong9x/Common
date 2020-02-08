@@ -54,12 +54,12 @@ using Autodesk.Revit.DB;
 namespace KeLi.Common.Revit.Relations
 {
     /// <summary>
-    /// About two lines relationship.
+    ///     About two lines relationship.
     /// </summary>
     public static class LineRelation
     {
         /// <summary>
-        /// Gets the result of whether the line line1 and the line line2 is space vertical.
+        ///     Gets the result of whether the Line line1 and the Line line2 is space vertical.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -77,7 +77,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of whether the line line1 and the line line2 is space parallel.
+        ///     Gets the result of whether the Line line1 and the Line line2 is space parallel.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -98,7 +98,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Converts to plane line.
+        ///     Converts to plane line.
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
@@ -114,7 +114,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of whether the line line1 and the line line2 is plane parallel.
+        ///     Gets the result of whether the Line line1 and the Line line2 is plane parallel.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -138,7 +138,7 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the result of whether the line line1 and the line line2 is plane vertical.
+        ///     Gets the result of whether the Line line1 and the Line line2 is plane vertical.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -159,14 +159,15 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the intersection of the line line1 and the line line2 on plane.
+        ///     Gets the intersection of the Line line1 and the Line line2 on plane.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
         /// <param name="isTouch"></param>
         /// <param name="tolerance"></param>
         /// <returns></returns>
-        public static XYZ GetPlaneCrossingPoint(this Line line1, Line line2, bool isTouch = true, double tolerance = 2e-2)
+        public static XYZ GetPlaneCrossingPoint(this Line line1, Line line2, bool isTouch = true,
+            double tolerance = 2e-2)
         {
             if (line1 == null)
                 throw new ArgumentNullException(nameof(line1));
@@ -195,7 +196,9 @@ namespace KeLi.Common.Revit.Relations
 
             // Must quadrature.
             if (line1.IsPlaneVertical(line2) && f1 || f2)
+            {
                 result = f1 ? new XYZ(x1, y3, pt1.Z) : new XYZ(x3, y1, pt1.Z);
+            }
             else
             {
                 var dx12 = x2 - x1;
@@ -224,13 +227,13 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets the intersections of the line and the lines on plane.
+        ///     Gets the intersections of the Line and the lines on plane.
         /// </summary>
         /// <param name="line"></param>
         /// <param name="lines"></param>
         /// <param name="isTouch"></param>
         /// <returns></returns>
-        public static List<XYZ> GetPlaneCrossingPointList(this Line line, List<Line> lines, bool isTouch = true)
+        public static List<XYZ> GetPlaneCrossingPointList(this Line line, IEnumerable<Line> lines, bool isTouch = true)
         {
             if (line == null)
                 throw new ArgumentNullException(nameof(line));
@@ -240,17 +243,17 @@ namespace KeLi.Common.Revit.Relations
 
             var results = new List<XYZ>();
 
-            lines.ForEach(f => results.Add(line.GetPlaneCrossingPoint(f, isTouch)));
+            lines.ToList().ForEach(f => results.Add(line.GetPlaneCrossingPoint(f, isTouch)));
 
             return results.Where(w => w != null).ToList();
         }
 
         /// <summary>
-        /// Gets the distinct vectors of the lines.
+        ///     Gets the distinct vectors of the Curve list.
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
-        public static List<XYZ> GetDistinctPointList(this List<Curve> curves)
+        public static List<XYZ> GetDistinctPointList(this IEnumerable<Curve> curves)
         {
             if (curves == null)
                 throw new ArgumentNullException(nameof(curves));
@@ -282,167 +285,169 @@ namespace KeLi.Common.Revit.Relations
         }
 
         /// <summary>
-        /// Gets points of the boundary.
+        ///     Gets points of the boundary.
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
-        public static List<XYZ> GetBoundaryPointList(this List<Curve> curves)
+        public static List<XYZ> GetBoundaryPointList(this IEnumerable<Curve> curves)
         {
             if (curves == null)
                 throw new ArgumentNullException(nameof(curves));
 
             var results = new List<XYZ>();
+            var tmpCurves = curves.ToList();
 
-            foreach (var line in curves)
+            foreach (var line in tmpCurves)
                 results.Add(line.GetEndPoint(0));
 
-            var endPoint = curves[curves.Count - 1].GetEndPoint(1);
+            var endPoint = tmpCurves[tmpCurves.Count - 1].GetEndPoint(1);
 
             // If no closed, the last line's end point is different from the first line's start point.
-            if (!curves[0].GetEndPoint(0).IsAlmostEqualTo(endPoint))
+            if (!tmpCurves[0].GetEndPoint(0).IsAlmostEqualTo(endPoint))
                 results.Add(endPoint);
 
             return results;
         }
 
         /// <summary>
-        /// Gets the max point of the line.
+        ///     Gets the true point order by right(x), front(y) and top(z) point of the Curve list.
         /// </summary>
-        /// <param name="line"></param>
+        /// <param name="curves"></param>
         /// <returns></returns>
-        public static XYZ GetMaxPoint(this Line line)
+        public static XYZ GetMinPoint(this IEnumerable<Curve> curves)
         {
-            if (line == null)
-                throw new ArgumentNullException(nameof(line));
+            if (curves is null)
+                throw new ArgumentNullException(nameof(curves));
 
-            var pt1 = line.GetEndPoint(0);
-            var pt2 = line.GetEndPoint(1);
-
-            return new XYZ(Math.Max(pt1.X, pt2.X), Math.Max(pt1.Y, pt2.Y), Math.Max(pt1.Z, pt2.Z));
+            return curves.Select(m => m.GetMinPoint()).GetMinPoint();
         }
 
         /// <summary>
-        /// Gets the min point of the lines.
+        ///     Gets the true point order by top(z), front(y) and right(x) in the Curve list.
         /// </summary>
-        /// <param name="lines"></param>
+        /// <param name="curves"></param>
         /// <returns></returns>
-        public static XYZ GetMaxPoint(this List<Line> lines)
+        public static XYZ GetMaxPoint(this IEnumerable<Curve> curves)
         {
-            if (lines == null)
-                throw new ArgumentNullException(nameof(lines));
+            if (curves is null)
+                throw new ArgumentNullException(nameof(curves));
 
-            var pts = new List<XYZ>();
-
-            foreach (var line in lines)
-            {
-                var pt1 = line.GetEndPoint(0);
-                var pt2 = line.GetEndPoint(1);
-
-                pts.Add(pt1);
-                pts.Add(pt2);
-            }
-
-            var x = pts.Select(s => s.X).Max();
-            var y = pts.Select(s => s.Y).Max();
-            var z = pts.Select(s => s.Z).Max();
-
-            return new XYZ(x, y, z);
+            return curves.Select(m => m.GetMaxPoint()).GetMaxPoint();
         }
 
         /// <summary>
-        /// Gets the min point of the line.
+        ///     Gets the true point order by right(x), front(y) and top(z) point of the Curve.
         /// </summary>
-        /// <param name="line"></param>
+        /// <param name="curve"></param>
         /// <returns></returns>
-        public static XYZ GetMinPoint(this Line line)
+        public static XYZ GetMinPoint(this Curve curve)
         {
-            if (line == null)
-                throw new ArgumentNullException(nameof(line));
+            if (curve == null)
+                throw new ArgumentNullException(nameof(curve));
 
-            var pt1 = line.GetEndPoint(0);
-            var pt2 = line.GetEndPoint(1);
-
-            return new XYZ(Math.Min(pt1.X, pt2.X), Math.Min(pt1.Y, pt2.Y), Math.Min(pt1.Z, pt2.Z));
+            return curve.GetEndPoints().GetMinPoint();
         }
 
         /// <summary>
-        /// Gets the min point of the lines.
+        ///     Gets the true point order by top(z), front(y) and right(x) in the Curve.
         /// </summary>
-        /// <param name="lines"></param>
+        /// <param name="curve"></param>
         /// <returns></returns>
-        public static XYZ GetMinPoint(this List<Line> lines)
+        public static XYZ GetMaxPoint(this Curve curve)
         {
-            if (lines == null)
-                throw new ArgumentNullException(nameof(lines));
+            if (curve == null)
+                throw new ArgumentNullException(nameof(curve));
 
-            var pts = new List<XYZ>();
-
-            foreach (var line in lines)
-            {
-                var pt1 = line.GetEndPoint(0);
-                var pt2 = line.GetEndPoint(1);
-
-                pts.Add(pt1);
-                pts.Add(pt2);
-            }
-
-            return pts.GetMinPoint();
+            return curve.GetEndPoints().GetMaxPoint();
         }
 
         /// <summary>
-        /// Gets the middle point of the line.
+        ///     Gets the two end points of the Curve.
         /// </summary>
-        /// <param name="line"></param>
+        /// <param name="curve"></param>
         /// <returns></returns>
-        public static XYZ GetMidPoint(this Line line)
+        public static List<XYZ> GetEndPoints(this Curve curve)
         {
-            if (line == null)
-                throw new ArgumentNullException(nameof(line));
+            if (curve == null)
+                throw new ArgumentNullException(nameof(curve));
 
-            return (line.GetEndPoint(0) + line.GetEndPoint(1)) * 0.5;
+            var pt1 = curve.GetEndPoint(0);
+            var pt2 = curve.GetEndPoint(1);
+
+            return new List<XYZ> {pt1, pt2};
         }
 
         /// <summary>
-        /// Gets the middle point of the two lines in nearest area.
+        ///     Gets the true point order by top(z), front(y) and right(x) in the XYZ list.
         /// </summary>
-        /// <param name="line1"></param>
-        /// <param name="line2"></param>
+        /// <param name="pts"></param>
         /// <returns></returns>
-        public static XYZ GetMidPoint(this Line line1, Line line2)
+        public static XYZ GetMaxPoint(this IEnumerable<XYZ> pts)
         {
-            if (line1 == null)
-                throw new ArgumentNullException(nameof(line1));
+            if (pts == null)
+                throw new ArgumentNullException(nameof(pts));
 
-            if (line2 == null)
-                throw new ArgumentNullException(nameof(line2));
+            return pts.OrderBy(o => o.X).ThenBy(o => o.Y).ThenBy(o => o.Z).FirstOrDefault();
+        }
 
-            var pt1 = line1.GetEndPoint(0);
-            var pt2 = line1.GetEndPoint(1);
-            var pt3 = line2.GetEndPoint(0);
-            var pt4 = line2.GetEndPoint(1);
-            var distance = double.MaxValue;
-            XYZ result = null;
+        /// <summary>
+        ///     Gets the true point order by right(x), front(y) and top(z) in the XYZ list.
+        /// </summary>
+        /// <param name="pts"></param>
+        /// <returns></returns>
+        public static XYZ GetMinPoint(this IEnumerable<XYZ> pts)
+        {
+            if (pts == null)
+                throw new ArgumentNullException(nameof(pts));
 
-            if (pt1.DistanceTo(pt3) < distance)
+            return pts.OrderBy(o => o.Z).ThenBy(o => o.Y).ThenBy(o => o.X).FirstOrDefault();
+        }
+
+        /// <summary>
+        ///     Gets the result of whether the point is in the plane direction polygon.
+        /// </summary>
+        /// <param name="pt"></param>
+        /// <param name="polygon"></param>
+        /// <returns></returns>
+        public static bool InPlanePolygon(this XYZ pt, IEnumerable<Line> polygon)
+        {
+            if (pt == null)
+                throw new ArgumentNullException(nameof(pt));
+
+            if (polygon == null)
+                throw new ArgumentNullException(nameof(polygon));
+
+            var x = pt.X;
+            var y = pt.Y;
+            var xs = new List<double>();
+            var ys = new List<double>();
+
+            foreach (var line in polygon)
             {
-                distance = pt1.DistanceTo(pt3);
-                result = (pt1 + pt3) * 0.5;
+                xs.Add(line.GetEndPoint(0).X);
+                ys.Add(line.GetEndPoint(0).Y);
             }
 
-            if (pt1.DistanceTo(pt4) < distance)
-            {
-                distance = pt1.DistanceTo(pt4);
-                result = (pt1 + pt4) * 0.5;
-            }
+            var minX = xs.Min();
+            var maxX = xs.Max();
+            var minY = ys.Min();
+            var maxY = ys.Max();
 
-            if (pt2.DistanceTo(pt3) < distance)
-            {
-                distance = pt2.DistanceTo(pt3);
-                result = (pt2 + pt3) * 0.5;
-            }
+            var tmpPolygon = polygon.ToList();
 
-            if (pt2.DistanceTo(pt4) < distance)
-                result = (pt2 + pt4) * 0.5;
+            if (tmpPolygon.Count == 0 || x < minX || x > maxX || y < minY || y > maxY)
+                return false;
+
+            var result = false;
+
+            for (int i = 0, j = tmpPolygon.Count - 1; i < tmpPolygon.Count; j = i++)
+            {
+                var dxji = xs[j] - xs[i];
+                var dyji = ys[j] - ys[i];
+
+                if (ys[i] > y != ys[j] > y && x < dxji * (y - ys[i]) / dyji + xs[i])
+                    result = !result;
+            }
 
             return result;
         }

@@ -57,45 +57,42 @@ using Autodesk.Revit.UI;
 namespace KeLi.Common.Revit.Information
 {
     /// <summary>
-    /// Parameter utility.
+    ///     Parameter utility.
     /// </summary>
-    public static class ParamUtil
+    public static class ParameterUtil
     {
         /// <summary>
-        /// Sets the value of the element's parameter.
+        ///     Gets the element's specified parameter.
         /// </summary>
         /// <param name="elm"></param>
-        /// <param name="paramName"></param>
-        /// <param name="value"></param>
-        public static void SetValue(this Element elm, string paramName, string value)
+        /// <param name="parameterName"></param>
+        /// <returns></returns>
+        public static Parameter GetParameter(this Element elm, string parameterName)
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
-            if (paramName == null)
-                throw new ArgumentNullException(nameof(paramName));
+            if (parameterName is null)
+                throw new ArgumentNullException(nameof(parameterName));
 
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
-            elm.LookupParameter(paramName)?.Set(value);
+            return elm.GetParameters(parameterName).FirstOrDefault(f => !f.IsReadOnly);
         }
 
         /// <summary>
-        /// Gets the value of the element's parameter.
+        ///     Gets the value of the element's parameter.
         /// </summary>
         /// <param name="elm"></param>
-        /// <param name="paramName"></param>
+        /// <param name="parmName"></param>
         /// <returns></returns>
-        public static string GetValue(this Element elm, string paramName)
+        public static string GetValue(this Element elm, string parmName)
         {
             if (elm == null)
                 throw new ArgumentNullException(nameof(elm));
 
-            if (paramName == null)
-                throw new ArgumentNullException(nameof(paramName));
+            if (parmName == null)
+                throw new ArgumentNullException(nameof(parmName));
 
-            var parameter = elm.LookupParameter(paramName);
+            var parameter = elm.LookupParameter(parmName);
             var result = string.Empty;
 
             switch (parameter.StorageType)
@@ -127,7 +124,7 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        /// Gets definition by sharing parameter file path.
+        ///     Gets definition by sharing parameter file path.
         /// </summary>
         /// <param name="group"></param>
         /// <param name="paramName"></param>
@@ -146,13 +143,13 @@ namespace KeLi.Common.Revit.Information
             if (definition != null)
                 return definition;
 
-            var opt = new ExternalDefinitionCreationOptions(paramName, ParameterType.Text) { UserModifiable = canEdit };
+            var opt = new ExternalDefinitionCreationOptions(paramName, ParameterType.Text) {UserModifiable = canEdit};
 
             return group.Definitions.Create(opt);
         }
 
         /// <summary>
-        /// Gets definition groups by sharing parameter file path.
+        ///     Gets definition groups by sharing parameter file path.
         /// </summary>
         /// <param name="groups"></param>
         /// <param name="groupName"></param>
@@ -169,7 +166,7 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        /// Gets definition groups by sharing parameter file path.
+        ///     Gets definition groups by sharing parameter file path.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="paramPath"></param>
@@ -191,7 +188,7 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        /// Initializes element or type parameter binding.
+        ///     Initializes element or type parameter binding.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="elm"></param>
@@ -227,7 +224,9 @@ namespace KeLi.Common.Revit.Information
                     if (!paramGroup.Name.Contains("Group"))
                     {
                         if (binding is InstanceBinding instanceBinding)
+                        {
                             bindingMap.ReInsert(definition, instanceBinding);
+                        }
                         else
                         {
                             instanceBinding = uiapp.Application.Create.NewInstanceBinding(elmCtgs);
@@ -237,7 +236,9 @@ namespace KeLi.Common.Revit.Information
                     else
                     {
                         if (binding is TypeBinding typeBinding)
+                        {
                             bindingMap.ReInsert(definition, typeBinding);
+                        }
                         else
                         {
                             typeBinding = uiapp.Application.Create.NewTypeBinding(elmCtgs);
@@ -249,29 +250,29 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        /// Getting group list by sharing parameter file path.
+        ///     Getting group list by sharing parameter file path.
         /// </summary>
         /// <returns></returns>
-        public static List<Group> GetGroups(string paramPath)
+        public static List<GroupParameter> GetGroups(string paramPath)
         {
             if (paramPath == null)
                 throw new ArgumentNullException(nameof(paramPath));
 
             var texts = File.ReadLines(paramPath).ToList();
-            var groups = new List<Group>();
-            var paras = new List<Param>();
+            var groups = new List<GroupParameter>();
+            var paras = new List<ElementParameter>();
 
             foreach (var text in texts)
             {
                 var items = text.Split('\t');
 
                 if (items[0] == "GROUP")
-                    groups.Add(new Group(items[1], items[2]));
+                    groups.Add(new GroupParameter(items[1], items[2]));
 
                 if (items[0] != "PARAM")
                     continue;
 
-                var param = new Param
+                var param = new ElementParameter
                 {
                     Guid = items[1],
                     ParamName = items[2],
@@ -287,90 +288,11 @@ namespace KeLi.Common.Revit.Information
             }
 
             foreach (var group in groups)
-                foreach (var para in paras)
-                    if (para.GroupId == group.Id)
-                        group.Params.Add(para);
+            foreach (var para in paras)
+                if (para.GroupId == group.Id)
+                    group.Params.Add(para);
 
             return groups;
-        }
-
-        /// <summary>
-        /// Parameter's group.
-        /// </summary>
-        public class Group
-        {
-            /// <summary>
-            /// Initializing parameter's group.
-            /// </summary>
-            /// <param name="id"></param>
-            /// <param name="groupName"></param>
-            public Group(string id, string groupName)
-            {
-                Id = id;
-                GroupName = groupName;
-                Params = new List<Param>();
-            }
-
-            /// <summary>
-            /// Returns the id of the parameter's group.
-            /// </summary>
-            public string Id { get; set; }
-
-            /// <summary>
-            /// Returns the name of the parameter's group.
-            /// </summary>
-            public string GroupName { get; set; }
-
-            /// <summary>
-            /// Returns the parameter list of the parameter's group.
-            /// </summary>
-            public List<Param> Params { get; set; }
-        }
-
-        /// <summary>
-        /// Element's parameter.
-        /// </summary>
-        public class Param
-        {
-            /// <summary>
-            /// Returns the guid of the element's parameter.
-            /// </summary>
-            public string Guid { get; set; }
-
-            /// <summary>
-            /// Returns the name of the element's parameter.
-            /// </summary>
-            public string ParamName { get; set; }
-
-            /// <summary>
-            /// Returns the data type of the element's parameter.
-            /// </summary>
-            public string DataType { get; set; }
-
-            /// <summary>
-            /// Returns the data category of the element's parameter.
-            /// </summary>
-            public string DataCatetory { get; set; }
-
-            /// <summary>
-            /// Returns the group id of the element's parameter.
-            /// </summary>
-            public string GroupId { get; set; }
-
-            /// <summary>
-            /// Returns the visible of element's parameter.
-            /// </summary>
-            public bool Visible { get; set; }
-
-            /// <summary>
-            /// Returns the description of element's parameter.
-            /// </summary>
-            public string Description { get; set; }
-
-            /// <summary>
-            /// Returns the can edit of element's parameter.
-            /// </summary>
-            public bool CanEdit { get; set; }
         }
     }
 }

@@ -54,12 +54,12 @@ using Autodesk.Revit.DB;
 namespace KeLi.Common.Revit.Geometry
 {
     /// <summary>
-    /// Mesh utility.
+    ///     Mesh utility.
     /// </summary>
     public static class MeshUtil
     {
         /// <summary>
-        /// Gets the dispersed line set.
+        ///     Gets the dispersed line list.
         /// </summary>
         /// <param name="curve"></param>
         /// <param name="gapNum"></param>
@@ -73,40 +73,7 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
-        /// Gets the dispersed line set.
-        /// </summary>
-        /// <param name="points"></param>
-        /// <param name="gapNum"></param>
-        /// <returns></returns>
-        public static List<Line> GetDispersedLineList(this IList<XYZ> points, int gapNum = 0)
-        {
-            if (points == null)
-                throw new ArgumentNullException(nameof(points));
-
-            var results = new List<Line>();
-
-            for (var i = 0; i < points.Count - 1; i++)
-            {
-                var endIndex = i + gapNum + 1;
-
-                if (endIndex > points.Count - 2)
-                    throw new ArgumentOutOfRangeException();
-
-                if (endIndex >= points.Count)
-                    break;
-
-                var line = Line.CreateBound(points[i], points[endIndex]);
-
-                results.Add(line);
-
-                i = endIndex - 1;
-            }
-
-            return results;
-        }
-
-        /// <summary>
-        /// Gets the element's triange set.
+        ///     Gets the element's triange list.
         /// </summary>
         /// <returns></returns>
         public static Dictionary<Mesh, List<MeshTriangle>> GetMeshTrianglesDict(this Element elm)
@@ -123,7 +90,7 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
-        /// Gets the element's triange set.
+        ///     Gets the element's triange list.
         /// </summary>
         /// <param name="mesh"></param>
         /// <returns></returns>
@@ -141,7 +108,7 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
-        /// Gets the element's mesh set.
+        ///     Gets the element's mesh list.
         /// </summary>
         /// <param name="elm"></param>
         /// <returns></returns>
@@ -158,7 +125,7 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
-        /// Gets the element's face set.
+        ///     Gets the element's face list.
         /// </summary>
         /// <param name="elm"></param>
         /// <returns></returns>
@@ -175,13 +142,19 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
-        /// Gets the element's face set for the specified direction.
+        ///     Gets the element's face set for the specified direction.
         /// </summary>
         /// <param name="elm"></param>
-        /// <param name="direction"></param>
+        /// <param name="dir"></param>
         /// <returns></returns>
-        public static List<Face> GetFaceList(this Element elm, XYZ direction)
+        public static List<Face> GetFaceList(this Element elm, XYZ dir)
         {
+            if (elm == null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (dir == null)
+                throw new ArgumentNullException(nameof(dir));
+
             var faces = elm.GetFaceList();
             var results = new List<Face>();
 
@@ -191,7 +164,7 @@ namespace KeLi.Common.Revit.Geometry
                 var min = box.Min;
                 var noraml = face.ComputeNormal(min);
 
-                if (noraml.AngleTo(direction) < 1e-6)
+                if (noraml.AngleTo(dir) < 1e-6)
                     results.Add(face);
             }
 
@@ -199,23 +172,26 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
-        /// Gets the element's face set for the specified direction list.
+        ///     Gets the element's face set for the specified direction list.
         /// </summary>
         /// <param name="elm"></param>
-        /// <param name="directions"></param>
+        /// <param name="dirs"></param>
         /// <returns></returns>
-        public static List<Face> GetFaceList(this Element elm, List<XYZ> directions)
+        public static List<Face> GetFaceList(this Element elm, IEnumerable<XYZ> dirs)
         {
+            if (dirs == null)
+                throw new ArgumentNullException(nameof(dirs));
+
             var results = new List<Face>();
 
-            foreach (var direction in directions)
+            foreach (var direction in dirs)
                 results.AddRange(elm.GetFaceList(direction));
 
             return results;
         }
 
         /// <summary>
-        /// Gets the element's point set on face.
+        ///     Gets the element's point set on face.
         /// </summary>
         /// <param name="elm"></param>
         /// <returns></returns>
@@ -232,7 +208,7 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
-        /// Gets the element's point set base on distance.
+        ///     Gets the element's point set base on distance.
         /// </summary>
         /// <param name="elm"></param>
         /// <returns></returns>
@@ -244,22 +220,20 @@ namespace KeLi.Common.Revit.Geometry
             var results = elm.GetFacePointList().OrderBy(o => o.X).ThenBy(o => o.Y).ThenBy(o => o.Z).ToList();
 
             for (var i = 0; i < results.Count; i++)
+            for (var j = i + 1; j < results.Count; j++)
             {
-                for (var j = i + 1; j < results.Count; j++)
-                {
-                    if (results[i] == null || results[j] == null)
-                        continue;
+                if (results[i] == null || results[j] == null)
+                    continue;
 
-                    if (results[j].GetRoundPoint(2).ToString() == results[i].GetRoundPoint(2).ToString())
-                        results[j] = null;
-                }
+                if (results[j].GetRoundPoint(2).ToString() == results[i].GetRoundPoint(2).ToString())
+                    results[j] = null;
             }
 
             return results.Where(w => w != null).ToList();
         }
 
         /// <summary>
-        /// Gets the element's edge set.
+        ///     Gets the element's edge list.
         /// </summary>
         /// <param name="elm"></param>
         /// <returns></returns>
@@ -276,7 +250,7 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
-        /// Gets the element's valid solid set.
+        ///     Gets the element's valid solid list.
         /// </summary>
         /// <param name="elm"></param>
         /// <returns></returns>
@@ -285,14 +259,14 @@ namespace KeLi.Common.Revit.Geometry
             if (elm == null)
                 throw new ArgumentNullException(nameof(elm));
 
-            var opt = new Options() { ComputeReferences = true, DetailLevel = ViewDetailLevel.Coarse };
+            var opt = new Options {ComputeReferences = true, DetailLevel = ViewDetailLevel.Coarse};
             var ge = elm.get_Geometry(opt);
 
             return ge == null ? new List<Solid>() : ge.GetValidSolidList();
         }
 
         /// <summary>
-        /// Gets the element's valid solid set.
+        ///     Gets the element's valid solid list.
         /// </summary>
         /// <param name="ge"></param>
         /// <param name="precision"></param>
@@ -305,7 +279,6 @@ namespace KeLi.Common.Revit.Geometry
             var results = new List<Solid>();
 
             foreach (var obj in ge)
-            {
                 switch (obj)
                 {
                     case Solid solid when solid.Volume < Math.Pow(10, -precision):
@@ -315,24 +288,53 @@ namespace KeLi.Common.Revit.Geometry
                         break;
 
                     case GeometryInstance gi:
-                        {
-                            var ge2 = gi.GetInstanceGeometry().GetTransformed(gi.Transform);
+                    {
+                        var ge2 = gi.GetInstanceGeometry();
 
-                            if (ge2 != null)
-                                results = results.Union(ge2.GetValidSolidList()).ToList();
+                        if (ge2 != null)
+                            results = results.Union(ge2.GetValidSolidList()).ToList();
 
-                            var ge3 = gi.GetSymbolGeometry();
+                        var ge3 = gi.GetSymbolGeometry();
 
-                            if (ge3 != null)
-                                results = results.Union(ge2.GetValidSolidList()).ToList();
+                        if (ge3 != null)
+                            results = results.Union(ge2.GetValidSolidList()).ToList();
 
-                            continue;
-                        }
+                        continue;
+                    }
 
                     case GeometryElement ge4:
                         results = results.Union(ge4.GetValidSolidList()).ToList();
                         break;
                 }
+
+            return results;
+        }
+
+        /// <summary>
+        ///     Gets the dispersed line list.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="gapNum"></param>
+        /// <returns></returns>
+        private static List<Line> GetDispersedLineList(this IEnumerable<XYZ> points, int gapNum = 0)
+        {
+            if (points == null)
+                throw new ArgumentNullException(nameof(points));
+
+            var tmpPoints = points.ToList();
+            var results = new List<Line>();
+
+            for (var i = 0; i < tmpPoints.Count - 1; i++)
+            {
+                var endIndex = i + gapNum + 1;
+
+                if (endIndex >= tmpPoints.Count)
+                    break;
+
+                var line = Line.CreateBound(tmpPoints[i], tmpPoints[endIndex]);
+
+                results.Add(line);
+                i = endIndex - 1;
             }
 
             return results;

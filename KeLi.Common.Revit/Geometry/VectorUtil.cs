@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
@@ -53,52 +54,76 @@ using Autodesk.Revit.DB;
 namespace KeLi.Common.Revit.Geometry
 {
     /// <summary>
-    /// Vector utility.
+    ///     Vector utility.
     /// </summary>
     public static class VectorUtil
     {
         /// <summary>
-        /// If true the specified line's direction and the specified directions are same.
+        ///     If true, the specified line's direction and the specified directions are same.
         /// </summary>
         /// <param name="line"></param>
-        /// <param name="directions"></param>
+        /// <param name="dirs"></param>
         /// <returns></returns>
-        public static bool IsSameDirection(this Line line, params XYZ[] directions)
+        public static bool IsSameDirection(this Line line, params XYZ[] dirs)
         {
-            return directions.Any(a => line.Direction.AngleTo(a) < 1e-6);
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
+
+            if (dirs == null)
+                throw new ArgumentNullException(nameof(dirs));
+
+            return dirs.Any(a => line.Direction.AngleTo(a) < 1e-6);
         }
 
         /// <summary>
-        /// If true the specified direction set and the line's direction are same.
+        ///     If true, the specified direction set and the line's direction are same.
         /// </summary>
         /// <param name="line"></param>
-        /// <param name="directions"></param>
+        /// <param name="dirs"></param>
         /// <returns></returns>
-        public static bool IsSameDirection(this Line line, List<XYZ> directions)
+        public static bool IsSameDirection(this Line line, IEnumerable<XYZ> dirs)
         {
-            return directions.Any(a => line.IsSameDirection(a));
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
+
+            if (dirs == null)
+                throw new ArgumentNullException(nameof(dirs));
+
+            return dirs.Any(a => line.IsSameDirection(a));
         }
 
         /// <summary>
-        /// If true the line1's direction and the line2's direction are same.
+        ///     If true, the line1's direction and the line2's direction are same.
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="Line2"></param>
         /// <returns></returns>
         public static bool IsSameDirection(this Line line1, Line Line2)
         {
+            if (line1 == null)
+                throw new ArgumentNullException(nameof(line1));
+
+            if (Line2 == null)
+                throw new ArgumentNullException(nameof(Line2));
+
             return line1.Direction.AngleTo(Line2.Direction) < 1e-6;
         }
 
         /// <summary>
-        /// If true the direction1 and the direction2 are same.
+        ///     If true, the dir1 and the dir2 are same.
         /// </summary>
-        /// <param name="direction1"></param>
-        /// <param name="direction2"></param>
+        /// <param name="dir1"></param>
+        /// <param name="dir2"></param>
         /// <returns></returns>
-        public static bool IsSameDirection(this XYZ direction1, XYZ direction2)
+        public static bool IsSameDirection(this XYZ dir1, XYZ dir2)
         {
-            return direction1.AngleTo(direction2) < 1e-6;
+            if (dir1 == null)
+                throw new ArgumentNullException(nameof(dir1));
+
+            if (dir2 == null)
+                throw new ArgumentNullException(nameof(dir2));
+
+            return dir1.AngleTo(dir2) < 1e-6;
         }
     }
 }

@@ -46,34 +46,43 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Autodesk.Revit.DB;
 using static Autodesk.Revit.DB.GeometryCreationUtilities;
 
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// DirectShape builder.
+    ///     DirectShape builder.
     /// </summary>
     public static class DirectShapeBuilder
     {
         /// <summary>
-        /// Creates a new DirectShape.
+        ///     Creates a new DirectShape.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="parm"></param>
         /// <param name="opt"></param>
         /// <returns></returns>
-        public static DirectShape CreateDirectShape(this Document doc, DirectShapeParm parm, SolidOptions opt = null)
+        public static DirectShape CreateDirectShape(this Document doc, DirectShapeParameter parm,
+            SolidOptions opt = null)
         {
-            var solid = CreateExtrusionGeometry(parm.Profile, parm.Direction, parm.Distance);
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (parm == null)
+                throw new ArgumentNullException(nameof(parm));
+
+            var solid = CreateExtrusionGeometry(parm.Profile.ToList(), parm.Direction, parm.Distance);
 
             if (opt != null)
-                solid = CreateExtrusionGeometry(parm.Profile, parm.Direction, parm.Distance, opt);
+                solid = CreateExtrusionGeometry(parm.Profile.ToList(), parm.Direction, parm.Distance, opt);
 
             var result = DirectShape.CreateElement(doc, new ElementId(parm.Category));
 
-            result?.AppendShape(new List<GeometryObject> { solid });
+            result?.AppendShape(new List<GeometryObject> {solid});
 
             return result;
         }

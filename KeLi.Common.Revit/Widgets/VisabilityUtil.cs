@@ -52,12 +52,12 @@ using Autodesk.Revit.DB;
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    /// Visability utility.
+    ///     Visability utility.
     /// </summary>
     public static class VisabilityUtil
     {
         /// <summary>
-        /// Sets the element's visible.
+        ///     Sets the element's visible.
         /// </summary>
         /// <param name="gf"></param>
         public static void SetExtrusionVisible(this GenericForm gf)

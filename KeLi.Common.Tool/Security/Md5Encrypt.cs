@@ -53,12 +53,12 @@ using System.Text;
 namespace KeLi.Common.Tool.Security
 {
     /// <summary>
-    /// MD5 Encrypt.
+    ///     MD5 Encrypt.
     /// </summary>
     public class Md5Encrypt
     {
         /// <summary>
-        /// Encrypt the content.
+        ///     Encrypt the content.
         /// </summary>
         /// <param name="content"></param>
         /// <returns></returns>

@@ -46,36 +46,42 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-namespace KeLi.Common.Tool.Web
+
+using System;
+using System.Collections.Generic;
+
+namespace KeLi.Common.Revit.Information
 {
     /// <summary>
-    ///     Request type.
+    ///     Group parameter.
     /// </summary>
-    public enum RequestType
+    public class GroupParameter
     {
         /// <summary>
-        ///     Post type.
+        ///     Initializing parameter's group.
         /// </summary>
-        Post,
+        /// <param name="id"></param>
+        /// <param name="groupName"></param>
+        public GroupParameter(string id, string groupName)
+        {
+            Id = id ?? throw new ArgumentNullException(nameof(id));
+            GroupName = groupName ?? throw new ArgumentNullException(nameof(groupName));
+            Params = new List<ElementParameter>();
+        }
 
         /// <summary>
-        ///     Delete type.
+        ///     Returns the id of the parameter's group.
         /// </summary>
-        Delete,
+        public string Id { get; set; }
 
         /// <summary>
-        ///     Put type.
+        ///     Returns the name of the parameter's group.
         /// </summary>
-        Put,
+        public string GroupName { get; set; }
 
         /// <summary>
-        ///     Patch type.
+        ///     Returns the parameter list of the parameter's group.
         /// </summary>
-        Patch,
-
-        /// <summary>
-        ///     Get type.
-        /// </summary>
-        Get
+        public List<ElementParameter> Params { get; set; }
     }
 }

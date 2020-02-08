@@ -46,42 +46,43 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Autodesk.Revit.DB;
 
-namespace KeLi.Common.Revit.Relations
+namespace KeLi.Common.Revit.Converters
 {
     /// <summary>
-    /// About a point and a line relationship.
+    ///     Unit utility.
     /// </summary>
-    public static class PointLineRelation
+    public static class UnitConverter
     {
         /// <summary>
-        /// Gets the max point of some points that x, y, z is max value.
+        ///     Millimeter to inch.
         /// </summary>
-        /// <param name="pts"></param>
-        /// <returns></returns>
-        public static XYZ GetMaxPoint(this List<XYZ> pts)
-        {
-            if (pts == null)
-                throw new ArgumentNullException(nameof(pts));
+        public const double MM_TO_INCH = 0.0393700787;
 
-            return new XYZ(pts.Max(m => m.X), pts.Max(m => m.Y), pts.Max(m => m.Z));
+        /// <summary>
+        ///     Millimeter to foot.
+        /// </summary>
+        public const double MM_TO_FT = 0.0032808399;
+
+        /// <summary>
+        ///     Converts feet unit value to mm unit value.
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static double ConvertFeetToMm(double num)
+        {
+            return UnitUtils.Convert(num, DisplayUnitType.DUT_DECIMAL_FEET, DisplayUnitType.DUT_MILLIMETERS);
         }
 
         /// <summary>
-        /// Gets the min point of some points that x, y, z is min value.
+        ///     Converts mm unit value to feet unit value.
         /// </summary>
-        /// <param name="pts"></param>
+        /// <param name="num"></param>
         /// <returns></returns>
-        public static XYZ GetMinPoint(this List<XYZ> pts)
+        public static double ConvertMmToFeet(double num)
         {
-            if (pts == null)
-                throw new ArgumentNullException(nameof(pts));
-
-            return new XYZ(pts.Min(m => m.X), pts.Min(m => m.Y), pts.Min(m => m.Z));
+            return UnitUtils.Convert(num, DisplayUnitType.DUT_MILLIMETERS, DisplayUnitType.DUT_DECIMAL_FEET);
         }
     }
 }

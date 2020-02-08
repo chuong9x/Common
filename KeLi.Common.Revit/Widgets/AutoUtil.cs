@@ -54,12 +54,12 @@ using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledEx
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    /// Auto action utility.
+    ///     Auto action utility.
     /// </summary>
     public static class AutoUtil
     {
         /// <summary>
-        /// To auto execute transaction.
+        ///     To auto execute transaction.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="act"></param>
@@ -82,12 +82,15 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// To repeat call command.
+        ///     To repeat call command.
         /// </summary>
         /// <param name="act"></param>
         /// <returns></returns>
         public static bool RepeatCommand(this Action act)
         {
+            if (act == null)
+                throw new ArgumentNullException(nameof(act));
+
             try
             {
                 act.Invoke();

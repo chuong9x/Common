@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 12/23/2019 13:08:20 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/15/2020 08:05:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -49,49 +49,79 @@
 using System;
 using Autodesk.Revit.DB;
 
-namespace KeLi.Common.Revit.Widgets
+namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    /// Elementy utility.
+    ///     Family symbol parmater.
     /// </summary>
-    public static class ElementUtil
+    public class FamilySymbolParameter
     {
         /// <summary>
-        /// Gets the element's location point.
+        ///     Family symbol parameter.
         /// </summary>
-        /// <param name="elm"></param>
-        /// <returns></returns>
-        public static XYZ GetLocationPoint<T>(this T elm) where T: Element
+        /// <param name="tplFileName"></param>
+        /// <param name="profile"></param>
+        /// <param name="plane"></param>
+        /// <param name="end"></param>
+        public FamilySymbolParameter(string tplFileName, CurveArrArray profile, Plane plane, double end)
         {
-            return elm.Location is LocationPoint pt ? pt.Point : throw new InvalidCastException(elm.Name);
+            TemplateFileName = tplFileName ?? throw new ArgumentNullException(nameof(tplFileName));
+            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
+            Plane = plane ?? throw new ArgumentNullException(nameof(plane));
+            End = end;
         }
 
         /// <summary>
-        /// Gets the element's location cuve.
+        ///     Family symbol parameter.
         /// </summary>
-        /// <param name="elm"></param>
-        /// <returns></returns>
-        public static Curve GetLocationCurve<T>(this T elm) where T : Element
+        /// <param name="tplFileName"></param>
+        /// <param name="profile"></param>
+        /// <param name="profilePath"></param>
+        /// <param name="location"></param>
+        /// <param name="index"></param>
+        public FamilySymbolParameter(string tplFileName, CurveArrArray profile, ReferenceArray profilePath,
+            ProfilePlaneLocation location = ProfilePlaneLocation.Start, int index = 0)
         {
-            return !(elm.Location is LocationCurve curve) ? throw new InvalidCastException(elm.Name) : curve.Curve;
+            TemplateFileName = tplFileName ?? throw new ArgumentNullException(nameof(tplFileName));
+            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
+            SweepPath = profilePath ?? throw new ArgumentNullException(nameof(profilePath));
+            Location = location;
+            Index = index;
         }
 
         /// <summary>
-        /// Sets the element's color fill pattern.
+        ///     The family symbol's template file name including file suffix.
         /// </summary>
-        /// <param name="elm"></param>
-        /// <param name="fillPattern"></param>
-        /// <param name="doc"></param>
-        /// <param name="color"></param>
-        public static void SetColorFill(this Element elm, Element fillPattern, Document doc, Color color)
-        {
-            var graSetting = doc.ActiveView.GetElementOverrides(elm.Id);
+        public string TemplateFileName { get; }
 
-            if (fillPattern != null)
-                graSetting.SetProjectionFillPatternId(fillPattern.Id);
+        /// <summary>
+        ///     The extrusion symbol's profile.
+        /// </summary>
+        public CurveArrArray Profile { get; }
 
-            graSetting.SetProjectionFillColor(color);
-            doc.ActiveView.SetElementOverrides(elm.Id, graSetting);
-        }
+        /// <summary>
+        ///     The family symbol's reference plane.
+        /// </summary>
+        public Plane Plane { get; }
+
+        /// <summary>
+        ///     The family symbol's end length.
+        /// </summary>
+        public double End { get; }
+
+        /// <summary>
+        ///     The sweep symbol's path.
+        /// </summary>
+        public ReferenceArray SweepPath { get; set; }
+
+        /// <summary>
+        ///     The sweep symbol's profile plane location.
+        /// </summary>
+        public ProfilePlaneLocation Location { get; set; }
+
+        /// <summary>
+        ///     The sweep symbol's index.
+        /// </summary>
+        public int Index { get; set; }
     }
 }

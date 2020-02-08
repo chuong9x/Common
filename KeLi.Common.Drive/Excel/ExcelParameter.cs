@@ -46,36 +46,60 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-namespace KeLi.Common.Tool.Web
+using System.IO;
+
+namespace KeLi.Common.Drive.Excel
 {
     /// <summary>
-    ///     Request type.
+    ///     Excel parameter.
     /// </summary>
-    public enum RequestType
+    public class ExcelParameter
     {
         /// <summary>
-        ///     Post type.
+        ///     This is a excel default sheet name.
         /// </summary>
-        Post,
+        private const string SHEET_NAME = "Sheet1";
 
         /// <summary>
-        ///     Delete type.
+        ///     Excel parameter.
         /// </summary>
-        Delete,
+        /// <param name="filePath"></param>
+        /// <param name="tplPath"></param>
+        public ExcelParameter(FileInfo filePath, FileInfo tplPath = null)
+        {
+            FilePath = filePath;
+            TemplatePath = tplPath;
+            SheetName = SHEET_NAME;
+            RowIndex = 1;
+            ColumnIndex = 0;
+
+            if (tplPath != null && tplPath.Exists)
+                File.Copy(tplPath.FullName, filePath.FullName, true);
+        }
 
         /// <summary>
-        ///     Put type.
+        ///     The template path.
         /// </summary>
-        Put,
+        public FileInfo TemplatePath { get; set; }
 
         /// <summary>
-        ///     Patch type.
+        ///     The file path.
         /// </summary>
-        Patch,
+        public FileInfo FilePath { get; set; }
 
         /// <summary>
-        ///     Get type.
+        ///     The sheet name.
         /// </summary>
-        Get
+        public string SheetName { get; set; }
+
+        /// <summary>
+        ///     The start row index.
+        /// </summary>
+        public int RowIndex { get; set; }
+
+        /// <summary>
+        ///     The start column index.
+        /// </summary>
+        public int ColumnIndex { get; set; }
     }
 }

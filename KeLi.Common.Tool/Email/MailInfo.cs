@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/22/2020 01:15:00 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,80 +46,49 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Autodesk.Revit.DB;
 
-namespace KeLi.Common.Revit.Relations
+using System;
+
+namespace KeLi.Common.Tool.Email
 {
     /// <summary>
-    /// About a point and a plane relationship.
+    /// Mail information.
     /// </summary>
-    public static class PointPlaneRelation
+    public class MailInfo
     {
         /// <summary>
-        /// Gets the result of whether the point is in the plane direction polygon.
+        /// Mail information.
         /// </summary>
-        /// <param name="pt"></param>
-        /// <param name="polygon"></param>
-        /// <returns></returns>
-        public static bool InPlanePolygon(this XYZ pt, List<Line> polygon)
+        /// <param name="address"></param>
+        /// <param name="subject"></param>
+        /// <param name="body"></param>
+        /// <param name="isHtml"></param>
+        public MailInfo(string address, string subject, string body, bool isHtml = false)
         {
-            if (pt == null)
-                throw new ArgumentNullException(nameof(pt));
-
-            if (polygon == null)
-                throw new ArgumentNullException(nameof(polygon));
-
-            var x = pt.X;
-            var y = pt.Y;
-            var xs = new List<double>();
-            var ys = new List<double>();
-
-            foreach (var line in polygon)
-            {
-                xs.Add(line.GetEndPoint(0).X);
-                ys.Add(line.GetEndPoint(0).Y);
-            }
-
-            var minX = xs.Min();
-            var maxX = xs.Max();
-            var minY = ys.Min();
-            var maxY = ys.Max();
-
-            if (polygon.Count == 0 || x < minX || x > maxX || y < minY || y > maxY)
-                return false;
-
-            var result = false;
-
-            for (int i = 0, j = polygon.Count - 1; i < polygon.Count; j = i++)
-            {
-                var dxji = xs[j] - xs[i];
-                var dyji = ys[j] - ys[i];
-
-                if (ys[i] > y != ys[j] > y && x < dxji * (y - ys[i]) / dyji + xs[i])
-                    result = !result;
-            }
-
-            return result;
+            Address = address ?? throw new ArgumentNullException(nameof(address));
+            Subject = subject ?? throw new ArgumentNullException(nameof(subject));
+            Body = body ?? throw new ArgumentNullException(nameof(body));
+            IsHtml = isHtml;
         }
 
         /// <summary>
-        /// Gets the result of whether the point is in the space direction polygon.
+        /// Mail address.
         /// </summary>
-        /// <param name="pt"></param>
-        /// <param name="polygon"></param>
-        /// <returns></returns>
-        public static bool InSpacePolygon(this XYZ pt, List<Line> polygon)
-        {
-            if (pt == null)
-                throw new ArgumentNullException(nameof(pt));
+        public string Address { get; }
 
-            if (polygon == null)
-                throw new ArgumentNullException(nameof(polygon));
+        /// <summary>
+        /// Mail subject.
+        /// </summary>
+        public string Subject { get; }
 
-            throw new NotImplementedException();
-        }
+        /// <summary>
+        /// Mail body.
+        /// </summary>
+        public string Body { get; }
+
+        /// <summary>
+        /// If true, mail is html.
+        /// </summary>
+        public bool IsHtml { get; }
     }
 }

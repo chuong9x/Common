@@ -52,27 +52,27 @@ using System.IO;
 namespace KeLi.Common.Tool.Other
 {
     /// <summary>
-    /// A light log assist.
+    ///     A light log assist.
     /// </summary>
     public static class LogAssist
     {
         /// <summary>
-        /// The log file name.
+        ///     The log file name.
         /// </summary>
         private const string FOLDER_NAME = "WorkLog";
 
         /// <summary>
-        /// The file name format.
+        ///     The file name format.
         /// </summary>
         private const string LOG_FILE_FORMAT = "yyyy-MM-dd-HH-mm";
 
         /// <summary>
-        /// The log item time stamp.
+        ///     The log item time stamp.
         /// </summary>
         private const string ITEM_TITLE = "mm:ss.ffff";
 
         /// <summary>
-        /// Writes the log.
+        ///     Writes the log.
         /// </summary>
         /// <param name="context"></param>
         public static void WriteLog(this object context)

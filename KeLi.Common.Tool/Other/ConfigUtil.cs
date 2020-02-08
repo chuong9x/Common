@@ -53,45 +53,52 @@ using System.Reflection;
 namespace KeLi.Common.Tool.Other
 {
     /// <summary>
-    /// Config utility.
+    ///     Config utility.
     /// </summary>
     public class ConfigUtil
     {
         /// <summary>
-        /// Local position.
+        ///     Local position.
         /// </summary>
         private static string _location;
 
         /// <summary>
-        /// To repeat creating setting instance by single thread.
+        ///     To repeat creating setting instance by single thread.
         /// </summary>
         private static AppSettingsSection _setting;
 
         /// <summary>
-        /// Config utility.
+        ///     Config utility.
         /// </summary>
         public static void Init(Type type)
         {
+            if (type is null)
+                throw new ArgumentNullException(nameof(type));
+
             if (_location == null)
                 _location = Assembly.GetAssembly(type).Location;
 
             if (_setting != null)
                 return;
 
-            var map = new ExeConfigurationFileMap { ExeConfigFilename = _location + ".config" };
+            var map = new ExeConfigurationFileMap {ExeConfigFilename = _location + ".config"};
 
             _setting = ConfigurationManager.OpenMappedExeConfiguration(map, 0).AppSettings;
         }
 
         /// <summary>
-        /// Get config file value by key.
+        ///     Get config file value by key.
         /// </summary>
         /// <param name="keyName"></param>
         /// <returns></returns>
         public static string GetValue(string keyName)
         {
+            if (keyName is null)
+                throw new ArgumentNullException(nameof(keyName));
+
             if (_setting == null)
-                throw new Exception("Please call static method ConfigUtil.Init() in static program's constructor firstly!");
+                throw new Exception(
+                    "Please call static method ConfigUtil.Init() in static program's constructor firstly!");
 
             return _setting.Settings[keyName].Value;
         }

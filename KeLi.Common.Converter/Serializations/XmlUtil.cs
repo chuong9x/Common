@@ -53,29 +53,31 @@ using System.Xml.Serialization;
 namespace KeLi.Common.Converter.Serializations
 {
     /// <summary>
-    /// A xml data serialization.
+    ///     A xml data serialization.
     /// </summary>
     public static class XmlUtil
     {
         /// <summary>
-        /// Serializes the list.
+        ///     Serializes the list.
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="obj"></param>
         public static void Serialize(FileInfo filePath, object obj)
         {
-            if (obj == null)
-                throw new ArgumentNullException(nameof(obj));
-
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
 
+            if (obj == null)
+                throw new ArgumentNullException(nameof(obj));
+
             using (var sw = new StreamWriter(filePath.FullName))
+            {
                 new XmlSerializer(obj.GetType()).Serialize(sw, obj);
+            }
         }
 
         /// <summary>
-        /// Deserializes the file text to the list.
+        ///     Deserializes the file text to the list.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="filePath"></param>
@@ -86,7 +88,9 @@ namespace KeLi.Common.Converter.Serializations
                 throw new ArgumentNullException(nameof(filePath));
 
             using (var fs = new FileStream(filePath.FullName, FileMode.Open))
+            {
                 return new XmlSerializer(typeof(T)).Deserialize(fs) as T;
+            }
         }
     }
 }

@@ -48,17 +48,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Converters
 {
     /// <summary>
-    /// Type converter.
+    ///     Type converter.
     /// </summary>
     public static class TypeConverter
     {
         /// <summary>
-        /// Convers the space curve to the plane line.
+        ///     Convers the space Curve to the plane Line.
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
@@ -74,7 +75,7 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Convers the space point to the plane point.
+        ///     Convers the space XYZ to the plane XYZ.
         /// </summary>
         /// <param name="pt"></param>
         /// <returns></returns>
@@ -87,11 +88,11 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the reference set to the ReferenceArray.
+        ///     Converts the Reference set to the ReferenceArray.
         /// </summary>
         /// <param name="refs"></param>
         /// <returns></returns>
-        public static ReferenceArray ToReferArray(this List<Reference> refs)
+        public static ReferenceArray ToReferArray(this IEnumerable<Reference> refs)
         {
             if (refs == null)
                 throw new ArgumentNullException(nameof(refs));
@@ -105,65 +106,217 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the reference set to the ReferenceArray.
+        ///     Converts the ReferenceArray to the Reference list.
         /// </summary>
         /// <param name="refs"></param>
         /// <returns></returns>
-        public static ReferenceArray ToReferArray(this Reference[] refs)
+        public static List<Reference> ToReferArray(this ReferenceArray refs)
         {
             if (refs == null)
                 throw new ArgumentNullException(nameof(refs));
 
-            var results = new ReferenceArray();
+            var results = new List<Reference>();
 
-            foreach (var refer in refs)
-                results.Append(refer);
+            foreach (Reference refer in refs)
+                results.Add(refer);
 
             return results;
         }
 
         /// <summary>
-        /// Converts the curve array set to the CurveArrArray.
+        ///     Converts the CurveLoop list to the CurveArrArray.
         /// </summary>
-        /// <param name="curvess"></param>
+        /// <param name="curveLoops"></param>
         /// <returns></returns>
-        public static CurveArrArray ToCurveArrArray(this List<CurveArray> curvess)
+        public static CurveArrArray ToCurveArrArray(this IEnumerable<CurveLoop> curveLoops)
         {
-            if (curvess == null)
-                throw new ArgumentNullException(nameof(curvess));
+            if (curveLoops == null)
+                throw new ArgumentNullException(nameof(curveLoops));
 
             var results = new CurveArrArray();
 
-            foreach (var curves in curvess)
+            foreach (var curveLoop in curveLoops)
+                results.Append(curveLoop.ToCurveArray());
+
+            return results;
+        }
+
+        /// <summary>
+        ///     Converts the CurveLoop list to the CurveArray list.
+        /// </summary>
+        /// <param name="curveLoops"></param>
+        /// <returns></returns>
+        public static List<CurveArray> ToCurveArrayList(this IEnumerable<CurveLoop> curveLoops)
+        {
+            if (curveLoops == null)
+                throw new ArgumentNullException(nameof(curveLoops));
+
+            return curveLoops.Select(s => s.ToCurveArray()).ToList();
+        }
+
+        /// <summary>
+        ///     Converts the CurveLoop list to the Curve list.
+        /// </summary>
+        /// <param name="curveLoops"></param>
+        /// <returns></returns>
+        public static List<Curve> ToCurveList(this IEnumerable<CurveLoop> curveLoops)
+        {
+            if (curveLoops == null)
+                throw new ArgumentNullException(nameof(curveLoops));
+
+            return curveLoops.SelectMany(s => s).ToList();
+        }
+
+        /// <summary>
+        ///     Converts the CurveArrArray to the CurveLoop list.
+        /// </summary>
+        /// <param name="curveArrArray"></param>
+        /// <returns></returns>
+        public static List<CurveLoop> ToCurveLoopList(this CurveArrArray curveArrArray)
+        {
+            if (curveArrArray == null)
+                throw new ArgumentNullException(nameof(curveArrArray));
+
+            var results = new List<CurveLoop>();
+
+            foreach (CurveArray curves in curveArrArray)
+                results.Add(curves.ToCurveLoop());
+
+            return results;
+        }
+
+        /// <summary>
+        ///     Converts the CurveArrArray to the CurveArray list.
+        /// </summary>
+        /// <param name="curveArrArray"></param>
+        /// <returns></returns>
+        public static List<CurveArray> ToCurveArrayList(this CurveArrArray curveArrArray)
+        {
+            if (curveArrArray == null)
+                throw new ArgumentNullException(nameof(curveArrArray));
+
+            var results = new List<CurveArray>();
+
+            foreach (CurveArray curves in curveArrArray)
+                results.Add(curves);
+
+            return results;
+        }
+
+        /// <summary>
+        ///     Converts the CurveArrArray to the Curve list.
+        /// </summary>
+        /// <param name="curveArrArray"></param>
+        /// <returns></returns>
+        public static List<Curve> ToCurveList(this CurveArrArray curveArrArray)
+        {
+            if (curveArrArray == null)
+                throw new ArgumentNullException(nameof(curveArrArray));
+
+            var results = new List<Curve>();
+
+            foreach (CurveArray curves in curveArrArray)
+                results.AddRange(curves.ToCurveList());
+
+            return results;
+        }
+
+        /// <summary>
+        ///     Converts the CurveArray list to the CurveArrArray.
+        /// </summary>
+        /// <param name="curveArrays"></param>
+        /// <returns></returns>
+        public static CurveArrArray ToCurveArrArray(this IEnumerable<CurveArray> curveArrays)
+        {
+            if (curveArrays == null)
+                throw new ArgumentNullException(nameof(curveArrays));
+
+            var results = new CurveArrArray();
+
+            foreach (var curves in curveArrays)
                 results.Append(curves);
 
             return results;
         }
 
         /// <summary>
-        /// Converts the curve array set to the CurveArrArray.
+        ///     Converts the CurveLoop to the CurveArray.
         /// </summary>
-        /// <param name="curvess"></param>
+        /// <param name="curveLoop"></param>
         /// <returns></returns>
-        public static CurveArrArray ToCurveArrArray(this CurveArray[] curvess)
+        public static CurveArray ToCurveArray(this CurveLoop curveLoop)
         {
-            if (curvess == null)
-                throw new ArgumentNullException(nameof(curvess));
+            if (curveLoop == null)
+                throw new ArgumentNullException(nameof(curveLoop));
 
-            var results = new CurveArrArray();
+            var results = new CurveArray();
 
-            foreach (var curves in curvess)
-                results.Append(curves);
+            foreach (var curve in curveLoop)
+                results.Append(curve);
 
             return results;
         }
 
         /// <summary>
-        /// Converts the curve set to the CurveArray.
+        ///     Converts the CurveLoop to the Curve list.
+        /// </summary>
+        /// <param name="curveLoop"></param>
+        /// <returns></returns>
+        public static List<Curve> ToCurveList(this CurveLoop curveLoop)
+        {
+            if (curveLoop == null)
+                throw new ArgumentNullException(nameof(curveLoop));
+
+            var results = new List<Curve>();
+
+            foreach (var curve in curveLoop)
+                results.Add(curve);
+
+            return results;
+        }
+
+        /// <summary>
+        ///     Converts the CurveArray to the CurveLoop.
+        /// </summary>
+        /// <param name="curveArray"></param>
+        /// <returns></returns>
+        public static CurveLoop ToCurveLoop(this CurveArray curveArray)
+        {
+            if (curveArray == null)
+                throw new ArgumentNullException(nameof(curveArray));
+
+            var results = new CurveLoop();
+
+            foreach (Curve curve in curveArray)
+                results.Append(curve);
+
+            return results;
+        }
+
+        /// <summary>
+        ///     Converts the CurveArray to the Curve list.
+        /// </summary>
+        /// <param name="curveArray"></param>
+        /// <returns></returns>
+        public static List<Curve> ToCurveList(this CurveArray curveArray)
+        {
+            if (curveArray == null)
+                throw new ArgumentNullException(nameof(curveArray));
+
+            var results = new List<Curve>();
+
+            foreach (Curve curve in curveArray)
+                results.Add(curve);
+
+            return results;
+        }
+
+        /// <summary>
+        ///     Converts the Curve list to the CurveArray.
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
-        public static CurveArray ToCurveArray(this List<Curve> curves)
+        public static CurveArray ToCurveArray(this IEnumerable<Curve> curves)
         {
             if (curves == null)
                 throw new ArgumentNullException(nameof(curves));
@@ -177,16 +330,16 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the curve set to the CurveArray.
+        ///     Converts the Curve list to the CurveLoop.
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
-        public static CurveArray ToCurveArray(this Curve[] curves)
+        public static CurveLoop ToCurveLoop(this IEnumerable<Curve> curves)
         {
             if (curves == null)
                 throw new ArgumentNullException(nameof(curves));
 
-            var results = new CurveArray();
+            var results = new CurveLoop();
 
             foreach (var curve in curves)
                 results.Append(curve);
@@ -195,11 +348,11 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the face set to the FaceArray.
+        ///     Converts the Face list to the FaceArray.
         /// </summary>
         /// <param name="faces"></param>
         /// <returns></returns>
-        public static FaceArray ToFaceArray(this List<Face> faces)
+        public static FaceArray ToFaceArray(this IEnumerable<Face> faces)
         {
             if (faces == null)
                 throw new ArgumentNullException(nameof(faces));
@@ -213,19 +366,19 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        /// Converts the face set to the FaceArray.
+        ///     Converts the FaceArray to the Face list.
         /// </summary>
         /// <param name="faces"></param>
         /// <returns></returns>
-        public static FaceArray ToFaceArray(this Face[] faces)
+        public static List<Face> ToFaceList(this FaceArray faces)
         {
             if (faces == null)
                 throw new ArgumentNullException(nameof(faces));
 
-            var results = new FaceArray();
+            var results = new List<Face>();
 
-            foreach (var face in faces)
-                results.Append(face);
+            foreach (Face face in faces)
+                results.Add(face);
 
             return results;
         }

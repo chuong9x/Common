@@ -51,21 +51,21 @@ using System;
 namespace KeLi.Common.Drive.Excel
 {
     /// <summary>
-    /// The span attribute.
+    ///     The span attribute.
     /// </summary>
     public class SpanAttribute : Attribute
     {
         /// <summary>
-        /// The span attribute.
+        ///     The span attribute.
         /// </summary>
-        /// <param name="columnSpan"></param>
-        public SpanAttribute(int columnSpan)
+        /// <param name="colSpan"></param>
+        public SpanAttribute(int colSpan)
         {
-            ColumnSpan = columnSpan;
+            ColumnSpan = colSpan;
         }
 
         /// <summary>
-        /// The span column num.
+        ///     The span column num.
         /// </summary>
         public int ColumnSpan { get; set; }
     }

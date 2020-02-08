@@ -57,6 +57,7 @@
     <Compile Include="Cache\EasyCacheHelper.cs" />
     <Compile Include="Email\EmailHelper.cs" />
     <Compile Include="Email\FromerInfo.cs" />
+    <Compile Include="Email\MailInfo.cs" />
     <Compile Include="Other\ExceptionUtil.cs" />
     <Compile Include="Other\SingletonFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
