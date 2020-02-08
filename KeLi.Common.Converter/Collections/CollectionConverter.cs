@@ -76,7 +76,7 @@ namespace KeLi.Common.Converter.Collections
         /// <typeparam name="T"></typeparam>
         /// <param name="items"></param>
         /// <returns></returns>
-        public static List<T> ToList<T>(ICollection items) where T: new()
+        public static List<T> ToList<T>(this ICollection items) where T: new()
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -101,7 +101,7 @@ namespace KeLi.Common.Converter.Collections
         /// <param name="items"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static IList ToIList(ICollection items, Type type)
+        public static IList ToIList(this ICollection items, Type type)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
