@@ -66,12 +66,12 @@ namespace KeLi.Common.Converter.Collections
     public static class CollectionConverter
     {
         /// <summary>
-        /// Binding flags.
+        ///     Binding flags.
         /// </summary>
         private const BindingFlags _flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
         /// <summary>
-        /// Converts the ICollection to the List.
+        ///     Converts the ICollection to the List.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="items"></param>
@@ -96,7 +96,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the ICollection to the IList.
+        ///     Converts the ICollection to the IList.
         /// </summary>
         /// <param name="items"></param>
         /// <param name="type"></param>
@@ -123,7 +123,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the DataTable to the List.
+        ///     Converts the DataTable to the List.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="dt"></param>

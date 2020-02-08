@@ -59,8 +59,8 @@ namespace KeLi.Common.Revit.Widgets
     public static class StorageUtil
     {
         /// <summary>
-        /// Closes the active document that is unsaved.
-        /// You can choose whether to save or not.
+        ///     Closes the active document that is unsaved.
+        ///     You can choose whether to save or not.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="modelPath"></param>
@@ -86,7 +86,8 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Saves to the file of current active document path by only covered mode, then closes it.
+        ///     Closes the active document path by only covered mode.
+        ///     You can choose whether to save or not.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="tmpRvt"></param>
@@ -103,8 +104,8 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Closes the active document path by only covered mode.
-        /// You can choose whether to save or not.
+        ///     Closes the active document path by only covered mode.
+        ///     You can choose whether to save or not.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="uiapp"></param>
