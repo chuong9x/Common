@@ -24,9 +24,9 @@ namespace KeLi.Common.Converter.Serializations.Tests
         [TestMethod()]
         public void DeserializeTest()
         {
-            var stu = JsonUtil.Deserialize<TestC[]>(new FileInfo("test.txt"));
+            var stus = JsonUtil.Deserialize<TestC[]>(new FileInfo("test.txt"));
 
-            //Assert.AreEqual(stu?.Name == "Jack", true);
+            Assert.AreEqual(stus.Count() == 2, true);
         }
     }
 }
