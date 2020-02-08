@@ -96,6 +96,25 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
+        ///     Converts the ICollection to the List.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public static List<T> ToList<T>(this ICollection<T> items) where T : new()
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            var results = new List<T>();
+
+            foreach (var item in items)
+                results.Add(item);
+
+            return results;
+        }
+
+        /// <summary>
         ///     Converts the ICollection to the IList.
         /// </summary>
         /// <param name="items"></param>
