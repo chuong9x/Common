@@ -59,46 +59,66 @@ namespace KeLi.Common.Revit.Widgets
     public static class StorageUtil
     {
         /// <summary>
-        /// Saves as a new file and closes it.
+        /// Closes the active document that is unsaved.
+        /// You can choose whether to save or not.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="modelPath"></param>
         /// <param name="saveModified"></param>
-        public static void SaveNewFileAndClose(this Document doc, string modelPath, bool saveModified = true)
+        public static void CloseUnsavedFile(this Document doc, string modelPath, bool saveModified = true)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(modelPath));
+
             if (modelPath == null)
                 throw new ArgumentNullException(nameof(modelPath));
+
+            if (!string.IsNullOrWhiteSpace(doc.PathName))
+                throw new Exception("The document file existed!");
 
             if (File.Exists(modelPath))
                 File.Delete(modelPath);
 
-            doc.SaveAs(modelPath);
+            if (saveModified)
+                doc.SaveAs(modelPath);
+
             doc.Close(saveModified);
         }
 
         /// <summary>
-        /// Saves to the file of current active document path by only covered mode, then closes it.
+        /// Closes the active document path by only covered mode.
+        /// You can choose whether to save or not.
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="tmpRvt"></param>
         /// <param name="saveModified"></param>
-        public static void SaveExistedFileAndClose(this UIApplication uiapp, string tmpRvt, bool saveModified = true)
+        public static void CloseExistedFile(this UIApplication uiapp, string tmpRvt, bool saveModified = true)
         {
+            if (uiapp == null)
+                throw new ArgumentNullException(nameof(uiapp));
+
             if (tmpRvt == null)
                 throw new ArgumentNullException(nameof(tmpRvt));
 
-            uiapp.ActiveUIDocument.Document.SaveExistedFileAndClose(uiapp, tmpRvt, saveModified);
+            uiapp.ActiveUIDocument.Document.CloseExistedFile(uiapp, tmpRvt, saveModified);
         }
 
         /// <summary>
-        /// Saves to the file of current active document path by only covered mode, then closes it.
+        /// Closes the active document path by only covered mode.
+        /// You can choose whether to save or not.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="uiapp"></param>
         /// <param name="tmpRvt"></param>
         /// <param name="saveModified"></param>
-        public static void SaveExistedFileAndClose(this Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
+        public static void CloseExistedFile(this Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (uiapp == null)
+                throw new ArgumentNullException(nameof(uiapp));
+
             if (tmpRvt == null)
                 throw new ArgumentNullException(nameof(tmpRvt));
 
@@ -117,6 +137,12 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="saveModified"></param>
         private static void SafelyClose(Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
         {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (uiapp == null)
+                throw new ArgumentNullException(nameof(uiapp));
+
             if (tmpRvt == null)
                 throw new ArgumentNullException(nameof(tmpRvt));
 

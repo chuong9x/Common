@@ -177,7 +177,7 @@ namespace KeLi.Common.Revit.Builders
             var family = fdoc.LoadFamily(doc);
 
             if (rfaPath != null)
-                fdoc.SaveNewFileAndClose(rfaPath);
+                fdoc.CloseUnsavedFile(rfaPath);
 
             return doc.GetFamilySymbol(family);
         }

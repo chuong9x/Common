@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeLi.Common.Revit", "KeLi.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeLi.Common.DriveTests", "KeLi.Common.DriveTests\KeLi.Common.DriveTests.csproj", "{FD88FF91-60DD-4785-AC6D-64388BDB9C32}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeLi.Common.ConverterTests", "KeLi.Common.ConverterTests\KeLi.Common.ConverterTests.csproj", "{E41A2898-B47C-442D-8080-D258ACEA5099}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{FD88FF91-60DD-4785-AC6D-64388BDB9C32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD88FF91-60DD-4785-AC6D-64388BDB9C32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD88FF91-60DD-4785-AC6D-64388BDB9C32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E41A2898-B47C-442D-8080-D258ACEA5099}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E41A2898-B47C-442D-8080-D258ACEA5099}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E41A2898-B47C-442D-8080-D258ACEA5099}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E41A2898-B47C-442D-8080-D258ACEA5099}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
