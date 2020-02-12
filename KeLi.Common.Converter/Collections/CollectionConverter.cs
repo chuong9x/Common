@@ -424,7 +424,20 @@ namespace KeLi.Common.Converter.Collections
             if (pairs == null)
                 throw new ArgumentNullException(nameof(pairs));
 
-            return pairs.AllKeys.ToDictionary(k => k, pairs.GetValues);
+            return pairs.AllKeys.ToDictionary(t => t, pairs.GetValues);
+        }
+
+        /// <summary>
+        /// Converts the NameValueCollection to the Dictionary.
+        /// </summary>
+        /// <param name="pairs"></param>
+        /// <returns></returns>
+        public static Dictionary<string, string> ToDictionary2(this NameValueCollection pairs)
+        {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
+            return pairs.AllKeys.ToDictionary(t => t, t => pairs.GetValues(t)?.FirstOrDefault());
         }
 
         /// <summary>
@@ -438,6 +451,19 @@ namespace KeLi.Common.Converter.Collections
                 throw new ArgumentNullException(nameof(pairs));
 
             return pairs.AllKeys.ToLookup(t => t, pairs.GetValues);
+        }
+
+        /// <summary>
+        /// Converts the NameValueCollection to the ILookup.
+        /// </summary>
+        /// <param name="pairs"></param>
+        /// <returns></returns>
+        public static ILookup<string, string> ToLookup2(this NameValueCollection pairs)
+        {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
+            return pairs.AllKeys.ToLookup(t => t, t => pairs.GetValues(t)?.FirstOrDefault());
         }
 
         /// <summary>
@@ -484,6 +510,24 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
+        /// Converts the IDictionary to the NameValueCollection.
+        /// </summary>
+        /// <param name="pairs"></param>
+        /// <returns></returns>
+        public static NameValueCollection ToNameValueCollection(this IDictionary<string, string> pairs)
+        {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
+            var result = new NameValueCollection();
+
+            foreach (var pair in pairs)
+                result.Add(pair.Key, pair.Value);
+
+            return result;
+        }
+
+        /// <summary>
         /// Converts the ILookup to the NameValueCollection.
         /// </summary>
         /// <param name="pairs"></param>
@@ -498,6 +542,24 @@ namespace KeLi.Common.Converter.Collections
             foreach (var pair in pairs)
                 foreach (var item in pair.SelectMany(s => s))
                     result.Add(pair.Key, item);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Converts the ILookup to the NameValueCollection.
+        /// </summary>
+        /// <param name="pairs"></param>
+        /// <returns></returns>
+        public static NameValueCollection ToNameValueCollection(this ILookup<string, string> pairs)
+        {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
+            var result = new NameValueCollection();
+
+            foreach (var pair in pairs)
+                result.Add(pair.Key, pair.FirstOrDefault());
 
             return result;
         }
@@ -558,6 +620,23 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
+        /// Converts the pair string to the Dictionary.
+        /// </summary>
+        /// <param name="pairs"></param>
+        /// <param name="pattern"></param>
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
+        public static Dictionary<string, string> ToDictionary2(string pairs, string pattern = "\r\n", string delimiter = ":")
+        {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
+            var nvc = ToNameValueCollection(pairs, pattern, delimiter);
+
+            return ToDictionary2(nvc);
+        }
+
+        /// <summary>
         /// Converts the IEnumerable to the Dictionary.
         /// </summary>
         /// <param name="pairs"></param>
@@ -571,6 +650,22 @@ namespace KeLi.Common.Converter.Collections
             var nvc = ToNameValueCollection(pairs, delimiter);
 
             return ToDictionary(nvc);
+        }
+
+        /// <summary>
+        /// Converts the IEnumerable to the Dictionary.
+        /// </summary>
+        /// <param name="pairs"></param>
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
+        public static Dictionary<string, string> ToDictionary2(this IEnumerable<string> pairs, string delimiter = ":")
+        {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
+            var nvc = ToNameValueCollection(pairs, delimiter);
+
+            return ToDictionary2(nvc);
         }
     }
 }
