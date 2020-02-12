@@ -46,7 +46,6 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using KeLi.Common.Converter.Serializations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -56,7 +55,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Web.Script.Serialization;
 
 namespace KeLi.Common.Converter.Collections
 {
@@ -106,7 +104,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        ///     Converts the data table to the ilist.
+        ///     Converts the DataTable to the IList.
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="type"></param>
@@ -150,7 +148,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        ///     Converts the sql data reader to the list.
+        ///     Converts the SqlDataReader to the List.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
@@ -183,7 +181,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        ///     Converts the sql data reader to the ilist.
+        ///     Converts the SqlDataReader to the IList.
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="type"></param>
@@ -230,7 +228,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the list to the data table.
+        /// Converts the List to the DataTable.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="ts"></param>
@@ -261,7 +259,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the sql data reader to the data table.
+        /// Converts the SqlDataReader to the DataTable.
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
@@ -304,7 +302,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the type t object to the type s object.
+        /// Converts the T to the S.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="S"></typeparam>
@@ -346,7 +344,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Convert the object to the sql db type object.
+        /// Convert the object to the SqlDbType.
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -417,7 +415,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the name value collection to the idictionary.
+        /// Converts the NameValueCollection to the Dictionary.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -430,7 +428,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the name value collection to the ilookup.
+        /// Converts the NameValueCollection to the ILookup.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -443,7 +441,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the idictionary to the name value collection.
+        /// Converts the IDictionary to the NameValueCollection.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -462,7 +460,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the ilookup to the name value collection.
+        /// Converts the ILookup to the NameValueCollection.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -481,7 +479,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the name value collection to the pair string.
+        /// Converts the NameValueCollection to the pair string.
         /// </summary>
         /// <param name="pairs"></param>
         public static string ToNvcString(this NameValueCollection pairs)
@@ -493,7 +491,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the pair string to the name value collection.
+        /// Converts the pair string to the NameValueCollection.
         /// </summary>
         /// <param name="pairs"></param>
         public static NameValueCollection ToNvc(string pairs)
@@ -512,6 +510,21 @@ namespace KeLi.Common.Converter.Collections
             }
 
             return results;
+        }
+
+        /// <summary>
+        /// Converts the pair string to the Dictionary.
+        /// </summary>
+        /// <param name="pairs"></param>
+        /// <returns></returns>
+        public static Dictionary<string, string[]> ToDictionary(string pairs)
+        {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
+            var nvc = ToNvc(pairs);
+
+            return ToDictionary(nvc);
         }
     }
 }

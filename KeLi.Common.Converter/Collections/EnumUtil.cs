@@ -109,6 +109,10 @@ namespace KeLi.Common.Converter.Collections
             foreach (T value in values)
             {
                 var member = typeof(T).GetMember(value.ToString()).FirstOrDefault();
+
+                if (member == null)
+                    continue;
+
                 var atts = member.GetCustomAttributes(typeof(DisplayAttribute), false);
                 var name = (atts.FirstOrDefault() as DisplayAttribute)?.Name;
 
@@ -131,6 +135,10 @@ namespace KeLi.Common.Converter.Collections
             foreach (T value in values)
             {
                 var member = typeof(T).GetMember(value.ToString()).FirstOrDefault();
+
+                if (member == null)
+                    continue;
+
                 var atts = member.GetCustomAttributes(typeof(DescriptionAttribute), false);
                 var name = (atts.FirstOrDefault() as DescriptionAttribute)?.Description;
 
