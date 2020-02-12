@@ -74,7 +74,7 @@ namespace KeLi.Common.Converter.Collections
         /// <typeparam name="T"></typeparam>
         /// <param name="dt"></param>
         /// <returns></returns>
-        public static List<T> ToList<T>(DataTable dt) where T: new()
+        public static List<T> ToList<T>(DataTable dt) where T : new()
         {
             if (dt == null)
                 throw new ArgumentNullException(nameof(dt));
@@ -308,7 +308,7 @@ namespace KeLi.Common.Converter.Collections
         /// <typeparam name="S"></typeparam>
         /// <param name="t"></param>
         /// <returns></returns>
-        public static S ToAnyType<T, S>(this T t) where T: class where S: new()
+        public static S ToAnyType<T, S>(this T t) where T : class where S : new()
         {
             if (t == null)
                 throw new ArgumentNullException(nameof(t));
@@ -441,6 +441,30 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
+        /// Converts the NameValueCollection to the pair string.
+        /// </summary>
+        /// <param name="pairs"></param>
+        public static string ToNvcString(this NameValueCollection pairs)
+        {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
+            return string.Join(Environment.NewLine, pairs.AllKeys.SelectMany(pairs.GetValues, (k, v) => k + ": " + v));
+        }
+
+        /// <summary>
+        /// Converts the NameValueCollection to the List.
+        /// </summary>
+        /// <param name="pairs"></param>
+        public static List<string> ToList(this NameValueCollection pairs)
+        {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
+            return pairs.AllKeys.ToList();
+        }
+
+        /// <summary>
         /// Converts the IDictionary to the NameValueCollection.
         /// </summary>
         /// <param name="pairs"></param>
@@ -453,8 +477,8 @@ namespace KeLi.Common.Converter.Collections
             var result = new NameValueCollection();
 
             foreach (var pair in pairs)
-            foreach (var val in pair.Value)
-                result.Add(pair.Key, val);
+                foreach (var val in pair.Value)
+                    result.Add(pair.Key, val);
 
             return result;
         }
@@ -472,57 +496,79 @@ namespace KeLi.Common.Converter.Collections
             var result = new NameValueCollection();
 
             foreach (var pair in pairs)
-            foreach (var item in pair.SelectMany(s => s))
-                result.Add(pair.Key, item);
+                foreach (var item in pair.SelectMany(s => s))
+                    result.Add(pair.Key, item);
 
             return result;
         }
 
         /// <summary>
-        /// Converts the NameValueCollection to the pair string.
+        /// Converts the IEnumerable to the NameValueCollection.
         /// </summary>
         /// <param name="pairs"></param>
-        public static string ToNvcString(this NameValueCollection pairs)
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
+        public static NameValueCollection ToNameValueCollection(this IEnumerable<string> pairs, string delimiter = ":")
         {
             if (pairs == null)
                 throw new ArgumentNullException(nameof(pairs));
-
-            return string.Join(Environment.NewLine, pairs.AllKeys.SelectMany(pairs.GetValues, (k, v) => k + ": " + v));
-        }
-
-        /// <summary>
-        /// Converts the pair string to the NameValueCollection.
-        /// </summary>
-        /// <param name="pairs"></param>
-        public static NameValueCollection ToNvc(string pairs)
-        {
-            if (pairs == null)
-                throw new ArgumentNullException(nameof(pairs));
-
-            var kvs = Regex.Split(pairs, "\r\n", RegexOptions.IgnoreCase);
             var results = new NameValueCollection();
 
-            foreach (var kv in kvs)
+            foreach (var pair in pairs)
             {
-                var index = kv.IndexOf(":", StringComparison.Ordinal);
+                var index = pair.IndexOf(delimiter, StringComparison.Ordinal);
 
-                results.Add(kv.Substring(0, index), kv.Substring(index + 1));
+                results.Add(pair.Substring(0, index), pair.Substring(index + 1).Trim());
             }
 
             return results;
         }
 
         /// <summary>
-        /// Converts the pair string to the Dictionary.
+        /// Converts the pair string to the NameValueCollection.
         /// </summary>
         /// <param name="pairs"></param>
-        /// <returns></returns>
-        public static Dictionary<string, string[]> ToDictionary(string pairs)
+        /// <param name="pattern"></param>
+        /// <param name="delimiter"></param>
+        public static NameValueCollection ToNameValueCollection(string pairs, string pattern = "\r\n", string delimiter = ":")
         {
             if (pairs == null)
                 throw new ArgumentNullException(nameof(pairs));
 
-            var nvc = ToNvc(pairs);
+            var kvs = Regex.Split(pairs, pattern, RegexOptions.IgnoreCase);
+
+            return ToNameValueCollection(kvs, delimiter);
+        }
+
+        /// <summary>
+        /// Converts the pair string to the Dictionary.
+        /// </summary>
+        /// <param name="pairs"></param>
+        /// <param name="pattern"></param>
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
+        public static Dictionary<string, string[]> ToDictionary(string pairs, string pattern = "\r\n", string delimiter = ":")
+        {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
+            var nvc = ToNameValueCollection(pairs, pattern, delimiter);
+
+            return ToDictionary(nvc);
+        }
+
+        /// <summary>
+        /// Converts the IEnumerable to the Dictionary.
+        /// </summary>
+        /// <param name="pairs"></param>
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
+        public static Dictionary<string, string[]> ToDictionary(this IEnumerable<string> pairs, string delimiter = ":")
+        {
+            if (pairs == null)
+                throw new ArgumentNullException(nameof(pairs));
+
+            var nvc = ToNameValueCollection(pairs, delimiter);
 
             return ToDictionary(nvc);
         }
