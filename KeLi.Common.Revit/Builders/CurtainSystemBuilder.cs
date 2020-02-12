@@ -48,7 +48,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Structure;
@@ -66,34 +65,13 @@ namespace KeLi.Common.Revit.Builders
     public static class CurtainSystemBuilder
     {
         /// <summary>
-        ///     Creates a new CurtainSystem.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="faces"></param>
-        /// <returns></returns>
-        public static CurtainSystem CreateCurtainSystem(this Document doc, FaceArray faces)
-        {
-            if (doc == null)
-                throw new ArgumentNullException(nameof(doc));
-
-            if (faces == null)
-                throw new ArgumentNullException(nameof(faces));
-
-            var defaultTypeId = doc.GetDefaultElementTypeId(ElementTypeGroup.CurtainSystemType);
-            var type = doc.GetElement(defaultTypeId) as CurtainSystemType;
-
-            return doc.Create.NewCurtainSystem(faces, type);
-        }
-
-        /// <summary>
         ///     Creates CurtainSystem list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="app"></param>
         /// <param name="pnlType"></param>
         /// <param name="tplFileName"></param>
-        public static void CreateCurtainSystemList(this Document doc, Application app, PanelType pnlType,
-            string tplFileName)
+        public static List<CurtainSystem> CreateCurtainSystemList(this Document doc, Application app, PanelType pnlType, string tplFileName)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -108,20 +86,23 @@ namespace KeLi.Common.Revit.Builders
                 throw new ArgumentNullException(nameof(tplFileName));
 
             var rooms = doc.GetSpatialElementList();
+            var results = new List<CurtainSystem>();
 
-            rooms.ForEach(f => doc.CreateCurtainSystemList(app, pnlType, tplFileName));
+            foreach (var room in rooms)
+                results.AddRange(doc.CreateCurtainSystemList(app, room, pnlType, tplFileName));
+
+            return results;
         }
 
         /// <summary>
         ///     Creates CurtainSystem list.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="room"></param>
         /// <param name="app"></param>
+        /// <param name="room"></param>
         /// <param name="pnlType"></param>
         /// <param name="tplFileName"></param>
-        public static void CreateCurtainSystemList(this Document doc, SpatialElement room, Application app,
-            PanelType pnlType, string tplFileName)
+        public static List<CurtainSystem> CreateCurtainSystemList(this Document doc, Application app, SpatialElement room, PanelType pnlType, string tplFileName)
         {
             if (doc == null)
                 throw new NullReferenceException(nameof(doc));
@@ -140,13 +121,16 @@ namespace KeLi.Common.Revit.Builders
 
             var roomc = room.GetBoundingBox(doc).GetBoxCenter();
             var walls = room.GetBoundaryWallList(doc);
+            var results = new List<CurtainSystem>();
 
             foreach (var wall in walls)
             {
                 var parm = new CurtainSystemParameter(wall, roomc, pnlType, tplFileName);
 
-                doc.CreateCurtainSystem(app, parm);
+                results.Add(doc.CreateCurtainSystem(app, parm));
             }
+
+            return results;
         }
 
         /// <summary>
@@ -155,8 +139,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="app"></param>
         /// <param name="parms"></param>
-        public static void CreateCurtainSystem(this Document doc, Application app,
-            IEnumerable<CurtainSystemParameter> parms)
+        public static List<CurtainSystem> CreateCurtainSystemList(this Document doc, Application app, IEnumerable<CurtainSystemParameter> parms)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -167,7 +150,12 @@ namespace KeLi.Common.Revit.Builders
             if (parms == null)
                 throw new NullReferenceException(nameof(parms));
 
-            parms.ToList().ForEach(f => doc.CreateCurtainSystem(app, f));
+            var results = new List<CurtainSystem>();
+
+            foreach (var parm in parms)
+                results.Add(doc.CreateCurtainSystem(app, parm));
+
+            return results;
         }
 
         /// <summary>
@@ -176,7 +164,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="app"></param>
         /// <param name="parm"></param>
-        public static void CreateCurtainSystem(this Document doc, Application app, CurtainSystemParameter parm)
+        public static CurtainSystem CreateCurtainSystem(this Document doc, Application app, CurtainSystemParameter parm)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -205,6 +193,7 @@ namespace KeLi.Common.Revit.Builders
             var symbol = doc.CreateExtrusionSymbol(app, symbolParm);
             var lvl = doc.GetElement(parm.RefWall.LevelId) as Level;
             var instanceParm = new FamilyInstanceParameter(minPt, symbol, lvl, StructuralType.NonStructural);
+            CurtainSystem result = null;
 
             doc.AutoTransaction(() =>
             {
@@ -215,21 +204,41 @@ namespace KeLi.Common.Revit.Builders
                 // The instance has thickness.
                 var faces = inst.GetFaceList(-innerNormal).ToFaceArray();
 
-                var curtain = doc.CreateCurtainSystem(faces);
-
+                result = doc.CreateCurtainSystem(faces);
                 doc.Delete(inst.Id);
                 doc.Delete(symbol.Family.Id);
 
                 if (parm.PanelType != null)
                 {
-                    curtain.CurtainSystemType.get_Parameter(BuiltInParameter.AUTO_PANEL).Set(parm.PanelType.Id);
+                    result.CurtainSystemType.get_Parameter(BuiltInParameter.AUTO_PANEL).Set(parm.PanelType.Id);
 
-                    var thickness = parm.PanelType.get_Parameter(BuiltInParameter.CURTAIN_WALL_SYSPANEL_THICKNESS)
-                        .AsDouble();
+                    var thickness = parm.PanelType.get_Parameter(BuiltInParameter.CURTAIN_WALL_SYSPANEL_THICKNESS).AsDouble();
 
-                    ElementTransformUtils.MoveElement(doc, curtain.Id, innerNormal * thickness / 2);
+                    ElementTransformUtils.MoveElement(doc, result.Id, innerNormal * thickness / 2);
                 }
             });
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Creates a new CurtainSystem.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="faces"></param>
+        /// <returns></returns>
+        public static CurtainSystem CreateCurtainSystem(this Document doc, FaceArray faces)
+        {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (faces == null)
+                throw new ArgumentNullException(nameof(faces));
+
+            var defaultTypeId = doc.GetDefaultElementTypeId(ElementTypeGroup.CurtainSystemType);
+            var type = doc.GetElement(defaultTypeId) as CurtainSystemType;
+
+            return doc.Create.NewCurtainSystem(faces, type);
         }
     }
 }
