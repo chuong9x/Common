@@ -118,7 +118,7 @@ namespace KeLi.Common.Revit.Builders
 
             var refAsix = XYZ.BasisZ;
 
-            if (line.IsSameDirection(new List<XYZ> {XYZ.BasisZ, -XYZ.BasisZ}))
+            if (line.IsSameDirection(XYZ.BasisZ, -XYZ.BasisZ))
                 refAsix = XYZ.BasisX;
 
             var normal = line.Direction.CrossProduct(refAsix).Normalize();
