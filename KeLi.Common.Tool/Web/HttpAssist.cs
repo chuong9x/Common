@@ -85,8 +85,12 @@ namespace KeLi.Common.Tool.Web
                 postData = CreateParameter(postParamDict);
 
             var response = param.CreateHttpResponse(postData);
+            var stream = response.GetResponseStream();
 
-            using (var reader = new StreamReader(response.GetResponseStream(), param.EncodeType))
+            if (stream == null)
+                throw new NullReferenceException(nameof(stream));
+
+            using (var reader = new StreamReader(stream, param.EncodeType))
             {
                 return reader.ReadToEnd();
             }
@@ -124,11 +128,11 @@ namespace KeLi.Common.Tool.Web
             var st = response.GetResponseStream();
             var results = new byte[response.ContentLength];
 
-            if (st != null)
-            {
-                st.Read(results, 0, results.Length);
-                st.Close();
-            }
+            if (st == null)
+                return results;
+
+            st.Read(results, 0, results.Length);
+            st.Close();
 
             return results;
         }
@@ -145,8 +149,12 @@ namespace KeLi.Common.Tool.Web
                 throw new ArgumentNullException(nameof(param));
 
             var response = param.CreateHttpResponse(string.Empty, filePath);
+            var stream = response.GetResponseStream();
 
-            using (var reader = new StreamReader(response.GetResponseStream(), param.EncodeType))
+            if (stream == null)
+                throw new NullReferenceException(nameof(stream));
+
+            using (var reader = new StreamReader(stream, param.EncodeType))
             {
                 return reader.ReadToEnd();
             }
@@ -226,6 +234,7 @@ namespace KeLi.Common.Tool.Web
                 if (request != null)
                     request.ProtocolVersion = HttpVersion.Version10;
             }
+
             else
             {
                 request = WebRequest.Create(param.Url) as HttpWebRequest;
@@ -304,7 +313,8 @@ namespace KeLi.Common.Tool.Web
                 }
             }
 
-            var result = request.GetResponse() as HttpWebResponse;
+            if (!(request.GetResponse() is HttpWebResponse result))
+                throw new NullReferenceException(nameof(result));
 
             Cookies.Add(request.CookieContainer.GetCookies(new Uri(@"http:\\" + new Uri(param.Url).Host)));
             Cookies.Add(request.CookieContainer.GetCookies(new Uri(@"https:\\" + new Uri(param.Url).Host)));

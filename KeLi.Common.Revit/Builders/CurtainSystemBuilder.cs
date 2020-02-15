@@ -233,8 +233,9 @@ namespace KeLi.Common.Revit.Builders
 
             var defaultTypeId = doc.GetDefaultElementTypeId(ElementTypeGroup.CurtainSystemType);
             var type = doc.GetElement(defaultTypeId) as CurtainSystemType;
+            var cloneType = type?.Duplicate(Guid.NewGuid().ToString()) as CurtainSystemType;
 
-            return doc.Create.NewCurtainSystem(faces, type);
+            return doc.Create.NewCurtainSystem(faces, cloneType);
         }
     }
 }
