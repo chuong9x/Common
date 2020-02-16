@@ -59,7 +59,7 @@ namespace KeLi.Common.Revit.Widgets
     public static class StorageUtil
     {
         /// <summary>
-        ///     Closes the active document that is unsaved.
+        ///     Closes the unactive document that is unsaved.
         ///     You can choose whether to save or not.
         /// </summary>
         /// <param name="doc"></param>
@@ -83,6 +83,41 @@ namespace KeLi.Common.Revit.Widgets
                 doc.SaveAs(modelPath);
 
             doc.Close(saveModified);
+        }
+
+        /// <summary>
+        ///     Closes the active or unactive document that is unsaved.
+        ///     You can choose whether to save or not.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="uiapp"></param>
+        /// <param name="modelPath"></param>
+        /// <param name="tmpRvt"></param>
+        /// <param name="saveModified"></param>
+        public static void CloseUnsavedFile(this Document doc, UIApplication uiapp, string modelPath, string tmpRvt, bool saveModified = true)
+        {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (modelPath == null)
+                throw new ArgumentNullException(nameof(modelPath));
+
+            if (tmpRvt == null)
+                throw new ArgumentNullException(nameof(tmpRvt));
+
+            if (!string.IsNullOrWhiteSpace(doc.PathName))
+                throw new Exception("The document file existed!");
+
+            if (File.Exists(modelPath))
+                File.Delete(modelPath);
+
+            if (saveModified)
+                doc.SaveAs(modelPath);
+
+            doc.SafelyClose(uiapp, tmpRvt, saveModified);
         }
 
         /// <summary>
@@ -125,7 +160,7 @@ namespace KeLi.Common.Revit.Widgets
             if (string.IsNullOrWhiteSpace(doc.PathName))
                 throw new Exception("The document file doesn't exist, please copy template file and open it!");
 
-            SafelyClose(doc, uiapp, tmpRvt, saveModified);
+            doc.SafelyClose( uiapp, tmpRvt, saveModified);
         }
 
         /// <summary>
@@ -135,7 +170,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="uiapp"></param>
         /// <param name="tmpRvt"></param>
         /// <param name="saveModified"></param>
-        private static void SafelyClose(Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
+        public static void SafelyClose(this Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
