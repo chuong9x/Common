@@ -94,7 +94,8 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="modelPath"></param>
         /// <param name="tmpRvt"></param>
         /// <param name="saveModified"></param>
-        public static void CloseUnsavedFile(this Document doc, UIApplication uiapp, string modelPath, string tmpRvt, bool saveModified = true)
+        public static void CloseUnsavedFile(this Document doc, UIApplication uiapp, string modelPath, string tmpRvt,
+            bool saveModified = true)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -146,7 +147,8 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="uiapp"></param>
         /// <param name="tmpRvt"></param>
         /// <param name="saveModified"></param>
-        public static void CloseExistedFile(this Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
+        public static void CloseExistedFile(this Document doc, UIApplication uiapp, string tmpRvt,
+            bool saveModified = true)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -158,9 +160,9 @@ namespace KeLi.Common.Revit.Widgets
                 throw new ArgumentNullException(nameof(tmpRvt));
 
             if (string.IsNullOrWhiteSpace(doc.PathName))
-                throw new Exception("The document file doesn't exist, please copy template file and open it!");
+                throw new Exception("The document file doesn't exist, please save it!");
 
-            doc.SafelyClose( uiapp, tmpRvt, saveModified);
+            doc.SafelyClose(uiapp, tmpRvt, saveModified);
         }
 
         /// <summary>
@@ -189,7 +191,19 @@ namespace KeLi.Common.Revit.Widgets
                 uiapp.OpenAndActivateDocument(modelPath, opt, false);
             }
 
-            doc.Close(saveModified);
+            // Before closing active document, must open another a document and active it.
+            if (saveModified)
+            {
+                if (string.IsNullOrWhiteSpace(doc.PathName))
+                    throw new Exception("The document file doesn't exist, please save it!");
+
+                doc.Close(true);
+            }
+
+            else
+            {
+                doc.Close(false);
+            }
         }
     }
 }
