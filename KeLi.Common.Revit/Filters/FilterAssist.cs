@@ -86,6 +86,7 @@ namespace KeLi.Common.Revit.Filters
 
                 case FilterType.All:
                     return filter.ToList();
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -191,10 +192,11 @@ namespace KeLi.Common.Revit.Filters
 
             var elms = doc.Checkout(FilterType.Instance, viewId);
             var results = new List<Element>();
-            var num = 0;
 
             foreach (var elm in elms)
             {
+                int num;
+
                 switch (type)
                 {
                     case CalcType.FaceNum:
@@ -208,6 +210,9 @@ namespace KeLi.Common.Revit.Filters
                     case CalcType.SolidPointNum:
                         num = elm.GetSolidPointList().Count;
                         break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
 
                 if (moreThan && num <= maxNum)
