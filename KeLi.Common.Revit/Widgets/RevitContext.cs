@@ -148,6 +148,18 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
+        ///     Creates an instances.
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public static RevitContext CreateInstance(int version)
+        {
+            _version = version.ToString();
+
+            return SingletonFactory<RevitContext>.CreateInstance();
+        }
+
+        /// <summary>
         ///     Gets revit application.
         /// </summary>
         /// <returns></returns>
