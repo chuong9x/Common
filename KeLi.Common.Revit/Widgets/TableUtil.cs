@@ -47,6 +47,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Autodesk.Revit.DB;
@@ -75,6 +76,23 @@ namespace KeLi.Common.Revit.Widgets
 
             var view = doc.GetInstanceElementList<ViewSchedule>().FirstOrDefault(f => f.Name == tableName);
 
+            return doc.GetDataTable(view);
+        }
+
+        /// <summary>
+        ///     Gets revit detail list's DataTable.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="view"></param>
+        /// <returns></returns>
+        public static DataTable GetDataTable(this Document doc, ViewSchedule view)
+        {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (view == null)
+                throw new ArgumentNullException(nameof(view));
+
             if (view == null)
                 throw new NullReferenceException(nameof(view));
 
@@ -82,7 +100,7 @@ namespace KeLi.Common.Revit.Widgets
             var body = table.GetSectionData(SectionType.Body);
             var colNum = body.NumberOfColumns;
             var rowNum = body.NumberOfRows;
-            var result = new DataTable {TableName = view.GetCellText(SectionType.Header, 0, 0)};
+            var result = new DataTable { TableName = view.GetCellText(SectionType.Header, 0, 0) };
 
             for (var i = 0; i < colNum; i++)
                 result.Columns.Add();
@@ -98,6 +116,47 @@ namespace KeLi.Common.Revit.Widgets
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Gets revit detail list's all DataTable set.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static DataSet GetDataSet(this Document doc)
+        {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            var views = doc.GetInstanceElementList<ViewSchedule>();
+
+            return doc.GetDataSet(views);
+        }
+
+        /// <summary>
+        /// Gets revit detail list's all DataTable set.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="views"></param>
+        /// <returns></returns>
+        public static DataSet GetDataSet(this Document doc, IEnumerable<ViewSchedule> views)
+        {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (views == null)
+                throw new ArgumentNullException(nameof(views));
+
+            var results = new DataSet();
+
+            foreach (var view in views)
+            {
+                var table = doc.GetDataTable(view);
+
+                results.Tables.Add(table);
+            }
+
+            return results;
         }
     }
 }
