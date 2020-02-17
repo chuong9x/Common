@@ -127,6 +127,7 @@
     <Compile Include="Widgets\AutoUtil.cs" />
     <Compile Include="Filters\RoomUtil.cs" />
     <Compile Include="Converters\TypeConverter.cs" />
+    <Compile Include="Widgets\TableUtil.cs" />
     <Compile Include="Widgets\VisabilityUtil.cs" />
   </ItemGroup>
   <ItemGroup>
