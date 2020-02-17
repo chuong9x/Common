@@ -64,17 +64,17 @@ namespace KeLi.Common.Revit.Widgets
         ///     Gets revit detail list's DataTable.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="tableName"></param>
+        /// <param name="viewName"></param>
         /// <returns></returns>
-        public static DataTable GetDataTable(this Document doc, string tableName)
+        public static DataTable GetDataTable(this Document doc, string viewName)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (tableName == null)
-                throw new ArgumentNullException(nameof(tableName));
+            if (viewName == null)
+                throw new ArgumentNullException(nameof(viewName));
 
-            var view = doc.GetInstanceElementList<ViewSchedule>().FirstOrDefault(f => f.Name == tableName);
+            var view = doc.GetInstanceElementList<ViewSchedule>().FirstOrDefault(f => f.Name == viewName);
 
             return doc.GetDataTable(view);
         }
@@ -131,6 +131,32 @@ namespace KeLi.Common.Revit.Widgets
             var views = doc.GetInstanceElementList<ViewSchedule>();
 
             return doc.GetDataSet(views);
+        }
+
+        /// <summary>
+        /// Gets revit detail list's all DataTable set.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="viewNames"></param>
+        /// <returns></returns>
+        public static DataSet GetDataSet(this Document doc, IEnumerable<string> viewNames)
+        {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (viewNames == null)
+                throw new ArgumentNullException(nameof(viewNames));
+
+            var results = new DataSet();
+
+            foreach (var viewName in viewNames)
+            {
+                var table = doc.GetDataTable(viewName);
+
+                results.Tables.Add(table);
+            }
+
+            return results;
         }
 
         /// <summary>
