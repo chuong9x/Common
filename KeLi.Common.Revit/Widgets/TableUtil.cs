@@ -119,27 +119,27 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Gets revit detail list's all DataTable set.
+        /// Gets revit detail list's all DataTable list.
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static DataSet GetDataSet(this Document doc)
+        public static List<DataTable> GetDataTableList(this Document doc)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
 
             var views = doc.GetInstanceElementList<ViewSchedule>();
 
-            return doc.GetDataSet(views);
+            return doc.GetDataTableList(views);
         }
 
         /// <summary>
-        /// Gets revit detail list's all DataTable set.
+        /// Gets revit detail list's all DataTable list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="viewNames"></param>
         /// <returns></returns>
-        public static DataSet GetDataSet(this Document doc, IEnumerable<string> viewNames)
+        public static List<DataTable> GetDataTableList(this Document doc, IEnumerable<string> viewNames)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -156,16 +156,16 @@ namespace KeLi.Common.Revit.Widgets
                 results.Tables.Add(table);
             }
 
-            return results;
+            return results.Tables.Cast<DataTable>().ToList();
         }
 
         /// <summary>
-        /// Gets revit detail list's all DataTable set.
+        /// Gets revit detail list's all DataTable list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="views"></param>
         /// <returns></returns>
-        public static DataSet GetDataSet(this Document doc, IEnumerable<ViewSchedule> views)
+        public static List<DataTable> GetDataTableList(this Document doc, IEnumerable<ViewSchedule> views)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -182,7 +182,7 @@ namespace KeLi.Common.Revit.Widgets
                 results.Tables.Add(table);
             }
 
-            return results;
+            return results.Tables.Cast<DataTable>().ToList();
         }
     }
 }
