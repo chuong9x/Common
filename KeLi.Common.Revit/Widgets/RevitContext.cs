@@ -109,7 +109,9 @@ namespace KeLi.Common.Revit.Widgets
         {
             _clientName = ConfigUtil.GetValue("ClientName");
             _vendorId = ConfigUtil.GetValue("VendorId");
-            _version = ConfigUtil.GetValue("RevitVersion");
+
+            if(string.IsNullOrWhiteSpace(_version))
+                _version = ConfigUtil.GetValue("RevitVersion");
         }
 
         /// <summary>
@@ -118,6 +120,30 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static RevitContext CreateInstance()
         {
+            return SingletonFactory<RevitContext>.CreateInstance();
+        }
+
+        /// <summary>
+        ///     Creates an instances.
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public static RevitContext CreateInstance(RevitVersion version)
+        {
+            _version =  version.ToString().Replace("Revit", string.Empty);
+
+            return SingletonFactory<RevitContext>.CreateInstance();
+        }
+
+        /// <summary>
+        ///     Creates an instances.
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public static RevitContext CreateInstance(string version)
+        {
+            _version = version;
+
             return SingletonFactory<RevitContext>.CreateInstance();
         }
 
