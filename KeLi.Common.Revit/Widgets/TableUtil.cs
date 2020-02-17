@@ -93,9 +93,6 @@ namespace KeLi.Common.Revit.Widgets
             if (view == null)
                 throw new ArgumentNullException(nameof(view));
 
-            if (view == null)
-                throw new NullReferenceException(nameof(view));
-
             var table = view.GetTableData();
             var body = table.GetSectionData(SectionType.Body);
             var colNum = body.NumberOfColumns;
