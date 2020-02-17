@@ -97,7 +97,7 @@ namespace KeLi.Common.Revit.Widgets
             var body = table.GetSectionData(SectionType.Body);
             var colNum = body.NumberOfColumns;
             var rowNum = body.NumberOfRows;
-            var result = new DataTable { TableName = view.GetCellText(SectionType.Header, 0, 0) };
+            var result = new DataTable {TableName = view.GetCellText(SectionType.Header, 0, 0)};
 
             for (var i = 0; i < colNum; i++)
                 result.Columns.Add();
@@ -116,7 +116,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Gets revit detail list's all DataTable list.
+        ///     Gets revit detail list's all DataTable list.
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
@@ -131,7 +131,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Gets revit detail list's all DataTable list.
+        ///     Gets revit detail list's all DataTable list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="viewNames"></param>
@@ -157,7 +157,7 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        /// Gets revit detail list's all DataTable list.
+        ///     Gets revit detail list's all DataTable list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="views"></param>
