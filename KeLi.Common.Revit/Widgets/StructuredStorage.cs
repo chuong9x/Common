@@ -128,6 +128,37 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
+        ///     Gets revit version number.
+        /// </summary>
+        /// <param name="fileInfo"></param>
+        /// <returns></returns>
+        public static int GetRevitVersionNum(FileInfo fileInfo)
+        {
+            if (fileInfo == null)
+                throw new ArgumentNullException(nameof(fileInfo));
+
+            return GetRevitVersionNum(fileInfo.FullName);
+        }
+
+        /// <summary>
+        ///     Gets revit version number.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static int GetRevitVersionNum(string filePath)
+        {
+            if (filePath == null)
+                throw new ArgumentNullException(nameof(filePath));
+
+            var dict = GetRevitInfoDict(filePath);
+            var versionInfo = dict.FirstOrDefault(f => f.Key == "Revit Build").Value;
+            var startIndex = versionInfo.IndexOf("Revit", StringComparison.Ordinal) + 6;
+            var version = versionInfo.Substring(startIndex, 4);
+
+            return Convert.ToInt32(version);
+        }
+
+        /// <summary>
         ///     Gets revit file info dictionary.
         /// </summary>
         /// <param name="fileInfo"></param>
