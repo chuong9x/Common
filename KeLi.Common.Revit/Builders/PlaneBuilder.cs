@@ -64,7 +64,7 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static Plane CreatePlane(this XYZ pt)
         {
-            if (pt == null)
+            if (pt is null)
                 throw new ArgumentNullException(nameof(pt));
 
             if (pt == XYZ.Zero)
@@ -80,7 +80,7 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static Plane CreatePlane(this Line line)
         {
-            if (line == null)
+            if (line is null)
                 throw new ArgumentNullException(nameof(line));
 
             var refAsix = XYZ.BasisZ;
@@ -101,10 +101,10 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static SketchPlane CreateSketchPlane(this Document doc, XYZ pt)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (pt == null)
+            if (pt is null)
                 throw new ArgumentNullException(nameof(pt));
 
             return SketchPlane.Create(doc, pt.CreatePlane());
@@ -118,10 +118,10 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static SketchPlane CreateSketchPlane(this Document doc, Line line)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (line == null)
+            if (line is null)
                 throw new ArgumentNullException(nameof(line));
 
             return SketchPlane.Create(doc, line.CreatePlane());
@@ -135,10 +135,10 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static SketchPlane CreateSketchPlane(this Document doc, Plane plane)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (plane == null)
+            if (plane is null)
                 throw new ArgumentNullException(nameof(plane));
 
             return SketchPlane.Create(doc, plane);

@@ -67,10 +67,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="saveModified"></param>
         public static void CloseUnsavedFile(this Document doc, string modelPath, bool saveModified = true)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (modelPath == null)
+            if (modelPath is null)
                 throw new ArgumentNullException(nameof(modelPath));
 
             if (!string.IsNullOrWhiteSpace(doc.PathName))
@@ -97,16 +97,16 @@ namespace KeLi.Common.Revit.Widgets
         public static void CloseUnsavedFile(this Document doc, UIApplication uiapp, string modelPath, string tmpRvt,
             bool saveModified = true)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (modelPath == null)
+            if (modelPath is null)
                 throw new ArgumentNullException(nameof(modelPath));
 
-            if (tmpRvt == null)
+            if (tmpRvt is null)
                 throw new ArgumentNullException(nameof(tmpRvt));
 
             if (!string.IsNullOrWhiteSpace(doc.PathName))
@@ -130,10 +130,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="saveModified"></param>
         public static void CloseExistedFile(this UIApplication uiapp, string tmpRvt, bool saveModified = true)
         {
-            if (uiapp == null)
+            if (uiapp is null)
                 throw new ArgumentNullException(nameof(uiapp));
 
-            if (tmpRvt == null)
+            if (tmpRvt is null)
                 throw new ArgumentNullException(nameof(tmpRvt));
 
             uiapp.ActiveUIDocument.Document.CloseExistedFile(uiapp, tmpRvt, saveModified);
@@ -150,13 +150,13 @@ namespace KeLi.Common.Revit.Widgets
         public static void CloseExistedFile(this Document doc, UIApplication uiapp, string tmpRvt,
             bool saveModified = true)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (uiapp == null)
+            if (uiapp is null)
                 throw new ArgumentNullException(nameof(uiapp));
 
-            if (tmpRvt == null)
+            if (tmpRvt is null)
                 throw new ArgumentNullException(nameof(tmpRvt));
 
             if (string.IsNullOrWhiteSpace(doc.PathName))
@@ -174,13 +174,13 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="saveModified"></param>
         public static void SafelyClose(this Document doc, UIApplication uiapp, string tmpRvt, bool saveModified = true)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (uiapp == null)
+            if (uiapp is null)
                 throw new ArgumentNullException(nameof(uiapp));
 
-            if (tmpRvt == null)
+            if (tmpRvt is null)
                 throw new ArgumentNullException(nameof(tmpRvt));
 
             if (Equals(uiapp.ActiveUIDocument.Document, doc))

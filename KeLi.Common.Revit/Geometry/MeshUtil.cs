@@ -66,7 +66,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static List<Line> GetDispersedLineList(this Curve curve, int gapNum = 0)
         {
-            if (curve == null)
+            if (curve is null)
                 throw new ArgumentNullException(nameof(curve));
 
             return curve.Tessellate().ToList().GetDispersedLineList(gapNum);
@@ -78,7 +78,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static Dictionary<Mesh, List<MeshTriangle>> GetMeshTrianglesDict(this Element elm)
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
             var results = new Dictionary<Mesh, List<MeshTriangle>>();
@@ -96,7 +96,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static List<MeshTriangle> GetMeshTriangleList(this Mesh mesh)
         {
-            if (mesh == null)
+            if (mesh is null)
                 throw new ArgumentNullException(nameof(mesh));
 
             var results = new List<MeshTriangle>();
@@ -114,7 +114,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static List<Mesh> GetMeshList(this Element elm)
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
             var results = new List<Mesh>();
@@ -131,7 +131,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static List<Face> GetFaceList(this Element elm)
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
             var results = new List<Face>();
@@ -149,10 +149,10 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static List<Face> GetFaceList(this Element elm, XYZ dir)
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
-            if (dir == null)
+            if (dir is null)
                 throw new ArgumentNullException(nameof(dir));
 
             var faces = elm.GetFaceList();
@@ -179,7 +179,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static List<Face> GetFaceList(this Element elm, IEnumerable<XYZ> dirs)
         {
-            if (dirs == null)
+            if (dirs is null)
                 throw new ArgumentNullException(nameof(dirs));
 
             var results = new List<Face>();
@@ -197,7 +197,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static List<XYZ> GetFacePointList(this Element elm)
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
             var results = new List<XYZ>();
@@ -214,7 +214,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static List<XYZ> GetSolidPointList(this Element elm)
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
             var results = elm.GetFacePointList().OrderBy(o => o.X).ThenBy(o => o.Y).ThenBy(o => o.Z).ToList();
@@ -222,7 +222,7 @@ namespace KeLi.Common.Revit.Geometry
             for (var i = 0; i < results.Count; i++)
             for (var j = i + 1; j < results.Count; j++)
             {
-                if (results[i] == null || results[j] == null)
+                if (results[i] is null || results[j] is null)
                     continue;
 
                 if (results[j].GetRoundPoint(2).ToString() == results[i].GetRoundPoint(2).ToString())
@@ -239,7 +239,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static List<Edge> GetEdgeList(this Element elm)
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
             var results = new List<Edge>();
@@ -256,13 +256,13 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static List<Solid> GetValidSolidList(this Element elm)
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
             var opt = new Options {ComputeReferences = true, DetailLevel = ViewDetailLevel.Coarse};
             var ge = elm.get_Geometry(opt);
 
-            return ge == null ? new List<Solid>() : ge.GetValidSolidList();
+            return ge is null ? new List<Solid>() : ge.GetValidSolidList();
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static List<Solid> GetValidSolidList(this GeometryElement ge, int precision = 10)
         {
-            if (ge == null)
+            if (ge is null)
                 throw new ArgumentNullException(nameof(ge));
 
             var results = new List<Solid>();
@@ -318,7 +318,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         private static List<Line> GetDispersedLineList(this IEnumerable<XYZ> points, int gapNum = 0)
         {
-            if (points == null)
+            if (points is null)
                 throw new ArgumentNullException(nameof(points));
 
             var tmpPoints = points.ToList();

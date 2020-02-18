@@ -67,19 +67,19 @@ namespace KeLi.Common.Drive.Excel
         /// <summary>
         ///     Reads the excel to the two dimension array.
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="parm"></param>
         /// <returns></returns>
-        public static object[,] As2DArray(this ExcelParameter param)
+        public static object[,] As2DArray(this ExcelParameter parm)
         {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
 
-            using (var excel = new ExcelPackage(param.FilePath))
+            using (var excel = new ExcelPackage(parm.FilePath))
             {
                 var sheets = excel.Workbook.Worksheets;
-                var sheet = (param.SheetName == null
+                var sheet = (parm.SheetName is null
                                 ? sheets.FirstOrDefault()
-                                : sheets[param.SheetName]) ?? sheets.FirstOrDefault();
+                                : sheets[parm.SheetName]) ?? sheets.FirstOrDefault();
 
                 if (!(sheet?.Cells.Value is object[,]))
                     return new object[0, 0];
@@ -91,44 +91,44 @@ namespace KeLi.Common.Drive.Excel
         /// <summary>
         ///     Reads the excel to the cross array.
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="parm"></param>
         /// <returns></returns>
-        public static object[][] AsCrossArray(this ExcelParameter param)
+        public static object[][] AsCrossArray(this ExcelParameter parm)
         {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
 
-            return param.As2DArray().Convert();
+            return parm.As2DArray().Convert();
         }
 
         /// <summary>
         ///     Reads the excel to the data table.
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="parm"></param>
         /// <returns></returns>
-        public static DataTable AsDataTable(this ExcelParameter param)
+        public static DataTable AsDataTable(this ExcelParameter parm)
         {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
 
             var results = new DataTable();
 
-            using (var excel = new ExcelPackage(param.FilePath))
+            using (var excel = new ExcelPackage(parm.FilePath))
             {
                 var sheets = excel.Workbook.Worksheets;
-                var sheet = (param.SheetName == null
+                var sheet = (parm.SheetName is null
                                 ? sheets.FirstOrDefault()
-                                : sheets[param.SheetName]) ?? sheets.FirstOrDefault();
+                                : sheets[parm.SheetName]) ?? sheets.FirstOrDefault();
 
                 if (!(sheet?.Cells.Value is object[,] cells))
                     return new DataTable();
 
-                for (var j = param.ColumnIndex; j < sheet.Dimension.Columns; j++)
+                for (var j = parm.ColumnIndex; j < sheet.Dimension.Columns; j++)
                     results.Columns.Add(new DataColumn(cells[0, j]?.ToString()));
 
-                for (var i = param.RowIndex; i < sheet.Dimension.Rows; i++)
-                for (var j = param.ColumnIndex; j < sheet.Dimension.Columns; j++)
-                    results.Rows[i - param.RowIndex][j] = cells[i + param.RowIndex, j];
+                for (var i = parm.RowIndex; i < sheet.Dimension.Rows; i++)
+                for (var j = parm.ColumnIndex; j < sheet.Dimension.Columns; j++)
+                    results.Rows[i - parm.RowIndex][j] = cells[i + parm.RowIndex, j];
             }
 
             return results;
@@ -138,35 +138,35 @@ namespace KeLi.Common.Drive.Excel
         ///     Reads the excel to the list.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="param"></param>
+        /// <param name="parm"></param>
         /// <returns></returns>
-        public static List<T> AsList<T>(this ExcelParameter param)
+        public static List<T> AsList<T>(this ExcelParameter parm)
         {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
 
             var results = new List<T>();
             var ps = typeof(T).GetProperties();
 
-            using (var excel = new ExcelPackage(param.FilePath))
+            using (var excel = new ExcelPackage(parm.FilePath))
             {
                 var sheets = excel.Workbook.Worksheets;
-                var sheet = (param.SheetName == null
+                var sheet = (parm.SheetName is null
                                 ? sheets.FirstOrDefault()
-                                : sheets[param.SheetName]) ?? sheets.FirstOrDefault();
+                                : sheets[parm.SheetName]) ?? sheets.FirstOrDefault();
 
                 if (!(sheet?.Cells.Value is object[,] cells))
                     return new List<T>();
 
-                for (var i = param.RowIndex; i < sheet.Dimension.Rows; i++)
+                for (var i = parm.RowIndex; i < sheet.Dimension.Rows; i++)
                 {
                     var obj = (T) Activator.CreateInstance(typeof(T));
 
-                    for (var j = param.ColumnIndex; j < typeof(T).GetProperties().Length + param.ColumnIndex; j++)
+                    for (var j = parm.ColumnIndex; j < typeof(T).GetProperties().Length + parm.ColumnIndex; j++)
                     {
                         var columnName = cells[0, j]?.ToString();
                         var pls = ps.Where(w =>
-                            w.GetDcrp().Equals(columnName) || w.Name.Equals(cells[param.RowIndex, j]));
+                            w.GetDcrp().Equals(columnName) || w.Name.Equals(cells[parm.RowIndex, j]));
 
                         foreach (var p in pls)
                         {
@@ -191,39 +191,39 @@ namespace KeLi.Common.Drive.Excel
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="objs"></param>
-        /// <param name="param"></param>
+        /// <param name="parm"></param>
         /// <param name="createHeader"></param>
-        public static void ToExcel<T>(this ExcelParameter param, IEnumerable<T> objs, bool createHeader = true)
+        public static void ToExcel<T>(this ExcelParameter parm, IEnumerable<T> objs, bool createHeader = true)
         {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
 
-            if (objs == null)
+            if (objs is null)
                 throw new ArgumentNullException(nameof(objs));
 
             // If exists, auto width setting will throw exception.
-            if (param.FilePath.Exists)
-                File.Delete(param.FilePath.FullName);
+            if (parm.FilePath.Exists)
+                File.Delete(parm.FilePath.FullName);
 
-            File.Copy(param.TemplatePath.FullName, param.FilePath.FullName);
+            File.Copy(parm.TemplatePath.FullName, parm.FilePath.FullName);
 
             // Epplus dll write excel file that column index from 1 to end column index and row index from 0 to end row index.
-            param.ColumnIndex += 1;
+            parm.ColumnIndex += 1;
 
-            var excel = param.GetExcelPackage(out var sheet);
+            var excel = parm.GetExcelPackage(out var sheet);
             var ps = typeof(T).GetProperties();
 
             // The titlt row.
             if (createHeader)
                 for (var i = 0; i < ps.Length; i++)
-                    sheet.Cells[param.RowIndex, i + param.ColumnIndex].Value = ps[i].GetDcrp();
+                    sheet.Cells[parm.RowIndex, i + parm.ColumnIndex].Value = ps[i].GetDcrp();
 
             var tmpObjs = objs.ToList();
 
             // The content row.
             for (var i = 0; i < tmpObjs.Count; i++)
             for (var j = 0; j < ps.Length; j++)
-                sheet.Cells[i + param.RowIndex + 1, j + param.ColumnIndex].Value = ps[j].GetValue(tmpObjs[i]);
+                sheet.Cells[i + parm.RowIndex + 1, j + parm.ColumnIndex].Value = ps[j].GetValue(tmpObjs[i]);
 
             sheet.SetExcelStyle();
             excel.Save();
@@ -232,31 +232,31 @@ namespace KeLi.Common.Drive.Excel
         /// <summary>
         ///     Writes the cross array to the excel.
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="parm"></param>
         /// <param name="table"></param>
         /// <returns></returns>
-        public static ExcelPackage ToExcel(this ExcelParameter param, object[][] table)
+        public static ExcelPackage ToExcel(this ExcelParameter parm, object[][] table)
         {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
 
-            if (table == null)
+            if (table is null)
                 throw new ArgumentNullException(nameof(table));
 
             // If exists, auto width setting will throw exception.
-            if (param.FilePath.Exists)
-                File.Delete(param.FilePath.FullName);
+            if (parm.FilePath.Exists)
+                File.Delete(parm.FilePath.FullName);
 
-            File.Copy(param.TemplatePath.FullName, param.FilePath.FullName);
+            File.Copy(parm.TemplatePath.FullName, parm.FilePath.FullName);
 
             // Epplus dll write excel file that column index from 1 to end column index and row index from 0 to end row index.
-            param.ColumnIndex += 1;
+            parm.ColumnIndex += 1;
 
-            var excel = param.GetExcelPackage(out var sheet);
+            var excel = parm.GetExcelPackage(out var sheet);
 
             for (var i = 0; i < table.GetLength(0); i++)
             for (var j = 0; j < table[i].Length; j++)
-                sheet.Cells[i + param.RowIndex, j + param.ColumnIndex].Value = table[i][j];
+                sheet.Cells[i + parm.RowIndex, j + parm.ColumnIndex].Value = table[i][j];
 
             sheet.SetExcelStyle();
             excel.Save();
@@ -267,31 +267,31 @@ namespace KeLi.Common.Drive.Excel
         /// <summary>
         ///     Writes the two dimension array to the excel.
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="parm"></param>
         /// <param name="table"></param>
         /// <returns></returns>
-        public static ExcelPackage ToExcel(this ExcelParameter param, object[,] table)
+        public static ExcelPackage ToExcel(this ExcelParameter parm, object[,] table)
         {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
 
-            if (table == null)
+            if (table is null)
                 throw new ArgumentNullException(nameof(table));
 
             // If exists, auto width setting will throw exception.
-            if (param.FilePath.Exists)
-                File.Delete(param.FilePath.FullName);
+            if (parm.FilePath.Exists)
+                File.Delete(parm.FilePath.FullName);
 
-            File.Copy(param.TemplatePath.FullName, param.FilePath.FullName);
+            File.Copy(parm.TemplatePath.FullName, parm.FilePath.FullName);
 
             // Epplus dll write excel file that column index from 1 to end column index and row index from 0 to end row index.
-            param.ColumnIndex += 1;
+            parm.ColumnIndex += 1;
 
-            var excel = param.GetExcelPackage(out var sheet);
+            var excel = parm.GetExcelPackage(out var sheet);
 
             for (var i = 0; i < table.GetLength(0); i++)
             for (var j = 0; j < table.GetLength(1); j++)
-                sheet.Cells[i + param.RowIndex, j + param.ColumnIndex].Value = table[i, j];
+                sheet.Cells[i + parm.RowIndex, j + parm.ColumnIndex].Value = table[i, j];
 
             sheet.SetExcelStyle();
             excel.Save();
@@ -303,36 +303,36 @@ namespace KeLi.Common.Drive.Excel
         ///     Writes the data table to the excel.
         /// </summary>
         /// <param name="table"></param>
-        /// <param name="param"></param>
+        /// <param name="parm"></param>
         /// <param name="createHeader"></param>
-        public static ExcelPackage ToExcel(this ExcelParameter param, DataTable table, bool createHeader = true)
+        public static ExcelPackage ToExcel(this ExcelParameter parm, DataTable table, bool createHeader = true)
         {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
 
-            if (table == null)
+            if (table is null)
                 throw new ArgumentNullException(nameof(table));
 
             // If exists, auto width setting will throw exception.
-            if (param.FilePath.Exists)
-                File.Delete(param.FilePath.FullName);
+            if (parm.FilePath.Exists)
+                File.Delete(parm.FilePath.FullName);
 
-            File.Copy(param.TemplatePath.FullName, param.FilePath.FullName);
+            File.Copy(parm.TemplatePath.FullName, parm.FilePath.FullName);
 
             // Epplus dll write excel file that column index from 1 to end column index and row index from 0 to end row index.
-            param.ColumnIndex += 1;
+            parm.ColumnIndex += 1;
 
-            var excel = param.GetExcelPackage(out var sheet);
+            var excel = parm.GetExcelPackage(out var sheet);
             var columns = table.Columns.Cast<DataColumn>().ToList();
 
             // The titlt row.
             for (var i = 0; createHeader && i < columns.Count; i++)
-                sheet.Cells[param.RowIndex, i + param.ColumnIndex].Value = columns[i].ColumnName;
+                sheet.Cells[parm.RowIndex, i + parm.ColumnIndex].Value = columns[i].ColumnName;
 
             // The cotent row.
             for (var i = 0; i < table.Rows.Count; i++)
             for (var j = 0; j < columns.Count; j++)
-                sheet.Cells[i + param.RowIndex + 1, j + param.ColumnIndex].Value = table.Rows[i][columns[j].ColumnName];
+                sheet.Cells[i + parm.RowIndex + 1, j + parm.ColumnIndex].Value = table.Rows[i][columns[j].ColumnName];
 
             sheet.SetExcelStyle();
             excel.Save();
@@ -345,39 +345,39 @@ namespace KeLi.Common.Drive.Excel
         /// </summary>
         /// <param name="excel"></param>
         /// <param name="action"></param>
-        /// <param name="param"></param>
-        public static void SetExcelStyle(this ExcelPackage excel, Action<ExcelWorksheet> action, ExcelParameter param)
+        /// <param name="parm"></param>
+        public static void SetExcelStyle(this ExcelPackage excel, Action<ExcelWorksheet> action, ExcelParameter parm)
         {
-            if (excel == null)
+            if (excel is null)
                 throw new ArgumentNullException(nameof(excel));
 
-            if (action == null)
+            if (action is null)
                 throw new ArgumentNullException(nameof(action));
 
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
 
-            action(excel.Workbook.Worksheets[param.SheetName]);
+            action(excel.Workbook.Worksheets[parm.SheetName]);
             excel.Save();
         }
 
         /// <summary>
         ///     Gets the excel object.
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="parm"></param>
         /// <param name="sheet"></param>
         /// <returns></returns>
-        public static ExcelPackage GetExcelPackage(this ExcelParameter param, out ExcelWorksheet sheet)
+        public static ExcelPackage GetExcelPackage(this ExcelParameter parm, out ExcelWorksheet sheet)
         {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
 
-            var result = new ExcelPackage(param.FilePath);
+            var result = new ExcelPackage(parm.FilePath);
             var sheets = result.Workbook.Worksheets;
 
-            sheet = sheets.FirstOrDefault(f => f.Name.ToLower() == param.SheetName.ToLower()) != null
-                ? sheets[param.SheetName]
-                : sheets.Add(param.SheetName);
+            sheet = sheets.FirstOrDefault(f => f.Name.ToLower() == parm.SheetName.ToLower()) != null
+                ? sheets[parm.SheetName]
+                : sheets.Add(parm.SheetName);
 
             return result;
         }
@@ -389,7 +389,7 @@ namespace KeLi.Common.Drive.Excel
         /// <returns></returns>
         public static string GetDcrp(this PropertyInfo p)
         {
-            if (p == null)
+            if (p is null)
                 throw new ArgumentNullException(nameof(p));
 
             var objs = p.GetCustomAttributes(typeof(DescriptionAttribute), false);
@@ -405,7 +405,7 @@ namespace KeLi.Common.Drive.Excel
         /// <returns></returns>
         public static int GetSpan(this PropertyInfo p)
         {
-            if (p == null)
+            if (p is null)
                 throw new ArgumentNullException(nameof(p));
 
             var objs = p.GetCustomAttributes(typeof(SpanAttribute), false);
@@ -426,7 +426,7 @@ namespace KeLi.Common.Drive.Excel
         /// <returns></returns>
         public static string GetReference(this PropertyInfo p)
         {
-            if (p == null)
+            if (p is null)
                 throw new ArgumentNullException(nameof(p));
 
             var objs = p.GetCustomAttributes(typeof(ReferenceAttribute), false);
@@ -449,14 +449,14 @@ namespace KeLi.Common.Drive.Excel
         /// <returns></returns>
         public static string GetMegerValue(this ExcelWorksheet worksheet, int row, int column)
         {
-            if (worksheet == null)
+            if (worksheet is null)
                 throw new ArgumentNullException(nameof(worksheet));
 
             var rangeStr = worksheet.MergedCells[row, column];
             var excelRange = worksheet.Cells;
             var cellVal = excelRange[row, column].Value;
 
-            if (rangeStr == null)
+            if (rangeStr is null)
                 return cellVal?.ToString();
 
             var startCell = new ExcelAddress(rangeStr).Start;
@@ -470,7 +470,7 @@ namespace KeLi.Common.Drive.Excel
         /// <param name="worksheet"></param>
         public static void SetExcelStyle(this ExcelWorksheet worksheet)
         {
-            if (worksheet == null)
+            if (worksheet is null)
                 throw new ArgumentNullException(nameof(worksheet));
 
             worksheet.Cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;

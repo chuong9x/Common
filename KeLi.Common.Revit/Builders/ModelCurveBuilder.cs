@@ -67,10 +67,10 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static ModelCurve CreateModelCurve(this Document doc, XYZ pt)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (pt == null)
+            if (pt is null)
                 throw new ArgumentNullException(nameof(pt));
 
             var line = Line.CreateBound(XYZ.Zero, pt);
@@ -87,13 +87,13 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static ModelCurve CreateModelCurve(this Document doc, XYZ pt1, XYZ pt2)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (pt1 == null)
+            if (pt1 is null)
                 throw new ArgumentNullException(nameof(pt1));
 
-            if (pt2 == null)
+            if (pt2 is null)
                 throw new ArgumentNullException(nameof(pt2));
 
             var line = Line.CreateBound(pt1, pt2);
@@ -110,10 +110,10 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static ModelCurve CreateModelCurve(this Document doc, Line line, out SketchPlane sketchPlane)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (line == null)
+            if (line is null)
                 throw new ArgumentNullException(nameof(line));
 
             var refAsix = XYZ.BasisZ;
@@ -140,10 +140,10 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static List<ModelCurve> CreateModelCurveList(this Document doc, IEnumerable<XYZ> pts)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (pts == null)
+            if (pts is null)
                 throw new ArgumentNullException(nameof(pts));
 
             return pts.Select(doc.CreateModelCurve).ToList();
@@ -157,10 +157,10 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static List<ModelCurve> CreateModelCurveList(this Document doc, params XYZ[] pts)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (pts == null)
+            if (pts is null)
                 throw new ArgumentNullException(nameof(pts));
 
             return pts.Select(doc.CreateModelCurve).ToList();
@@ -177,7 +177,7 @@ namespace KeLi.Common.Revit.Builders
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (lines == null)
+            if (lines is null)
                 throw new ArgumentNullException(nameof(lines));
 
             return lines.Select(s => doc.CreateModelCurve(s, out _)).ToList();
@@ -191,10 +191,10 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static List<ModelCurve> CreateModelCurveList(this Document doc, params Line[] lines)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (lines == null)
+            if (lines is null)
                 throw new ArgumentNullException(nameof(lines));
 
             return lines.Select(s => doc.CreateModelCurve(s, out _)).ToList();

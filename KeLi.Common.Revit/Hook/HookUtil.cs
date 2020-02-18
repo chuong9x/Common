@@ -47,6 +47,7 @@
 */
 
 using System;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 

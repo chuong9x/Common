@@ -69,16 +69,15 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="parm"></param>
         /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateExtrusionSymbol(this Document doc, Application app, FamilySymbolParameter parm,
-            string rfaPath = null)
+        public static FamilySymbol CreateExtrusionSymbol(this Document doc, Application app, FamilySymbolParameter parm, string rfaPath = null)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (app == null)
+            if (app is null)
                 throw new ArgumentNullException(nameof(app));
 
-            if (parm == null)
+            if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
 
             var templateFilePath = app.GeTemplateFilePath(parm.TemplateFileName);
@@ -103,16 +102,15 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="parm"></param>
         /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateSweepSymbol(this Document doc, Application app, FamilySymbolParameter parm,
-            string rfaPath = null)
+        public static FamilySymbol CreateSweepSymbol(this Document doc, Application app, FamilySymbolParameter parm, string rfaPath = null)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (app == null)
+            if (app is null)
                 throw new ArgumentNullException(nameof(app));
 
-            if (parm == null)
+            if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
 
             var templateFilePath = app.GeTemplateFilePath(parm.TemplateFileName);
@@ -137,10 +135,10 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static FamilySymbol CreateFamilySymbol(this Document doc, string rfaPath)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (rfaPath == null)
+            if (rfaPath is null)
                 throw new ArgumentNullException(nameof(rfaPath));
 
             doc.LoadFamily(rfaPath, out var family);
@@ -157,22 +155,21 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="rfaPath"></param>
         /// <param name="act"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateFamilySymbol(this Document doc, Application app, string tplFileName,
-            string rfaPath, Action<Document> act)
+        public static FamilySymbol CreateFamilySymbol(this Document doc, Application app, string tplFileName, string rfaPath, Action<Document> act)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (app == null)
+            if (app is null)
                 throw new ArgumentNullException(nameof(app));
 
-            if (tplFileName == null)
+            if (tplFileName is null)
                 throw new ArgumentNullException(nameof(tplFileName));
 
-            if (rfaPath == null)
+            if (rfaPath is null)
                 throw new ArgumentNullException(nameof(rfaPath));
 
-            if (act == null)
+            if (act is null)
                 throw new ArgumentNullException(nameof(act));
 
             var templateFilePath = app.GeTemplateFilePath(tplFileName);
@@ -192,10 +189,10 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static FamilySymbol GetFamilySymbol(this Document doc, Document fdoc, string rfaPath = null)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (fdoc == null)
+            if (fdoc is null)
                 throw new ArgumentNullException(nameof(fdoc));
 
             var family = fdoc.LoadFamily(doc);
@@ -214,10 +211,10 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static FamilySymbol GetFamilySymbol(this Document doc, Family family)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (family == null)
+            if (family is null)
                 throw new ArgumentNullException(nameof(family));
 
             var symbolId = family.GetFamilySymbolIds().FirstOrDefault();
@@ -240,10 +237,10 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static string GeTemplateFilePath(this Application app, string fileName)
         {
-            if (app == null)
+            if (app is null)
                 throw new ArgumentNullException(nameof(app));
 
-            if (fileName == null)
+            if (fileName is null)
                 throw new ArgumentNullException(nameof(fileName));
 
             return Path.Combine(app.FamilyTemplatePath, fileName);
@@ -256,7 +253,7 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         private static CurveArrArray ResetCurveArrArray(CurveArrArray profile)
         {
-            if (profile == null)
+            if (profile is null)
                 throw new ArgumentNullException(nameof(profile));
 
             var results = new CurveArrArray();
@@ -288,7 +285,7 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         private static XYZ GetLocationPoint(CurveArrArray profile)
         {
-            if (profile == null)
+            if (profile is null)
                 throw new ArgumentNullException(nameof(profile));
 
             var curves = profile.Cast<CurveArray>().SelectMany(s => s.Cast<Curve>()).ToList();

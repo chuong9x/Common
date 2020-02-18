@@ -65,10 +65,10 @@ namespace KeLi.Common.Converter.Serializations
         /// <param name="obj"></param>
         public static void Serialize(FileInfo filePath, object obj)
         {
-            if (filePath == null)
+            if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));
 
-            if (obj == null)
+            if (obj is null)
                 throw new ArgumentNullException(nameof(obj));
 
             using (var fs = new FileStream(filePath.FullName, FileMode.Create))
@@ -85,7 +85,7 @@ namespace KeLi.Common.Converter.Serializations
         /// <returns></returns>
         public static T Deserialize<T>(FileInfo filePath) where T : class
         {
-            if (filePath == null)
+            if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));
 
             using (var fs = new FileStream(filePath.FullName, FileMode.Open))

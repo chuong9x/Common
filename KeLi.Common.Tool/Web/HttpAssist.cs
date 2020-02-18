@@ -70,27 +70,26 @@ namespace KeLi.Common.Tool.Web
         /// <summary>
         ///     Gets all type request data.
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="parm"></param>
         /// <param name="postParamDict"></param>
         /// <returns></returns>
-        public static string GetRequestResult(this ResponseParam param,
-            IDictionary<string, string> postParamDict = null)
+        public static string GetRequestResult(this ResponseParam parm, IDictionary<string, string> postParamDict = null)
         {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
 
             var postData = string.Empty;
 
             if (postParamDict != null)
                 postData = CreateParameter(postParamDict);
 
-            var response = param.CreateHttpResponse(postData);
+            var response = parm.CreateHttpResponse(postData);
             var stream = response.GetResponseStream();
 
-            if (stream == null)
+            if (stream is null)
                 throw new NullReferenceException(nameof(stream));
 
-            using (var reader = new StreamReader(stream, param.EncodeType))
+            using (var reader = new StreamReader(stream, parm.EncodeType))
             {
                 return reader.ReadToEnd();
             }
@@ -100,15 +99,15 @@ namespace KeLi.Common.Tool.Web
         ///     Gets all type request model data.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="param"></param>
+        /// <param name="parm"></param>
         /// <param name="postParamDict"></param>
         /// <returns></returns>
-        public static T GetRequestResult<T>(this ResponseParam param, IDictionary<string, string> postParamDict = null)
+        public static T GetRequestResult<T>(this ResponseParam parm, IDictionary<string, string> postParamDict = null)
         {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
 
-            var response = GetRequestResult(param, postParamDict);
+            var response = GetRequestResult(parm, postParamDict);
 
             return JsonConvert.DeserializeObject<T>(response);
         }
@@ -116,19 +115,19 @@ namespace KeLi.Common.Tool.Web
         /// <summary>
         ///     Downloads the file.
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="parm"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static byte[] DownloadFile(this ResponseParam param, FileSystemInfo filePath = null)
+        public static byte[] DownloadFile(this ResponseParam parm, FileSystemInfo filePath = null)
         {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
 
-            var response = param.CreateHttpResponse(string.Empty, filePath);
+            var response = parm.CreateHttpResponse(string.Empty, filePath);
             var st = response.GetResponseStream();
             var results = new byte[response.ContentLength];
 
-            if (st == null)
+            if (st is null)
                 return results;
 
             st.Read(results, 0, results.Length);
@@ -140,21 +139,21 @@ namespace KeLi.Common.Tool.Web
         /// <summary>
         ///     Uploads the file.
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="parm"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static string UploadFile(this ResponseParam param, FileSystemInfo filePath = null)
+        public static string UploadFile(this ResponseParam parm, FileSystemInfo filePath = null)
         {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
 
-            var response = param.CreateHttpResponse(string.Empty, filePath);
+            var response = parm.CreateHttpResponse(string.Empty, filePath);
             var stream = response.GetResponseStream();
 
-            if (stream == null)
+            if (stream is null)
                 throw new NullReferenceException(nameof(stream));
 
-            using (var reader = new StreamReader(stream, param.EncodeType))
+            using (var reader = new StreamReader(stream, parm.EncodeType))
             {
                 return reader.ReadToEnd();
             }
@@ -214,22 +213,21 @@ namespace KeLi.Common.Tool.Web
         /// <summary>
         ///     Creates http request data.
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="parm"></param>
         /// <param name="postData"></param>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        private static HttpWebResponse CreateHttpResponse(this ResponseParam param, string postData = null,
-            FileSystemInfo filePath = null)
+        private static HttpWebResponse CreateHttpResponse(this ResponseParam parm, string postData = null, FileSystemInfo filePath = null)
         {
-            if (param == null)
-                throw new ArgumentNullException(nameof(param));
+            if (parm is null)
+                throw new ArgumentNullException(nameof(parm));
 
             HttpWebRequest request;
 
-            if (param.Url.StartsWith(@"https:\\", StringComparison.OrdinalIgnoreCase))
+            if (parm.Url.StartsWith(@"https:\\", StringComparison.OrdinalIgnoreCase))
             {
                 ServicePointManager.ServerCertificateValidationCallback = CheckResultValidation;
-                request = WebRequest.Create(param.Url) as HttpWebRequest;
+                request = WebRequest.Create(parm.Url) as HttpWebRequest;
 
                 if (request != null)
                     request.ProtocolVersion = HttpVersion.Version10;
@@ -237,16 +235,16 @@ namespace KeLi.Common.Tool.Web
 
             else
             {
-                request = WebRequest.Create(param.Url) as HttpWebRequest;
+                request = WebRequest.Create(parm.Url) as HttpWebRequest;
             }
 
-            if (request == null)
+            if (request is null)
                 throw new NullReferenceException(nameof(request));
 
-            if (param.Proxy != null)
-                request.Proxy = param.Proxy;
+            if (parm.Proxy != null)
+                request.Proxy = parm.Proxy;
 
-            switch (param.Type)
+            switch (parm.Type)
             {
                 case RequestType.Post:
                     request.Method = "POST";
@@ -276,18 +274,18 @@ namespace KeLi.Common.Tool.Web
             request.Headers["Accept-Language"] = "en-US,en;q=0.5";
             request.Headers["Pragma"] = "no-cache";
             request.Headers.Add("X-Requested-With", "XMLHttpRequest");
-            request.Headers.Add("x-authentication-token", param.Token);
-            request.Headers.Add("X-CORAL-TENANT", param.TenantId);
-            request.Headers.Add("X-AUTH-ID", param.AuthId);
-            request.Headers.Add("X-Authorization", param.Authorization);
-            request.Referer = param.Referer;
-            request.UserAgent = param.UserAgent;
-            request.ContentType = param.ContentType;
+            request.Headers.Add("x-authentication-token", parm.Token);
+            request.Headers.Add("X-CORAL-TENANT", parm.TenantId);
+            request.Headers.Add("X-AUTH-ID", parm.AuthId);
+            request.Headers.Add("X-Authorization", parm.Authorization);
+            request.Referer = parm.Referer;
+            request.UserAgent = parm.UserAgent;
+            request.ContentType = parm.ContentType;
 
-            if (param.Cookies != null)
+            if (parm.Cookies != null)
             {
                 request.CookieContainer = new CookieContainer();
-                request.CookieContainer.Add(param.Cookies);
+                request.CookieContainer.Add(parm.Cookies);
             }
             else
             {
@@ -295,8 +293,8 @@ namespace KeLi.Common.Tool.Web
                 request.CookieContainer.Add(Cookies);
             }
 
-            if (param.Timeout.HasValue)
-                request.Timeout = param.Timeout.Value * 1000;
+            if (parm.Timeout.HasValue)
+                request.Timeout = parm.Timeout.Value * 1000;
 
             request.Expect = string.Empty;
 
@@ -305,7 +303,7 @@ namespace KeLi.Common.Tool.Web
 
             if (!string.IsNullOrEmpty(postData))
             {
-                var data = param.EncodeType.GetBytes(postData);
+                var data = parm.EncodeType.GetBytes(postData);
 
                 using (var stream = request.GetRequestStream())
                 {
@@ -316,8 +314,8 @@ namespace KeLi.Common.Tool.Web
             if (!(request.GetResponse() is HttpWebResponse result))
                 throw new NullReferenceException(nameof(result));
 
-            Cookies.Add(request.CookieContainer.GetCookies(new Uri(@"http:\\" + new Uri(param.Url).Host)));
-            Cookies.Add(request.CookieContainer.GetCookies(new Uri(@"https:\\" + new Uri(param.Url).Host)));
+            Cookies.Add(request.CookieContainer.GetCookies(new Uri(@"http:\\" + new Uri(parm.Url).Host)));
+            Cookies.Add(request.CookieContainer.GetCookies(new Uri(@"https:\\" + new Uri(parm.Url).Host)));
             Cookies.Add(result.Cookies);
 
             return result;
@@ -330,7 +328,7 @@ namespace KeLi.Common.Tool.Web
         /// <returns></returns>
         private static string CreateParameter(IDictionary<string, string> postParameterDict)
         {
-            if (postParameterDict == null)
+            if (postParameterDict is null)
                 throw new ArgumentNullException(nameof(postParameterDict));
 
             var buffer = new StringBuilder();
@@ -349,16 +347,15 @@ namespace KeLi.Common.Tool.Web
         /// <param name="chain"></param>
         /// <param name="errors"></param>
         /// <returns></returns>
-        private static bool CheckResultValidation(object sender, X509Certificate certificate, X509Chain chain,
-            SslPolicyErrors errors)
+        private static bool CheckResultValidation(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
         {
-            if (sender == null)
+            if (sender is null)
                 throw new ArgumentNullException(nameof(sender));
 
-            if (certificate == null)
+            if (certificate is null)
                 throw new ArgumentNullException(nameof(certificate));
 
-            if (chain == null)
+            if (chain is null)
                 throw new ArgumentNullException(nameof(chain));
 
             return true;

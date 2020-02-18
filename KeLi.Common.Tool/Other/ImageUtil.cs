@@ -67,7 +67,7 @@ namespace KeLi.Common.Tool.Other
         /// <returns></returns>
         public static BitmapImage ToBitmapImage(this Bitmap bitmap)
         {
-            if (bitmap == null)
+            if (bitmap is null)
                 throw new ArgumentNullException(nameof(bitmap));
 
             using (var ms = new MemoryStream())
@@ -93,7 +93,7 @@ namespace KeLi.Common.Tool.Other
         /// <returns></returns>
         public static BitmapSource GetEmbeddedImage(string resName)
         {
-            if (resName == null)
+            if (resName is null)
                 throw new ArgumentNullException(nameof(resName));
 
             var asm = Assembly.GetExecutingAssembly();

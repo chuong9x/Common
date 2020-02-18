@@ -86,7 +86,7 @@ namespace KeLi.Common.Drive.Sql
         /// <returns></returns>
         public static int Update(string text, CommandType ct = CommandType.Text)
         {
-            if (text == null)
+            if (text is null)
                 throw new ArgumentNullException(nameof(text));
 
             int result;
@@ -112,10 +112,10 @@ namespace KeLi.Common.Drive.Sql
         /// <returns></returns>
         public static int Update(string text, IEnumerable<SqlParameter> sps, CommandType ct = CommandType.Text)
         {
-            if (text == null)
+            if (text is null)
                 throw new ArgumentNullException(nameof(text));
 
-            if (sps == null)
+            if (sps is null)
                 throw new ArgumentNullException(nameof(sps));
 
             int result;
@@ -141,7 +141,7 @@ namespace KeLi.Common.Drive.Sql
         /// <returns></returns>
         public static int Update(IEnumerable<string> texts, CommandType ct = CommandType.Text)
         {
-            if (texts == null)
+            if (texts is null)
                 throw new ArgumentNullException(nameof(texts));
 
             var result = 0;
@@ -187,10 +187,10 @@ namespace KeLi.Common.Drive.Sql
         /// <returns></returns>
         public static int Update(IEnumerable<string> texts, SqlParameter[][] sps, CommandType ct = CommandType.Text)
         {
-            if (texts == null)
+            if (texts is null)
                 throw new ArgumentNullException(nameof(texts));
 
-            if (sps == null)
+            if (sps is null)
                 throw new ArgumentNullException(nameof(sps));
 
             var result = 0;
@@ -238,7 +238,7 @@ namespace KeLi.Common.Drive.Sql
         /// <returns></returns>
         public static object Query(string text, CommandType ct = CommandType.Text)
         {
-            if (text == null)
+            if (text is null)
                 throw new ArgumentNullException(nameof(text));
 
             object result;
@@ -264,10 +264,10 @@ namespace KeLi.Common.Drive.Sql
         /// <returns></returns>
         public static object Query(string text, IEnumerable<SqlParameter> sps, CommandType ct = CommandType.Text)
         {
-            if (text == null)
+            if (text is null)
                 throw new ArgumentNullException(nameof(text));
 
-            if (sps == null)
+            if (sps is null)
                 throw new ArgumentNullException(nameof(sps));
 
             object result;
@@ -293,7 +293,7 @@ namespace KeLi.Common.Drive.Sql
         /// <returns></returns>
         public static DataTable QueryTable(string text, CommandType ct = CommandType.Text)
         {
-            if (text == null)
+            if (text is null)
                 throw new ArgumentNullException(nameof(text));
 
             var results = new DataTable();
@@ -319,10 +319,10 @@ namespace KeLi.Common.Drive.Sql
         public static DataTable QueryTable(string text, IEnumerable<SqlParameter> sps,
             CommandType ct = CommandType.Text)
         {
-            if (text == null)
+            if (text is null)
                 throw new ArgumentNullException(nameof(text));
 
-            if (sps == null)
+            if (sps is null)
                 throw new ArgumentNullException(nameof(sps));
 
             var results = new DataTable();

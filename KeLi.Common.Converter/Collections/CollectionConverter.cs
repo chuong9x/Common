@@ -76,7 +76,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static List<T> ToList<T>(DataTable dt) where T : new()
         {
-            if (dt == null)
+            if (dt is null)
                 throw new ArgumentNullException(nameof(dt));
 
             var results = new List<T>();
@@ -111,27 +111,27 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static IList ToIList(DataTable dt, Type type)
         {
-            if (dt == null)
+            if (dt is null)
                 throw new ArgumentNullException(nameof(dt));
 
-            if (type == null)
+            if (type is null)
                 throw new ArgumentNullException(nameof(type));
 
             var listType = typeof(List<>).MakeGenericType(type);
             var results = Activator.CreateInstance(listType) as IList;
             var constructor = type.GetConstructors(_flags).OrderBy(c => c.GetParameters().Length).FirstOrDefault();
 
-            if (constructor == null)
+            if (constructor is null)
                 return results;
 
-            var parameters = constructor.GetParameters();
-            var values = new object[parameters.Length];
+            var parms = constructor.GetParameters();
+            var values = new object[parms.Length];
 
             foreach (DataRow dr in dt.Rows)
             {
                 var index = 0;
 
-                foreach (var item in parameters)
+                foreach (var item in parms)
                 {
                     object val = null;
 
@@ -155,7 +155,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static List<T> ToList<T>(SqlDataReader reader) where T : new()
         {
-            if (reader == null)
+            if (reader is null)
                 throw new ArgumentNullException(nameof(reader));
 
             var results = new List<T>();
@@ -188,10 +188,10 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static IList ToIList(SqlDataReader reader, Type type)
         {
-            if (reader == null)
+            if (reader is null)
                 throw new ArgumentNullException(nameof(reader));
 
-            if (type == null)
+            if (type is null)
                 throw new ArgumentNullException(nameof(type));
 
             var listType = typeof(List<>).MakeGenericType(type);
@@ -202,19 +202,19 @@ namespace KeLi.Common.Converter.Collections
             var results = Activator.CreateInstance(listType) as IList;
             var constructor = type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .OrderBy(c => c.GetParameters().Length).First();
-            var parameters = constructor.GetParameters();
-            var values = new object[parameters.Length];
+            var parms = constructor.GetParameters();
+            var values = new object[parms.Length];
 
             while (reader.Read())
             {
                 var index = 0;
 
-                foreach (var item in parameters)
+                foreach (var parm in parms)
                 {
-                    var val = reader[item.Name];
+                    var val = reader[parm.Name];
 
                     if (val != DBNull.Value)
-                        val = Convert.ChangeType(val, item.ParameterType);
+                        val = Convert.ChangeType(val, parm.ParameterType);
 
                     values[index++] = val;
                 }
@@ -235,7 +235,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static DataTable ToTable<T>(IEnumerable<T> ts)
         {
-            if (ts == null)
+            if (ts is null)
                 throw new ArgumentNullException(nameof(ts));
 
             var tmpTs = ts.ToList();
@@ -265,7 +265,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static DataTable ToTable(SqlDataReader reader)
         {
-            if (reader == null)
+            if (reader is null)
                 throw new ArgumentNullException(nameof(reader));
 
             var results = new DataTable();
@@ -310,7 +310,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static S ToAnyType<T, S>(this T t) where T : class where S : new()
         {
-            if (t == null)
+            if (t is null)
                 throw new ArgumentNullException(nameof(t));
 
             var result = Activator.CreateInstance<S>();
@@ -321,7 +321,7 @@ namespace KeLi.Common.Converter.Collections
                 var value = prop.GetValue(t);
                 var info = typeof(S).GetProperty(prop.Name);
 
-                if (value == null || info == null)
+                if (value is null || info is null)
                     continue;
 
                 var type = info.PropertyType;
@@ -350,7 +350,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static SqlDbType ToDbType(object obj)
         {
-            if (obj == null)
+            if (obj is null)
                 throw new ArgumentNullException(nameof(obj));
 
             var result = SqlDbType.NChar;
@@ -421,7 +421,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static Dictionary<string, string[]> ToDictionary(this NameValueCollection pairs)
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
 
             return pairs.AllKeys.ToDictionary(t => t, pairs.GetValues);
@@ -434,7 +434,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static Dictionary<string, string> ToDictionary2(this NameValueCollection pairs)
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
 
             return pairs.AllKeys.ToDictionary(t => t, t => pairs.GetValues(t)?.FirstOrDefault());
@@ -447,7 +447,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static ILookup<string, string[]> ToLookup(this NameValueCollection pairs)
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
 
             return pairs.AllKeys.ToLookup(t => t, pairs.GetValues);
@@ -460,7 +460,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static ILookup<string, string> ToLookup2(this NameValueCollection pairs)
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
 
             return pairs.AllKeys.ToLookup(t => t, t => pairs.GetValues(t)?.FirstOrDefault());
@@ -472,7 +472,7 @@ namespace KeLi.Common.Converter.Collections
         /// <param name="pairs"></param>
         public static string ToNvcString(this NameValueCollection pairs)
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
 
             return string.Join(Environment.NewLine, pairs.AllKeys.SelectMany(pairs.GetValues, (k, v) => k + ": " + v));
@@ -484,7 +484,7 @@ namespace KeLi.Common.Converter.Collections
         /// <param name="pairs"></param>
         public static List<string> ToList(this NameValueCollection pairs)
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
 
             return pairs.AllKeys.ToList();
@@ -497,7 +497,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static NameValueCollection ToNameValueCollection(this IDictionary<string, string[]> pairs)
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
 
             var result = new NameValueCollection();
@@ -516,7 +516,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static NameValueCollection ToNameValueCollection(this IDictionary<string, string> pairs)
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
 
             var result = new NameValueCollection();
@@ -534,7 +534,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static NameValueCollection ToNameValueCollection(this ILookup<string, string[]> pairs)
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
 
             var result = new NameValueCollection();
@@ -553,7 +553,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static NameValueCollection ToNameValueCollection(this ILookup<string, string> pairs)
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
 
             var result = new NameValueCollection();
@@ -572,7 +572,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static NameValueCollection ToNameValueCollection(this IEnumerable<string> pairs, string delimiter = ":")
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
             var results = new NameValueCollection();
 
@@ -594,7 +594,7 @@ namespace KeLi.Common.Converter.Collections
         /// <param name="delimiter"></param>
         public static NameValueCollection ToNameValueCollection(string pairs, string pattern = "\r\n", string delimiter = ":")
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
 
             var kvs = Regex.Split(pairs, pattern, RegexOptions.IgnoreCase);
@@ -611,7 +611,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static Dictionary<string, string[]> ToDictionary(string pairs, string pattern = "\r\n", string delimiter = ":")
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
 
             var nvc = ToNameValueCollection(pairs, pattern, delimiter);
@@ -628,7 +628,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static Dictionary<string, string> ToDictionary2(string pairs, string pattern = "\r\n", string delimiter = ":")
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
 
             var nvc = ToNameValueCollection(pairs, pattern, delimiter);
@@ -644,7 +644,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static Dictionary<string, string[]> ToDictionary(this IEnumerable<string> pairs, string delimiter = ":")
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
 
             var nvc = ToNameValueCollection(pairs, delimiter);
@@ -660,7 +660,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static Dictionary<string, string> ToDictionary2(this IEnumerable<string> pairs, string delimiter = ":")
         {
-            if (pairs == null)
+            if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
 
             var nvc = ToNameValueCollection(pairs, delimiter);

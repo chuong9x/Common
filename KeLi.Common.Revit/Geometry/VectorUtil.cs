@@ -66,10 +66,10 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static bool IsSameDirection(this Line line, params XYZ[] dirs)
         {
-            if (line == null)
+            if (line is null)
                 throw new ArgumentNullException(nameof(line));
 
-            if (dirs == null)
+            if (dirs is null)
                 throw new ArgumentNullException(nameof(dirs));
 
             return dirs.Any(a => line.Direction.AngleTo(a) < 1e-6);
@@ -83,10 +83,10 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static bool IsSameDirection(this Line line, IEnumerable<XYZ> dirs)
         {
-            if (line == null)
+            if (line is null)
                 throw new ArgumentNullException(nameof(line));
 
-            if (dirs == null)
+            if (dirs is null)
                 throw new ArgumentNullException(nameof(dirs));
 
             return dirs.Any(a => line.IsSameDirection(a));
@@ -100,10 +100,10 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static bool IsSameDirection(this Line line1, Line Line2)
         {
-            if (line1 == null)
+            if (line1 is null)
                 throw new ArgumentNullException(nameof(line1));
 
-            if (Line2 == null)
+            if (Line2 is null)
                 throw new ArgumentNullException(nameof(Line2));
 
             return line1.Direction.AngleTo(Line2.Direction) < 1e-6;
@@ -117,10 +117,10 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static bool IsSameDirection(this XYZ dir1, XYZ dir2)
         {
-            if (dir1 == null)
+            if (dir1 is null)
                 throw new ArgumentNullException(nameof(dir1));
 
-            if (dir2 == null)
+            if (dir2 is null)
                 throw new ArgumentNullException(nameof(dir2));
 
             return dir1.AngleTo(dir2) < 1e-6;

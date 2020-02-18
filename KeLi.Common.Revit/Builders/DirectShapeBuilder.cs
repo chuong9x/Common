@@ -66,13 +66,12 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="parm"></param>
         /// <param name="opt"></param>
         /// <returns></returns>
-        public static DirectShape CreateDirectShape(this Document doc, DirectShapeParameter parm,
-            SolidOptions opt = null)
+        public static DirectShape CreateDirectShape(this Document doc, DirectShapeParameter parm, SolidOptions opt = null)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (parm == null)
+            if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
 
             var solid = CreateExtrusionGeometry(parm.Profile.ToList(), parm.Direction, parm.Distance);

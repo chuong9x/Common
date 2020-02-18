@@ -86,10 +86,10 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static string GetValue(this Element elm, string parmName)
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
-            if (parmName == null)
+            if (parmName is null)
                 throw new ArgumentNullException(nameof(parmName));
 
             var parameter = elm.LookupParameter(parmName);
@@ -132,10 +132,10 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static Definition GetDefinition(this DefinitionGroup group, string paramName, bool canEdit = false)
         {
-            if (group == null)
+            if (group is null)
                 throw new ArgumentNullException(nameof(group));
 
-            if (paramName == null)
+            if (paramName is null)
                 throw new ArgumentNullException(nameof(paramName));
 
             var definition = group.Definitions.get_Item(paramName);
@@ -156,10 +156,10 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static DefinitionGroup GetGroup(this DefinitionGroups groups, string groupName)
         {
-            if (groups == null)
+            if (groups is null)
                 throw new ArgumentNullException(nameof(groups));
 
-            if (groupName == null)
+            if (groupName is null)
                 throw new ArgumentNullException(nameof(groupName));
 
             return groups.get_Item(groupName) ?? groups.Create(groupName);
@@ -169,20 +169,20 @@ namespace KeLi.Common.Revit.Information
         ///     Gets definition groups by sharing parameter file path.
         /// </summary>
         /// <param name="uiapp"></param>
-        /// <param name="paramPath"></param>
+        /// <param name="parmPath"></param>
         /// <returns></returns>
-        public static DefinitionGroups GetGroupList(this UIApplication uiapp, string paramPath)
+        public static DefinitionGroups GetGroupList(this UIApplication uiapp, string parmPath)
         {
-            if (uiapp == null)
+            if (uiapp is null)
                 throw new ArgumentNullException(nameof(uiapp));
 
-            if (paramPath == null)
-                throw new ArgumentNullException(nameof(paramPath));
+            if (parmPath is null)
+                throw new ArgumentNullException(nameof(parmPath));
 
-            if (!File.Exists(paramPath))
-                File.CreateText(paramPath);
+            if (!File.Exists(parmPath))
+                File.CreateText(parmPath);
 
-            uiapp.Application.SharedParametersFilename = paramPath;
+            uiapp.Application.SharedParametersFilename = parmPath;
 
             return uiapp.Application.OpenSharedParameterFile()?.Groups;
         }
@@ -192,26 +192,26 @@ namespace KeLi.Common.Revit.Information
         /// </summary>
         /// <param name="uiapp"></param>
         /// <param name="elm"></param>
-        /// <param name="paramPath"></param>
-        public static void InitParamList(this UIApplication uiapp, Element elm, string paramPath)
+        /// <param name="parmPath"></param>
+        public static void InitParamList(this UIApplication uiapp, Element elm, string parmPath)
         {
-            if (uiapp == null)
+            if (uiapp is null)
                 throw new ArgumentNullException(nameof(uiapp));
 
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
-            if (paramPath == null)
-                throw new ArgumentNullException(nameof(paramPath));
+            if (parmPath is null)
+                throw new ArgumentNullException(nameof(parmPath));
 
             var doc = uiapp.ActiveUIDocument.Document;
             var bindingMap = doc.ParameterBindings;
-            var gs = uiapp.GetGroupList(paramPath);
+            var gs = uiapp.GetGroupList(parmPath);
             var elmCtgs = new CategorySet();
 
             elmCtgs.Insert(elm.Category);
 
-            foreach (var group in GetGroups(paramPath))
+            foreach (var group in GetGroups(parmPath))
             {
                 var paramGroup = gs.GetGroup(group.GroupName);
 
@@ -255,7 +255,7 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static List<GroupParameter> GetGroups(string paramPath)
         {
-            if (paramPath == null)
+            if (paramPath is null)
                 throw new ArgumentNullException(nameof(paramPath));
 
             var texts = File.ReadLines(paramPath).ToList();

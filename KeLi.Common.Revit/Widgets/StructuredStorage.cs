@@ -81,7 +81,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="stream"></param>
         private StructuredStorage(Stream stream)
         {
-            if (stream == null)
+            if (stream is null)
                 throw new ArgumentNullException(nameof(stream));
 
             try
@@ -100,7 +100,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="fileName"></param>
         private StructuredStorage(string fileName)
         {
-            if (fileName == null)
+            if (fileName is null)
                 throw new ArgumentNullException(nameof(fileName));
 
             try
@@ -134,7 +134,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static int GetRevitVersionNum(FileInfo fileInfo)
         {
-            if (fileInfo == null)
+            if (fileInfo is null)
                 throw new ArgumentNullException(nameof(fileInfo));
 
             return GetRevitVersionNum(fileInfo.FullName);
@@ -147,7 +147,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static int GetRevitVersionNum(string filePath)
         {
-            if (filePath == null)
+            if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));
 
             var dict = GetRevitInfoDict(filePath);
@@ -165,7 +165,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static Dictionary<string, string> GetRevitInfoDict(FileInfo fileInfo)
         {
-            if (fileInfo == null)
+            if (fileInfo is null)
                 throw new ArgumentNullException(nameof(fileInfo));
 
             return GetRevitInfoDict(fileInfo.FullName);
@@ -178,7 +178,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static Dictionary<string, string> GetRevitInfoDict(string filePath)
         {
-            if (filePath == null)
+            if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));
 
             var rawData = GetRawBasicFileInfo(filePath);
@@ -191,7 +191,7 @@ namespace KeLi.Common.Revit.Widgets
             var worksharing = fileInfo.FirstOrDefault(f => f.Contains("Worksharing"));
             var index = fileInfo.IndexOf(worksharing);
 
-            if (worksharing == null)
+            if (worksharing is null)
                 return fileInfo.ToDictionary2();
 
             var startIndex = worksharing.IndexOf("Worksharing", StringComparison.Ordinal);
@@ -208,7 +208,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         private static bool IsFileStructuredStorage(string filePath)
         {
-            if (filePath == null)
+            if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));
 
             var result = StgIsStorageFile(filePath);
@@ -233,7 +233,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         private static byte[] GetRawBasicFileInfo(string filePath)
         {
-            if (filePath == null)
+            if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));
 
             if (!IsFileStructuredStorage(filePath))
@@ -266,7 +266,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         private static object InvokeStorageRoot(StorageInfo storageRoot, string methodName, params object[] methodArgs)
         {
-            if (methodName == null)
+            if (methodName is null)
                 throw new ArgumentNullException(nameof(methodName));
 
             var type = typeof(StorageInfo).Assembly.GetType("System.IO.Packaging.StorageRoot", true, false);

@@ -65,10 +65,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="act"></param>
         public static void AutoTransaction(this Document doc, Action act)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (act == null)
+            if (act is null)
                 throw new ArgumentNullException(nameof(act));
 
             using (var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name))
@@ -88,7 +88,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static bool RepeatCommand(this Action act)
         {
-            if (act == null)
+            if (act is null)
                 throw new ArgumentNullException(nameof(act));
 
             try

@@ -68,10 +68,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static DataTable GetDataTable(this Document doc, string viewName)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (viewName == null)
+            if (viewName is null)
                 throw new ArgumentNullException(nameof(viewName));
 
             var view = doc.GetInstanceElementList<ViewSchedule>().FirstOrDefault(f => f.Name == viewName);
@@ -87,10 +87,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static DataTable GetDataTable(this Document doc, ViewSchedule view)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (view == null)
+            if (view is null)
                 throw new ArgumentNullException(nameof(view));
 
             var table = view.GetTableData();
@@ -122,7 +122,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static List<DataTable> GetDataTableList(this Document doc)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             var views = doc.GetInstanceElementList<ViewSchedule>();
@@ -138,10 +138,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static List<DataTable> GetDataTableList(this Document doc, IEnumerable<string> viewNames)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (viewNames == null)
+            if (viewNames is null)
                 throw new ArgumentNullException(nameof(viewNames));
 
             var results = new DataSet();
@@ -164,10 +164,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static List<DataTable> GetDataTableList(this Document doc, IEnumerable<ViewSchedule> views)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (views == null)
+            if (views is null)
                 throw new ArgumentNullException(nameof(views));
 
             var results = new DataSet();

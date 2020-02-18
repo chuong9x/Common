@@ -75,7 +75,7 @@ namespace KeLi.Common.Tool.Other
             if (type is null)
                 throw new ArgumentNullException(nameof(type));
 
-            if (_location == null)
+            if (_location is null)
                 _location = Assembly.GetAssembly(type).Location;
 
             if (_setting != null)
@@ -96,7 +96,7 @@ namespace KeLi.Common.Tool.Other
             if (keyName is null)
                 throw new ArgumentNullException(nameof(keyName));
 
-            if (_setting == null)
+            if (_setting is null)
                 throw new Exception(
                     "Please call static method ConfigUtil.Init() in static program's constructor firstly!");
 

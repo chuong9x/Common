@@ -64,7 +64,7 @@ namespace KeLi.Common.Tool.Security
         /// <returns></returns>
         public static string Encrypt(string content)
         {
-            if (content == null)
+            if (content is null)
                 throw new ArgumentNullException(nameof(content));
 
             if (string.IsNullOrWhiteSpace(content))

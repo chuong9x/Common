@@ -70,13 +70,13 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool RejectPlaneBox(this Document doc, Element elm1, Element elm2)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (elm1 == null)
+            if (elm1 is null)
                 throw new ArgumentNullException(nameof(elm1));
 
-            if (elm2 == null)
+            if (elm2 is null)
                 throw new ArgumentNullException(nameof(elm2));
 
             var box1 = elm1.GetRoundBox(doc);
@@ -97,10 +97,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool RejectPlaneBox(this BoundingBoxXYZ box1, BoundingBoxXYZ box2)
         {
-            if (box1 == null)
+            if (box1 is null)
                 throw new ArgumentNullException(nameof(box1));
 
-            if (box2 == null)
+            if (box2 is null)
                 throw new ArgumentNullException(nameof(box2));
 
             box1 = box1.GetRoundBox();
@@ -123,13 +123,13 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool RejectSpaceBox(this Document doc, Element elm1, Element elm2)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (elm1 == null)
+            if (elm1 is null)
                 throw new ArgumentNullException(nameof(elm1));
 
-            if (elm2 == null)
+            if (elm2 is null)
                 throw new ArgumentNullException(nameof(elm2));
 
             var box1 = elm1.GetRoundBox(doc);
@@ -152,10 +152,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool RejectSpaceBox(this BoundingBoxXYZ box1, BoundingBoxXYZ box2)
         {
-            if (box1 == null)
+            if (box1 is null)
                 throw new ArgumentNullException(nameof(box1));
 
-            if (box2 == null)
+            if (box2 is null)
                 throw new ArgumentNullException(nameof(box2));
 
             box1 = box1.GetRoundBox();
@@ -180,13 +180,13 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool CrossPlaneBox(this Document doc, Element elm1, Element elm2)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (elm1 == null)
+            if (elm1 is null)
                 throw new ArgumentNullException(nameof(elm1));
 
-            if (elm2 == null)
+            if (elm2 is null)
                 throw new ArgumentNullException(nameof(elm2));
 
             var box1 = elm1.GetRoundBox(doc);
@@ -209,10 +209,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool CrossPlaneBox(this BoundingBoxXYZ box1, BoundingBoxXYZ box2)
         {
-            if (box1 == null)
+            if (box1 is null)
                 throw new ArgumentNullException(nameof(box1));
 
-            if (box2 == null)
+            if (box2 is null)
                 throw new ArgumentNullException(nameof(box2));
 
             box1 = box1.GetRoundBox();
@@ -237,13 +237,13 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool CrossSpaceBox(this Document doc, Element elm1, Element elm2)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (elm1 == null)
+            if (elm1 is null)
                 throw new ArgumentNullException(nameof(elm1));
 
-            if (elm2 == null)
+            if (elm2 is null)
                 throw new ArgumentNullException(nameof(elm2));
 
             var box1 = elm1.GetRoundBox(doc);
@@ -266,10 +266,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool CrossSpaceBox(this BoundingBoxXYZ box1, BoundingBoxXYZ box2)
         {
-            if (box1 == null)
+            if (box1 is null)
                 throw new ArgumentNullException(nameof(box1));
 
-            if (box2 == null)
+            if (box2 is null)
                 throw new ArgumentNullException(nameof(box2));
 
             box1 = box1.GetRoundBox();
@@ -292,10 +292,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool CutElement(this Element elm1, Element elm2, CutFailureReason reason)
         {
-            if (elm1 == null)
+            if (elm1 is null)
                 throw new ArgumentNullException(nameof(elm1));
 
-            if (elm2 == null)
+            if (elm2 is null)
                 throw new ArgumentNullException(nameof(elm2));
 
             if (!Enum.IsDefined(typeof(CutFailureReason), reason))
@@ -312,10 +312,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool CrossGeometry(this Element elm1, Element elm2)
         {
-            if (elm1 == null)
+            if (elm1 is null)
                 throw new ArgumentNullException(nameof(elm1));
 
-            if (elm2 == null)
+            if (elm2 is null)
                 throw new ArgumentNullException(nameof(elm2));
 
             return elm1.GetValidSolidList().CrossSolid(elm2.GetValidSolidList());
@@ -329,10 +329,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool CrossGeometry(this GeometryElement ge1, GeometryElement ge2)
         {
-            if (ge1 == null)
+            if (ge1 is null)
                 throw new ArgumentNullException(nameof(ge1));
 
-            if (ge2 == null)
+            if (ge2 is null)
                 throw new ArgumentNullException(nameof(ge2));
 
             return ge1.GetValidSolidList().CrossSolid(ge2.GetValidSolidList());
@@ -346,10 +346,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool CrossSolid(this IEnumerable<Solid> solid1s, IEnumerable<Solid> solid2s)
         {
-            if (solid1s == null)
+            if (solid1s is null)
                 throw new ArgumentNullException(nameof(solid1s));
 
-            if (solid2s == null)
+            if (solid2s is null)
                 throw new ArgumentNullException(nameof(solid2s));
 
             return solid1s.FirstOrDefault(f => f.CrossSolid(solid2s)) != null;
@@ -363,10 +363,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool CrossSolid(this Solid solid, IEnumerable<Solid> solids)
         {
-            if (solid == null)
+            if (solid is null)
                 throw new ArgumentNullException(nameof(solid));
 
-            if (solids == null)
+            if (solids is null)
                 throw new ArgumentNullException(nameof(solids));
 
             return solids.FirstOrDefault(f => f.CrossSolid(solid)) != null;
@@ -380,10 +380,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool CrossSolid(this Solid solid1, Solid solid2)
         {
-            if (solid1 == null)
+            if (solid1 is null)
                 throw new ArgumentNullException(nameof(solid1));
 
-            if (solid2 == null)
+            if (solid2 is null)
                 throw new ArgumentNullException(nameof(solid2));
 
             return BooleanOperationsUtils.ExecuteBooleanOperation(solid1, solid2, BooleanOperationsType.Intersect)

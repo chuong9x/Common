@@ -67,12 +67,12 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static bool TryParseByDisplayAttr<T>(string value, out T result) where T : Enum
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentNullException(nameof(value));
 
-            var descs = GetDisplayEnumDict<T>();
+            var dict = GetDisplayEnumDict<T>();
 
-            if (!descs.TryGetValue(value, out result))
+            if (!dict.TryGetValue(value, out result))
                 throw new InvalidEnumArgumentException();
 
             return true;
@@ -86,7 +86,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static bool TryParseByDescAttr<T>(string value, out T result) where T : Enum
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentNullException(nameof(value));
 
             var descs = GetDescriptionEnumDict<T>();
@@ -110,7 +110,7 @@ namespace KeLi.Common.Converter.Collections
             {
                 var member = typeof(T).GetMember(value.ToString()).FirstOrDefault();
 
-                if (member == null)
+                if (member is null)
                     continue;
 
                 var atts = member.GetCustomAttributes(typeof(DisplayAttribute), false);
@@ -136,7 +136,7 @@ namespace KeLi.Common.Converter.Collections
             {
                 var member = typeof(T).GetMember(value.ToString()).FirstOrDefault();
 
-                if (member == null)
+                if (member is null)
                     continue;
 
                 var atts = member.GetCustomAttributes(typeof(DescriptionAttribute), false);

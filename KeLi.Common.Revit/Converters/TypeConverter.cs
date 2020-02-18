@@ -65,7 +65,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static Line ToPlaneLine(this Curve line)
         {
-            if (line == null)
+            if (line is null)
                 throw new ArgumentNullException(nameof(line));
 
             var p1 = line.GetEndPoint(0).ToPlanePoint();
@@ -81,7 +81,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static XYZ ToPlanePoint(this XYZ pt)
         {
-            if (pt == null)
+            if (pt is null)
                 throw new ArgumentNullException(nameof(pt));
 
             return new XYZ(pt.X, pt.Y, 0);
@@ -94,7 +94,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static ReferenceArray ToReferArray(this IEnumerable<Reference> refs)
         {
-            if (refs == null)
+            if (refs is null)
                 throw new ArgumentNullException(nameof(refs));
 
             var results = new ReferenceArray();
@@ -112,7 +112,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static List<Reference> ToReferArray(this ReferenceArray refs)
         {
-            if (refs == null)
+            if (refs is null)
                 throw new ArgumentNullException(nameof(refs));
 
             var results = new List<Reference>();
@@ -130,7 +130,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static CurveArrArray ToCurveArrArray(this IEnumerable<CurveLoop> curveLoops)
         {
-            if (curveLoops == null)
+            if (curveLoops is null)
                 throw new ArgumentNullException(nameof(curveLoops));
 
             var results = new CurveArrArray();
@@ -148,7 +148,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static List<CurveArray> ToCurveArrayList(this IEnumerable<CurveLoop> curveLoops)
         {
-            if (curveLoops == null)
+            if (curveLoops is null)
                 throw new ArgumentNullException(nameof(curveLoops));
 
             return curveLoops.Select(s => s.ToCurveArray()).ToList();
@@ -161,7 +161,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static List<Curve> ToCurveList(this IEnumerable<CurveLoop> curveLoops)
         {
-            if (curveLoops == null)
+            if (curveLoops is null)
                 throw new ArgumentNullException(nameof(curveLoops));
 
             return curveLoops.SelectMany(s => s).ToList();
@@ -174,7 +174,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static List<CurveLoop> ToCurveLoopList(this CurveArrArray curveArrArray)
         {
-            if (curveArrArray == null)
+            if (curveArrArray is null)
                 throw new ArgumentNullException(nameof(curveArrArray));
 
             var results = new List<CurveLoop>();
@@ -192,7 +192,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static List<CurveArray> ToCurveArrayList(this CurveArrArray curveArrArray)
         {
-            if (curveArrArray == null)
+            if (curveArrArray is null)
                 throw new ArgumentNullException(nameof(curveArrArray));
 
             var results = new List<CurveArray>();
@@ -210,7 +210,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static List<Curve> ToCurveList(this CurveArrArray curveArrArray)
         {
-            if (curveArrArray == null)
+            if (curveArrArray is null)
                 throw new ArgumentNullException(nameof(curveArrArray));
 
             var results = new List<Curve>();
@@ -228,7 +228,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static CurveArrArray ToCurveArrArray(this IEnumerable<CurveArray> curveArrays)
         {
-            if (curveArrays == null)
+            if (curveArrays is null)
                 throw new ArgumentNullException(nameof(curveArrays));
 
             var results = new CurveArrArray();
@@ -246,7 +246,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static CurveArray ToCurveArray(this CurveLoop curveLoop)
         {
-            if (curveLoop == null)
+            if (curveLoop is null)
                 throw new ArgumentNullException(nameof(curveLoop));
 
             var results = new CurveArray();
@@ -264,7 +264,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static List<Curve> ToCurveList(this CurveLoop curveLoop)
         {
-            if (curveLoop == null)
+            if (curveLoop is null)
                 throw new ArgumentNullException(nameof(curveLoop));
 
             var results = new List<Curve>();
@@ -282,7 +282,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static CurveLoop ToCurveLoop(this CurveArray curveArray)
         {
-            if (curveArray == null)
+            if (curveArray is null)
                 throw new ArgumentNullException(nameof(curveArray));
 
             var results = new CurveLoop();
@@ -300,7 +300,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static List<Curve> ToCurveList(this CurveArray curveArray)
         {
-            if (curveArray == null)
+            if (curveArray is null)
                 throw new ArgumentNullException(nameof(curveArray));
 
             var results = new List<Curve>();
@@ -318,7 +318,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static CurveArray ToCurveArray(this IEnumerable<Curve> curves)
         {
-            if (curves == null)
+            if (curves is null)
                 throw new ArgumentNullException(nameof(curves));
 
             var results = new CurveArray();
@@ -336,7 +336,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static CurveLoop ToCurveLoop(this IEnumerable<Curve> curves)
         {
-            if (curves == null)
+            if (curves is null)
                 throw new ArgumentNullException(nameof(curves));
 
             var results = new CurveLoop();
@@ -354,7 +354,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static FaceArray ToFaceArray(this IEnumerable<Face> faces)
         {
-            if (faces == null)
+            if (faces is null)
                 throw new ArgumentNullException(nameof(faces));
 
             var results = new FaceArray();
@@ -372,7 +372,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static List<Face> ToFaceList(this FaceArray faces)
         {
-            if (faces == null)
+            if (faces is null)
                 throw new ArgumentNullException(nameof(faces));
 
             var results = new List<Face>();

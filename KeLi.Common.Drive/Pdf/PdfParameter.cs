@@ -53,18 +53,18 @@ using System.IO;
 namespace KeLi.Common.Drive.Pdf
 {
     /// <summary>
-    ///     Pdf parameter.
+    ///     PDF parameter.
     /// </summary>
     public class PdfParameter
     {
         /// <summary>
-        ///     Pdf parameter.
+        ///     PDF parameter.
         /// </summary>
         /// <param name="pdfPath"></param>
         /// <param name="imgName"></param>
         public PdfParameter(string pdfPath, string imgName = null)
         {
-            if (pdfPath == null)
+            if (pdfPath is null)
                 throw new ArgumentNullException(nameof(pdfPath));
 
             PdfPath = new FileInfo(pdfPath);

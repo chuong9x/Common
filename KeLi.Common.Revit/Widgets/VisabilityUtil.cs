@@ -62,7 +62,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="gf"></param>
         public static void SetExtrusionVisible(this GenericForm gf)
         {
-            if (gf == null)
+            if (gf is null)
                 throw new ArgumentNullException(nameof(gf));
 
             var visibility = gf.GetVisibility();

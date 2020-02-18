@@ -70,7 +70,7 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static List<FamilySymbol> GetFamilySymbolList(this Document doc)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             return doc.GetTypeElementList<FamilySymbol>();
@@ -83,7 +83,7 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static List<Wall> GetWallList(this Document doc)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             return doc.GetInstanceElementList<Wall>();
@@ -97,10 +97,10 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static List<FamilyInstance> GetFamilyInstanceList(this Document doc, string symbolName)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (symbolName == null)
+            if (symbolName is null)
                 throw new ArgumentNullException(nameof(symbolName));
 
             return GetFamilyInstanceList(doc).Where(w => w.Symbol.Name == symbolName).ToList();
@@ -113,7 +113,7 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static List<FamilyInstance> GetFamilyInstanceList(this Document doc)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             return doc.GetInstanceElementList<FamilyInstance>();
@@ -126,7 +126,7 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static List<SpatialElement> GetSpatialElementList(this Document doc)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             return doc.GetInstanceElementList<SpatialElement>();
@@ -139,7 +139,7 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static List<PanelType> GetPanelTypeList(this Document doc)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             return doc.GetTypeElementList<PanelType>().ToList();
@@ -152,7 +152,7 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static List<WallType> GetWallTypeList(this Document doc)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             return doc.GetTypeElementList<WallType>();
@@ -165,7 +165,7 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static Level GetBottomLevel(this Document doc)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             return GetLevelList(doc).OrderBy(o => o.Elevation).FirstOrDefault();
@@ -178,7 +178,7 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static List<Level> GetLevelList(this Document doc)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             return doc.GetInstanceElementList<Level>();
@@ -191,7 +191,7 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static XYZ GetLocationPoint<T>(this T elm) where T : Element
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
             return elm.Location is LocationPoint pt ? pt.Point : throw new InvalidCastException(elm.Name);
@@ -204,7 +204,7 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static Curve GetLocationCurve<T>(this T elm) where T : Element
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
             return !(elm.Location is LocationCurve curve) ? throw new InvalidCastException(elm.Name) : curve.Curve;
@@ -219,10 +219,10 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static List<T> GetIntersectElements<T>(this SpatialElement room, Document doc) where T : Element
         {
-            if (room == null)
+            if (room is null)
                 throw new ArgumentNullException(nameof(room));
 
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             var results = new List<T>();
@@ -243,10 +243,10 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static List<Element> GetIntersectElements(this SpatialElement room, Document doc)
         {
-            if (room == null)
+            if (room is null)
                 throw new ArgumentNullException(nameof(room));
 
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             var opt = new SpatialElementBoundaryOptions
@@ -270,16 +270,16 @@ namespace KeLi.Common.Revit.Filters
         /// <param name="color"></param>
         public static void SetColorFill(this Element elm, Element fillPattern, Document doc, Color color)
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
-            if (fillPattern == null)
+            if (fillPattern is null)
                 throw new ArgumentNullException(nameof(fillPattern));
 
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (color == null)
+            if (color is null)
                 throw new ArgumentNullException(nameof(color));
 
             var graSetting = doc.ActiveView.GetElementOverrides(elm.Id);
@@ -298,7 +298,7 @@ namespace KeLi.Common.Revit.Filters
         /// <returns>Returns projection area.</returns>
         public static double GetShadowArea(this Element elm)
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
             var areas = new List<double>();
@@ -306,7 +306,7 @@ namespace KeLi.Common.Revit.Filters
 
             foreach (var instance in geo.Select(s => s as GeometryInstance))
             {
-                if (instance == null)
+                if (instance is null)
                     continue;
 
                 foreach (var item in instance.GetInstanceGeometry())
@@ -329,7 +329,7 @@ namespace KeLi.Common.Revit.Filters
                         continue;
                     }
 
-                    if (analyzer == null)
+                    if (analyzer is null)
                         continue;
 
                     areas.Add(analyzer.GetExtrusionBase().Area * FT2_TO_M2);

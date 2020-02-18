@@ -77,7 +77,7 @@ namespace KeLi.Common.Tool.Other
         /// <param name="context"></param>
         public static void WriteLog(this object context)
         {
-            if (context == null)
+            if (context is null)
                 throw new ArgumentNullException(nameof(context));
 
             if (!Directory.Exists(FOLDER_NAME))

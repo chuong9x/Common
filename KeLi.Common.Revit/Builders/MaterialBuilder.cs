@@ -64,10 +64,10 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static Material CreateMaterial(this Document doc, string name)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (name == null)
+            if (name is null)
                 throw new ArgumentNullException(nameof(name));
 
             return doc.GetElement(Material.Create(doc, name)) as Material;

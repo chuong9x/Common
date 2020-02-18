@@ -70,13 +70,13 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="localPath"></param>
         public static Document OpenCentralFile(this Application app, string serverPath, string localPath)
         {
-            if (app == null)
+            if (app is null)
                 throw new ArgumentNullException(nameof(app));
 
-            if (serverPath == null)
+            if (serverPath is null)
                 throw new ArgumentNullException(nameof(serverPath));
 
-            if (localPath == null)
+            if (localPath is null)
                 throw new ArgumentNullException(nameof(localPath));
 
             var serverPathl = new FilePath(serverPath);
@@ -100,10 +100,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="centralPath"></param>
         public static void CompactCentralFile(this Application app, string centralPath)
         {
-            if (app == null)
+            if (app is null)
                 throw new ArgumentNullException(nameof(app));
 
-            if (centralPath == null)
+            if (centralPath is null)
                 throw new ArgumentNullException(nameof(centralPath));
 
             var doc = app.OpenDocumentFile(centralPath);
@@ -121,10 +121,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static void SetCentralFile(this Document doc, string centralPath)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (centralPath == null)
+            if (centralPath is null)
                 throw new ArgumentNullException(nameof(centralPath));
 
             var saveOption = new SaveAsOptions {OverwriteExistingFile = true};
@@ -145,10 +145,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="comment"></param>
         public static void SyncCentralFile(this UIApplication uiapp, string comment)
         {
-            if (uiapp == null)
+            if (uiapp is null)
                 throw new ArgumentNullException(nameof(uiapp));
 
-            if (comment == null)
+            if (comment is null)
                 throw new ArgumentNullException(nameof(comment));
 
             var doc = uiapp.ActiveUIDocument.Document;
@@ -175,10 +175,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static Document DetachedFromCentralFile(this Application app, string centralPath)
         {
-            if (app == null)
+            if (app is null)
                 throw new ArgumentNullException(nameof(app));
 
-            if (centralPath == null)
+            if (centralPath is null)
                 throw new ArgumentNullException(nameof(centralPath));
 
             var modelPath = new FilePath(centralPath);
@@ -200,13 +200,13 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static Workset AddWorkset(this Document doc, string gridLvl, string worksetName)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (gridLvl == null)
+            if (gridLvl is null)
                 throw new ArgumentNullException(nameof(gridLvl));
 
-            if (worksetName == null)
+            if (worksetName is null)
                 throw new ArgumentNullException(nameof(worksetName));
 
             if (doc.IsWorkshared)
@@ -222,10 +222,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="linkPath"></param>
         public static void AddCadLink(this Document doc, string linkPath)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (linkPath == null)
+            if (linkPath is null)
                 throw new ArgumentNullException(nameof(linkPath));
 
             var options = new DWGImportOptions {OrientToView = true};
@@ -240,10 +240,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="linkPaths"></param>
         public static void AddCadLinkList(this Document doc, List<string> linkPaths)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (linkPaths == null)
+            if (linkPaths is null)
                 throw new ArgumentNullException(nameof(linkPaths));
 
             linkPaths.ForEach(doc.AddCadLink);
@@ -257,10 +257,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static void AddRevitLink(this Document doc, string linkPath)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (linkPath == null)
+            if (linkPath is null)
                 throw new ArgumentNullException(nameof(linkPath));
 
             var filePathl = new FilePath(linkPath);
@@ -286,10 +286,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="linkPaths"></param>
         public static void AddRevitLinkList(this Document doc, List<string> linkPaths)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (linkPaths == null)
+            if (linkPaths is null)
                 throw new ArgumentNullException(nameof(linkPaths));
 
             linkPaths.ForEach(doc.AddRevitLink);
@@ -303,10 +303,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static void RemoveRevitLink(this Document doc, string linkPath)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (linkPath == null)
+            if (linkPath is null)
                 throw new ArgumentNullException(nameof(linkPath));
 
             var links = new FilteredElementCollector(doc).OfClass(typeof(RevitLinkInstance));
@@ -335,10 +335,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static void RemoveRevitLinkList(this Document doc, List<string> linkPaths)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (linkPaths == null)
+            if (linkPaths is null)
                 throw new ArgumentNullException(nameof(linkPaths));
 
             linkPaths.ForEach(doc.RemoveRevitLink);
@@ -351,15 +351,15 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="linkPaths"></param>
         public static void SetRevitLinkList(this string centralPath, List<string> linkPaths)
         {
-            if (centralPath == null)
+            if (centralPath is null)
                 throw new ArgumentNullException(nameof(centralPath));
 
-            if (linkPaths == null)
+            if (linkPaths is null)
                 throw new ArgumentNullException(nameof(linkPaths));
 
             var transData = TransmissionData.ReadTransmissionData(new FilePath(centralPath));
 
-            if (transData == null)
+            if (transData is null)
                 return;
 
             // If found not the link, don't submit, otherwise throw file writing exception.
@@ -375,7 +375,7 @@ namespace KeLi.Common.Revit.Widgets
                 var userPath = ModelPathUtils.ConvertModelPathToUserVisiblePath(extRef.GetPath());
                 var linkPath = linkPaths.FirstOrDefault(w => w != null && userPath.Contains(Path.GetFileName(w)));
 
-                if (linkPath == null)
+                if (linkPath is null)
                     continue;
 
                 transData.SetDesiredReferenceData(extRef.GetReferencingId(), new FilePath(linkPath), PathType.Relative,
@@ -397,10 +397,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="filePaths"></param>
         public static void SetRevitLinkList(this Document doc, List<string> filePaths)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (filePaths == null)
+            if (filePaths is null)
                 throw new ArgumentNullException(nameof(filePaths));
 
             if (filePaths.Count == 0)
@@ -416,10 +416,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="filePath"></param>
         public static void SetRevitLink(this Document doc, string filePath)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (filePath == null)
+            if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));
 
             if (!File.Exists(filePath))
@@ -429,7 +429,7 @@ namespace KeLi.Common.Revit.Widgets
             var type = doc.GetRevitLinkList()
                 .FirstOrDefault(w => filePath.Contains(w.Name) || w.Name.Split('-').Length == 5);
 
-            if (type == null)
+            if (type is null)
                 return;
 
             type.LoadFrom(new FilePath(filePath), new WorksetConfiguration(WorksetConfigurationOption.OpenLastViewed));
@@ -443,7 +443,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static List<RevitLinkType> GetRevitLinkList(this Document doc)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             return doc.GetTypeElementList<RevitLinkType>();
@@ -456,10 +456,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="blankPath"></param>
         public static void SaveRevit(this UIApplication uiapp, string blankPath)
         {
-            if (uiapp == null)
+            if (uiapp is null)
                 throw new ArgumentNullException(nameof(uiapp));
 
-            if (blankPath == null)
+            if (blankPath is null)
                 throw new ArgumentNullException(nameof(blankPath));
 
             var doc = uiapp.ActiveUIDocument.Document;
@@ -477,10 +477,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="centralPath"></param>
         public static void SaveRevit(this Document doc, string centralPath)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (centralPath == null)
+            if (centralPath is null)
                 throw new ArgumentNullException(nameof(centralPath));
 
             var saveOption = new SaveAsOptions {OverwriteExistingFile = true};

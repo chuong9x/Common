@@ -65,16 +65,16 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static ViewSection CreateViewSection(this Document doc, ElementId elmId, BoundingBoxXYZ box)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (elmId == null)
+            if (elmId is null)
                 throw new ArgumentNullException(nameof(elmId));
 
-            if (box == null)
+            if (box is null)
                 throw new ArgumentNullException(nameof(box));
 
-            return doc.GetElement(elmId) == null ? null : ViewSection.CreateSection(doc, elmId, box);
+            return doc.GetElement(elmId) is null ? null : ViewSection.CreateSection(doc, elmId, box);
         }
     }
 }

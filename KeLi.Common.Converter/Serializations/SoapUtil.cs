@@ -67,10 +67,10 @@ namespace KeLi.Common.Converter.Serializations
         /// <param name="filePath"></param>
         public static void Serialize<T>(FileInfo filePath, IEnumerable<T> ts)
         {
-            if (filePath == null)
+            if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));
 
-            if (ts == null)
+            if (ts is null)
                 throw new ArgumentNullException(nameof(ts));
 
             // Not support generic list, must convert to T type array.
@@ -88,7 +88,7 @@ namespace KeLi.Common.Converter.Serializations
         /// <returns></returns>
         public static List<T> Deserialize<T>(FileInfo filePath)
         {
-            if (filePath == null)
+            if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));
 
             using (var fs = new FileStream(filePath.FullName, FileMode.Open))

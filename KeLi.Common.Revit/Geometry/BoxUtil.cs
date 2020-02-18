@@ -66,10 +66,10 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static BoundingBoxXYZ GetBoundingBox(this Element elm, Document doc)
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             var box = elm.get_BoundingBox(doc.ActiveView);
@@ -89,10 +89,10 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static BoundingBoxXYZ GetPlaneBox(this Element elm, Document doc)
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             var box = elm.GetBoundingBox(doc);
@@ -111,7 +111,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static BoundingBoxXYZ GetRoundBox(this BoundingBoxXYZ box)
         {
-            if (box == null)
+            if (box is null)
                 throw new ArgumentNullException(nameof(box));
 
             return new BoundingBoxXYZ
@@ -129,10 +129,10 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static BoundingBoxXYZ GetCrossingBox(this BoundingBoxXYZ box1, BoundingBoxXYZ box2)
         {
-            if (box1 == null)
+            if (box1 is null)
                 throw new ArgumentNullException(nameof(box1));
 
-            if (box2 == null)
+            if (box2 is null)
                 throw new ArgumentNullException(nameof(box2));
 
             var box1Min = box1.Min;
@@ -160,7 +160,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static BoundingBoxXYZ ToBoundingBoxXYZ(this PickedBox box)
         {
-            if (box == null)
+            if (box is null)
                 throw new ArgumentNullException(nameof(box));
 
             var minPt = box.Min;
@@ -187,10 +187,10 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static BoundingBoxXYZ GetRoundBox(this Element elm, Document doc)
         {
-            if (elm == null)
+            if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             var box = elm.get_BoundingBox(doc.ActiveView);
@@ -209,7 +209,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static List<Line> GetPlaneEdgeList(this BoundingBoxXYZ box)
         {
-            if (box == null)
+            if (box is null)
                 throw new ArgumentNullException(nameof(box));
 
             var vectors = box.GetPlaneVectorList();
@@ -232,7 +232,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static List<XYZ> GetPlaneVectorList(this BoundingBoxXYZ box)
         {
-            if (box == null)
+            if (box is null)
                 throw new ArgumentNullException(nameof(box));
 
             var p1 = box.Min;
@@ -250,7 +250,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static List<Line> GetSpaceEdgeList(this BoundingBoxXYZ box)
         {
-            if (box == null)
+            if (box is null)
                 throw new ArgumentNullException(nameof(box));
 
             var vectors = box.GetSpaceVectorList();
@@ -285,7 +285,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static List<XYZ> GetSpaceVectorList(this BoundingBoxXYZ box)
         {
-            if (box == null)
+            if (box is null)
                 throw new ArgumentNullException(nameof(box));
 
             var p1 = box.Min;
@@ -307,7 +307,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static XYZ GetBoxCenter(this BoundingBoxXYZ box)
         {
-            if (box == null)
+            if (box is null)
                 throw new ArgumentNullException(nameof(box));
 
             return (box.Max + box.Min) / 2;
@@ -320,7 +320,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static double GetBoxLength(this BoundingBoxXYZ box)
         {
-            if (box == null)
+            if (box is null)
                 throw new ArgumentNullException(nameof(box));
 
             return box.Max.X - box.Min.X;
@@ -333,7 +333,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static double GetBoxWidth(this BoundingBoxXYZ box)
         {
-            if (box == null)
+            if (box is null)
                 throw new ArgumentNullException(nameof(box));
 
             return box.Max.Y - box.Min.Y;
@@ -347,7 +347,7 @@ namespace KeLi.Common.Revit.Geometry
         /// <returns></returns>
         public static XYZ GetRoundPoint(this XYZ point, int precision = 4)
         {
-            if (point == null)
+            if (point is null)
                 throw new ArgumentNullException(nameof(point));
 
             return new XYZ(Math.Round(point.X, precision), Math.Round(point.Y, precision),

@@ -62,7 +62,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static object[][] Convert(this object[,] array)
         {
-            if (array == null)
+            if (array is null)
                 throw new ArgumentNullException(nameof(array));
 
             var results = new object[array.GetLength(0)][];
@@ -81,7 +81,7 @@ namespace KeLi.Common.Converter.Collections
         /// <returns></returns>
         public static object[,] Convert(this object[][] array)
         {
-            if (array == null)
+            if (array is null)
                 throw new ArgumentNullException(nameof(array));
 
             var results = new object[array.Length, array[0].Length];

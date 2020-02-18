@@ -74,16 +74,16 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="tplFileName"></param>
         public static List<CurtainSystem> CreateCurtainSystemListWithTrans(this Document doc, Application app, PanelType pnlType, string tplFileName)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (app == null)
+            if (app is null)
                 throw new ArgumentNullException(nameof(app));
 
-            if (pnlType == null)
+            if (pnlType is null)
                 throw new ArgumentNullException(nameof(pnlType));
 
-            if (tplFileName == null)
+            if (tplFileName is null)
                 throw new ArgumentNullException(nameof(tplFileName));
 
             var rooms = doc.GetSpatialElementList();
@@ -105,19 +105,19 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="tplFileName"></param>
         public static List<CurtainSystem> CreateCurtainSystemListWithTrans(this Document doc, Application app, SpatialElement room, PanelType pnlType, string tplFileName)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new NullReferenceException(nameof(doc));
 
-            if (room == null)
+            if (room is null)
                 throw new NullReferenceException(nameof(room));
 
-            if (app == null)
+            if (app is null)
                 throw new NullReferenceException(nameof(app));
 
-            if (pnlType == null)
+            if (pnlType is null)
                 throw new NullReferenceException(nameof(pnlType));
 
-            if (tplFileName == null)
+            if (tplFileName is null)
                 throw new NullReferenceException(nameof(tplFileName));
 
             var roomc = room.GetBoundingBox(doc).GetBoxCenter();
@@ -142,13 +142,13 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="parms"></param>
         public static List<CurtainSystem> CreateCurtainSystemListWithTrans(this Document doc, Application app, IEnumerable<CurtainSystemParameter> parms)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (app == null)
+            if (app is null)
                 throw new NullReferenceException(nameof(app));
 
-            if (parms == null)
+            if (parms is null)
                 throw new NullReferenceException(nameof(parms));
 
             return parms.Select(parm => doc.CreateCurtainSystemWithTrans(app, parm)).ToList();
@@ -162,13 +162,13 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="parm"></param>
         public static CurtainSystem CreateCurtainSystemWithTrans(this Document doc, Application app, CurtainSystemParameter parm)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (app == null)
+            if (app is null)
                 throw new NullReferenceException(nameof(app));
 
-            if (parm == null)
+            if (parm is null)
                 throw new NullReferenceException(nameof(parm));
 
             var wline = parm.RefWall.GetLocationCurve() as Line;
@@ -204,7 +204,7 @@ namespace KeLi.Common.Revit.Builders
                 doc.Delete(inst.Id);
                 doc.Delete(symbol.Family.Id);
 
-                if (parm.PanelType == null)
+                if (parm.PanelType is null)
                     return;
 
                 result.CurtainSystemType.get_Parameter(BuiltInParameter.AUTO_PANEL).Set(parm.PanelType.Id);
@@ -225,10 +225,10 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static CurtainSystem CreateCurtainSystemWithTrans(this Document doc, FaceArray faces)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (faces == null)
+            if (faces is null)
                 throw new ArgumentNullException(nameof(faces));
 
             var defaultTypeId = doc.GetDefaultElementTypeId(ElementTypeGroup.CurtainSystemType);

@@ -76,16 +76,16 @@ namespace KeLi.Common.Tool.Security
         /// <returns></returns>
         public static string Encrypt(string content, byte[] keys = null, byte[] ivs = null)
         {
-            if (content == null)
+            if (content is null)
                 throw new ArgumentNullException(nameof(content));
 
             if (string.IsNullOrWhiteSpace(content))
                 return null;
 
-            if (keys == null || keys.Length == 0)
+            if (keys is null || keys.Length == 0)
                 keys = Keys;
 
-            if (ivs == null || ivs.Length == 0)
+            if (ivs is null || ivs.Length == 0)
                 ivs = Ivs;
 
             var dcsp = new DESCryptoServiceProvider();
@@ -112,16 +112,16 @@ namespace KeLi.Common.Tool.Security
         /// <returns></returns>
         public static string Decrypt(string ciphertext, byte[] keys = null, byte[] ivs = null)
         {
-            if (ciphertext == null)
+            if (ciphertext is null)
                 throw new ArgumentNullException(nameof(ciphertext));
 
             if (string.IsNullOrWhiteSpace(ciphertext))
                 return null;
 
-            if (keys == null || keys.Length == 0)
+            if (keys is null || keys.Length == 0)
                 keys = Keys;
 
-            if (ivs == null || ivs.Length == 0)
+            if (ivs is null || ivs.Length == 0)
                 ivs = Ivs;
 
             var dcsp = new DESCryptoServiceProvider();

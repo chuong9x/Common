@@ -67,10 +67,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool IsSpaceVertical(this Line line1, Line line2, double tolerance = 2e-2)
         {
-            if (line1 == null)
+            if (line1 is null)
                 throw new ArgumentNullException(nameof(line1));
 
-            if (line2 == null)
+            if (line2 is null)
                 throw new ArgumentNullException(nameof(line2));
 
             return Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI / 2) < tolerance;
@@ -85,10 +85,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool IsSpaceParallel(this Line line1, Line line2, double tolerance = 2e-2)
         {
-            if (line1 == null)
+            if (line1 is null)
                 throw new ArgumentNullException(nameof(line1));
 
-            if (line2 == null)
+            if (line2 is null)
                 throw new ArgumentNullException(nameof(line2));
 
             if (Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI) < tolerance)
@@ -104,7 +104,7 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static Line ToPlaneLine(this Line line)
         {
-            if (line == null)
+            if (line is null)
                 throw new ArgumentNullException(nameof(line));
 
             var p1 = line.GetEndPoint(0);
@@ -122,10 +122,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool IsPlaneParallel(this Line line1, Line line2, double tolerance = 2e-2)
         {
-            if (line1 == null)
+            if (line1 is null)
                 throw new ArgumentNullException(nameof(line1));
 
-            if (line2 == null)
+            if (line2 is null)
                 throw new ArgumentNullException(nameof(line2));
 
             line1 = line1.ToPlaneLine();
@@ -146,10 +146,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool IsPlaneVertical(this Line line1, Line line2, double tolerance = 2e-2)
         {
-            if (line1 == null)
+            if (line1 is null)
                 throw new ArgumentNullException(nameof(line1));
 
-            if (line2 == null)
+            if (line2 is null)
                 throw new ArgumentNullException(nameof(line2));
 
             line1 = line1.ToPlaneLine();
@@ -169,10 +169,10 @@ namespace KeLi.Common.Revit.Relations
         public static XYZ GetPlaneCrossingPoint(this Line line1, Line line2, bool isTouch = true,
             double tolerance = 2e-2)
         {
-            if (line1 == null)
+            if (line1 is null)
                 throw new ArgumentNullException(nameof(line1));
 
-            if (line2 == null)
+            if (line2 is null)
                 throw new ArgumentNullException(nameof(line2));
 
             if (line1.IsPlaneParallel(line2))
@@ -235,10 +235,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static List<XYZ> GetPlaneCrossingPointList(this Line line, IEnumerable<Line> lines, bool isTouch = true)
         {
-            if (line == null)
+            if (line is null)
                 throw new ArgumentNullException(nameof(line));
 
-            if (lines == null)
+            if (lines is null)
                 throw new ArgumentNullException(nameof(lines));
 
             var results = new List<XYZ>();
@@ -255,7 +255,7 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static List<XYZ> GetDistinctPointList(this IEnumerable<Curve> curves)
         {
-            if (curves == null)
+            if (curves is null)
                 throw new ArgumentNullException(nameof(curves));
 
             var results = new List<XYZ>();
@@ -268,12 +268,12 @@ namespace KeLi.Common.Revit.Relations
 
             for (var i = 0; i < results.Count; i++)
             {
-                if (results[i] == null)
+                if (results[i] is null)
                     continue;
 
                 for (var j = i + 1; j < results.Count; j++)
                 {
-                    if (results[j] == null)
+                    if (results[j] is null)
                         continue;
 
                     if (results[i].IsAlmostEqualTo(results[j]))
@@ -291,7 +291,7 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static List<XYZ> GetBoundaryPointList(this IEnumerable<Curve> curves)
         {
-            if (curves == null)
+            if (curves is null)
                 throw new ArgumentNullException(nameof(curves));
 
             var results = new List<XYZ>();
@@ -342,7 +342,7 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static XYZ GetMinPoint(this Curve curve)
         {
-            if (curve == null)
+            if (curve is null)
                 throw new ArgumentNullException(nameof(curve));
 
             return curve.GetEndPoints().GetMinPoint();
@@ -355,7 +355,7 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static XYZ GetMaxPoint(this Curve curve)
         {
-            if (curve == null)
+            if (curve is null)
                 throw new ArgumentNullException(nameof(curve));
 
             return curve.GetEndPoints().GetMaxPoint();
@@ -368,7 +368,7 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static List<XYZ> GetEndPoints(this Curve curve)
         {
-            if (curve == null)
+            if (curve is null)
                 throw new ArgumentNullException(nameof(curve));
 
             var pt1 = curve.GetEndPoint(0);
@@ -384,7 +384,7 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static XYZ GetMaxPoint(this IEnumerable<XYZ> pts)
         {
-            if (pts == null)
+            if (pts is null)
                 throw new ArgumentNullException(nameof(pts));
 
             return pts.OrderBy(o => o.X).ThenBy(o => o.Y).ThenBy(o => o.Z).FirstOrDefault();
@@ -397,7 +397,7 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static XYZ GetMinPoint(this IEnumerable<XYZ> pts)
         {
-            if (pts == null)
+            if (pts is null)
                 throw new ArgumentNullException(nameof(pts));
 
             return pts.OrderBy(o => o.Z).ThenBy(o => o.Y).ThenBy(o => o.X).FirstOrDefault();
@@ -411,10 +411,10 @@ namespace KeLi.Common.Revit.Relations
         /// <returns></returns>
         public static bool InPlanePolygon(this XYZ pt, IEnumerable<Line> polygon)
         {
-            if (pt == null)
+            if (pt is null)
                 throw new ArgumentNullException(nameof(pt));
 
-            if (polygon == null)
+            if (polygon is null)
                 throw new ArgumentNullException(nameof(polygon));
 
             var x = pt.X;

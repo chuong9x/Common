@@ -66,10 +66,10 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static Group CreateGroup(this Document doc, IEnumerable<ElementId> elmIds)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (elmIds == null)
+            if (elmIds is null)
                 throw new ArgumentNullException(nameof(elmIds));
 
             return doc.Create.NewGroup(elmIds.ToList());

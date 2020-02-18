@@ -67,7 +67,7 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static List<Line> GetEdgeList(this SpatialElement room, SpatialElementBoundaryLocation boundary)
         {
-            if (room == null)
+            if (room is null)
                 throw new ArgumentNullException(nameof(room));
 
             var result = new List<Line>();
@@ -97,7 +97,7 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static List<SpatialElement> GetSpatialElementList(this Document doc, bool isValid = true)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             var results = doc.GetTypeElementList<SpatialElement>();
@@ -117,10 +117,10 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static List<Wall> GetBoundaryWallList(this SpatialElement room, Document doc, double maxThickness = 80)
         {
-            if (room == null)
+            if (room is null)
                 throw new ArgumentNullException(nameof(room));
 
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             const BuiltInParameter parmEnum = BuiltInParameter.WALL_ATTR_WIDTH_PARAM;
@@ -155,15 +155,15 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static Face GetInnerFace(this Wall wall, XYZ refPt)
         {
-            if (wall == null)
+            if (wall is null)
                 throw new ArgumentNullException(nameof(wall));
 
-            if (refPt == null)
+            if (refPt is null)
                 throw new ArgumentNullException(nameof(refPt));
 
             var line = wall.GetLocationCurve() as Line;
 
-            if (line == null)
+            if (line is null)
                 throw new Exception("Curve wall isn't supported!");
 
             var wdir = GetLineDirection(line, refPt);
@@ -202,10 +202,10 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static LineDirection GetLineDirection(this Line line, XYZ refPt)
         {
-            if (line == null)
+            if (line is null)
                 throw new ArgumentNullException(nameof(line));
 
-            if (refPt == null)
+            if (refPt is null)
                 throw new ArgumentNullException(nameof(refPt));
 
             // X axis direction.

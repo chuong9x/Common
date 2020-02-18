@@ -67,7 +67,7 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static FamilyInstance CreateFamilyInstance(this Document doc, FamilyInstanceParameter parm)
         {
-            if (parm == null)
+            if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
 
             if (doc.IsFamilyDocument)
@@ -87,16 +87,16 @@ namespace KeLi.Common.Revit.Builders
         public static FamilyInstance CreateNonStructuralInstance(this Document doc, XYZ location, FamilySymbol symbol,
             Level lvl)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (location == null)
+            if (location is null)
                 throw new ArgumentNullException(nameof(location));
 
-            if (symbol == null)
+            if (symbol is null)
                 throw new ArgumentNullException(nameof(symbol));
 
-            if (lvl == null)
+            if (lvl is null)
                 throw new ArgumentNullException(nameof(lvl));
 
             var parm = new FamilyInstanceParameter(location, symbol, lvl, StructuralType.NonStructural);
@@ -113,13 +113,13 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static FamilyInstance CreateFamilyInstance(this Document doc, FamilySymbol symbol, IEnumerable<XYZ> pts)
         {
-            if (doc == null)
+            if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (symbol == null)
+            if (symbol is null)
                 throw new ArgumentNullException(nameof(symbol));
 
-            if (pts == null)
+            if (pts is null)
                 throw new ArgumentNullException(nameof(pts));
 
             var tmpPts = pts.ToList();

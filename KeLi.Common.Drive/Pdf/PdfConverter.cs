@@ -70,7 +70,7 @@ namespace KeLi.Common.Drive.Pdf
         /// <exception cref="FileNotFoundException"></exception>
         public static List<string> ToImageList(this PdfParameter parm)
         {
-            if (parm == null)
+            if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
 
             var results = new List<string>();
@@ -115,7 +115,7 @@ namespace KeLi.Common.Drive.Pdf
         /// <returns></returns>
         public static Size GetPdfSize(this FileInfo pdfPath)
         {
-            if (pdfPath == null)
+            if (pdfPath is null)
                 throw new ArgumentNullException(nameof(pdfPath));
 
             var reader = new PdfReader(pdfPath.FullName);
@@ -133,7 +133,7 @@ namespace KeLi.Common.Drive.Pdf
         /// <param name="srcPdf"></param>
         public static List<FileInfo> SplitedPdfList(FileInfo srcPdf)
         {
-            if (srcPdf == null)
+            if (srcPdf is null)
                 throw new ArgumentNullException(nameof(srcPdf));
 
             var results = new List<FileInfo>();
@@ -178,10 +178,10 @@ namespace KeLi.Common.Drive.Pdf
         /// <param name="endPage"></param>
         public static void CopyPdf(FileInfo srcPdf, FileInfo tgtPdf, int startPage, int endPage)
         {
-            if (srcPdf == null)
+            if (srcPdf is null)
                 throw new ArgumentNullException(nameof(srcPdf));
 
-            if (tgtPdf == null)
+            if (tgtPdf is null)
                 throw new ArgumentNullException(nameof(tgtPdf));
 
             var reader = new PdfReader(srcPdf.FullName);
@@ -232,10 +232,10 @@ namespace KeLi.Common.Drive.Pdf
         /// <param name="endPage"></param>
         public static void ExtractPdf(FileInfo srcPdf, FileInfo tgtPdf, int startPage, int endPage)
         {
-            if (srcPdf == null)
+            if (srcPdf is null)
                 throw new ArgumentNullException(nameof(srcPdf));
 
-            if (tgtPdf == null)
+            if (tgtPdf is null)
                 throw new ArgumentNullException(nameof(tgtPdf));
 
             var reader = new PdfReader(srcPdf.FullName);
@@ -263,13 +263,13 @@ namespace KeLi.Common.Drive.Pdf
         /// <param name="extractPages"></param>
         public static void ExtractPdf(FileInfo srcPdf, FileInfo tgtPdf, IEnumerable<int> extractPages)
         {
-            if (srcPdf == null)
+            if (srcPdf is null)
                 throw new ArgumentNullException(nameof(srcPdf));
 
-            if (tgtPdf == null)
+            if (tgtPdf is null)
                 throw new ArgumentNullException(nameof(tgtPdf));
 
-            if (extractPages == null)
+            if (extractPages is null)
                 throw new ArgumentNullException(nameof(extractPages));
 
             var tmpExtractPages = extractPages.ToList();
