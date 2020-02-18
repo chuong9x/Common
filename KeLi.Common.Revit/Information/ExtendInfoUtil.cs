@@ -173,9 +173,6 @@ namespace KeLi.Common.Revit.Information
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
 
-            if (dcrp is null)
-                throw new ArgumentNullException(nameof(dcrp));
-
             var result = schemaBuilder.AddMapField(fieldName, typeof(K), typeof(V));
 
             result.SetUnitType(unitType);
@@ -191,6 +188,9 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static Entity InitSimpleFieldEntity<T>(string fieldName, T value)
         {
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
             var schemaBuilder = CreateSchemaBuilder();
 
             schemaBuilder.AddSimpleField(fieldName, typeof(T));
@@ -212,6 +212,12 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static Entity InitListFieldEntity<T>(string fieldName, IEnumerable<T> value)
         {
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+
             var schemaBuilder = CreateSchemaBuilder();
 
             schemaBuilder.AddArrayField(fieldName, typeof(T));
@@ -234,6 +240,12 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static Entity InitDictFieldEntity<K, V>(string fieldName, IDictionary<K, V> value)
         {
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+
             var schemaBuilder = CreateSchemaBuilder();
 
             schemaBuilder.AddMapField(fieldName, typeof(K), typeof(V));
@@ -257,6 +269,18 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static void BindSimpleFieldEntity<T>(this Element elm, Document doc, string fieldName, T value)
         {
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+
             var entity = InitSimpleFieldEntity(fieldName, value);
 
             doc.AutoTransaction(() => elm.SetEntity(entity));
@@ -273,6 +297,18 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static void BindListFieldEntity<T>(this Element elm, Document doc, string fieldName, IEnumerable<T> value)
         {
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+
             var entity = InitListFieldEntity(fieldName, value);
 
             doc.AutoTransaction(() => elm.SetEntity(entity));
@@ -290,6 +326,18 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static void BindDictFieldEntity<K, V>(this Element elm, Document doc, string fieldName, IDictionary<K, V> value)
         {
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+
             var entity = InitDictFieldEntity(fieldName, value);
 
             doc.AutoTransaction(() => elm.SetEntity(entity));
@@ -376,6 +424,9 @@ namespace KeLi.Common.Revit.Information
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
 
@@ -424,6 +475,9 @@ namespace KeLi.Common.Revit.Information
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
+
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
 
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
@@ -520,6 +574,9 @@ namespace KeLi.Common.Revit.Information
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
+
+            if (schemaName is null)
+                throw new ArgumentNullException(nameof(schemaName));
 
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
