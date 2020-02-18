@@ -59,14 +59,27 @@ namespace KeLi.Common.Revit.Builders
         /// <summary>
         ///     Curtain system parameter.
         /// </summary>
-        /// <param name="refWall"></param>
-        /// <param name="refCenter"></param>
+        /// <param name="room"></param>
         /// <param name="pnlType"></param>
         /// <param name="tplFileName"></param>
-        public CurtainSystemParameter(Wall refWall, XYZ refCenter, PanelType pnlType, string tplFileName)
+        public CurtainSystemParameter(SpatialElement room, PanelType pnlType, string tplFileName)
+        {
+            Room = room ?? throw new ArgumentNullException(nameof(room));
+            PanelType = pnlType ?? throw new ArgumentNullException(nameof(pnlType));
+            TemplateFileName = tplFileName ?? throw new ArgumentNullException(nameof(tplFileName));
+        }
+
+        /// <summary>
+        ///     Curtain system parameter.
+        /// </summary>
+        /// <param name="refWall"></param>
+        /// <param name="room"></param>
+        /// <param name="pnlType"></param>
+        /// <param name="tplFileName"></param>
+        public CurtainSystemParameter(Wall refWall, SpatialElement room, PanelType pnlType, string tplFileName)
         {
             RefWall = refWall ?? throw new ArgumentNullException(nameof(refWall));
-            RefCenter = refCenter ?? throw new ArgumentNullException(nameof(refCenter));
+            Room = room ?? throw new ArgumentNullException(nameof(room));
             PanelType = pnlType ?? throw new ArgumentNullException(nameof(pnlType));
             TemplateFileName = tplFileName ?? throw new ArgumentNullException(nameof(tplFileName));
         }
@@ -77,9 +90,9 @@ namespace KeLi.Common.Revit.Builders
         public Wall RefWall { get; set; }
 
         /// <summary>
-        ///     Reference point, such as, room center.
+        ///     Reference room.
         /// </summary>
-        public XYZ RefCenter { get; set; }
+        public SpatialElement Room { get; set; }
 
         /// <summary>
         ///     Panel type.

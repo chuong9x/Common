@@ -51,6 +51,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.ExtensibleStorage;
+using KeLi.Common.Revit.Widgets;
 
 namespace KeLi.Common.Revit.Information
 {
@@ -129,7 +130,7 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        ///     Creates an array type field builder by field name.
+        ///     Creates an IEnumerable type field builder by field name.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="schemaBuilder"></param>
@@ -137,7 +138,7 @@ namespace KeLi.Common.Revit.Information
         /// <param name="unitType"></param>
         /// <param name="dcrp"></param>
         /// <returns></returns>
-        public static void AddArrayField<T>(this SchemaBuilder schemaBuilder, string fieldName, UnitType unitType, string dcrp = null)
+        public static void AddListField<T>(this SchemaBuilder schemaBuilder, string fieldName, UnitType unitType, string dcrp = null)
         {
             if (schemaBuilder is null)
                 throw new ArgumentNullException(nameof(schemaBuilder));
@@ -148,14 +149,14 @@ namespace KeLi.Common.Revit.Information
             if (dcrp is null)
                 throw new ArgumentNullException(nameof(dcrp));
 
-            var result = schemaBuilder.AddArrayField(fieldName, typeof(T));
+            var result = schemaBuilder.AddArrayField(fieldName, typeof(IEnumerable<T>));
 
             result.SetUnitType(unitType);
             result.SetDocumentation(dcrp);
         }
 
         /// <summary>
-        ///     Creates an dictionary type field builder by field name.
+        ///     Creates an IDictionary type field builder by field name.
         /// </summary>
         /// <typeparam name="K"></typeparam>
         /// <typeparam name="V"></typeparam>
@@ -182,13 +183,13 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        ///     Inits the entity by simple value.
+        ///     Inits the entity by simple field and value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="fieldName"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static Entity InitEntityBySimpleData<T>(string fieldName, T value)
+        public static Entity InitSimpleFieldEntity<T>(string fieldName, T value)
         {
             var schemaBuilder = CreateSchemaBuilder();
 
@@ -203,13 +204,13 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        ///     Inits the entity by IEnumerable value.
+        ///     Inits the entity by IEnumerable field and value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="fieldName"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static Entity InitEntityByListData<T>(string fieldName, IEnumerable<T> value)
+        public static Entity InitListFieldEntity<T>(string fieldName, IEnumerable<T> value)
         {
             var schemaBuilder = CreateSchemaBuilder();
 
@@ -224,14 +225,14 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        ///     Inits the entity by IDictionary value.
+        ///     Inits the entity by IDictionary field and value.
         /// </summary>
         /// <typeparam name="K"></typeparam>
         /// <typeparam name="V"></typeparam>
         /// <param name="fieldName"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static Entity InitEntityByDictData<K, V>(string fieldName, IDictionary<K, V> value)
+        public static Entity InitDictFieldEntity<K, V>(string fieldName, IDictionary<K, V> value)
         {
             var schemaBuilder = CreateSchemaBuilder();
 
@@ -243,6 +244,55 @@ namespace KeLi.Common.Revit.Information
             result.SetDictFieldValue(fieldName, value);
 
             return result;
+        }
+
+        /// <summary>
+        ///     Binds the entity by simple field and value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="doc"></param>
+        /// <param name="fieldName"></param>
+        /// <param name="value"></param>
+        /// <param name="elm"></param>
+        /// <returns></returns>
+        public static void BindSimpleFieldEntity<T>(this Element elm, Document doc, string fieldName, T value)
+        {
+            var entity = InitSimpleFieldEntity(fieldName, value);
+
+            doc.AutoTransaction(() => elm.SetEntity(entity));
+        }
+
+        /// <summary>
+        ///     Binds the entity by IEnumerable field and value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="doc"></param>
+        /// <param name="fieldName"></param>
+        /// <param name="value"></param>
+        /// <param name="elm"></param>
+        /// <returns></returns>
+        public static void BindListFieldEntity<T>(this Element elm, Document doc, string fieldName, IEnumerable<T> value)
+        {
+            var entity = InitListFieldEntity(fieldName, value);
+
+            doc.AutoTransaction(() => elm.SetEntity(entity));
+        }
+
+        /// <summary>
+        ///     Binds element entity by IDictionary field and value.
+        /// </summary>
+        /// <typeparam name="K"></typeparam>
+        /// <typeparam name="V"></typeparam>
+        /// <param name="doc"></param>
+        /// <param name="fieldName"></param>
+        /// <param name="value"></param>
+        /// <param name="elm"></param>
+        /// <returns></returns>
+        public static void BindDictFieldEntity<K, V>(this Element elm, Document doc, string fieldName, IDictionary<K, V> value)
+        {
+            var entity = InitDictFieldEntity(fieldName, value);
+
+            doc.AutoTransaction(() => elm.SetEntity(entity));
         }
 
         /// <summary>
@@ -271,9 +321,10 @@ namespace KeLi.Common.Revit.Information
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="elm"></param>
+        /// <param name="doc"></param>
         /// <param name="fieldName"></param>
         /// <param name="value"></param>
-        public static void SetSimpleFieldValue<T>(this Element elm, string fieldName, T value)
+        public static void SetSimpleFieldValue<T>(this Element elm, Document doc, string fieldName, T value)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
@@ -288,6 +339,7 @@ namespace KeLi.Common.Revit.Information
             var entity = elm.GetEntity(schema);
 
             entity.Set(fieldName, value);
+            doc.AutoTransaction(() => elm.SetEntity(entity));
         }
 
         /// <summary>
@@ -316,9 +368,10 @@ namespace KeLi.Common.Revit.Information
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="elm"></param>
+        /// <param name="doc"></param>
         /// <param name="fieldName"></param>
         /// <param name="value"></param>
-        public static void SetListFieldValue<T>(this Element elm, string fieldName, IEnumerable<T> value)
+        public static void SetListFieldValue<T>(this Element elm, Document doc, string fieldName, IEnumerable<T> value)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
@@ -333,6 +386,7 @@ namespace KeLi.Common.Revit.Information
             var entity = elm.GetEntity(schema);
 
             entity.Set(fieldName, value);
+            doc.AutoTransaction(() => elm.SetEntity(entity));
         }
 
         /// <summary>
@@ -363,9 +417,10 @@ namespace KeLi.Common.Revit.Information
         /// <typeparam name="K"></typeparam>
         /// <typeparam name="V"></typeparam>
         /// <param name="elm"></param>
+        /// <param name="doc"></param>
         /// <param name="fieldName"></param>
         /// <param name="value"></param>
-        public static void SetDictFieldValue<K, V>(this Element elm, string fieldName, IDictionary<K, V> value)
+        public static void SetDictFieldValue<K, V>(this Element elm, Document doc, string fieldName, IDictionary<K, V> value)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
@@ -380,6 +435,7 @@ namespace KeLi.Common.Revit.Information
             var entity = elm.GetEntity(schema);
 
             entity.Set(fieldName, value);
+            doc.AutoTransaction(() => elm.SetEntity(entity));
         }
 
         /// <summary>
@@ -431,13 +487,13 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        ///     Gets the Array type field's value.
+        ///     Gets the IEnumerable type field's value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="elm"></param>
         /// <param name="fieldName"></param>
         /// <returns></returns>
-        public static T[] GetArrayFieldValue<T>(this Element elm, string fieldName)
+        public static IEnumerable<T> GetListFieldValue<T>(this Element elm, string fieldName)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
@@ -449,18 +505,18 @@ namespace KeLi.Common.Revit.Information
             var entity = elm.GetEntity(schema);
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
 
-            return field != null ? entity.Get<T[]>(field) : default;
+            return field != null ? entity.Get<IEnumerable<T>>(field) : default;
         }
 
         /// <summary>
-        ///     Gets the Array type field's value.
+        ///     Gets the IEnumerable type field's value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="elm"></param>
         /// <param name="schemaName"></param>
         /// <param name="fieldName"></param>
         /// <returns></returns>
-        public static T[] GetArrayFieldValue<T>(this Element elm, string schemaName, string fieldName)
+        public static IEnumerable<T> GetListFieldValue<T>(this Element elm, string schemaName, string fieldName)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
@@ -472,55 +528,7 @@ namespace KeLi.Common.Revit.Information
             var entity = elm.GetEntity(schema);
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
 
-            return field != null ? entity.Get<T[]>(field) : default;
-        }
-
-        /// <summary>
-        ///     Gets the List type field's value.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="elm"></param>
-        /// <param name="fieldName"></param>
-        /// <returns></returns>
-        public static List<T> GetListFieldValue<T>(this Element elm, string fieldName)
-        {
-            if (elm is null)
-                throw new ArgumentNullException(nameof(elm));
-
-            if (fieldName is null)
-                throw new ArgumentNullException(nameof(fieldName));
-
-            var schema = elm.GetSchemaByFieldName(fieldName);
-            var entity = elm.GetEntity(schema);
-            var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
-
-            return field != null ? entity.Get<List<T>>(field) : default;
-        }
-
-        /// <summary>
-        ///     Gets the List type field's value.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="elm"></param>
-        /// <param name="schemaName"></param>
-        /// <param name="fieldName"></param>
-        /// <returns></returns>
-        public static List<T> GetListFieldValue<T>(this Element elm, string schemaName, string fieldName)
-        {
-            if (elm is null)
-                throw new ArgumentNullException(nameof(elm));
-
-            if (schemaName is null)
-                throw new ArgumentNullException(nameof(schemaName));
-
-            if (fieldName is null)
-                throw new ArgumentNullException(nameof(fieldName));
-
-            var schema = elm.GetSchemaBySchemaName(schemaName);
-            var entity = elm.GetEntity(schema);
-            var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
-
-            return field != null ? entity.Get<List<T>>(field) : default;
+            return field != null ? entity.Get<IEnumerable<T>>(field) : default;
         }
 
         /// <summary>
@@ -593,7 +601,7 @@ namespace KeLi.Common.Revit.Information
         }
 
         /// <summary>
-        ///     Gets the element's schema by schema name.
+        ///     Gets the element's schema by field name.
         /// </summary>
         /// <param name="elm"></param>
         /// <param name="fieldName"></param>

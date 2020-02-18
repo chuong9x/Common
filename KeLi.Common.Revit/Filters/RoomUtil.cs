@@ -65,7 +65,7 @@ namespace KeLi.Common.Revit.Filters
         /// <param name="room"></param>
         /// <param name="boundary"></param>
         /// <returns></returns>
-        public static List<Line> GetEdgeList(this SpatialElement room, SpatialElementBoundaryLocation boundary)
+        public static List<Line> GetEdgeLineList(this SpatialElement room, SpatialElementBoundaryLocation boundary)
         {
             if (room is null)
                 throw new ArgumentNullException(nameof(room));
@@ -76,9 +76,9 @@ namespace KeLi.Common.Revit.Filters
                 StoreFreeBoundaryFaces = true,
                 SpatialElementBoundaryLocation = boundary
             };
-            var segments = room.GetBoundarySegments(opt).SelectMany(s => s);
+            var segs = room.GetBoundarySegments(opt).SelectMany(s => s);
 
-            foreach (var seg in segments)
+            foreach (var seg in segs)
             {
                 var sp = seg.GetCurve().GetEndPoint(0);
                 var ep = seg.GetCurve().GetEndPoint(1);
@@ -142,9 +142,7 @@ namespace KeLi.Common.Revit.Filters
                     results.Add(wall);
             }
 
-            return results
-                .Where(w => Convert.ToDouble(w.WallType.get_Parameter(parmEnum).AsValueString()) < maxThickness)
-                .ToList();
+            return results.Where(w => Convert.ToDouble(w.WallType.get_Parameter(parmEnum).AsValueString()) < maxThickness).ToList();
         }
 
         /// <summary>
