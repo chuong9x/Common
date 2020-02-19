@@ -95,8 +95,8 @@ namespace KeLi.Common.Drive.Pdf
                 withNum = parm.StartPage == parm.EndPage ? null : "_" + withNum;
 
                 var imgPage = pdfFile.GetPageImage(i - 1, 56 * parm.Resolution);
-                var filePath = Path.Combine(parm.PdfPath.DirectoryName ?? throw new InvalidOperationException(),
-                    parm.ImgName + withNum + "." + parm.Format.ToString().ToLower());
+                var dirPath = parm.PdfPath.DirectoryName ?? throw new InvalidOperationException();
+                var filePath = Path.Combine(dirPath, parm.ImgName + withNum + "." + parm.Format.ToString().ToLower());
 
                 results.Add(filePath);
                 imgPage.Save(filePath, parm.Format);
@@ -142,7 +142,7 @@ namespace KeLi.Common.Drive.Pdf
 
             if (reader.NumberOfPages == 1)
             {
-                results = new List<FileInfo> {srcPdf};
+                results = new List<FileInfo> { srcPdf };
                 reader.Close();
 
                 return results;
@@ -202,19 +202,21 @@ namespace KeLi.Common.Drive.Pdf
 
                 if (rotation != 90 && rotation != 270)
                     content.AddTemplate(page, 1f, 0, 0, 1f, 0, 0);
+
                 else
+                {
                     switch (rotation)
                     {
                         case 90:
                             content.AddTemplate(page, 0, -1f, 1f, 0, 0,
                                 reader.GetPageSizeWithRotation(startPage).Height);
                             break;
-
                         case 270:
                             content.AddTemplate(page, 0, 1.0F, -1.0F, 0,
                                 reader.GetPageSizeWithRotation(startPage).Width, 0);
                             break;
                     }
+                }
 
                 startPage++;
             }
@@ -302,10 +304,12 @@ namespace KeLi.Common.Drive.Pdf
                 var page = 0;
 
                 foreach (DictionaryEntry kv in mark)
+                {
                     switch (kv.Key.ToString())
                     {
                         case "Action":
                             continue;
+
                         case "Title":
                             title = kv.Value.ToString();
                             break;
@@ -314,6 +318,7 @@ namespace KeLi.Common.Drive.Pdf
                             page = Convert.ToInt32(kv.Value.ToString().Split(' ')[0]);
                             break;
                     }
+                }
 
                 results.Add(page, title);
             }

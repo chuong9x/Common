@@ -77,14 +77,12 @@ namespace KeLi.Common.Drive.Excel
             using (var excel = new ExcelPackage(parm.FilePath))
             {
                 var sheets = excel.Workbook.Worksheets;
-                var sheet = (parm.SheetName is null
-                                ? sheets.FirstOrDefault()
-                                : sheets[parm.SheetName]) ?? sheets.FirstOrDefault();
+                var sheet = (parm.SheetName is null ? sheets.FirstOrDefault() : sheets[parm.SheetName]) ?? sheets.FirstOrDefault();
 
                 if (!(sheet?.Cells.Value is object[,]))
                     return new object[0, 0];
 
-                return (object[,]) sheet.Cells.Value;
+                return (object[,])sheet.Cells.Value;
             }
         }
 
@@ -116,9 +114,7 @@ namespace KeLi.Common.Drive.Excel
             using (var excel = new ExcelPackage(parm.FilePath))
             {
                 var sheets = excel.Workbook.Worksheets;
-                var sheet = (parm.SheetName is null
-                                ? sheets.FirstOrDefault()
-                                : sheets[parm.SheetName]) ?? sheets.FirstOrDefault();
+                var sheet = (parm.SheetName is null ? sheets.FirstOrDefault() : sheets[parm.SheetName]) ?? sheets.FirstOrDefault();
 
                 if (!(sheet?.Cells.Value is object[,] cells))
                     return new DataTable();
@@ -127,8 +123,8 @@ namespace KeLi.Common.Drive.Excel
                     results.Columns.Add(new DataColumn(cells[0, j]?.ToString()));
 
                 for (var i = parm.RowIndex; i < sheet.Dimension.Rows; i++)
-                for (var j = parm.ColumnIndex; j < sheet.Dimension.Columns; j++)
-                    results.Rows[i - parm.RowIndex][j] = cells[i + parm.RowIndex, j];
+                    for (var j = parm.ColumnIndex; j < sheet.Dimension.Columns; j++)
+                        results.Rows[i - parm.RowIndex][j] = cells[i + parm.RowIndex, j];
             }
 
             return results;
@@ -151,28 +147,25 @@ namespace KeLi.Common.Drive.Excel
             using (var excel = new ExcelPackage(parm.FilePath))
             {
                 var sheets = excel.Workbook.Worksheets;
-                var sheet = (parm.SheetName is null
-                                ? sheets.FirstOrDefault()
-                                : sheets[parm.SheetName]) ?? sheets.FirstOrDefault();
+                var sheet = (parm.SheetName is null ? sheets.FirstOrDefault() : sheets[parm.SheetName]) ?? sheets.FirstOrDefault();
 
                 if (!(sheet?.Cells.Value is object[,] cells))
                     return new List<T>();
 
                 for (var i = parm.RowIndex; i < sheet.Dimension.Rows; i++)
                 {
-                    var obj = (T) Activator.CreateInstance(typeof(T));
+                    var obj = (T)Activator.CreateInstance(typeof(T));
 
                     for (var j = parm.ColumnIndex; j < typeof(T).GetProperties().Length + parm.ColumnIndex; j++)
                     {
                         var columnName = cells[0, j]?.ToString();
-                        var pls = ps.Where(w =>
-                            w.GetDcrp().Equals(columnName) || w.Name.Equals(cells[parm.RowIndex, j]));
+                        var pls = ps.Where(w => w.GetDcrp().Equals(columnName) || w.Name.Equals(cells[parm.RowIndex, j]));
 
                         foreach (var p in pls)
                         {
-                            var val = p.PropertyType.IsEnum
-                                ? Enum.Parse(p.PropertyType, cells[i, j].ToString())
-                                : Convert.ChangeType(cells[i, j], p.PropertyType);
+                            var v1 = Enum.Parse(p.PropertyType, cells[i, j].ToString());
+                            var v2 = Convert.ChangeType(cells[i, j], p.PropertyType);
+                            var val = p.PropertyType.IsEnum ? v1 : v2;
 
                             p.SetValue(obj, cells[i, j] != DBNull.Value ? val : null, null);
                             break;
@@ -222,8 +215,8 @@ namespace KeLi.Common.Drive.Excel
 
             // The content row.
             for (var i = 0; i < tmpObjs.Count; i++)
-            for (var j = 0; j < ps.Length; j++)
-                sheet.Cells[i + parm.RowIndex + 1, j + parm.ColumnIndex].Value = ps[j].GetValue(tmpObjs[i]);
+                for (var j = 0; j < ps.Length; j++)
+                    sheet.Cells[i + parm.RowIndex + 1, j + parm.ColumnIndex].Value = ps[j].GetValue(tmpObjs[i]);
 
             sheet.SetExcelStyle();
             excel.Save();
@@ -255,8 +248,8 @@ namespace KeLi.Common.Drive.Excel
             var excel = parm.GetExcelPackage(out var sheet);
 
             for (var i = 0; i < table.GetLength(0); i++)
-            for (var j = 0; j < table[i].Length; j++)
-                sheet.Cells[i + parm.RowIndex, j + parm.ColumnIndex].Value = table[i][j];
+                for (var j = 0; j < table[i].Length; j++)
+                    sheet.Cells[i + parm.RowIndex, j + parm.ColumnIndex].Value = table[i][j];
 
             sheet.SetExcelStyle();
             excel.Save();
@@ -290,8 +283,8 @@ namespace KeLi.Common.Drive.Excel
             var excel = parm.GetExcelPackage(out var sheet);
 
             for (var i = 0; i < table.GetLength(0); i++)
-            for (var j = 0; j < table.GetLength(1); j++)
-                sheet.Cells[i + parm.RowIndex, j + parm.ColumnIndex].Value = table[i, j];
+                for (var j = 0; j < table.GetLength(1); j++)
+                    sheet.Cells[i + parm.RowIndex, j + parm.ColumnIndex].Value = table[i, j];
 
             sheet.SetExcelStyle();
             excel.Save();
@@ -331,8 +324,8 @@ namespace KeLi.Common.Drive.Excel
 
             // The cotent row.
             for (var i = 0; i < table.Rows.Count; i++)
-            for (var j = 0; j < columns.Count; j++)
-                sheet.Cells[i + parm.RowIndex + 1, j + parm.ColumnIndex].Value = table.Rows[i][columns[j].ColumnName];
+                for (var j = 0; j < columns.Count; j++)
+                    sheet.Cells[i + parm.RowIndex + 1, j + parm.ColumnIndex].Value = table.Rows[i][columns[j].ColumnName];
 
             sheet.SetExcelStyle();
             excel.Save();
@@ -375,9 +368,8 @@ namespace KeLi.Common.Drive.Excel
             var result = new ExcelPackage(parm.FilePath);
             var sheets = result.Workbook.Worksheets;
 
-            sheet = sheets.FirstOrDefault(f => f.Name.ToLower() == parm.SheetName.ToLower()) != null
-                ? sheets[parm.SheetName]
-                : sheets.Add(parm.SheetName);
+            sheet = sheets.FirstOrDefault(f => f.Name.ToLower() == parm.SheetName.ToLower());
+            sheet = sheet != null ? sheets[parm.SheetName] : sheets.Add(parm.SheetName);
 
             return result;
         }
