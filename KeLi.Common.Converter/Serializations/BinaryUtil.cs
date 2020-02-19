@@ -47,7 +47,6 @@
 */
 
 using System;
-using System.Collections;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -59,26 +58,59 @@ namespace KeLi.Common.Converter.Serializations
     public static class BinaryUtil
     {
         /// <summary>
-        ///     Serializes the list.
+        ///     Serializes the object that may be a entity or a collection.
         /// </summary>
         /// <param name="filePath"></param>
-        /// <param name="obj"></param>
-        public static void Serialize(FileInfo filePath, object obj)
+        /// <param name="t"></param>
+        public static void Serialize<T>(string filePath, T t) where T : class
         {
             if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));
 
-            if (obj is null)
-                throw new ArgumentNullException(nameof(obj));
+            if (t is null)
+                throw new ArgumentNullException(nameof(t));
 
-            using (var fs = new FileStream(filePath.FullName, FileMode.Create))
+            using (var fs = new FileStream(filePath, FileMode.Create))
             {
-                new BinaryFormatter().Serialize(fs, obj);
+                new BinaryFormatter().Serialize(fs, t);
             }
         }
 
         /// <summary>
-        ///     Deserializes the file text to the list.
+        ///     Serializes the object that may be a entity or a collection.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="t"></param>
+        public static void Serialize<T>(FileInfo filePath, T t) where T : class
+        {
+            if (filePath is null)
+                throw new ArgumentNullException(nameof(filePath));
+
+            if (t is null)
+                throw new ArgumentNullException(nameof(t));
+
+            Serialize(filePath.FullName, t);
+        }
+
+        /// <summary>
+        ///     Deserializes the file text to T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static T Deserialize<T>(string filePath) where T : class
+        {
+            if (filePath is null)
+                throw new ArgumentNullException(nameof(filePath));
+
+            using (var fs = new FileStream(filePath, FileMode.Open))
+            {
+                return new BinaryFormatter().Deserialize(fs) as T;
+            }
+        }
+
+        /// <summary>
+        ///     Deserializes the file text to T.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="filePath"></param>
@@ -88,10 +120,7 @@ namespace KeLi.Common.Converter.Serializations
             if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));
 
-            using (var fs = new FileStream(filePath.FullName, FileMode.Open))
-            {
-                return new BinaryFormatter().Deserialize(fs) as T;
-            }
+            return Deserialize<T>(filePath.FullName);
         }
     }
 }

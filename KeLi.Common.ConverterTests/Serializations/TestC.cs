@@ -1,5 +1,8 @@
-﻿namespace KeLi.Common.Converter.Serializations.Tests
+﻿using System;
+
+namespace KeLi.Common.ConverterTests.Serializations
 {
+    [Serializable]
     public class TestC
     {
         public TestC()

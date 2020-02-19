@@ -63,6 +63,7 @@
     <Compile Include="Collections\TestB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serializations\JsonUtilTests.cs" />
+    <Compile Include="Serializations\SoapUtilTests.cs" />
     <Compile Include="Serializations\TestC.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -47,9 +47,7 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Soap;
 
 namespace KeLi.Common.Converter.Serializations
@@ -60,41 +58,72 @@ namespace KeLi.Common.Converter.Serializations
     public static class SoapUtil
     {
         /// <summary>
-        ///     Serializes the list.
+        ///     Serializes the IEnumerable that will be converted to array.
+        ///     The entity T must use Serializable attribte.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="ts"></param>
+        /// <param name="t"></param>
         /// <param name="filePath"></param>
-        public static void Serialize<T>(FileInfo filePath, IEnumerable<T> ts)
+        public static void Serialize<T>(string filePath, T t) where T : class
         {
             if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));
 
-            if (ts is null)
-                throw new ArgumentNullException(nameof(ts));
+            if (t is null)
+                throw new ArgumentNullException(nameof(t));
 
-            // Not support generic list, must convert to T type array.
-            using (var fs = new FileStream(filePath.FullName, FileMode.Create))
+            // Not support generic list.
+            using (var fs = new FileStream(filePath, FileMode.Create))
             {
-                new SoapFormatter().Serialize(fs, ts.ToArray());
+                new SoapFormatter().Serialize(fs, t);
             }
         }
 
         /// <summary>
-        ///     Deserializes the file text to the list.
+        ///     Serializes the IEnumerable that will be converted to array.
+        ///     The entity T must use Serializable attribte.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <param name="t"></param>
         /// <param name="filePath"></param>
-        /// <returns></returns>
-        public static List<T> Deserialize<T>(FileInfo filePath)
+        public static void Serialize<T>(FileInfo filePath, T t) where T : class
         {
             if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));
 
-            using (var fs = new FileStream(filePath.FullName, FileMode.Open))
+            if (t is null)
+                throw new ArgumentNullException(nameof(t));
+
+            Serialize(filePath.FullName, t);
+        }
+
+        /// <summary>
+        ///     Deserializes the file text to T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static T Deserialize<T>(string filePath) where T : class
+        {
+            if (filePath is null)
+                throw new ArgumentNullException(nameof(filePath));
+
+            using (var fs = new FileStream(filePath, FileMode.Open))
             {
-                return ((T[]) new SoapFormatter().Deserialize(fs)).ToList();
+                return new SoapFormatter().Deserialize(fs) as T;
             }
+        }
+
+        /// <summary>
+        ///     Deserializes the file text to T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static T Deserialize<T>(FileInfo filePath) where T: class
+        {
+            if (filePath is null)
+                throw new ArgumentNullException(nameof(filePath));
+
+            return Deserialize<T>(filePath.FullName);
         }
     }
 }
