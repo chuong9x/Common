@@ -83,6 +83,69 @@ namespace KeLi.Common.Revit.Widgets
         ///     Gets revit detail list's DataTable.
         /// </summary>
         /// <param name="doc"></param>
+        /// <param name="viewName"></param>
+        /// <param name="colNames"></param>
+        /// <returns></returns>
+        public static DataTable GetDataTable(this Document doc, string viewName, params string[] colNames)
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (viewName is null)
+                throw new ArgumentNullException(nameof(viewName));
+
+            var view = doc.GetInstanceElementList<ViewSchedule>().FirstOrDefault(f => f.Name == viewName);
+
+            if (view == null)
+                throw new NullReferenceException(nameof(view));
+
+            var table = view.GetTableData();
+            var body = table.GetSectionData(SectionType.Body);
+            var colNum = body.NumberOfColumns;
+            var rowNum = body.NumberOfRows;
+            var result = new DataTable { TableName = view.GetCellText(SectionType.Header, 0, 0) };
+            var colIndexs = new List<int>();
+
+            for (var i = 0; i < 3; i++)
+            {
+                for (var j = 0; j < colNum; j++)
+                {
+                    if (colIndexs.Contains(j))
+                        continue;
+
+                    var cellText = view.GetCellText(SectionType.Body, i, j);
+
+                    if (colNames.Contains(cellText))
+                    {
+                        colIndexs.Add(j);
+                        result.Columns.Add(cellText);
+                    }
+
+                    if (result.Columns.Count == colNames.Length)
+                        break;
+                }
+
+                if (result.Columns.Count == colNames.Length)
+                    break;
+            }
+
+            for (var i = 0; i < rowNum; i++)
+            {
+                var row = result.NewRow();
+
+                foreach (var colIndex in colIndexs)
+                    row[colIndex] = view.GetCellText(SectionType.Body, i, colIndex);
+
+                result.Rows.Add(row);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Gets revit detail list's DataTable.
+        /// </summary>
+        /// <param name="doc"></param>
         /// <param name="view"></param>
         /// <returns></returns>
         public static DataTable GetDataTable(this Document doc, ViewSchedule view)
