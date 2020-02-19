@@ -1,4 +1,4 @@
-﻿namespace KeLi.Common.Converter.Collections.Tests
+﻿namespace KeLi.Common.ConverterTests.Collections
 {
     public partial class CollectionConverterTests
     {

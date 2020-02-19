@@ -667,5 +667,26 @@ namespace KeLi.Common.Converter.Collections
 
             return ToDictionary2(nvc);
         }
+
+        /// <summary>
+        ///     Whether Type givenType and Type genericType is inheritance.
+        /// </summary>
+        /// <param name="givenType"></param>
+        /// <param name="genericType"></param>
+        /// <returns></returns>
+        public static bool IsInheritance(this Type givenType, Type genericType)
+        {
+            var interfaceTypes = givenType.GetInterfaces();
+
+            if (interfaceTypes.Any(a => a.IsGenericType && a.GetGenericTypeDefinition() == genericType))
+                return true;
+
+            if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
+                return true;
+
+            var baseType = givenType.BaseType;
+
+            return baseType != null && IsInheritance(baseType, genericType);
+        }
     }
 }

@@ -1,12 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using KeLi.Common.Converter.Collections;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using KeLi.Common.Converter.Collections;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace KeLi.Common.Converter.Collections.Tests
+namespace KeLi.Common.ConverterTests.Collections
 {
     [TestClass()]
     public partial class CollectionConverterTests

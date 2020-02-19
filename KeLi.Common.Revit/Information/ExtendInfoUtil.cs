@@ -119,6 +119,9 @@ namespace KeLi.Common.Revit.Information
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
 
+            if(!typeof(T).IsPrimitive)
+                throw new NotSupportedException(nameof(T));
+
             var result = schemaBuilder.AddSimpleField(fieldName, typeof(T));
 
             result.SetUnitType(unitType);
@@ -149,6 +152,9 @@ namespace KeLi.Common.Revit.Information
             if (dcrp is null)
                 throw new ArgumentNullException(nameof(dcrp));
 
+            if (!typeof(T).IsPrimitive)
+                throw new NotSupportedException(nameof(T));
+
             var result = schemaBuilder.AddArrayField(fieldName, typeof(IEnumerable<T>));
 
             result.SetUnitType(unitType);
@@ -173,6 +179,12 @@ namespace KeLi.Common.Revit.Information
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
 
+            if (!typeof(K).IsPrimitive)
+                throw new NotSupportedException(nameof(K));
+
+            if (!typeof(V).IsPrimitive)
+                throw new NotSupportedException(nameof(V));
+
             var result = schemaBuilder.AddMapField(fieldName, typeof(K), typeof(V));
 
             result.SetUnitType(unitType);
@@ -190,6 +202,9 @@ namespace KeLi.Common.Revit.Information
         {
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
+
+            if (!typeof(T).IsPrimitive)
+                throw new NotSupportedException(nameof(T));
 
             var schemaBuilder = CreateSchemaBuilder();
 
@@ -218,6 +233,9 @@ namespace KeLi.Common.Revit.Information
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
 
+            if (!typeof(T).IsPrimitive)
+                throw new NotSupportedException(nameof(T));
+
             var schemaBuilder = CreateSchemaBuilder();
 
             schemaBuilder.AddArrayField(fieldName, typeof(T));
@@ -245,6 +263,12 @@ namespace KeLi.Common.Revit.Information
 
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
+
+            if (!typeof(K).IsPrimitive)
+                throw new NotSupportedException(nameof(K));
+
+            if (!typeof(V).IsPrimitive)
+                throw new NotSupportedException(nameof(V));
 
             var schemaBuilder = CreateSchemaBuilder();
 
@@ -281,6 +305,9 @@ namespace KeLi.Common.Revit.Information
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
 
+            if (!typeof(T).IsPrimitive)
+                throw new NotSupportedException(nameof(T));
+
             var entity = InitSimpleFieldEntity(fieldName, value);
 
             doc.AutoTransaction(() => elm.SetEntity(entity));
@@ -308,6 +335,9 @@ namespace KeLi.Common.Revit.Information
 
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
+
+            if (!typeof(T).IsPrimitive)
+                throw new NotSupportedException(nameof(T));
 
             var entity = InitListFieldEntity(fieldName, value);
 
@@ -338,6 +368,12 @@ namespace KeLi.Common.Revit.Information
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
 
+            if (!typeof(K).IsPrimitive)
+                throw new NotSupportedException(nameof(K));
+
+            if (!typeof(V).IsPrimitive)
+                throw new NotSupportedException(nameof(V));
+
             var entity = InitDictFieldEntity(fieldName, value);
 
             doc.AutoTransaction(() => elm.SetEntity(entity));
@@ -361,6 +397,9 @@ namespace KeLi.Common.Revit.Information
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
 
+            if (!typeof(T).IsPrimitive)
+                throw new NotSupportedException(nameof(T));
+
             entity.Set(fieldName, value);
         }
 
@@ -382,6 +421,9 @@ namespace KeLi.Common.Revit.Information
 
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
+
+            if (!typeof(T).IsPrimitive)
+                throw new NotSupportedException(nameof(T));
 
             var schema = elm.GetSchemaByFieldName(fieldName);
             var entity = elm.GetEntity(schema);
@@ -408,6 +450,9 @@ namespace KeLi.Common.Revit.Information
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
 
+            if (!typeof(T).IsPrimitive)
+                throw new NotSupportedException(nameof(T));
+
             entity.Set(fieldName, value);
         }
 
@@ -432,6 +477,9 @@ namespace KeLi.Common.Revit.Information
 
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
+
+            if (!typeof(T).IsPrimitive)
+                throw new NotSupportedException(nameof(T));
 
             var schema = elm.GetSchemaByFieldName(fieldName);
             var entity = elm.GetEntity(schema);
@@ -459,6 +507,12 @@ namespace KeLi.Common.Revit.Information
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
 
+            if (!typeof(K).IsPrimitive)
+                throw new NotSupportedException(nameof(K));
+
+            if (!typeof(V).IsPrimitive)
+                throw new NotSupportedException(nameof(V));
+
             entity.Set(fieldName, value);
         }
 
@@ -485,6 +539,12 @@ namespace KeLi.Common.Revit.Information
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
 
+            if (!typeof(K).IsPrimitive)
+                throw new NotSupportedException(nameof(K));
+
+            if (!typeof(V).IsPrimitive)
+                throw new NotSupportedException(nameof(V));
+
             var schema = elm.GetSchemaByFieldName(fieldName);
             var entity = elm.GetEntity(schema);
 
@@ -506,6 +566,9 @@ namespace KeLi.Common.Revit.Information
 
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
+
+            if (!typeof(T).IsPrimitive)
+                throw new NotSupportedException(nameof(T));
 
             var schema = GetSchemaByFieldName(elm, fieldName);
             var entity = elm.GetEntity(schema);
@@ -533,6 +596,9 @@ namespace KeLi.Common.Revit.Information
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
 
+            if (!typeof(T).IsPrimitive)
+                throw new NotSupportedException(nameof(T));
+
             var schema = GetSchemaBySchemaName(elm, schemaName);
             var entity = elm.GetEntity(schema);
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
@@ -554,6 +620,9 @@ namespace KeLi.Common.Revit.Information
 
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
+
+            if (!typeof(T).IsPrimitive)
+                throw new NotSupportedException(nameof(T));
 
             var schema = elm.GetSchemaByFieldName(fieldName);
             var entity = elm.GetEntity(schema);
@@ -581,6 +650,9 @@ namespace KeLi.Common.Revit.Information
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
 
+            if (!typeof(T).IsPrimitive)
+                throw new NotSupportedException(nameof(T));
+
             var schema = elm.GetSchemaBySchemaName(schemaName);
             var entity = elm.GetEntity(schema);
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
@@ -603,6 +675,12 @@ namespace KeLi.Common.Revit.Information
 
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
+
+            if (!typeof(K).IsPrimitive)
+                throw new NotSupportedException(nameof(K));
+
+            if (!typeof(V).IsPrimitive)
+                throw new NotSupportedException(nameof(V));
 
             var schema = elm.GetSchemaByFieldName(fieldName);
             var entity = elm.GetEntity(schema);
@@ -630,6 +708,12 @@ namespace KeLi.Common.Revit.Information
 
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
+
+            if (!typeof(K).IsPrimitive)
+                throw new NotSupportedException(nameof(K));
+
+            if (!typeof(V).IsPrimitive)
+                throw new NotSupportedException(nameof(V));
 
             var schema = elm.GetSchemaBySchemaName(schemaName);
             var entity = elm.GetEntity(schema);

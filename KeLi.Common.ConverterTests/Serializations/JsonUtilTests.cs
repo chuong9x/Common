@@ -1,13 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using KeLi.Common.Converter.Serializations;
-using System;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+using KeLi.Common.Converter.Serializations;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace KeLi.Common.Converter.Serializations.Tests
+namespace KeLi.Common.ConverterTests.Serializations
 {
     [TestClass()]
     public class JsonUtilTests
@@ -18,13 +14,13 @@ namespace KeLi.Common.Converter.Serializations.Tests
             var stu1 = new TestC(1)  { Name = "Jack" };
             var stu2 = new TestC(2) { Name = "Tom" };
 
-            JsonUtil.Serialize(new FileInfo("test.txt"), new TestC[] { stu1,stu2 });
+            JsonUtil.Serialize(new FileInfo("JsonTest.txt"), new[] { stu1,stu2 });
         }
 
         [TestMethod()]
         public void DeserializeTest()
         {
-            var stus = JsonUtil.Deserialize<TestC[]>(new FileInfo("test.txt"));
+            var stus = JsonUtil.Deserialize<TestC[]>(new FileInfo("JsonTest.txt"));
 
             Assert.AreEqual(stus.Count() == 2, true);
         }
