@@ -242,13 +242,39 @@ namespace KeLi.Common.Revit.Builders
             var results = new List<CurtainSystem>();
 
             foreach (var room in rooms)
-            {
-                var parm = new CurtainSystemParameter(room, pnlType, tplFileName);
-
-                results.Add(doc.CreateFloorCurtainSystem(app, parm));
-            }
+                results.Add(doc.CreateFloorCurtainSystem(app, room, pnlType, tplFileName));
 
             return results;
+        }
+
+        /// <summary>
+        ///     Creates a CurtainSystem for floor with transaction.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="app"></param>
+        /// <param name="room"></param>
+        /// <param name="pnlType"></param>
+        /// <param name="tplFileName"></param>
+        public static CurtainSystem CreateFloorCurtainSystem(this Document doc, Application app, SpatialElement room, PanelType pnlType, string tplFileName)
+        {
+            if (doc is null)
+                throw new NullReferenceException(nameof(doc));
+
+            if (room is null)
+                throw new NullReferenceException(nameof(room));
+
+            if (app is null)
+                throw new NullReferenceException(nameof(app));
+
+            if (pnlType is null)
+                throw new NullReferenceException(nameof(pnlType));
+
+            if (tplFileName is null)
+                throw new NullReferenceException(nameof(tplFileName));
+
+            var parm = new CurtainSystemParameter(room, pnlType, tplFileName);
+
+            return doc.CreateFloorCurtainSystem(app, parm);
         }
 
         /// <summary>
