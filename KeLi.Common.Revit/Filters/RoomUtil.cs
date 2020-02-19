@@ -90,25 +90,6 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        ///     Gets room list.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="isValid"></param>
-        /// <returns></returns>
-        public static List<SpatialElement> GetSpatialElementList(this Document doc, bool isValid = true)
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            var results = doc.GetTypeElementList<SpatialElement>();
-
-            if (isValid)
-                results = results.Where(w => w?.Location != null && w.Area > 1e-6).ToList();
-
-            return results;
-        }
-
-        /// <summary>
         ///     Gets boundary wall list of the room.
         /// </summary>
         /// <param name="room"></param>
