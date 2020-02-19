@@ -130,7 +130,7 @@ namespace KeLi.Common.Revit.Filters
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            var results = doc.GetTypeElementList<SpatialElement>();
+            var results = doc.GetInstanceElementList<SpatialElement>();
 
             if (isValid)
                 results = results.Where(w => w?.Location != null && w.Area > 1e-6).ToList();
