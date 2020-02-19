@@ -50,6 +50,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
+using static Autodesk.Revit.DB.SpatialElementBoundaryLocation;
 
 namespace KeLi.Common.Revit.Filters
 {
@@ -255,16 +256,12 @@ namespace KeLi.Common.Revit.Filters
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            var opt = new SpatialElementBoundaryOptions
-            {
-                SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Center
-            };
+            var opt = new SpatialElementBoundaryOptions  { SpatialElementBoundaryLocation = Center };
             var calc = new SpatialElementGeometryCalculator(doc, opt);
             var solid = calc.CalculateSpatialElementGeometry(room).GetGeometry();
             var intersectFilter = new ElementIntersectsSolidFilter(solid);
 
-            return new FilteredElementCollector(doc).WhereElementIsNotElementType().WherePasses(intersectFilter)
-                .ToList();
+            return new FilteredElementCollector(doc).WhereElementIsNotElementType().WherePasses(intersectFilter).ToList();
         }
 
         /// <summary>
