@@ -55,7 +55,7 @@ namespace KeLi.Common.Converter.Serializations
     /// <summary>
     ///     A json data serialization.
     /// </summary>
-    public static class JsonUtil
+    public class JsonUtil
     {
         /// <summary>
         ///     Serializes the object that may be a entity or a collection.
