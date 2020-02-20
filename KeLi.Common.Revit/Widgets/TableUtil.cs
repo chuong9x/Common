@@ -76,7 +76,7 @@ namespace KeLi.Common.Revit.Widgets
 
             var view = doc.GetInstanceElementList<ViewSchedule>().FirstOrDefault(f => f.Name == viewName);
 
-            return doc.GetDataTable(view);
+            return view.GetDataTable(doc);
         }
 
         /// <summary>
@@ -145,10 +145,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <summary>
         ///     Gets revit detail list's DataTable.
         /// </summary>
-        /// <param name="doc"></param>
         /// <param name="view"></param>
+        /// <param name="doc"></param>
         /// <returns></returns>
-        public static DataTable GetDataTable(this Document doc, ViewSchedule view)
+        public static DataTable GetDataTable(this ViewSchedule view, Document doc)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -190,16 +190,16 @@ namespace KeLi.Common.Revit.Widgets
 
             var views = doc.GetInstanceElementList<ViewSchedule>();
 
-            return doc.GetDataTableList(views);
+            return views.GetDataTableList(doc);
         }
 
         /// <summary>
         ///     Gets revit detail list's all DataTable list.
         /// </summary>
-        /// <param name="doc"></param>
         /// <param name="viewNames"></param>
+        /// <param name="doc"></param>
         /// <returns></returns>
-        public static List<DataTable> GetDataTableList(this Document doc, IEnumerable<string> viewNames)
+        public static List<DataTable> GetDataTableList(this IEnumerable<string> viewNames, Document doc)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -222,10 +222,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <summary>
         ///     Gets revit detail list's all DataTable list.
         /// </summary>
-        /// <param name="doc"></param>
         /// <param name="views"></param>
+        /// <param name="doc"></param>
         /// <returns></returns>
-        public static List<DataTable> GetDataTableList(this Document doc, IEnumerable<ViewSchedule> views)
+        public static List<DataTable> GetDataTableList(this IEnumerable<ViewSchedule> views, Document doc)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -237,7 +237,7 @@ namespace KeLi.Common.Revit.Widgets
 
             foreach (var view in views)
             {
-                var table = doc.GetDataTable(view);
+                var table = view.GetDataTable(doc);
 
                 results.Tables.Add(table);
             }

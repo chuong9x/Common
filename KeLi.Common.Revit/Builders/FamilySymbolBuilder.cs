@@ -265,6 +265,9 @@ namespace KeLi.Common.Revit.Builders
 
                 foreach (var line in lines.Cast<Line>())
                 {
+                    if (line.Length < 1e-2)
+                        continue;
+
                     var pt1 = line.GetEndPoint(0) - location;
                     var pt2 = line.GetEndPoint(1) - location;
                     var newLine = Line.CreateBound(pt1, pt2);
