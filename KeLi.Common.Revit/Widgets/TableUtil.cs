@@ -61,12 +61,12 @@ namespace KeLi.Common.Revit.Widgets
     public static class TableUtil
     {
         /// <summary>
-        ///     Gets revit detail list's DataTable.
+        ///     Converts revit detail view to a DataTable.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="viewName"></param>
         /// <returns></returns>
-        public static DataTable GetDataTable(this Document doc, string viewName)
+        public static DataTable ToDataTable(this Document doc, string viewName)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -76,17 +76,17 @@ namespace KeLi.Common.Revit.Widgets
 
             var view = doc.GetInstanceElementList<ViewSchedule>().FirstOrDefault(f => f.Name == viewName);
 
-            return view.GetDataTable(doc);
+            return view.ToDataTable(doc);
         }
 
         /// <summary>
-        ///     Gets revit detail list's DataTable.
+        ///     Converts revit detail view to a DataTable.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="viewName"></param>
         /// <param name="colNames"></param>
         /// <returns></returns>
-        public static DataTable GetDataTable(this Document doc, string viewName, params string[] colNames)
+        public static DataTable ToDataTable(this Document doc, string viewName, params string[] colNames)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -143,18 +143,18 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        ///     Gets revit detail list's DataTable.
+        ///     Converts revit detail view to a DataTable.
         /// </summary>
         /// <param name="view"></param>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static DataTable GetDataTable(this ViewSchedule view, Document doc)
+        public static DataTable ToDataTable(this ViewSchedule view, Document doc)
         {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
             if (view is null)
                 throw new ArgumentNullException(nameof(view));
+
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
 
             var table = view.GetTableData();
             var body = table.GetSectionData(SectionType.Body);
@@ -168,7 +168,7 @@ namespace KeLi.Common.Revit.Widgets
             for (var i = 0; i < rowNum; i++)
             {
                 var row = result.NewRow();
-
+                
                 for (var j = 0; j < colNum; j++)
                     row[j] = view.GetCellText(SectionType.Body, i, j);
 
@@ -179,39 +179,39 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        ///     Gets revit detail list's all DataTable list.
+        ///     Converts all revit detail views to DataTable list.
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static List<DataTable> GetDataTableList(this Document doc)
+        public static List<DataTable> ToDataTableList(this Document doc)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             var views = doc.GetInstanceElementList<ViewSchedule>();
 
-            return views.GetDataTableList(doc);
+            return views.ToDataTableList(doc);
         }
 
         /// <summary>
-        ///     Gets revit detail list's all DataTable list.
+        ///     Converts revit detail views all DataTable list.
         /// </summary>
         /// <param name="viewNames"></param>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static List<DataTable> GetDataTableList(this IEnumerable<string> viewNames, Document doc)
+        public static List<DataTable> ToDataTableList(this IEnumerable<string> viewNames, Document doc)
         {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
             if (viewNames is null)
                 throw new ArgumentNullException(nameof(viewNames));
+
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
 
             var results = new DataSet();
 
             foreach (var viewName in viewNames)
             {
-                var table = doc.GetDataTable(viewName);
+                var table = doc.ToDataTable(viewName);
 
                 results.Tables.Add(table);
             }
@@ -220,24 +220,24 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        ///     Gets revit detail list's all DataTable list.
+        ///     Converts revit detail views all DataTable list.
         /// </summary>
         /// <param name="views"></param>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static List<DataTable> GetDataTableList(this IEnumerable<ViewSchedule> views, Document doc)
+        public static List<DataTable> ToDataTableList(this IEnumerable<ViewSchedule> views, Document doc)
         {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
             if (views is null)
                 throw new ArgumentNullException(nameof(views));
+
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
 
             var results = new DataSet();
 
             foreach (var view in views)
             {
-                var table = view.GetDataTable(doc);
+                var table = view.ToDataTable(doc);
 
                 results.Tables.Add(table);
             }

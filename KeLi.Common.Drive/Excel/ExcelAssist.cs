@@ -65,7 +65,7 @@ namespace KeLi.Common.Drive.Excel
     public static class ExcelAssist
     {
         /// <summary>
-        ///     Reads the excel to the two dimension array.
+        ///     Reads the excel to a two dimension array.
         /// </summary>
         /// <param name="parm"></param>
         /// <returns></returns>
@@ -87,7 +87,7 @@ namespace KeLi.Common.Drive.Excel
         }
 
         /// <summary>
-        ///     Reads the excel to the cross array.
+        ///     Reads the excel to a cross array.
         /// </summary>
         /// <param name="parm"></param>
         /// <returns></returns>
@@ -100,7 +100,7 @@ namespace KeLi.Common.Drive.Excel
         }
 
         /// <summary>
-        ///     Reads the excel to the data table.
+        ///     Reads the excel to a DataTable.
         /// </summary>
         /// <param name="parm"></param>
         /// <returns></returns>
@@ -131,7 +131,7 @@ namespace KeLi.Common.Drive.Excel
         }
 
         /// <summary>
-        ///     Reads the excel to the list.
+        ///     Reads the excel to a List.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="parm"></param>
@@ -180,7 +180,7 @@ namespace KeLi.Common.Drive.Excel
         }
 
         /// <summary>
-        ///     Writes the list to the excel.
+        ///     Writes the IEnumerable to the excel.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="objs"></param>
@@ -223,7 +223,7 @@ namespace KeLi.Common.Drive.Excel
         }
 
         /// <summary>
-        ///     Writes the cross array to the excel.
+        ///     Writes the cross array to a excel.
         /// </summary>
         /// <param name="parm"></param>
         /// <param name="table"></param>
@@ -258,7 +258,7 @@ namespace KeLi.Common.Drive.Excel
         }
 
         /// <summary>
-        ///     Writes the two dimension array to the excel.
+        ///     Writes the two dimension array to a excel.
         /// </summary>
         /// <param name="parm"></param>
         /// <param name="table"></param>
@@ -293,7 +293,7 @@ namespace KeLi.Common.Drive.Excel
         }
 
         /// <summary>
-        ///     Writes the data table to the excel.
+        ///     Writes the DataTable to a excel.
         /// </summary>
         /// <param name="table"></param>
         /// <param name="parm"></param>
