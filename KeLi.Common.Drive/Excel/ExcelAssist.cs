@@ -194,7 +194,7 @@ namespace KeLi.Common.Drive.Excel
             if (objs is null)
                 throw new ArgumentNullException(nameof(objs));
 
-            // If exists, auto width setting will throw exception.
+            // If exists data, auto width setting will throw exception.
             if (parm.FilePath.Exists)
                 File.Delete(parm.FilePath.FullName);
 

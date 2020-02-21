@@ -265,6 +265,7 @@ namespace KeLi.Common.Revit.Builders
 
                 foreach (var line in lines.Cast<Line>())
                 {
+                    // TODO: It's no work.
                     if (line.Length < 1e-2)
                         continue;
 

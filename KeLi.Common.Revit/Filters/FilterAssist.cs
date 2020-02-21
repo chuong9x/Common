@@ -82,7 +82,7 @@ namespace KeLi.Common.Revit.Filters
                     return filter.WhereElementIsNotElementType().ToList();
 
                 case FilterType.Type:
-                    return filter.WhereElementIsNotElementType().ToList();
+                    return filter.WhereElementIsElementType().ToList();
 
                 case FilterType.All:
                     return filter.ToList();
@@ -118,8 +118,7 @@ namespace KeLi.Common.Revit.Filters
         /// <param name="category"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static List<T> GetTypeElementList<T>(this Document doc, BuiltInCategory category,
-            ElementId viewId = null) where T : Element
+        public static List<T> GetTypeElementList<T>(this Document doc, BuiltInCategory category, ElementId viewId = null) where T : Element
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -158,8 +157,7 @@ namespace KeLi.Common.Revit.Filters
         /// <param name="category"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static List<T> GetInstanceElementList<T>(this Document doc, BuiltInCategory category,
-            ElementId viewId = null) where T : Element
+        public static List<T> GetInstanceElementList<T>(this Document doc, BuiltInCategory category, ElementId viewId = null) where T : Element
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -181,14 +179,10 @@ namespace KeLi.Common.Revit.Filters
         /// <param name="type"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static List<Element> GetElementList(this Document doc, CalcType type, int maxNum, bool moreThan,
-            ElementId viewId)
+        public static List<Element> GetElementList(this Document doc, CalcType type, int maxNum, bool moreThan, ElementId viewId = null)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
-
-            if (viewId is null)
-                throw new ArgumentNullException(nameof(viewId));
 
             var elms = doc.Checkout(FilterType.Instance, viewId);
             var results = new List<Element>();
@@ -234,13 +228,10 @@ namespace KeLi.Common.Revit.Filters
         /// <param name="type"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static (Element, int) GetMaxElementPair(this Document doc, CalcType type, ElementId viewId)
+        public static (Element, int) GetMaxElementPair(this Document doc, CalcType type, ElementId viewId = null)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
-
-            if (viewId is null)
-                throw new ArgumentNullException(nameof(viewId));
 
             var elms = doc.Checkout(FilterType.Instance, viewId);
             var maxElm = default(Element);
