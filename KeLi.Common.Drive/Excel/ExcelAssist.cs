@@ -74,7 +74,7 @@ namespace KeLi.Common.Drive.Excel
             if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
 
-            using (var excel = new ExcelPackage(parm.FilePath))
+            using (var excel = new ExcelPackage(new FileInfo(parm.FilePath)))
             {
                 var sheets = excel.Workbook.Worksheets;
                 var sheet = (parm.SheetName is null ? sheets.FirstOrDefault() : sheets[parm.SheetName]) ?? sheets.FirstOrDefault();
@@ -111,7 +111,7 @@ namespace KeLi.Common.Drive.Excel
 
             var results = new DataTable();
 
-            using (var excel = new ExcelPackage(parm.FilePath))
+            using (var excel = new ExcelPackage(new FileInfo(parm.FilePath)))
             {
                 var sheets = excel.Workbook.Worksheets;
                 var sheet = (parm.SheetName is null ? sheets.FirstOrDefault() : sheets[parm.SheetName]) ?? sheets.FirstOrDefault();
@@ -144,7 +144,7 @@ namespace KeLi.Common.Drive.Excel
             var results = new List<T>();
             var ps = typeof(T).GetProperties();
 
-            using (var excel = new ExcelPackage(parm.FilePath))
+            using (var excel = new ExcelPackage(new FileInfo(parm.FilePath)))
             {
                 var sheets = excel.Workbook.Worksheets;
                 var sheet = (parm.SheetName is null ? sheets.FirstOrDefault() : sheets[parm.SheetName]) ?? sheets.FirstOrDefault();
@@ -195,10 +195,10 @@ namespace KeLi.Common.Drive.Excel
                 throw new ArgumentNullException(nameof(objs));
 
             // If exists data, auto width setting will throw exception.
-            if (parm.FilePath.Exists)
-                File.Delete(parm.FilePath.FullName);
+            if (File.Exists(parm.FilePath))
+                File.Delete(parm.FilePath);
 
-            File.Copy(parm.TemplatePath.FullName, parm.FilePath.FullName);
+            File.Copy(parm.TemplatePath, parm.FilePath);
 
             // Epplus dll write excel file that column index from 1 to end column index and row index from 0 to end row index.
             parm.ColumnIndex += 1;
@@ -237,10 +237,10 @@ namespace KeLi.Common.Drive.Excel
                 throw new ArgumentNullException(nameof(table));
 
             // If exists, auto width setting will throw exception.
-            if (parm.FilePath.Exists)
-                File.Delete(parm.FilePath.FullName);
+            if (File.Exists(parm.FilePath))
+                File.Delete(parm.FilePath);
 
-            File.Copy(parm.TemplatePath.FullName, parm.FilePath.FullName);
+            File.Copy(parm.TemplatePath, parm.FilePath);
 
             // Epplus dll write excel file that column index from 1 to end column index and row index from 0 to end row index.
             parm.ColumnIndex += 1;
@@ -272,10 +272,10 @@ namespace KeLi.Common.Drive.Excel
                 throw new ArgumentNullException(nameof(table));
 
             // If exists, auto width setting will throw exception.
-            if (parm.FilePath.Exists)
-                File.Delete(parm.FilePath.FullName);
+            if (File.Exists(parm.FilePath))
+                File.Delete(parm.FilePath);
 
-            File.Copy(parm.TemplatePath.FullName, parm.FilePath.FullName);
+            File.Copy(parm.TemplatePath, parm.FilePath);
 
             // Epplus dll write excel file that column index from 1 to end column index and row index from 0 to end row index.
             parm.ColumnIndex += 1;
@@ -307,10 +307,10 @@ namespace KeLi.Common.Drive.Excel
                 throw new ArgumentNullException(nameof(table));
 
             // If exists, auto width setting will throw exception.
-            if (parm.FilePath.Exists)
-                File.Delete(parm.FilePath.FullName);
+            if (File.Exists(parm.FilePath))
+                File.Delete(parm.FilePath);
 
-            File.Copy(parm.TemplatePath.FullName, parm.FilePath.FullName);
+            File.Copy(parm.TemplatePath, parm.FilePath);
 
             // Epplus dll write excel file that column index from 1 to end column index and row index from 0 to end row index.
             parm.ColumnIndex += 1;
@@ -365,7 +365,7 @@ namespace KeLi.Common.Drive.Excel
             if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
 
-            var result = new ExcelPackage(parm.FilePath);
+            var result = new ExcelPackage(new FileInfo(parm.FilePath));
             var sheets = result.Workbook.Worksheets;
 
             sheet = sheets.FirstOrDefault(f => f.Name.ToLower() == parm.SheetName.ToLower());

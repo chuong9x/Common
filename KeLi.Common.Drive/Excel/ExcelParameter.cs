@@ -65,27 +65,29 @@ namespace KeLi.Common.Drive.Excel
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="tplPath"></param>
-        public ExcelParameter(FileInfo filePath, FileInfo tplPath = null)
+        public ExcelParameter(string filePath, string tplPath = null)
         {
+            // When Creating File, it's can no exist!
+            // So, It's set to string type, otherwise it's throw an exception that file no found.
             FilePath = filePath;
             TemplatePath = tplPath;
             SheetName = SHEET_NAME;
             RowIndex = 1;
             ColumnIndex = 0;
 
-            if (tplPath != null && tplPath.Exists)
-                File.Copy(tplPath.FullName, filePath.FullName, true);
+            if (tplPath != null && File.Exists(tplPath))
+                File.Copy(tplPath, filePath, true);
         }
 
         /// <summary>
         ///     The template path.
         /// </summary>
-        public FileInfo TemplatePath { get; set; }
+        public string TemplatePath { get; set; }
 
         /// <summary>
         ///     The file path.
         /// </summary>
-        public FileInfo FilePath { get; set; }
+        public string FilePath { get; set; }
 
         /// <summary>
         ///     The sheet name.
