@@ -163,9 +163,8 @@ namespace KeLi.Common.Drive.Excel
 
                         foreach (var p in pls)
                         {
-                            var v1 = Enum.Parse(p.PropertyType, cells[i, j].ToString());
-                            var v2 = Convert.ChangeType(cells[i, j], p.PropertyType);
-                            var val = p.PropertyType.IsEnum ? v1 : v2;
+                            var val = p.PropertyType.IsEnum ? Enum.Parse(p.PropertyType, cells[i, j].ToString())
+                                : Convert.ChangeType(cells[i, j], p.PropertyType);
 
                             p.SetValue(obj, cells[i, j] != DBNull.Value ? val : null, null);
                             break;
