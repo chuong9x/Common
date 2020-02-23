@@ -55,7 +55,7 @@ namespace KeLi.Common.Converter.Serializations
     /// <summary>
     ///     A xml data serialization.
     /// </summary>
-    public static class XmlUtil
+    public class XmlUtil
     {
         /// <summary>
         ///     Serializes the object that may be a entity or a collection.

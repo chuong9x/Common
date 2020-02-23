@@ -55,7 +55,7 @@ namespace KeLi.Common.Converter.Serializations
     /// <summary>
     ///     A binary data serialization.
     /// </summary>
-    public static class BinaryUtil
+    public class BinaryUtil
     {
         /// <summary>
         ///     Serializes the object that may be a entity or a collection.

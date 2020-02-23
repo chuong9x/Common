@@ -55,7 +55,7 @@ namespace KeLi.Common.Converter.Serializations
     /// <summary>
     ///     A soap data serialization.
     /// </summary>
-    public static class SoapUtil
+    public class SoapUtil
     {
         /// <summary>
         ///     Serializes the IEnumerable that will be converted to array.
