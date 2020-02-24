@@ -83,7 +83,10 @@ namespace KeLi.Common.Tool.Other
 
             var cfgName = _location + ".config";
 
-            var map = new ExeConfigurationFileMap(cfgName);
+            var map = new ExeConfigurationFileMap
+            {
+                ExeConfigFilename = cfgName
+            };
 
             _setting = ConfigurationManager.OpenMappedExeConfiguration(map, 0).AppSettings;
         }
