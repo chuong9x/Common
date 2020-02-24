@@ -133,8 +133,8 @@ namespace KeLi.Common.Revit.Widgets
             {
                 var row = result.NewRow();
 
-                foreach (var colIndex in colIndexs)
-                    row[colIndex] = view.GetCellText(SectionType.Body, i, colIndex);
+                for (var j = 0; j < colIndexs.Count; j++)
+                    row[j] = view.GetCellText(SectionType.Body, i, colIndexs[j]);
 
                 result.Rows.Add(row);
             }
