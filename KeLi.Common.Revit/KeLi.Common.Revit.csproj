@@ -114,8 +114,6 @@
     <Compile Include="Information\ExtendInfoUtil.cs" />
     <Compile Include="Geometry\MeshUtil.cs" />
     <Compile Include="Filters\FilterAssist.cs" />
-    <Compile Include="Hook\HookHandler.cs" />
-    <Compile Include="Hook\HookUtil.cs" />
     <Compile Include="Widgets\LinkUtil.cs" />
     <Compile Include="Relations\LineRelation.cs" />
     <Compile Include="Relations\SolidRelaction.cs" />
