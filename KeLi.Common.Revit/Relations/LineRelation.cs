@@ -49,6 +49,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Relations
@@ -108,6 +109,7 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(line));
 
             var p1 = line.GetEndPoint(0);
+
             var p2 = line.GetEndPoint(1);
 
             return Line.CreateBound(new XYZ(p1.X, p1.Y, p1.Z), new XYZ(p2.X, p2.Y, p1.Z));
@@ -129,6 +131,7 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(line2));
 
             line1 = line1.ToPlaneLine();
+
             line2 = line2.ToPlaneLine();
 
             if (Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI) < tolerance)
@@ -153,6 +156,7 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(line2));
 
             line1 = line1.ToPlaneLine();
+
             line2 = line2.ToPlaneLine();
 
             return Math.Abs(line1.Direction.AngleTo(line2.Direction) - Math.PI / 2) < tolerance;
@@ -166,8 +170,7 @@ namespace KeLi.Common.Revit.Relations
         /// <param name="isTouch"></param>
         /// <param name="tolerance"></param>
         /// <returns></returns>
-        public static XYZ GetPlaneCrossingPoint(this Line line1, Line line2, bool isTouch = true,
-            double tolerance = 2e-2)
+        public static XYZ GetPlaneCrossingPoint(this Line line1, Line line2, bool isTouch = true, double tolerance = 2e-2)
         {
             if (line1 is null)
                 throw new ArgumentNullException(nameof(line1));
@@ -179,19 +182,33 @@ namespace KeLi.Common.Revit.Relations
                 return null;
 
             XYZ result;
+
             var pt1 = line1.GetEndPoint(0);
+
             var pt2 = line1.GetEndPoint(1);
+
             var pt3 = line2.GetEndPoint(0);
+
             var pt4 = line2.GetEndPoint(1);
+
             var x1 = pt1.X;
+
             var y1 = pt1.Y;
+
             var x2 = pt2.X;
+
             var y2 = pt2.Y;
+
             var x3 = pt3.X;
+
             var y3 = pt3.Y;
+
             var x4 = pt4.X;
+
             var y4 = pt4.Y;
+
             var f1 = Math.Abs(line1.Direction.AngleTo(XYZ.BasisX) - Math.PI / 2) < tolerance;
+
             var f2 = Math.Abs(line2.Direction.AngleTo(XYZ.BasisX) - Math.PI / 2) < tolerance;
 
             // Must quadrature.
@@ -199,17 +216,27 @@ namespace KeLi.Common.Revit.Relations
             {
                 result = f1 ? new XYZ(x1, y3, pt1.Z) : new XYZ(x3, y1, pt1.Z);
             }
+
             else
             {
                 var dx12 = x2 - x1;
+
                 var dx31 = x3 - x1;
+
                 var dx34 = x3 - x4;
+
                 var dy21 = y2 - y1;
+
                 var dy31 = y3 - y1;
+
                 var dy34 = y3 - y4;
+
                 var k1 = dx12 * dx34 * dy31 - x3 * dx12 * dy34 + x1 * dy21 * dx34;
+
                 var k2 = dy21 * dx34 - dx12 * dy34;
+
                 var k3 = dy21 * dy34 * dx31 - y3 * dy21 * dx34 + y1 * dx12 * dy34;
+
                 var k4 = dx12 * dy34 - dy21 * dx34;
 
                 // Equations of the state, by the formula to calculate the intersection.
@@ -218,8 +245,11 @@ namespace KeLi.Common.Revit.Relations
 
             // It be used to calc the result in line1 and line2.
             var flag1 = (result.Y - x1) * (result.X - x2) <= 0;
+
             var flag2 = (result.Y - y1) * (result.Y - y2) <= 0;
+
             var flag3 = (result.X - x3) * (result.X - x4) <= 0;
+
             var flag4 = (result.Y - y3) * (result.Y - y4) <= 0;
 
             // No touch or true cross returns the intersection pt, otherwise returns null.
@@ -263,6 +293,7 @@ namespace KeLi.Common.Revit.Relations
             foreach (var line in curves)
             {
                 results.Add(line.GetEndPoint(0));
+
                 results.Add(line.GetEndPoint(1));
             }
 
@@ -295,6 +326,7 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(curves));
 
             var results = new List<XYZ>();
+
             var tmpCurves = curves.ToList();
 
             foreach (var line in tmpCurves)
@@ -372,6 +404,7 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(curve));
 
             var pt1 = curve.GetEndPoint(0);
+
             var pt2 = curve.GetEndPoint(1);
 
             return new List<XYZ> {pt1, pt2};
@@ -418,19 +451,26 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(polygon));
 
             var x = pt.X;
+
             var y = pt.Y;
+
             var xs = new List<double>();
+
             var ys = new List<double>();
 
             foreach (var line in polygon)
             {
                 xs.Add(line.GetEndPoint(0).X);
+
                 ys.Add(line.GetEndPoint(0).Y);
             }
 
             var minX = xs.Min();
+
             var maxX = xs.Max();
+
             var minY = ys.Min();
+
             var maxY = ys.Max();
 
             var tmpPolygon = polygon.ToList();
@@ -443,6 +483,7 @@ namespace KeLi.Common.Revit.Relations
             for (int i = 0, j = tmpPolygon.Count - 1; i < tmpPolygon.Count; j = i++)
             {
                 var dxji = xs[j] - xs[i];
+
                 var dyji = ys[j] - ys[i];
 
                 if (ys[i] > y != ys[j] > y && x < dxji * (y - ys[i]) / dyji + xs[i])

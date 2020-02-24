@@ -50,7 +50,9 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+
 using Autodesk.Revit.DB;
+
 using KeLi.Common.Revit.Filters;
 
 namespace KeLi.Common.Revit.Widgets
@@ -96,14 +98,19 @@ namespace KeLi.Common.Revit.Widgets
 
             var view = doc.GetInstanceElementList<ViewSchedule>().FirstOrDefault(f => f.Name == viewName);
 
-            if (view == null)
+            if (view is null)
                 throw new NullReferenceException(nameof(view));
 
             var table = view.GetTableData();
+
             var body = table.GetSectionData(SectionType.Body);
+
             var colNum = body.NumberOfColumns;
+
             var rowNum = body.NumberOfRows;
+
             var result = new DataTable { TableName = view.GetCellText(SectionType.Header, 0, 0) };
+
             var colIndexs = new List<int>();
 
             for (var i = 0; i < 3; i++)
@@ -118,6 +125,7 @@ namespace KeLi.Common.Revit.Widgets
                     if (colNames.Contains(cellText))
                     {
                         colIndexs.Add(j);
+
                         result.Columns.Add(cellText);
                     }
 
@@ -157,9 +165,13 @@ namespace KeLi.Common.Revit.Widgets
                 throw new ArgumentNullException(nameof(doc));
 
             var table = view.GetTableData();
+
             var body = table.GetSectionData(SectionType.Body);
+
             var colNum = body.NumberOfColumns;
+
             var rowNum = body.NumberOfRows;
+
             var result = new DataTable {TableName = view.GetCellText(SectionType.Header, 0, 0)};
 
             for (var i = 0; i < colNum; i++)

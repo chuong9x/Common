@@ -49,7 +49,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Autodesk.Revit.DB;
+
+using static Autodesk.Revit.DB.ViewDetailLevel;
 
 namespace KeLi.Common.Revit.Geometry
 {
@@ -82,6 +85,7 @@ namespace KeLi.Common.Revit.Geometry
                 throw new ArgumentNullException(nameof(elm));
 
             var results = new Dictionary<Mesh, List<MeshTriangle>>();
+
             var meshes = elm.GetMeshList();
 
             meshes.ForEach(f => results.Add(f, f.GetMeshTriangleList()));
@@ -156,12 +160,15 @@ namespace KeLi.Common.Revit.Geometry
                 throw new ArgumentNullException(nameof(dir));
 
             var faces = elm.GetFaceList();
+
             var results = new List<Face>();
 
             foreach (var face in faces)
             {
                 var box = face.GetBoundingBox();
+
                 var min = box.Min;
+
                 var noraml = face.ComputeNormal(min);
 
                 if (noraml.AngleTo(dir) < 1e-6)
@@ -217,7 +224,9 @@ namespace KeLi.Common.Revit.Geometry
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
-            var results = elm.GetFacePointList().OrderBy(o => o.X).ThenBy(o => o.Y).ThenBy(o => o.Z).ToList();
+            var pts = elm.GetFacePointList();
+
+            var results = pts.OrderBy(o => o.X).ThenBy(o => o.Y).ThenBy(o => o.Z).ToList();
 
             for (var i = 0; i < results.Count; i++)
             for (var j = i + 1; j < results.Count; j++)
@@ -259,7 +268,8 @@ namespace KeLi.Common.Revit.Geometry
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
-            var opt = new Options {ComputeReferences = true, DetailLevel = ViewDetailLevel.Coarse};
+            var opt = new Options { ComputeReferences = true, DetailLevel = Coarse };
+
             var ge = elm.get_Geometry(opt);
 
             return ge is null ? new List<Solid>() : ge.GetValidSolidList();
@@ -269,9 +279,8 @@ namespace KeLi.Common.Revit.Geometry
         ///     Gets the element's valid solid list.
         /// </summary>
         /// <param name="ge"></param>
-        /// <param name="precision"></param>
         /// <returns></returns>
-        public static List<Solid> GetValidSolidList(this GeometryElement ge, int precision = 10)
+        public static List<Solid> GetValidSolidList(this GeometryElement ge)
         {
             if (ge is null)
                 throw new ArgumentNullException(nameof(ge));
@@ -279,33 +288,31 @@ namespace KeLi.Common.Revit.Geometry
             var results = new List<Solid>();
 
             foreach (var obj in ge)
-                switch (obj)
+            {
+                if (obj is Solid solid1 && solid1.Volume < 1e-9)
+                    continue;
+
+                if (obj is Solid solid)
                 {
-                    case Solid solid when solid.Volume < Math.Pow(10, -precision):
-                        continue;
-                    case Solid solid:
-                        results.Add(solid);
-                        break;
-
-                    case GeometryInstance gi:
-                    {
-                        var ge2 = gi.GetInstanceGeometry();
-
-                        if (ge2 != null)
-                            results = results.Union(ge2.GetValidSolidList()).ToList();
-
-                        var ge3 = gi.GetSymbolGeometry();
-
-                        if (ge3 != null)
-                            results = results.Union(ge2.GetValidSolidList()).ToList();
-
-                        continue;
-                    }
-
-                    case GeometryElement ge4:
-                        results = results.Union(ge4.GetValidSolidList()).ToList();
-                        break;
+                    results.Add(solid);
                 }
+
+                else if (obj is GeometryInstance gi)
+                {
+                    var subGe = gi.GetInstanceGeometry();
+
+                    if (subGe != null)
+                        results = results.Union(subGe.GetValidSolidList()).ToList();
+
+                    if (gi.GetSymbolGeometry() != null)
+                        results = results.Union(subGe.GetValidSolidList()).ToList();
+                }
+
+                else if (obj is GeometryElement subGe)
+                {
+                    results = results.Union(subGe.GetValidSolidList()).ToList();
+                }
+            }
 
             return results;
         }
@@ -322,6 +329,7 @@ namespace KeLi.Common.Revit.Geometry
                 throw new ArgumentNullException(nameof(points));
 
             var tmpPoints = points.ToList();
+
             var results = new List<Line>();
 
             for (var i = 0; i < tmpPoints.Count - 1; i++)
@@ -334,6 +342,7 @@ namespace KeLi.Common.Revit.Geometry
                 var line = Line.CreateBound(tmpPoints[i], tmpPoints[endIndex]);
 
                 results.Add(line);
+
                 i = endIndex - 1;
             }
 

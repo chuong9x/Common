@@ -55,7 +55,7 @@ namespace KeLi.Common.Tool.Other
     /// <summary>
     ///     Config utility.
     /// </summary>
-    public class ConfigUtil
+    public static class ConfigUtil
     {
         /// <summary>
         ///     Local position.
@@ -70,7 +70,7 @@ namespace KeLi.Common.Tool.Other
         /// <summary>
         ///     Config utility.
         /// </summary>
-        public static void Init(Type type)
+        public static void Init(this Type type)
         {
             if (type is null)
                 throw new ArgumentNullException(nameof(type));
@@ -81,7 +81,9 @@ namespace KeLi.Common.Tool.Other
             if (_setting != null)
                 return;
 
-            var map = new ExeConfigurationFileMap {ExeConfigFilename = _location + ".config"};
+            var cfgName = _location + ".config";
+
+            var map = new ExeConfigurationFileMap(cfgName);
 
             _setting = ConfigurationManager.OpenMappedExeConfiguration(map, 0).AppSettings;
         }
@@ -97,8 +99,7 @@ namespace KeLi.Common.Tool.Other
                 throw new ArgumentNullException(nameof(keyName));
 
             if (_setting is null)
-                throw new Exception(
-                    "Please call static method ConfigUtil.Init() in static program's constructor firstly!");
+                throw new Exception("Please call Init() method firstly!");
 
             return _setting.Settings[keyName].Value;
         }

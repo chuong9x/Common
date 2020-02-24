@@ -68,10 +68,15 @@ namespace KeLi.Common.Drive.Pdf
                 throw new ArgumentNullException(nameof(pdfPath));
 
             PdfPath = new FileInfo(pdfPath);
+
             ImgName = imgName ?? Path.GetFileNameWithoutExtension(pdfPath);
+
             StartPage = 1;
+
             EndPage = 1;
+
             Format = ImageFormat.Jpeg;
+
             Resolution = 5;
         }
 

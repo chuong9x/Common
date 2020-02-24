@@ -51,6 +51,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
@@ -143,7 +144,7 @@ namespace KeLi.Common.Revit.Information
             if (definition != null)
                 return definition;
 
-            var opt = new ExternalDefinitionCreationOptions(paramName, ParameterType.Text) {UserModifiable = canEdit};
+            var opt = new ExternalDefinitionCreationOptions(paramName, ParameterType.Text) { UserModifiable = canEdit };
 
             return group.Definitions.Create(opt);
         }
@@ -205,19 +206,23 @@ namespace KeLi.Common.Revit.Information
                 throw new ArgumentNullException(nameof(parmPath));
 
             var doc = uiapp.ActiveUIDocument.Document;
+
             var bindingMap = doc.ParameterBindings;
-            var gs = uiapp.GetGroupList(parmPath);
+
+            var groups = uiapp.GetGroupList(parmPath);
+
             var elmCtgs = new CategorySet();
 
             elmCtgs.Insert(elm.Category);
 
-            foreach (var group in GetGroups(parmPath))
+            foreach (var groupPram in GetGroups(parmPath))
             {
-                var paramGroup = gs.GetGroup(group.GroupName);
+                var paramGroup = groups.GetGroup(groupPram.GroupName);
 
-                foreach (var param in group.Params)
+                foreach (var elmPram in groupPram.Params)
                 {
-                    var definition = paramGroup.GetDefinition(param.ParamName, param.CanEdit);
+                    var definition = paramGroup.GetDefinition(elmPram.ParamName, elmPram.CanEdit);
+
                     var binding = bindingMap.get_Item(definition);
 
                     // If the parameter group's name contains type key, it's means type binding.
@@ -227,9 +232,11 @@ namespace KeLi.Common.Revit.Information
                         {
                             bindingMap.ReInsert(definition, instanceBinding);
                         }
+
                         else
                         {
                             instanceBinding = uiapp.Application.Create.NewInstanceBinding(elmCtgs);
+
                             bindingMap.Insert(definition, instanceBinding);
                         }
                     }
@@ -239,9 +246,11 @@ namespace KeLi.Common.Revit.Information
                         {
                             bindingMap.ReInsert(definition, typeBinding);
                         }
+
                         else
                         {
                             typeBinding = uiapp.Application.Create.NewTypeBinding(elmCtgs);
+
                             bindingMap.Insert(definition, typeBinding);
                         }
                     }
@@ -259,15 +268,17 @@ namespace KeLi.Common.Revit.Information
                 throw new ArgumentNullException(nameof(paramPath));
 
             var texts = File.ReadLines(paramPath).ToList();
-            var groups = new List<GroupParameter>();
-            var paras = new List<ElementParameter>();
+
+            var results = new List<GroupParameter>();
+
+            var elmParms = new List<ElementParameter>();
 
             foreach (var text in texts)
             {
                 var items = text.Split('\t');
 
                 if (items[0] == "GROUP")
-                    groups.Add(new GroupParameter(items[1], items[2]));
+                    results.Add(new GroupParameter(items[1], items[2]));
 
                 if (items[0] != "PARAM")
                     continue;
@@ -275,24 +286,28 @@ namespace KeLi.Common.Revit.Information
                 var param = new ElementParameter
                 {
                     Guid = items[1],
+
                     ParamName = items[2],
+
                     DataType = items[3],
+
                     DataCatetory = items[4],
+
                     GroupId = items[5],
+
                     Visible = Convert.ToBoolean(Convert.ToInt32(items[6])),
+
                     Description = items[7],
+
                     CanEdit = Convert.ToBoolean(Convert.ToInt32(items[8]))
                 };
 
-                paras.Add(param);
+                elmParms.Add(param);
             }
 
-            foreach (var group in groups)
-            foreach (var para in paras)
-                if (para.GroupId == group.Id)
-                    group.Params.Add(para);
+            results.ForEach(f => f.Params.AddRange(elmParms.Where(w => w.GroupId == f.Id)));
 
-            return groups;
+            return results;
         }
     }
 }

@@ -50,7 +50,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+
 using Autodesk.Revit.DB;
+
 using KeLi.Common.Revit.Converters;
 using KeLi.Common.Revit.Geometry;
 
@@ -80,10 +82,15 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(elm2));
 
             var box1 = elm1.GetRoundBox(doc);
+
             var box2 = elm2.GetRoundBox(doc);
+
             var v1 = box1.Min.X <= box2.Max.X;
+
             var v2 = box1.Max.X >= box2.Min.X;
+
             var v3 = box1.Min.Y <= box2.Max.Y;
+
             var v4 = box1.Max.Y >= box2.Min.Y;
 
             return v1 && v2 && v3 && v4;
@@ -104,11 +111,15 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(box2));
 
             box1 = box1.GetRoundBox();
+
             box2 = box2.GetRoundBox();
 
             var v1 = box1.Min.X <= box2.Max.X;
+
             var v2 = box1.Max.X >= box2.Min.X;
+
             var v3 = box1.Min.Y <= box2.Max.Y;
+
             var v4 = box1.Max.Y >= box2.Min.Y;
 
             return v1 && v2 && v3 && v4;
@@ -133,12 +144,19 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(elm2));
 
             var box1 = elm1.GetRoundBox(doc);
+
             var box2 = elm2.GetRoundBox(doc);
+
             var v1 = box1.Min.X <= box2.Max.X;
+
             var v2 = box1.Max.X >= box2.Min.X;
+
             var v3 = box1.Min.Y <= box2.Max.Y;
+
             var v4 = box1.Max.Y >= box2.Min.Y;
+
             var v5 = box1.Min.Z <= box2.Max.Z;
+
             var v6 = box1.Max.Z >= box2.Min.Z;
 
             return v1 && v2 && v3 && v4 && v5 && v6;
@@ -159,13 +177,19 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(box2));
 
             box1 = box1.GetRoundBox();
+
             box2 = box2.GetRoundBox();
 
             var v1 = box1.Min.X <= box2.Max.X;
+
             var v2 = box1.Max.X >= box2.Min.X;
+
             var v3 = box1.Min.Y <= box2.Max.Y;
+
             var v4 = box1.Max.Y >= box2.Min.Y;
+
             var v5 = box1.Min.Z <= box2.Max.Z;
+
             var v6 = box1.Max.Z >= box2.Min.Z;
 
             return v1 && v2 && v3 && v4 && v5 && v6;
@@ -190,12 +214,19 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(elm2));
 
             var box1 = elm1.GetRoundBox(doc);
+
             var box2 = elm2.GetRoundBox(doc);
+
             var cp1 = (box1.Min - box2.Min).ToPlanePoint().CrossProduct((box2.Max - box2.Min).ToPlanePoint());
+
             var cp2 = (box2.Max - box2.Min).ToPlanePoint().CrossProduct((box1.Max - box2.Min).ToPlanePoint());
+
             var cp3 = (box2.Min - box1.Min).ToPlanePoint().CrossProduct((box1.Max - box1.Min).ToPlanePoint());
+
             var cp4 = (box1.Max - box1.Min).ToPlanePoint().CrossProduct((box2.Max - box1.Min).ToPlanePoint());
+
             var f1 = Math.Abs(cp1.DotProduct(cp2)) > 10e-3;
+
             var f2 = Math.Abs(cp3.DotProduct(cp4)) > 10e-3;
 
             return f1 && f2;
@@ -216,13 +247,19 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(box2));
 
             box1 = box1.GetRoundBox();
+
             box2 = box2.GetRoundBox();
 
             var cp1 = (box1.Min - box2.Min).ToPlanePoint().CrossProduct((box2.Max - box2.Min).ToPlanePoint());
+
             var cp2 = (box2.Max - box2.Min).ToPlanePoint().CrossProduct((box1.Max - box2.Min).ToPlanePoint());
+
             var cp3 = (box2.Min - box1.Min).ToPlanePoint().CrossProduct((box1.Max - box1.Min).ToPlanePoint());
+
             var cp4 = (box1.Max - box1.Min).ToPlanePoint().CrossProduct((box2.Max - box1.Min).ToPlanePoint());
+
             var f1 = Math.Abs(cp1.DotProduct(cp2)) > 10e-3;
+
             var f2 = Math.Abs(cp3.DotProduct(cp4)) > 10e-3;
 
             return f1 && f2;
@@ -247,12 +284,19 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(elm2));
 
             var box1 = elm1.GetRoundBox(doc);
+
             var box2 = elm2.GetRoundBox(doc);
+
             var cp1 = (box1.Min - box2.Min).CrossProduct(box2.Max - box2.Min);
+
             var cp2 = (box2.Max - box2.Min).CrossProduct(box1.Max - box2.Min);
+
             var cp3 = (box2.Min - box1.Min).CrossProduct(box1.Max - box1.Min);
+
             var cp4 = (box1.Max - box1.Min).CrossProduct(box2.Max - box1.Min);
+
             var f1 = Math.Abs(cp1.DotProduct(cp2)) > 10e-3;
+
             var f2 = Math.Abs(cp3.DotProduct(cp4)) > 10e-3;
 
             return f1 && f2;
@@ -273,11 +317,15 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(box2));
 
             box1 = box1.GetRoundBox();
+
             box2 = box2.GetRoundBox();
 
             var cp1 = (box1.Min - box2.Min).CrossProduct(box2.Max - box2.Min);
+
             var cp2 = (box2.Max - box2.Min).CrossProduct(box1.Max - box2.Min);
+
             var cp3 = (box2.Min - box1.Min).CrossProduct(box1.Max - box1.Min);
+
             var cp4 = (box1.Max - box1.Min).CrossProduct(box2.Max - box1.Min);
 
             return cp1.DotProduct(cp2) > 10e-6 && cp3.DotProduct(cp4) > 10e-6;

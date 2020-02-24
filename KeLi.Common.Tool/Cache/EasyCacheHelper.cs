@@ -103,6 +103,7 @@ namespace KeLi.Common.Tool.Cache
             else
             {
                 _data[key] = new KeyValuePair<object, DateTime>(data, DateTime.Now);
+
                 result = _data.ContainsKey(key);
             }
 

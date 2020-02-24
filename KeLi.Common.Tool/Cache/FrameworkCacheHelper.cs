@@ -213,7 +213,9 @@ namespace KeLi.Common.Tool.Cache
                 throw new ArgumentNullException(nameof(pattern));
 
             List<object> results;
+
             var regex = new Regex(pattern);
+
             var keys = _data.Where(w => regex.IsMatch(w.Key)).Select(s => s.Key).ToList();
 
             if (keys.Count == 0)
@@ -224,6 +226,7 @@ namespace KeLi.Common.Tool.Cache
             else
             {
                 results = new List<object>();
+
                 results.AddRange(keys.Select(RemoveItem));
             }
 

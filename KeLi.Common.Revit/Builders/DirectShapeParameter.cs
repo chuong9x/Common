@@ -48,6 +48,7 @@
 
 using System;
 using System.Collections.Generic;
+
 using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Builders
@@ -67,8 +68,11 @@ namespace KeLi.Common.Revit.Builders
         public DirectShapeParameter(IEnumerable<CurveLoop> profile, XYZ direction, double distance, BuiltInCategory category)
         {
             Profile = profile ?? throw new ArgumentNullException(nameof(profile));
+
             Direction = direction ?? throw new ArgumentNullException(nameof(direction));
+
             Distance = distance;
+
             Category = category;
         }
 

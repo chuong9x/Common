@@ -53,7 +53,9 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+
 using KeLi.Common.Converter.Collections;
+
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
@@ -77,7 +79,14 @@ namespace KeLi.Common.Drive.Excel
             using (var excel = new ExcelPackage(new FileInfo(parm.FilePath)))
             {
                 var sheets = excel.Workbook.Worksheets;
-                var sheet = (parm.SheetName is null ? sheets.FirstOrDefault() : sheets[parm.SheetName]) ?? sheets.FirstOrDefault();
+
+                ExcelWorksheet sheet;
+
+                if (parm.SheetName is null)
+                    sheet = sheets.FirstOrDefault();
+
+                else
+                    sheet = sheets[parm.SheetName] ?? sheets.FirstOrDefault();
 
                 if (!(sheet?.Cells.Value is object[,]))
                     return new object[0, 0];
@@ -114,7 +123,14 @@ namespace KeLi.Common.Drive.Excel
             using (var excel = new ExcelPackage(new FileInfo(parm.FilePath)))
             {
                 var sheets = excel.Workbook.Worksheets;
-                var sheet = (parm.SheetName is null ? sheets.FirstOrDefault() : sheets[parm.SheetName]) ?? sheets.FirstOrDefault();
+
+                ExcelWorksheet sheet;
+
+                if (parm.SheetName is null)
+                    sheet = sheets.FirstOrDefault();
+
+                else
+                    sheet = sheets[parm.SheetName] ?? sheets.FirstOrDefault();
 
                 if (!(sheet?.Cells.Value is object[,] cells))
                     return new DataTable();
@@ -142,12 +158,20 @@ namespace KeLi.Common.Drive.Excel
                 throw new ArgumentNullException(nameof(parm));
 
             var results = new List<T>();
+
             var ps = typeof(T).GetProperties();
 
             using (var excel = new ExcelPackage(new FileInfo(parm.FilePath)))
             {
                 var sheets = excel.Workbook.Worksheets;
-                var sheet = (parm.SheetName is null ? sheets.FirstOrDefault() : sheets[parm.SheetName]) ?? sheets.FirstOrDefault();
+
+                ExcelWorksheet sheet;
+
+                if (parm.SheetName is null)
+                    sheet = sheets.FirstOrDefault();
+
+                else
+                    sheet = sheets[parm.SheetName] ?? sheets.FirstOrDefault();
 
                 if (!(sheet?.Cells.Value is object[,] cells))
                     return new List<T>();
@@ -159,14 +183,22 @@ namespace KeLi.Common.Drive.Excel
                     for (var j = parm.ColumnIndex; j < typeof(T).GetProperties().Length + parm.ColumnIndex; j++)
                     {
                         var columnName = cells[0, j]?.ToString();
+
                         var pls = ps.Where(w => w.GetDcrp().Equals(columnName) || w.Name.Equals(cells[parm.RowIndex, j]));
+
+                        var cellVal = cells[i, j];
 
                         foreach (var p in pls)
                         {
-                            var val = p.PropertyType.IsEnum ? Enum.Parse(p.PropertyType, cells[i, j].ToString())
-                                : Convert.ChangeType(cells[i, j], p.PropertyType);
+                            object val;
 
-                            p.SetValue(obj, cells[i, j] != DBNull.Value ? val : null, null);
+                            if (p.PropertyType.IsEnum)
+                                val = Enum.Parse(p.PropertyType, cellVal.ToString());
+
+                            else
+                                val = Convert.ChangeType(cellVal, p.PropertyType);
+
+                            p.SetValue(obj, cellVal != DBNull.Value ? val : null, null);
                             break;
                         }
                     }
@@ -203,12 +235,12 @@ namespace KeLi.Common.Drive.Excel
             parm.ColumnIndex += 1;
 
             var excel = parm.GetExcelPackage(out var sheet);
+
             var ps = typeof(T).GetProperties();
 
             // The titlt row.
-            if (createHeader)
-                for (var i = 0; i < ps.Length; i++)
-                    sheet.Cells[parm.RowIndex, i + parm.ColumnIndex].Value = ps[i].GetDcrp();
+            for (var i = 0; createHeader && i < ps.Length; i++)
+                sheet.Cells[parm.RowIndex, i + parm.ColumnIndex].Value = ps[i].GetDcrp();
 
             var tmpObjs = objs.ToList();
 
@@ -218,6 +250,7 @@ namespace KeLi.Common.Drive.Excel
                     sheet.Cells[i + parm.RowIndex + 1, j + parm.ColumnIndex].Value = ps[j].GetValue(tmpObjs[i]);
 
             sheet.SetExcelStyle();
+
             excel.Save();
         }
 
@@ -251,6 +284,7 @@ namespace KeLi.Common.Drive.Excel
                     sheet.Cells[i + parm.RowIndex, j + parm.ColumnIndex].Value = table[i][j];
 
             sheet.SetExcelStyle();
+
             excel.Save();
 
             return excel;
@@ -286,6 +320,7 @@ namespace KeLi.Common.Drive.Excel
                     sheet.Cells[i + parm.RowIndex, j + parm.ColumnIndex].Value = table[i, j];
 
             sheet.SetExcelStyle();
+
             excel.Save();
 
             return excel;
@@ -315,6 +350,7 @@ namespace KeLi.Common.Drive.Excel
             parm.ColumnIndex += 1;
 
             var excel = parm.GetExcelPackage(out var sheet);
+
             var columns = table.Columns.Cast<DataColumn>().ToList();
 
             // The titlt row.
@@ -327,6 +363,7 @@ namespace KeLi.Common.Drive.Excel
                     sheet.Cells[i + parm.RowIndex + 1, j + parm.ColumnIndex].Value = table.Rows[i][columns[j].ColumnName];
 
             sheet.SetExcelStyle();
+
             excel.Save();
 
             return excel;
@@ -350,6 +387,7 @@ namespace KeLi.Common.Drive.Excel
                 throw new ArgumentNullException(nameof(parm));
 
             action(excel.Workbook.Worksheets[parm.SheetName]);
+
             excel.Save();
         }
 
@@ -365,9 +403,11 @@ namespace KeLi.Common.Drive.Excel
                 throw new ArgumentNullException(nameof(parm));
 
             var result = new ExcelPackage(new FileInfo(parm.FilePath));
+
             var sheets = result.Workbook.Worksheets;
 
-            sheet = sheets.FirstOrDefault(f => f.Name.ToLower() == parm.SheetName.ToLower());
+            sheet = sheets.FirstOrDefault(f => string.Equals(f.Name.ToLower(), parm.SheetName.ToLower()));
+
             sheet = sheet != null ? sheets[parm.SheetName] : sheets.Add(parm.SheetName);
 
             return result;
@@ -444,7 +484,9 @@ namespace KeLi.Common.Drive.Excel
                 throw new ArgumentNullException(nameof(worksheet));
 
             var rangeStr = worksheet.MergedCells[row, column];
+
             var excelRange = worksheet.Cells;
+
             var cellVal = excelRange[row, column].Value;
 
             if (rangeStr is null)
@@ -465,7 +507,9 @@ namespace KeLi.Common.Drive.Excel
                 throw new ArgumentNullException(nameof(worksheet));
 
             worksheet.Cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
             worksheet.Cells.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
             worksheet.Cells.AutoFitColumns();
         }
     }

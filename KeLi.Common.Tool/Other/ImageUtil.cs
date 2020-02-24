@@ -73,13 +73,17 @@ namespace KeLi.Common.Tool.Other
             using (var ms = new MemoryStream())
             {
                 bitmap.Save(ms, ImageFormat.Png);
+
                 ms.Position = 0;
 
                 var result = new BitmapImage();
 
                 result.BeginInit();
+
                 result.StreamSource = ms;
+
                 result.CacheOption = BitmapCacheOption.OnLoad;
+
                 result.EndInit();
 
                 return result;
@@ -97,9 +101,10 @@ namespace KeLi.Common.Tool.Other
                 throw new ArgumentNullException(nameof(resName));
 
             var asm = Assembly.GetExecutingAssembly();
+
             var stream = asm.GetManifestResourceStream(resName);
 
-            return BitmapFrame.Create(stream);
+            return BitmapFrame.Create(stream ?? throw new InvalidOperationException());
         }
     }
 }

@@ -49,7 +49,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Autodesk.Revit.DB;
+
 using KeLi.Common.Revit.Geometry;
 
 namespace KeLi.Common.Revit.Builders
@@ -122,6 +124,7 @@ namespace KeLi.Common.Revit.Builders
                 refAsix = XYZ.BasisX;
 
             var normal = line.Direction.CrossProduct(refAsix).Normalize();
+
             var plane = Plane.CreateByNormalAndOrigin(normal, line.Origin);
 
             sketchPlane = SketchPlane.Create(doc, plane);

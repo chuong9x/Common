@@ -49,7 +49,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Autodesk.Revit.DB;
+
 using KeLi.Common.Revit.Geometry;
 
 namespace KeLi.Common.Revit.Filters
@@ -71,16 +73,20 @@ namespace KeLi.Common.Revit.Filters
                 throw new ArgumentNullException(nameof(room));
 
             var result = new List<Line>();
+
             var opt = new SpatialElementBoundaryOptions
             {
                 StoreFreeBoundaryFaces = true,
+
                 SpatialElementBoundaryLocation = boundary
             };
+
             var segs = room.GetBoundarySegments(opt).SelectMany(s => s);
 
             foreach (var seg in segs)
             {
                 var sp = seg.GetCurve().GetEndPoint(0);
+
                 var ep = seg.GetCurve().GetEndPoint(1);
 
                 result.Add(Line.CreateBound(sp, ep));
@@ -105,7 +111,9 @@ namespace KeLi.Common.Revit.Filters
                 throw new ArgumentNullException(nameof(doc));
 
             const BuiltInParameter parmEnum = BuiltInParameter.WALL_ATTR_WIDTH_PARAM;
+
             var results = new List<Wall>();
+
             var loops = room.GetBoundarySegments(new SpatialElementBoundaryOptions());
 
             foreach (var loop in loops)
@@ -146,6 +154,7 @@ namespace KeLi.Common.Revit.Filters
                 throw new Exception("Curve wall isn't supported!");
 
             var wdir = GetLineDirection(line, refPt);
+
             var innerNormal = GetInnerNormal(wdir);
 
             return wall.GetFaceList(innerNormal).FirstOrDefault();
@@ -162,12 +171,16 @@ namespace KeLi.Common.Revit.Filters
             {
                 case LineDirection.East:
                     return -XYZ.BasisX;
+
                 case LineDirection.West:
                     return XYZ.BasisX;
+
                 case LineDirection.South:
                     return XYZ.BasisY;
+
                 case LineDirection.North:
                     return -XYZ.BasisY;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
             }

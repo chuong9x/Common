@@ -48,8 +48,11 @@
 
 using System;
 using System.Collections.Generic;
+
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI.Selection;
+
+using static System.Math;
 
 namespace KeLi.Common.Revit.Geometry
 {
@@ -77,6 +80,7 @@ namespace KeLi.Common.Revit.Geometry
             return new BoundingBoxXYZ
             {
                 Min = box.Min,
+
                 Max = box.Max
             };
         }
@@ -100,6 +104,7 @@ namespace KeLi.Common.Revit.Geometry
             return new BoundingBoxXYZ
             {
                 Min = box.Min,
+
                 Max = new XYZ(box.Max.X, box.Max.Y, box.Min.Z)
             };
         }
@@ -117,6 +122,7 @@ namespace KeLi.Common.Revit.Geometry
             return new BoundingBoxXYZ
             {
                 Min = box.Min.GetRoundPoint(),
+
                 Max = box.Max.GetRoundPoint()
             };
         }
@@ -136,19 +142,29 @@ namespace KeLi.Common.Revit.Geometry
                 throw new ArgumentNullException(nameof(box2));
 
             var box1Min = box1.Min;
+
             var box1Max = box1.Max;
+
             var box2Min = box2.Min;
+
             var box2Max = box2.Max;
-            var minX = Math.Max(box1Min.X, box2Min.X);
-            var minY = Math.Max(box1Min.Y, box2Min.Y);
-            var minZ = Math.Max(box1Min.Z, box2Min.Z);
-            var maxX = Math.Min(box1Max.X, box2Max.X);
-            var maxY = Math.Min(box1Max.Y, box2Max.Y);
-            var maxZ = Math.Min(box1Max.Z, box2Max.Z);
+
+            var minX = Max(box1Min.X, box2Min.X);
+
+            var minY = Max(box1Min.Y, box2Min.Y);
+
+            var minZ = Max(box1Min.Z, box2Min.Z);
+
+            var maxX = Min(box1Max.X, box2Max.X);
+
+            var maxY = Min(box1Max.Y, box2Max.Y);
+
+            var maxZ = Min(box1Max.Z, box2Max.Z);
 
             return new BoundingBoxXYZ
             {
                 Min = new XYZ(minX, minY, minZ),
+
                 Max = new XYZ(maxX, maxY, maxZ)
             };
         }
@@ -164,17 +180,25 @@ namespace KeLi.Common.Revit.Geometry
                 throw new ArgumentNullException(nameof(box));
 
             var minPt = box.Min;
+
             var maxPt = box.Max;
-            var minX = Math.Min(minPt.X, maxPt.X);
-            var minY = Math.Min(minPt.Y, maxPt.Y);
-            var minZ = Math.Min(minPt.Z, maxPt.Z);
-            var maxX = Math.Max(minPt.X, maxPt.X);
-            var maxY = Math.Max(minPt.Y, maxPt.Y);
-            var maxZ = Math.Max(minPt.Z, maxPt.Z);
+
+            var minX = Min(minPt.X, maxPt.X);
+
+            var minY = Min(minPt.Y, maxPt.Y);
+
+            var minZ = Min(minPt.Z, maxPt.Z);
+
+            var maxX = Max(minPt.X, maxPt.X);
+
+            var maxY = Max(minPt.Y, maxPt.Y);
+
+            var maxZ = Max(minPt.Z, maxPt.Z);
 
             return new BoundingBoxXYZ
             {
                 Min = new XYZ(minX, minY, minZ),
+
                 Max = new XYZ(maxX, maxY, maxZ)
             };
         }
@@ -198,6 +222,7 @@ namespace KeLi.Common.Revit.Geometry
             return new BoundingBoxXYZ
             {
                 Min = box.Min.GetRoundPoint(),
+
                 Max = box.Max.GetRoundPoint()
             };
         }
@@ -213,13 +238,21 @@ namespace KeLi.Common.Revit.Geometry
                 throw new ArgumentNullException(nameof(box));
 
             var vectors = box.GetPlaneVectorList();
+
             var p1 = vectors[0];
+
             var p2 = vectors[1];
+
             var p3 = vectors[2];
+
             var p4 = vectors[3];
+
             var p12 = Line.CreateBound(p1, p2);
+
             var p23 = Line.CreateBound(p2, p3);
+
             var p34 = Line.CreateBound(p3, p4);
+
             var p41 = Line.CreateBound(p4, p1);
 
             return new List<Line> {p12, p23, p34, p41};
@@ -236,8 +269,11 @@ namespace KeLi.Common.Revit.Geometry
                 throw new ArgumentNullException(nameof(box));
 
             var p1 = box.Min;
+
             var p2 = new XYZ(box.Max.X, box.Min.Y, p1.Z);
+
             var p3 = new XYZ(box.Max.X, box.Max.Y, p1.Z);
+
             var p4 = new XYZ(p1.X, box.Max.Y, p1.Z);
 
             return new List<XYZ> {p1, p2, p3, p4};
@@ -254,25 +290,45 @@ namespace KeLi.Common.Revit.Geometry
                 throw new ArgumentNullException(nameof(box));
 
             var vectors = box.GetSpaceVectorList();
+
             var p1 = vectors[0];
+
             var p2 = vectors[1];
+
             var p3 = vectors[2];
+
             var p4 = vectors[3];
+
             var p5 = vectors[4];
+
             var p6 = vectors[5];
+
             var p7 = vectors[6];
+
             var p8 = vectors[7];
+
             var p12 = Line.CreateBound(p1, p2);
+
             var p14 = Line.CreateBound(p1, p4);
+
             var p15 = Line.CreateBound(p1, p5);
+
             var p23 = Line.CreateBound(p2, p3);
+
             var p24 = Line.CreateBound(p2, p4);
+
             var p34 = Line.CreateBound(p3, p4);
+
             var p37 = Line.CreateBound(p3, p7);
+
             var p48 = Line.CreateBound(p4, p8);
+
             var p56 = Line.CreateBound(p5, p6);
+
             var p58 = Line.CreateBound(p5, p8);
+
             var p67 = Line.CreateBound(p6, p7);
+
             var p78 = Line.CreateBound(p7, p8);
 
             return new List<Line> {p12, p14, p15, p23, p24, p34, p37, p48, p56, p58, p67, p78};
@@ -289,12 +345,19 @@ namespace KeLi.Common.Revit.Geometry
                 throw new ArgumentNullException(nameof(box));
 
             var p1 = box.Min;
+
             var p2 = new XYZ(box.Max.X, box.Min.Y, p1.Z);
+
             var p3 = new XYZ(box.Max.X, box.Max.Y, p1.Z);
+
             var p4 = new XYZ(p1.X, box.Max.Y, p1.Z);
+
             var p5 = new XYZ(p1.X, p1.Y, box.Max.Z);
+
             var p6 = new XYZ(box.Max.X, p1.Y, box.Max.Z);
+
             var p7 = new XYZ(p1.X, box.Max.Y, box.Max.Z);
+
             var p8 = box.Max;
 
             return new List<XYZ> {p1, p2, p3, p4, p5, p6, p7, p8};
@@ -350,8 +413,13 @@ namespace KeLi.Common.Revit.Geometry
             if (point is null)
                 throw new ArgumentNullException(nameof(point));
 
-            return new XYZ(Math.Round(point.X, precision), Math.Round(point.Y, precision),
-                Math.Round(point.Z, precision));
+            var roundX = Round(point.X, precision);
+
+            var roundY = Round(point.Y, precision);
+
+            var roundZ = Round(point.Z, precision);
+
+            return new XYZ(roundX, roundY, roundZ);
         }
     }
 }

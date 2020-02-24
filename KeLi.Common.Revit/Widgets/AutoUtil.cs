@@ -48,7 +48,9 @@
 
 using System;
 using System.Diagnostics;
+
 using Autodesk.Revit.DB;
+
 using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledException;
 
 namespace KeLi.Common.Revit.Widgets
@@ -74,6 +76,7 @@ namespace KeLi.Common.Revit.Widgets
             using (var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name))
             {
                 trans.Start();
+
                 act.Invoke();
 
                 if (trans.Commit() != TransactionStatus.Committed)
@@ -94,6 +97,7 @@ namespace KeLi.Common.Revit.Widgets
             try
             {
                 act.Invoke();
+
                 RepeatCommand(act);
             }
             catch (OperationCanceledException)

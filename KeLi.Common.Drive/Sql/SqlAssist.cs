@@ -74,6 +74,7 @@ namespace KeLi.Common.Drive.Sql
             using (var conn = new SqlConnection(ConnSql))
             {
                 conn.Open();
+
                 return conn.State == ConnectionState.Open;
             }
         }
@@ -96,7 +97,9 @@ namespace KeLi.Common.Drive.Sql
                 var cmd = new SqlCommand(text, conn) {CommandType = ct};
 
                 conn.Open();
+
                 result = cmd.ExecuteNonQuery();
+
                 cmd.Dispose();
             }
 
@@ -125,8 +128,11 @@ namespace KeLi.Common.Drive.Sql
                 var cmd = new SqlCommand(text, conn) {CommandType = ct};
 
                 conn.Open();
+
                 cmd.Parameters.AddRange(sps.ToArray());
+
                 result = cmd.ExecuteNonQuery();
+
                 cmd.Dispose();
             }
 
@@ -145,6 +151,7 @@ namespace KeLi.Common.Drive.Sql
                 throw new ArgumentNullException(nameof(texts));
 
             var result = 0;
+
             var cmd = new SqlCommand();
 
             try
@@ -152,13 +159,17 @@ namespace KeLi.Common.Drive.Sql
                 using (var conn = new SqlConnection(ConnSql))
                 {
                     conn.Open();
+
                     cmd.Connection = conn;
+
                     cmd.Transaction = conn.BeginTransaction();
 
                     foreach (var text in texts)
                     {
                         cmd.CommandText = text;
+
                         cmd.CommandType = ct;
+
                         result += cmd.ExecuteNonQuery();
                     }
 
@@ -194,6 +205,7 @@ namespace KeLi.Common.Drive.Sql
                 throw new ArgumentNullException(nameof(sps));
 
             var result = 0;
+
             var cmd = new SqlCommand();
 
             try
@@ -201,7 +213,9 @@ namespace KeLi.Common.Drive.Sql
                 using (var conn = new SqlConnection(ConnSql))
                 {
                     conn.Open();
+
                     cmd.Connection = conn;
+
                     cmd.Transaction = conn.BeginTransaction();
 
                     var index = 0;
@@ -209,8 +223,11 @@ namespace KeLi.Common.Drive.Sql
                     foreach (var text in texts)
                     {
                         cmd.Parameters.AddRange(sps[index++]);
+
                         cmd.CommandText = text;
+
                         cmd.CommandType = ct;
+
                         result += cmd.ExecuteNonQuery();
                     }
 
@@ -248,7 +265,9 @@ namespace KeLi.Common.Drive.Sql
                 var cmd = new SqlCommand(text, conn) {CommandType = ct};
 
                 conn.Open();
+
                 result = cmd.ExecuteScalar();
+
                 cmd.Dispose();
             }
 
@@ -277,8 +296,11 @@ namespace KeLi.Common.Drive.Sql
                 var cmd = new SqlCommand(text, conn) {CommandType = ct};
 
                 conn.Open();
+
                 cmd.Parameters.AddRange(sps.ToArray());
+
                 result = cmd.ExecuteScalar();
+
                 cmd.Dispose();
             }
 
@@ -303,6 +325,7 @@ namespace KeLi.Common.Drive.Sql
                 var cmd = new SqlCommand(text, conn) {CommandType = ct};
 
                 new SqlDataAdapter(cmd).Fill(results);
+
                 cmd.Dispose();
             }
 
@@ -332,7 +355,9 @@ namespace KeLi.Common.Drive.Sql
                 var cmd = new SqlCommand(text, conn) {CommandType = ct};
 
                 cmd.Parameters.AddRange(sps.ToArray());
+
                 new SqlDataAdapter(cmd).Fill(results);
+
                 cmd.Dispose();
             }
 

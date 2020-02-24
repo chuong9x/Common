@@ -96,9 +96,11 @@ namespace KeLi.Common.Tool.Other
             {
                 result = 0;
             }
+
             else
             {
                 Rscp.GetBytes(Bytes);
+
                 result = BitConverter.ToInt32(Bytes, 0) % (max + 1);
 
                 if (result < 0)
@@ -119,8 +121,10 @@ namespace KeLi.Common.Tool.Other
 
             if (min <= 0)
                 result = 0;
+
             else if (max <= 0)
                 result = 0;
+
             else
                 result = GenerateRandomNum(max - min) + min;
 
@@ -142,22 +146,28 @@ namespace KeLi.Common.Tool.Other
             {
                 results = new int[num];
             }
+
             else if (min <= 0)
             {
                 results = new int[num];
             }
+
             else if (max <= 0)
             {
                 results = new int[num];
             }
+
             else if (max - min < num)
             {
                 results = new int[num];
             }
+
             else
             {
                 var random = new Random();
+
                 var length = max - min;
+
                 var bytes = new byte[length];
 
                 random.NextBytes(bytes);
@@ -168,6 +178,7 @@ namespace KeLi.Common.Tool.Other
                     temps[i] = i + min;
 
                 Array.Sort(bytes, temps);
+
                 Array.Copy(temps, results, num);
             }
 
@@ -189,18 +200,22 @@ namespace KeLi.Common.Tool.Other
             {
                 results = new int[num];
             }
+
             else if (min <= 0)
             {
                 results = new int[num];
             }
+
             else if (max <= 0)
             {
                 results = new int[num];
             }
+
             else if (max - min < num)
             {
                 results = new int[num];
             }
+
             else
             {
                 // Default not set the max number.
@@ -245,18 +260,22 @@ namespace KeLi.Common.Tool.Other
             {
                 results = new int[num];
             }
+
             else if (min <= 0)
             {
                 results = new int[num];
             }
+
             else if (max <= 0)
             {
                 results = new int[num];
             }
+
             else if (max - min < num)
             {
                 results = new int[num];
             }
+
             else
             {
                 results = new int[num];
@@ -296,21 +315,26 @@ namespace KeLi.Common.Tool.Other
             {
                 results = new int[num];
             }
+
             else if (min <= 0)
             {
                 results = new int[num];
             }
+
             else if (max <= 0)
             {
                 results = new int[num];
             }
+
             else if (max - min < num)
             {
                 results = new int[num];
             }
+
             else
             {
                 var list = new ArrayList();
+
                 var random = new Random();
 
                 while (list.Count < num)
@@ -342,18 +366,22 @@ namespace KeLi.Common.Tool.Other
             {
                 results = new Hashtable();
             }
+
             else if (min <= 0)
             {
                 results = new Hashtable();
             }
+
             else if (max <= 0)
             {
                 results = new Hashtable();
             }
+
             else if (max - min < num)
             {
                 results = new Hashtable();
             }
+
             else
             {
                 results = new Hashtable();

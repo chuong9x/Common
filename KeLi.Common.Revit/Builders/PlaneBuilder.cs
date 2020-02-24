@@ -47,7 +47,9 @@
 */
 
 using System;
+
 using Autodesk.Revit.DB;
+
 using KeLi.Common.Revit.Geometry;
 
 namespace KeLi.Common.Revit.Builders

@@ -49,8 +49,10 @@
 using System;
 using System.IO;
 using System.Linq;
+
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
+
 using KeLi.Common.Revit.Relations;
 using KeLi.Common.Revit.Widgets;
 
@@ -80,13 +82,21 @@ namespace KeLi.Common.Revit.Builders
             if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
 
-            var templateFilePath = app.GeTemplateFilePath(parm.TemplateFileName);
-            var fdoc = app.NewFamilyDocument(templateFilePath);
+            var tplPath = app.GeTemplateFilePath(parm.TemplateFileName);
+
+            var fdoc = app.NewFamilyDocument(tplPath);
 
             fdoc.AutoTransaction(() =>
             {
                 var profile = ResetCurveArrArray(parm.Profile);
+
+                if (profile is null)
+                    return;
+
                 var skectchPlane = fdoc.CreateSketchPlane(parm.Plane);
+
+                if (skectchPlane is null)
+                    return;
 
                 fdoc.FamilyCreate.NewExtrusion(true, profile, skectchPlane, parm.End);
             });
@@ -113,13 +123,21 @@ namespace KeLi.Common.Revit.Builders
             if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
 
-            var templateFilePath = app.GeTemplateFilePath(parm.TemplateFileName);
-            var fdoc = app.NewFamilyDocument(templateFilePath);
+            var tplPath = app.GeTemplateFilePath(parm.TemplateFileName);
+
+            var fdoc = app.NewFamilyDocument(tplPath);
 
             fdoc.AutoTransaction(() =>
             {
-                var profileArrArray = ResetCurveArrArray(parm.Profile);
-                var profile = app.Create.NewCurveLoopsProfile(profileArrArray);
+                var curveLoops = ResetCurveArrArray(parm.Profile);
+
+                if (curveLoops is null)
+                    return;
+
+                var profile = app.Create.NewCurveLoopsProfile(curveLoops);
+
+                if (profile is null)
+                    return;
 
                 fdoc.FamilyCreate.NewSweep(true, parm.SweepPath, profile, parm.Index, parm.Location);
             });
@@ -172,8 +190,15 @@ namespace KeLi.Common.Revit.Builders
             if (act is null)
                 throw new ArgumentNullException(nameof(act));
 
-            var templateFilePath = app.GeTemplateFilePath(tplFileName);
-            var fdoc = app.NewFamilyDocument(templateFilePath);
+            var tplPath = app.GeTemplateFilePath(tplFileName);
+
+            if (tplPath is null)
+                return null;
+
+            var fdoc = app.NewFamilyDocument(tplPath);
+
+            if (fdoc is null)
+                return null;
 
             fdoc.AutoTransaction(() => act.Invoke(fdoc));
 
@@ -218,6 +243,7 @@ namespace KeLi.Common.Revit.Builders
                 throw new ArgumentNullException(nameof(family));
 
             var symbolId = family.GetFamilySymbolIds().FirstOrDefault();
+
             var result = doc.GetElement(symbolId) as FamilySymbol;
 
             doc.AutoTransaction(() =>
@@ -257,6 +283,7 @@ namespace KeLi.Common.Revit.Builders
                 throw new ArgumentNullException(nameof(profile));
 
             var results = new CurveArrArray();
+
             var location = GetLocationPoint(profile);
 
             foreach (CurveArray lines in profile)
@@ -265,12 +292,13 @@ namespace KeLi.Common.Revit.Builders
 
                 foreach (var line in lines.Cast<Line>())
                 {
-                    // TODO: It's no work.
                     if (line.Length < 1e-2)
-                        continue;
+                        return null;
 
                     var pt1 = line.GetEndPoint(0) - location;
+
                     var pt2 = line.GetEndPoint(1) - location;
+
                     var newLine = Line.CreateBound(pt1, pt2);
 
                     tmpLines.Append(newLine);
@@ -293,8 +321,10 @@ namespace KeLi.Common.Revit.Builders
                 throw new ArgumentNullException(nameof(profile));
 
             var curves = profile.Cast<CurveArray>().SelectMany(s => s.Cast<Curve>()).ToList();
-            var pts = curves.GetDistinctPointList()
-                .OrderBy(o => o.Z).ThenBy(o => o.Y).ThenBy(o => o.X).ToList();
+
+            var pts = curves.GetDistinctPointList();
+
+            pts = pts.OrderBy(o => o.Z).ThenBy(o => o.Y).ThenBy(o => o.X).ToList();
 
             return pts.FirstOrDefault();
         }

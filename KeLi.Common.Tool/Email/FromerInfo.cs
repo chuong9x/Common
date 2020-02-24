@@ -1,4 +1,6 @@
-﻿namespace KeLi.Common.Tool.Email
+﻿using System;
+
+namespace KeLi.Common.Tool.Email
 {
     /// <summary>
     ///     Fromer info.
@@ -15,10 +17,14 @@
         /// <param name="port"></param>
         public FromerInfo(string fromAddress, string displayName, string password, string host, int port)
         {
-            FromAddress = fromAddress;
-            DisplayName = displayName;
-            Password = password;
-            Host = host;
+            FromAddress = fromAddress ?? throw new ArgumentNullException(nameof(fromAddress));
+
+            DisplayName = displayName ?? throw new ArgumentNullException(nameof(displayName));
+
+            Password = password ?? throw new ArgumentNullException(nameof(password));
+
+            Host = host ?? throw new ArgumentNullException(nameof(host));
+
             Port = port;
         }
 

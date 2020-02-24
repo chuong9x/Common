@@ -68,8 +68,8 @@ namespace KeLi.Common.Converter.Collections
             var results = new object[array.GetLength(0)][];
 
             for (var i = 0; i < array.GetLength(0); i++)
-            for (var j = 0; j < array.GetLength(1); j++)
-                results[i][j] = array[i, j];
+                for (var j = 0; j < array.GetLength(1); j++)
+                    results[i][j] = array[i, j];
 
             return results;
         }
@@ -87,8 +87,8 @@ namespace KeLi.Common.Converter.Collections
             var results = new object[array.Length, array[0].Length];
 
             for (var i = 0; i < array.Length; i++)
-            for (var j = 0; j < array[i].Length; j++)
-                results[i, j] = array[i][j];
+                for (var j = 0; j < array[i].Length; j++)
+                    results[i, j] = array[i][j];
 
             return results;
         }

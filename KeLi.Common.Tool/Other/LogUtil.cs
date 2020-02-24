@@ -89,6 +89,7 @@ namespace KeLi.Common.Tool.Other
             using (var sw = new StreamWriter(fs))
             {
                 sw.WriteLine("[" + DateTime.Now.ToString(ITEM_TITLE) + "]" + context);
+
                 sw.WriteLine();
             }
         }

@@ -46,7 +46,6 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-
 using System;
 
 namespace KeLi.Common.Tool.Email
@@ -66,8 +65,11 @@ namespace KeLi.Common.Tool.Email
         public MailInfo(string address, string subject, string body, bool isHtml = false)
         {
             Address = address ?? throw new ArgumentNullException(nameof(address));
+
             Subject = subject ?? throw new ArgumentNullException(nameof(subject));
+
             Body = body ?? throw new ArgumentNullException(nameof(body));
+
             IsHtml = isHtml;
         }
 

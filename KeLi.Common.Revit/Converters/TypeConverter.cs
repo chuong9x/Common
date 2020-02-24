@@ -49,6 +49,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Converters
@@ -69,6 +70,7 @@ namespace KeLi.Common.Revit.Converters
                 throw new ArgumentNullException(nameof(curve));
 
             var p1 = curve.GetEndPoint(0).ToPlanePoint();
+
             var p2 = curve.GetEndPoint(1).ToPlanePoint();
 
             return Line.CreateBound(p1, p2);

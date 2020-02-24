@@ -52,8 +52,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+
 using O2S.Components.PDFRender4NET;
 
 namespace KeLi.Common.Drive.Pdf
@@ -74,6 +76,7 @@ namespace KeLi.Common.Drive.Pdf
                 throw new ArgumentNullException(nameof(parm));
 
             var results = new List<string>();
+
             var pdfFile = PDFFile.Open(parm.PdfPath.FullName);
 
             if (parm.StartPage <= 0)
@@ -85,6 +88,7 @@ namespace KeLi.Common.Drive.Pdf
             if (parm.StartPage > parm.EndPage)
             {
                 parm.StartPage = parm.EndPage;
+
                 parm.EndPage = parm.StartPage;
             }
 
@@ -95,11 +99,15 @@ namespace KeLi.Common.Drive.Pdf
                 withNum = parm.StartPage == parm.EndPage ? null : "_" + withNum;
 
                 var imgPage = pdfFile.GetPageImage(i - 1, 56 * parm.Resolution);
+
                 var dirPath = parm.PdfPath.DirectoryName ?? throw new InvalidOperationException();
+
                 var filePath = Path.Combine(dirPath, parm.ImgName + withNum + "." + parm.Format.ToString().ToLower());
 
                 results.Add(filePath);
+
                 imgPage.Save(filePath, parm.Format);
+
                 imgPage.Dispose();
             }
 
@@ -119,7 +127,9 @@ namespace KeLi.Common.Drive.Pdf
                 throw new ArgumentNullException(nameof(pdfPath));
 
             var reader = new PdfReader(pdfPath.FullName);
+
             var width = reader.GetPageSizeWithRotation(1).Width;
+
             var height = reader.GetPageSizeWithRotation(1).Height;
 
             reader.Close();
@@ -137,12 +147,15 @@ namespace KeLi.Common.Drive.Pdf
                 throw new ArgumentNullException(nameof(srcPdf));
 
             var results = new List<FileInfo>();
+
             var reader = new PdfReader(srcPdf.FullName);
+
             var titled = GetPageMark(reader);
 
             if (reader.NumberOfPages == 1)
             {
                 results = new List<FileInfo> { srcPdf };
+
                 reader.Close();
 
                 return results;
@@ -151,16 +164,19 @@ namespace KeLi.Common.Drive.Pdf
             for (var i = 1; i <= reader.NumberOfPages; i++)
             {
                 var tgtPath = Path.GetDirectoryName(srcPdf.FullName);
+
                 var tgtName = Path.GetFileNameWithoutExtension(srcPdf.FullName);
 
                 if (titled.ContainsKey(i))
                     tgtName += "_" + titled[i] + Path.GetExtension(srcPdf.FullName);
+
                 else
                     tgtName += "_" + i + Path.GetExtension(srcPdf.FullName);
 
                 var targetPdf = new FileInfo(Path.Combine(tgtPath ?? throw new InvalidOperationException(), tgtName));
 
                 CopyPdf(srcPdf, targetPdf, i, i);
+
                 results.Add(targetPdf);
             }
 
@@ -185,7 +201,9 @@ namespace KeLi.Common.Drive.Pdf
                 throw new ArgumentNullException(nameof(tgtPdf));
 
             var reader = new PdfReader(srcPdf.FullName);
+
             var doc = new Document(reader.GetPageSizeWithRotation(startPage));
+
             var writer = PdfWriter.GetInstance(doc, new FileStream(tgtPdf.FullName, FileMode.Create));
 
             doc.Open();
@@ -194,34 +212,36 @@ namespace KeLi.Common.Drive.Pdf
 
             for (var i = startPage - 1; i < endPage; i++)
             {
-                doc.SetPageSize(reader.GetPageSizeWithRotation(startPage));
+                var rect = reader.GetPageSizeWithRotation(startPage);
+
+                doc.SetPageSize(rect);
+
                 doc.NewPage();
 
                 var page = writer.GetImportedPage(reader, startPage);
+
                 var rotation = reader.GetPageRotation(startPage);
 
                 if (rotation != 90 && rotation != 270)
                     content.AddTemplate(page, 1f, 0, 0, 1f, 0, 0);
 
                 else
-                {
                     switch (rotation)
                     {
                         case 90:
-                            content.AddTemplate(page, 0, -1f, 1f, 0, 0,
-                                reader.GetPageSizeWithRotation(startPage).Height);
+                            content.AddTemplate(page, 0, -1f, 1f, 0, 0, rect.Height);
                             break;
+
                         case 270:
-                            content.AddTemplate(page, 0, 1.0F, -1.0F, 0,
-                                reader.GetPageSizeWithRotation(startPage).Width, 0);
+                            content.AddTemplate(page, 0, 1.0F, -1.0F, 0, rect.Width, 0);
                             break;
                     }
-                }
 
                 startPage++;
             }
 
             doc.Close();
+
             reader.Close();
         }
 
@@ -241,7 +261,9 @@ namespace KeLi.Common.Drive.Pdf
                 throw new ArgumentNullException(nameof(tgtPdf));
 
             var reader = new PdfReader(srcPdf.FullName);
+
             var doc = new Document(reader.GetPageSizeWithRotation(startPage));
+
             var copy = new PdfCopy(doc, new FileStream(tgtPdf.FullName, FileMode.Create));
 
             doc.Open();
@@ -254,6 +276,7 @@ namespace KeLi.Common.Drive.Pdf
             }
 
             doc.Close();
+
             reader.Close();
         }
 
@@ -275,8 +298,11 @@ namespace KeLi.Common.Drive.Pdf
                 throw new ArgumentNullException(nameof(extractPages));
 
             var tmpExtractPages = extractPages.ToList();
+
             var reader = new PdfReader(srcPdf.FullName);
+
             var doc = new Document(reader.GetPageSizeWithRotation(tmpExtractPages[0]));
+
             var copy = new PdfCopy(doc, new FileStream(tgtPdf.FullName, FileMode.Create));
 
             doc.Open();
@@ -285,6 +311,7 @@ namespace KeLi.Common.Drive.Pdf
                 copy.AddPage(copy.GetImportedPage(reader, pageNumber));
 
             doc.Close();
+
             reader.Close();
         }
 
@@ -296,15 +323,16 @@ namespace KeLi.Common.Drive.Pdf
         private static Dictionary<int, string> GetPageMark(PdfReader reader)
         {
             var marks = SimpleBookmark.GetBookmark(reader);
+
             var results = new Dictionary<int, string>();
 
             foreach (Hashtable mark in marks)
             {
                 var title = string.Empty;
+
                 var page = 0;
 
                 foreach (DictionaryEntry kv in mark)
-                {
                     switch (kv.Key.ToString())
                     {
                         case "Action":
@@ -318,7 +346,6 @@ namespace KeLi.Common.Drive.Pdf
                             page = Convert.ToInt32(kv.Value.ToString().Split(' ')[0]);
                             break;
                     }
-                }
 
                 results.Add(page, title);
             }

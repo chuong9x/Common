@@ -85,6 +85,7 @@ namespace KeLi.Common.Tool.Security
             rsa.FromXmlString(key);
 
             var bytes = new UnicodeEncoding().GetBytes(content);
+
             var marks = rsa.Encrypt(bytes, false);
 
             return Convert.ToBase64String(marks);
@@ -109,6 +110,7 @@ namespace KeLi.Common.Tool.Security
             rsa.FromXmlString(value);
 
             var marks = Convert.FromBase64String(ciphertext);
+
             var bytes = rsa.Decrypt(marks, false);
 
             return new UnicodeEncoding().GetString(bytes);
@@ -121,7 +123,9 @@ namespace KeLi.Common.Tool.Security
         private static KeyValuePair<string, string> GetKeyPair()
         {
             var rsa = new RSACryptoServiceProvider();
+
             var key = rsa.ToXmlString(false);
+
             var value = rsa.ToXmlString(true);
 
             return new KeyValuePair<string, string>(key, value);

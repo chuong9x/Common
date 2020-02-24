@@ -46,7 +46,6 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-
 using System;
 using System.Collections.Generic;
 
@@ -65,7 +64,9 @@ namespace KeLi.Common.Revit.Information
         public GroupParameter(string id, string groupName)
         {
             Id = id ?? throw new ArgumentNullException(nameof(id));
+
             GroupName = groupName ?? throw new ArgumentNullException(nameof(groupName));
+
             Params = new List<ElementParameter>();
         }
 

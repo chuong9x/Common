@@ -50,10 +50,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+
 using KeLi.Common.Revit.Filters;
+
+using static Autodesk.Revit.DB.WorksetConfigurationOption;
 
 namespace KeLi.Common.Revit.Widgets
 {
@@ -80,6 +84,7 @@ namespace KeLi.Common.Revit.Widgets
                 throw new ArgumentNullException(nameof(localPath));
 
             var serverPathl = new FilePath(serverPath);
+
             var localPathl = new FilePath(localPath);
 
             WorksharingUtils.CreateNewLocal(serverPathl, localPathl);
@@ -87,6 +92,7 @@ namespace KeLi.Common.Revit.Widgets
             var option = new OpenOptions
             {
                 DetachFromCentralOption = DetachFromCentralOption.DoNotDetach,
+
                 Audit = false
             };
 
@@ -107,9 +113,11 @@ namespace KeLi.Common.Revit.Widgets
                 throw new ArgumentNullException(nameof(centralPath));
 
             var doc = app.OpenDocumentFile(centralPath);
+
             var option = new SaveOptions {Compact = true};
 
             doc.Save(option);
+
             doc.Close(false);
         }
 
@@ -128,13 +136,16 @@ namespace KeLi.Common.Revit.Widgets
                 throw new ArgumentNullException(nameof(centralPath));
 
             var saveOption = new SaveAsOptions {OverwriteExistingFile = true};
+
             var sharingOption = new WorksharingSaveAsOptions
             {
                 SaveAsCentral = true,
+
                 OpenWorksetsDefault = SimpleWorksetConfiguration.LastViewed
             };
 
             saveOption.SetWorksharingOptions(sharingOption);
+
             doc.SaveAs(centralPath, saveOption);
         }
 
@@ -152,10 +163,13 @@ namespace KeLi.Common.Revit.Widgets
                 throw new ArgumentNullException(nameof(comment));
 
             var doc = uiapp.ActiveUIDocument.Document;
+
             var syncOption = new SynchronizeWithCentralOptions();
+
             var relinqOption = new RelinquishOptions(false)
             {
                 CheckedOutElements = true,
+
                 StandardWorksets = false
             };
 
@@ -164,6 +178,7 @@ namespace KeLi.Common.Revit.Widgets
             var transOption = new TransactWithCentralOptions();
 
             uiapp.Application.WriteJournalComment(comment, true);
+
             doc.SynchronizeWithCentral(transOption, syncOption);
         }
 
@@ -182,9 +197,11 @@ namespace KeLi.Common.Revit.Widgets
                 throw new ArgumentNullException(nameof(centralPath));
 
             var modelPath = new FilePath(centralPath);
+
             var option = new OpenOptions
             {
                 AllowOpeningLocalByWrongUser = true,
+
                 DetachFromCentralOption = DetachFromCentralOption.DetachAndDiscardWorksets
             };
 
@@ -269,12 +286,14 @@ namespace KeLi.Common.Revit.Widgets
             doc.AutoTransaction(() =>
             {
                 var result = RevitLinkType.Create(doc, filePathl, linkOption);
+
                 var instance = RevitLinkInstance.Create(doc, result.ElementId);
 
                 if (!(doc.GetElement(instance.GetTypeId()) is RevitLinkType type))
                     return;
 
                 type.AttachmentType = AttachmentType.Attachment;
+
                 type.PathType = PathType.Relative;
             });
         }
@@ -322,8 +341,8 @@ namespace KeLi.Common.Revit.Widgets
                 var type = doc.GetElement(instance.GetTypeId()) as RevitLinkType;
 
                 type?.Unload(null);
+
                 doc.AutoTransaction(() => doc.Delete(instance.Id));
-                break;
             }
         }
 
@@ -373,13 +392,16 @@ namespace KeLi.Common.Revit.Widgets
                     continue;
 
                 var userPath = ModelPathUtils.ConvertModelPathToUserVisiblePath(extRef.GetPath());
+
                 var linkPath = linkPaths.FirstOrDefault(w => w != null && userPath.Contains(Path.GetFileName(w)));
 
                 if (linkPath is null)
                     continue;
 
-                transData.SetDesiredReferenceData(extRef.GetReferencingId(), new FilePath(linkPath), PathType.Relative,
-                    true);
+                var elmId = extRef.GetReferencingId();
+
+                transData.SetDesiredReferenceData(elmId, new FilePath(linkPath), PathType.Relative, true);
+
                 flag = true;
             }
 
@@ -387,6 +409,7 @@ namespace KeLi.Common.Revit.Widgets
                 return;
 
             transData.IsTransmitted = true;
+
             TransmissionData.WriteTransmissionData(new FilePath(centralPath), transData);
         }
 
@@ -426,13 +449,15 @@ namespace KeLi.Common.Revit.Widgets
                 throw new FileNotFoundException(filePath);
 
             // main model modifies repeatedly, so the performance is poor.
-            var type = doc.GetRevitLinkList()
-                .FirstOrDefault(w => filePath.Contains(w.Name) || w.Name.Split('-').Length == 5);
+            var linkTypes = doc.GetRevitLinkList().Where(w => filePath.Contains(w.Name));
+
+            var type = linkTypes.FirstOrDefault(f => f.Name.Split('-').Length == 5);
 
             if (type is null)
                 return;
 
-            type.LoadFrom(new FilePath(filePath), new WorksetConfiguration(WorksetConfigurationOption.OpenLastViewed));
+            type.LoadFrom(new FilePath(filePath), new WorksetConfiguration(OpenLastViewed));
+
             type.PathType = PathType.Relative;
         }
 
@@ -463,10 +488,13 @@ namespace KeLi.Common.Revit.Widgets
                 throw new ArgumentNullException(nameof(blankPath));
 
             var doc = uiapp.ActiveUIDocument.Document;
+
             var saveOption = new SaveOptions {Compact = true};
 
             doc.Save(saveOption);
+
             uiapp.OpenAndActivateDocument(blankPath);
+
             doc.Close(true);
         }
 
@@ -484,9 +512,11 @@ namespace KeLi.Common.Revit.Widgets
                 throw new ArgumentNullException(nameof(centralPath));
 
             var saveOption = new SaveAsOptions {OverwriteExistingFile = true};
+
             var modelPath = new FilePath(centralPath);
 
             doc.SaveAs(modelPath, saveOption);
+
             doc.Close(true);
         }
     }

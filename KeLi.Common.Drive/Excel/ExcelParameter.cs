@@ -69,9 +69,13 @@ namespace KeLi.Common.Drive.Excel
         public ExcelParameter(string filePath, string tplPath = null)
         {
             FilePath = filePath;
+
             TemplatePath = tplPath;
+
             SheetName = SHEET_NAME;
+
             RowIndex = 1;
+
             ColumnIndex = 0;
 
             if (tplPath != null && File.Exists(tplPath))
@@ -84,7 +88,7 @@ namespace KeLi.Common.Drive.Excel
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="tplPath"></param>
-        public ExcelParameter(FileInfo filePath, FileInfo tplPath = null): this(filePath.FullName, tplPath.FullName)
+        public ExcelParameter(FileInfo filePath, FileInfo tplPath = null): this(filePath.FullName, tplPath?.FullName)
         {
         }
 

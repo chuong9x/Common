@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
@@ -17,46 +17,44 @@ namespace KeLi.Common.Tool.Email
         /// <param name="mail"></param>
         public static void SendMail(this FromerInfo former, MailInfo mail)
         {
-            try
+            var msg = new MailMessage
             {
-                var msg = new MailMessage
-                {
-                    From = new MailAddress(former.FromAddress, former.DisplayName, Encoding.UTF8),
-                    Subject = mail.Subject,
-                    SubjectEncoding = Encoding.UTF8,
-                    Body = mail.Body,
-                    BodyEncoding = Encoding.UTF8,
-                    IsBodyHtml = mail.IsHtml,
-                    Priority = MailPriority.Normal
-                };
+                From = new MailAddress(former.FromAddress, former.DisplayName, Encoding.UTF8),
 
-                if (mail.Address.IndexOf(',') > -1)
-                {
-                    var mailAddresses = mail.Address.Split(',');
+                Subject = mail.Subject,
 
-                    foreach (var item in mailAddresses)
-                        if (item.Trim() != string.Empty)
-                            msg.To.Add(item);
-                }
+                SubjectEncoding = Encoding.UTF8,
 
-                else
-                {
-                    msg.To.Add(mail.Address);
-                }
+                Body = mail.Body,
 
-                var client = new SmtpClient(former.Host, former.Port)
-                {
-                    EnableSsl = true,
-                    Credentials = new NetworkCredential(former.FromAddress, former.Password)
-                };
+                BodyEncoding = Encoding.UTF8,
 
-                client.Send(msg);
-            }
-            catch (Exception e)
+                IsBodyHtml = mail.IsHtml,
+
+                Priority = MailPriority.Normal
+            };
+
+            if (mail.Address.IndexOf(',') > -1)
             {
-                Console.WriteLine(e);
-                throw;
+                var addresses = mail.Address.Split(',').Where(w => !string.IsNullOrWhiteSpace(w.Trim()));
+
+                foreach (var address in addresses)
+                    msg.To.Add(address);
             }
+
+            else
+            {
+                msg.To.Add(mail.Address);
+            }
+
+            var client = new SmtpClient(former.Host, former.Port)
+            {
+                EnableSsl = true,
+
+                Credentials = new NetworkCredential(former.FromAddress, former.Password)
+            };
+
+            client.Send(msg);
         }
     }
 }

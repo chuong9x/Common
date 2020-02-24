@@ -54,7 +54,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+
 using KeLi.Common.Converter.Collections;
+
 using static System.Reflection.BindingFlags;
 
 namespace KeLi.Common.Revit.Widgets
@@ -104,8 +106,7 @@ namespace KeLi.Common.Revit.Widgets
 
             try
             {
-                BaseRoot = (StorageInfo) InvokeStorageRoot(null, "Open", fileName, FileMode.Open, FileAccess.Read,
-                    FileShare.Read);
+                BaseRoot = (StorageInfo) InvokeStorageRoot(null, "Open", fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
             }
             catch (Exception ex)
             {
@@ -150,8 +151,32 @@ namespace KeLi.Common.Revit.Widgets
                 throw new ArgumentNullException(nameof(filePath));
 
             var dict = GetRevitInfoDict(filePath);
+
             var versionInfo = dict.FirstOrDefault(f => f.Key == "Revit Build").Value;
+
             var startIndex = versionInfo.IndexOf("Revit", StringComparison.Ordinal) + 6;
+
+            var version = versionInfo.Substring(startIndex, 4);
+
+            return Convert.ToInt32(version);
+        }
+
+        /// <summary>
+        ///     Gets revit version number.
+        /// </summary>
+        /// <param name="fileStream"></param>
+        /// <returns></returns>
+        public static int GetRevitVersionNum(Stream fileStream)
+        {
+            if (fileStream is null)
+                throw new ArgumentNullException(nameof(fileStream));
+
+            var dict = GetRevitInfoDict(fileStream);
+
+            var versionInfo = dict.FirstOrDefault(f => f.Key == "Revit Build").Value;
+
+            var startIndex = versionInfo.IndexOf("Revit", StringComparison.Ordinal) + 6;
+
             var version = versionInfo.Substring(startIndex, 4);
 
             return Convert.ToInt32(version);
@@ -181,13 +206,42 @@ namespace KeLi.Common.Revit.Widgets
                 throw new ArgumentNullException(nameof(filePath));
 
             var rawData = GetRawBasicFileInfo(filePath);
+
+            return GetRevitInfoDict(rawData);
+        }
+
+        /// <summary>
+        ///     Gets revit file info dictionary.
+        /// </summary>
+        /// <param name="fileStream"></param>
+        /// <returns></returns>
+        public static Dictionary<string, string> GetRevitInfoDict(Stream fileStream)
+        {
+            if (fileStream is null)
+                throw new ArgumentNullException(nameof(fileStream));
+
+            var rawData = GetRawBasicFileInfo(fileStream);
+
+            return GetRevitInfoDict(rawData);
+        }
+
+        /// <summary>
+        ///     Gets revit fiel info dictionary.
+        /// </summary>
+        /// <param name="rawData"></param>
+        /// <returns></returns>
+        private static Dictionary<string, string> GetRevitInfoDict(byte[] rawData)
+        {
             var rawString = Encoding.Unicode.GetString(rawData);
-            var fileInfo = rawString.Split(new[] {"\0", "\r\n"}, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            var fileInfo = rawString.Split(new[] { "\0", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
             fileInfo.RemoveAll(r => !r.Contains(":"));
+
             fileInfo = fileInfo.Skip(2).ToList();
 
             var worksharing = fileInfo.FirstOrDefault(f => f.Contains("Worksharing"));
+
             var index = fileInfo.IndexOf(worksharing);
 
             if (worksharing is null)
@@ -198,31 +252,6 @@ namespace KeLi.Common.Revit.Widgets
             fileInfo[index] = worksharing.Substring(startIndex);
 
             return fileInfo.ToDictionary2();
-        }
-
-        /// <summary>
-        ///     If true, this file is structured storage.
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        private static bool IsFileStructuredStorage(string filePath)
-        {
-            if (filePath is null)
-                throw new ArgumentNullException(nameof(filePath));
-
-            var result = StgIsStorageFile(filePath);
-
-            switch (result)
-            {
-                case 0:
-                    return true;
-
-                case 1:
-                    return false;
-
-                default:
-                    throw new FileNotFoundException(nameof(filePath));
-            }
         }
 
         /// <summary>
@@ -239,6 +268,34 @@ namespace KeLi.Common.Revit.Widgets
                 throw new NotSupportedException("File isn't a structured storage file!");
 
             using (var storage = new StructuredStorage(filePath))
+            {
+                if (!storage.BaseRoot.StreamExists(_streamName))
+                    throw new NotSupportedException($"File doesn't contain {_streamName} stream!");
+
+                var streamInfo = storage.BaseRoot.GetStreamInfo(_streamName);
+
+                using (var stream = streamInfo.GetStream(FileMode.Open, FileAccess.Read))
+                {
+                    var buffer = new byte[stream.Length];
+
+                    stream.Read(buffer, 0, buffer.Length);
+
+                    return buffer;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Gets raw basic file info.
+        /// </summary>
+        /// <param name="fileStream"></param>
+        /// <returns></returns>
+        private static byte[] GetRawBasicFileInfo(Stream fileStream)
+        {
+            if (fileStream is null)
+                throw new ArgumentNullException(nameof(fileStream));
+
+            using (var storage = new StructuredStorage(fileStream))
             {
                 if (!storage.BaseRoot.StreamExists(_streamName))
                     throw new NotSupportedException($"File doesn't contain {_streamName} stream!");
@@ -279,6 +336,31 @@ namespace KeLi.Common.Revit.Widgets
         private void CloseStorageRoot()
         {
             InvokeStorageRoot(BaseRoot, "Close");
+        }
+
+        /// <summary>
+        ///     If true, this file is structured storage.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        private static bool IsFileStructuredStorage(string filePath)
+        {
+            if (filePath is null)
+                throw new ArgumentNullException(nameof(filePath));
+
+            var result = StgIsStorageFile(filePath);
+
+            switch (result)
+            {
+                case 0:
+                    return true;
+
+                case 1:
+                    return false;
+
+                default:
+                    throw new FileNotFoundException(nameof(filePath));
+            }
         }
 
         /// <summary>

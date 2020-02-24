@@ -71,6 +71,7 @@ namespace KeLi.Common.Tool.Security
                 return null;
 
             var mcsp = new MD5CryptoServiceProvider();
+
             var bytes = Encoding.GetEncoding("UTF-8").GetBytes(content);
 
             return BitConverter.ToString(mcsp.ComputeHash(bytes)).Replace("-", string.Empty);

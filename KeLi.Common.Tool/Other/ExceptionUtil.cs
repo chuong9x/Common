@@ -63,7 +63,7 @@ namespace KeLi.Common.Tool.Other
         /// <param name="act"></param>
         /// <param name="name"></param>
         /// <param name="showMsg"></param>
-        public static void AutoTry(Action act, string name = null, bool showMsg = false)
+        public static void AutoTry(this Action act, string name = null, bool showMsg = false)
         {
             if (act is null)
                 throw new ArgumentNullException(nameof(act));
@@ -79,7 +79,9 @@ namespace KeLi.Common.Tool.Other
                     var sb = new StringBuilder();
 
                     sb.AppendLine(e.Message);
+
                     sb.AppendLine(e.StackTrace);
+
                     MessageBox.Show(sb.ToString(), name);
                 }
             }

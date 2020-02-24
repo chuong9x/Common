@@ -104,6 +104,7 @@ namespace KeLi.Common.Converter.Collections
         public static Dictionary<string, T> GetDisplayEnumDict<T>() where T : Enum
         {
             var results = new Dictionary<string, T>();
+
             var values = Enum.GetValues(typeof(T));
 
             foreach (T value in values)
@@ -114,6 +115,7 @@ namespace KeLi.Common.Converter.Collections
                     continue;
 
                 var atts = member.GetCustomAttributes(typeof(DisplayAttribute), false);
+
                 var name = (atts.FirstOrDefault() as DisplayAttribute)?.Name;
 
                 if (name != null)
@@ -130,6 +132,7 @@ namespace KeLi.Common.Converter.Collections
         public static Dictionary<string, T> GetDescriptionEnumDict<T>() where T : Enum
         {
             var results = new Dictionary<string, T>();
+
             var values = Enum.GetValues(typeof(T));
 
             foreach (T value in values)
@@ -140,6 +143,7 @@ namespace KeLi.Common.Converter.Collections
                     continue;
 
                 var atts = member.GetCustomAttributes(typeof(DescriptionAttribute), false);
+
                 var name = (atts.FirstOrDefault() as DescriptionAttribute)?.Description;
 
                 if (name != null)

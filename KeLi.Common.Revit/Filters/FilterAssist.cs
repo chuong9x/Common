@@ -49,7 +49,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Autodesk.Revit.DB;
+
 using KeLi.Common.Revit.Geometry;
 
 namespace KeLi.Common.Revit.Filters
@@ -108,7 +110,9 @@ namespace KeLi.Common.Revit.Filters
             if (viewId != null)
                 filter = new FilteredElementCollector(doc, viewId);
 
-            return filter.OfClass(typeof(T)).WhereElementIsElementType().Cast<T>().ToList();
+            var typeFilter = filter.OfClass(typeof(T)).WhereElementIsElementType();
+
+            return typeFilter.Cast<T>().ToList();
         }
 
         /// <summary>
@@ -128,7 +132,9 @@ namespace KeLi.Common.Revit.Filters
             if (viewId != null)
                 filter = new FilteredElementCollector(doc, viewId);
 
-            return filter.OfClass(typeof(T)).OfCategory(category).WhereElementIsElementType().Cast<T>().ToList();
+            var catgFilter = filter.OfClass(typeof(T)).OfCategory(category);
+
+            return catgFilter.WhereElementIsElementType().Cast<T>().ToList();
         }
 
         /// <summary>
@@ -147,7 +153,9 @@ namespace KeLi.Common.Revit.Filters
             if (viewId != null)
                 filter = new FilteredElementCollector(doc, viewId);
 
-            return filter.OfClass(typeof(T)).WhereElementIsNotElementType().Cast<T>().ToList();
+            var instFilter = filter.OfClass(typeof(T)).WhereElementIsNotElementType();
+
+            return instFilter.Cast<T>().ToList();
         }
 
         /// <summary>
@@ -167,7 +175,11 @@ namespace KeLi.Common.Revit.Filters
             if (viewId != null)
                 filter = new FilteredElementCollector(doc, viewId);
 
-            return filter.OfClass(typeof(T)).OfCategory(category).WhereElementIsNotElementType().Cast<T>().ToList();
+            var catgFilter = filter.OfClass(typeof(T)).OfCategory(category);
+
+            var instFilter = catgFilter.WhereElementIsNotElementType();
+
+            return instFilter.Cast<T>().ToList();
         }
 
         /// <summary>
@@ -185,6 +197,7 @@ namespace KeLi.Common.Revit.Filters
                 throw new ArgumentNullException(nameof(doc));
 
             var elms = doc.Checkout(FilterType.Instance, viewId);
+
             var results = new List<Element>();
 
             foreach (var elm in elms)
@@ -234,8 +247,11 @@ namespace KeLi.Common.Revit.Filters
                 throw new ArgumentNullException(nameof(doc));
 
             var elms = doc.Checkout(FilterType.Instance, viewId);
+
             var maxElm = default(Element);
+
             var maxNum = int.MinValue;
+
             var num = 0;
 
             foreach (var elm in elms)

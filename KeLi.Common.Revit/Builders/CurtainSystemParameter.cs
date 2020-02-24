@@ -47,6 +47,7 @@
 */
 
 using System;
+
 using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Builders
@@ -65,7 +66,9 @@ namespace KeLi.Common.Revit.Builders
         public CurtainSystemParameter(SpatialElement room, PanelType pnlType, string tplFileName)
         {
             Room = room ?? throw new ArgumentNullException(nameof(room));
+
             PanelType = pnlType ?? throw new ArgumentNullException(nameof(pnlType));
+
             TemplateFileName = tplFileName ?? throw new ArgumentNullException(nameof(tplFileName));
         }
 
@@ -79,8 +82,11 @@ namespace KeLi.Common.Revit.Builders
         public CurtainSystemParameter(Wall refWall, SpatialElement room, PanelType pnlType, string tplFileName)
         {
             RefWall = refWall ?? throw new ArgumentNullException(nameof(refWall));
+
             Room = room ?? throw new ArgumentNullException(nameof(room));
+
             PanelType = pnlType ?? throw new ArgumentNullException(nameof(pnlType));
+
             TemplateFileName = tplFileName ?? throw new ArgumentNullException(nameof(tplFileName));
         }
 

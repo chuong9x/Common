@@ -75,13 +75,16 @@ namespace KeLi.Common.Tool.Security
                 key = Key;
 
             var bytes = Encoding.UTF8.GetBytes(content);
+
             var dcsp = new DESCryptoServiceProvider
             {
                 Key = Encoding.ASCII.GetBytes(key),
+
                 IV = Encoding.ASCII.GetBytes(key)
             };
 
             var ct = dcsp.CreateEncryptor();
+
             var marks = ct.TransformFinalBlock(bytes, 0, bytes.Length);
 
             return BitConverter.ToString(marks);
@@ -100,12 +103,15 @@ namespace KeLi.Common.Tool.Security
 
             if (string.IsNullOrWhiteSpace(ciphertext))
                 return null;
+
             if (string.IsNullOrWhiteSpace(Key))
                 return null;
+
             if (string.IsNullOrWhiteSpace(key))
                 key = Key;
 
             var marks = ciphertext.Split("-".ToCharArray());
+
             var bytes = new byte[marks.Length];
 
             for (var i = 0; i < marks.Length; i++)
@@ -114,6 +120,7 @@ namespace KeLi.Common.Tool.Security
             var dcsp = new DESCryptoServiceProvider
             {
                 Key = Encoding.ASCII.GetBytes(key),
+
                 IV = Encoding.ASCII.GetBytes(key)
             };
 
@@ -128,7 +135,7 @@ namespace KeLi.Common.Tool.Security
         /// <returns></returns>
         private static string GenerateKey()
         {
-            var des = (DESCryptoServiceProvider) DES.Create();
+            var des = (DESCryptoServiceProvider)DES.Create();
 
             return Encoding.ASCII.GetString(des.Key);
         }

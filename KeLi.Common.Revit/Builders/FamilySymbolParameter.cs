@@ -47,7 +47,12 @@
 */
 
 using System;
+
 using Autodesk.Revit.DB;
+
+using static Autodesk.Revit.DB.ProfilePlaneLocation;
+
+using Location = Autodesk.Revit.DB.ProfilePlaneLocation;
 
 namespace KeLi.Common.Revit.Builders
 {
@@ -59,33 +64,39 @@ namespace KeLi.Common.Revit.Builders
         /// <summary>
         ///     Family symbol parameter.
         /// </summary>
-        /// <param name="tplFileName"></param>
+        /// <param name="tplName"></param>
         /// <param name="profile"></param>
         /// <param name="plane"></param>
         /// <param name="end"></param>
-        public FamilySymbolParameter(string tplFileName, CurveArrArray profile, Plane plane, double end)
+        public FamilySymbolParameter(string tplName, CurveArrArray profile, Plane plane, double end)
         {
-            TemplateFileName = tplFileName ?? throw new ArgumentNullException(nameof(tplFileName));
+            TemplateFileName = tplName ?? throw new ArgumentNullException(nameof(tplName));
+
             Profile = profile ?? throw new ArgumentNullException(nameof(profile));
+
             Plane = plane ?? throw new ArgumentNullException(nameof(plane));
+
             End = end;
         }
 
         /// <summary>
         ///     Family symbol parameter.
         /// </summary>
-        /// <param name="tplFileName"></param>
+        /// <param name="tplName"></param>
         /// <param name="profile"></param>
-        /// <param name="profilePath"></param>
-        /// <param name="location"></param>
+        /// <param name="path"></param>
+        /// <param name="loc"></param>
         /// <param name="index"></param>
-        public FamilySymbolParameter(string tplFileName, CurveArrArray profile, ReferenceArray profilePath,
-            ProfilePlaneLocation location = ProfilePlaneLocation.Start, int index = 0)
+        public FamilySymbolParameter(string tplName, CurveArrArray profile, ReferenceArray path, Location loc = Start, int index = 0)
         {
-            TemplateFileName = tplFileName ?? throw new ArgumentNullException(nameof(tplFileName));
+            TemplateFileName = tplName ?? throw new ArgumentNullException(nameof(tplName));
+
             Profile = profile ?? throw new ArgumentNullException(nameof(profile));
-            SweepPath = profilePath ?? throw new ArgumentNullException(nameof(profilePath));
-            Location = location;
+
+            SweepPath = path ?? throw new ArgumentNullException(nameof(path));
+
+            Location = loc;
+
             Index = index;
         }
 

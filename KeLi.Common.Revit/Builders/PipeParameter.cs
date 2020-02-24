@@ -47,6 +47,7 @@
 */
 
 using System;
+
 using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Builders
@@ -65,7 +66,9 @@ namespace KeLi.Common.Revit.Builders
         public PipeParameter(ElementId systemId, ElementId typeId, ElementId lvlId)
         {
             SystemId = systemId ?? throw new ArgumentNullException(nameof(systemId));
+
             TypeId = typeId ?? throw new ArgumentNullException(nameof(typeId));
+
             LevelId = lvlId ?? throw new ArgumentNullException(nameof(lvlId));
         }
 

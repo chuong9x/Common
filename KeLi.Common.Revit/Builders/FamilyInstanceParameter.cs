@@ -47,6 +47,7 @@
 */
 
 using System;
+
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Structure;
 
@@ -67,8 +68,11 @@ namespace KeLi.Common.Revit.Builders
         public FamilyInstanceParameter(XYZ location, FamilySymbol symbol, Level lvl, StructuralType type)
         {
             Location = location ?? throw new ArgumentNullException(nameof(location));
+
             Symbol = symbol ?? throw new ArgumentNullException(nameof(symbol));
+
             Level = lvl ?? throw new ArgumentNullException(nameof(lvl));
+
             Type = type;
         }
 

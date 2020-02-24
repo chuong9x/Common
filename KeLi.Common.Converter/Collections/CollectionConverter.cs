@@ -56,6 +56,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
+using static System.Reflection.BindingFlags;
+
 namespace KeLi.Common.Converter.Collections
 {
     /// <summary>
@@ -66,7 +68,7 @@ namespace KeLi.Common.Converter.Collections
         /// <summary>
         ///     Binding flags.
         /// </summary>
-        private const BindingFlags _flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+        private const BindingFlags _flags = Public | NonPublic | Instance;
 
         /// <summary>
         ///     Converts the DataTable to the List.
@@ -84,6 +86,7 @@ namespace KeLi.Common.Converter.Collections
             for (var i = 0; i < dt.Rows.Count; i++)
             {
                 var tab = Activator.CreateInstance<T>();
+
                 var properties = tab.GetType().GetProperties();
 
                 for (var j = 0; j < dt.Columns.Count; j++)
@@ -118,13 +121,16 @@ namespace KeLi.Common.Converter.Collections
                 throw new ArgumentNullException(nameof(type));
 
             var listType = typeof(List<>).MakeGenericType(type);
+
             var results = Activator.CreateInstance(listType) as IList;
+
             var constructor = type.GetConstructors(_flags).OrderBy(c => c.GetParameters().Length).FirstOrDefault();
 
             if (constructor is null)
                 return results;
 
             var parms = constructor.GetParameters();
+
             var values = new object[parms.Length];
 
             foreach (DataRow dr in dt.Rows)
@@ -200,9 +206,13 @@ namespace KeLi.Common.Converter.Collections
                 return Activator.CreateInstance(listType) as IList;
 
             var results = Activator.CreateInstance(listType) as IList;
-            var constructor = type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .OrderBy(c => c.GetParameters().Length).First();
+
+            var constructors = type.GetConstructors(Public | NonPublic | Instance);
+
+            var constructor = constructors.OrderBy(c => c.GetParameters().Length).First();
+
             var parms = constructor.GetParameters();
+
             var values = new object[parms.Length];
 
             while (reader.Read())
@@ -239,7 +249,9 @@ namespace KeLi.Common.Converter.Collections
                 throw new ArgumentNullException(nameof(ts));
 
             var tmpTs = ts.ToList();
+
             var results = new DataTable();
+
             var props = tmpTs[0].GetType().GetProperties();
 
             foreach (var prop in props)
@@ -279,6 +291,7 @@ namespace KeLi.Common.Converter.Collections
                 var col = new DataColumn
                 {
                     DataType = reader.GetFieldType(i),
+
                     ColumnName = reader.GetName(i)
                 };
 
@@ -314,11 +327,13 @@ namespace KeLi.Common.Converter.Collections
                 throw new ArgumentNullException(nameof(t));
 
             var result = Activator.CreateInstance<S>();
+
             var props = typeof(T).GetProperties();
 
             foreach (var prop in props)
             {
                 var value = prop.GetValue(t);
+
                 var info = typeof(S).GetProperty(prop.Name);
 
                 if (value is null || info is null)
@@ -354,6 +369,7 @@ namespace KeLi.Common.Converter.Collections
                 throw new ArgumentNullException(nameof(obj));
 
             var result = SqlDbType.NChar;
+
             var type = obj.GetType();
 
             switch (type.Name)
@@ -574,6 +590,7 @@ namespace KeLi.Common.Converter.Collections
         {
             if (pairs is null)
                 throw new ArgumentNullException(nameof(pairs));
+
             var results = new NameValueCollection();
 
             foreach (var pair in pairs)

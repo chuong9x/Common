@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Globalization;
 using System.Reflection;
+
+using static System.Globalization.CultureInfo;
+using static System.Reflection.BindingFlags;
 
 namespace KeLi.Common.Tool.Other
 {
@@ -13,18 +15,17 @@ namespace KeLi.Common.Tool.Other
         /// <summary>
         ///     Binding flags.
         /// </summary>
-        private const BindingFlags FLAGS = BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.NonPublic;
+        private const BindingFlags FLAGS = BindingFlags.CreateInstance | Instance | NonPublic;
 
         /// <summary>
         ///     It's for getting instance by reflect way.
         /// </summary>
-        private static T _instance =
-            typeof(T).InvokeMember(typeof(T).Name, FLAGS, null, null, null, CultureInfo.CurrentCulture) as T;
+        private static T _inst =  typeof(T).InvokeMember(typeof(T).Name, FLAGS, null, null, null, CurrentCulture) as T;
 
         /// <summary>
         ///     It's a singleton.
         /// </summary>
-        private static readonly T _single = new Lazy<T>(() => _instance).Value;
+        private static readonly T _single = new Lazy<T>(() => _inst).Value;
 
         /// <summary>
         ///     create a T type singleton.
@@ -40,7 +41,7 @@ namespace KeLi.Common.Tool.Other
         /// </summary>
         public static void ClearInstance()
         {
-            _instance = null;
+            _inst = null;
         }
     }
 }

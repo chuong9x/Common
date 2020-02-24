@@ -50,6 +50,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
+
 using Autodesk.Revit.UI;
 
 namespace KeLi.Common.Revit.Widgets
@@ -74,7 +75,9 @@ namespace KeLi.Common.Revit.Widgets
                 throw new InvalidCastException();
 
             result.ToolTip = pbd.ToolTip;
+
             result.LongDescription = pbd.LongDescription;
+
             result.LargeImage = pbd.LargeImage;
 
             return result;
@@ -124,7 +127,9 @@ namespace KeLi.Common.Revit.Widgets
                 throw new InvalidCastException();
 
             result.ToolTip = pbd.ToolTip;
+
             result.LongDescription = pbd.LongDescription;
+
             result.LargeImage = pbd.LargeImage;
 
             foreach (var pbdl in pbds)
@@ -135,7 +140,9 @@ namespace KeLi.Common.Revit.Widgets
                     continue;
 
                 btn.ToolTip = pbdl.ToolTip;
+
                 btn.LongDescription = pbdl.LongDescription;
+
                 btn.LargeImage = pbdl.LargeImage;
             }
 
@@ -165,7 +172,9 @@ namespace KeLi.Common.Revit.Widgets
                 throw new InvalidCastException();
 
             result.ToolTip = pbd.ToolTip;
+
             result.LongDescription = pbd.LongDescription;
+
             result.LargeImage = pbd.LargeImage;
 
             foreach (var pbdl in pbds)
@@ -176,7 +185,9 @@ namespace KeLi.Common.Revit.Widgets
                     continue;
 
                 btn.ToolTip = pbdl.ToolTip;
+
                 btn.LongDescription = pbdl.LongDescription;
+
                 btn.LargeImage = pbdl.LargeImage;
             }
 
@@ -198,6 +209,7 @@ namespace KeLi.Common.Revit.Widgets
             return new PushButtonData(typeof(T).Name, text, typeof(T).Assembly.Location, typeof(T).FullName)
             {
                 LargeImage = image,
+
                 AvailabilityClassName = isAvailable ? typeof(T).FullName : null
             };
         }
@@ -220,6 +232,7 @@ namespace KeLi.Common.Revit.Widgets
             return new PushButtonData(type.Name, text, type.Assembly.Location, type.FullName)
             {
                 LargeImage = image,
+
                 AvailabilityClassName = isAvailable ? type.FullName : null
             };
         }
@@ -252,6 +265,7 @@ namespace KeLi.Common.Revit.Widgets
             return new PushButtonData(type.Name, text, type.Assembly.Location, type.FullName)
             {
                 LargeImage = image,
+
                 AvailabilityClassName = isAvailable ? type.FullName : null
             };
         }

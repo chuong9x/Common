@@ -50,10 +50,12 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+
 using Autodesk.Revit;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
 using Autodesk.RevitAddIns;
+
 using KeLi.Common.Tool.Other;
 
 namespace KeLi.Common.Revit.Widgets
@@ -90,7 +92,9 @@ namespace KeLi.Common.Revit.Widgets
         private RevitContext()
         {
             InitConfig();
+
             SetEnvironmentVariable();
+
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
 
@@ -108,6 +112,7 @@ namespace KeLi.Common.Revit.Widgets
         private static void InitConfig()
         {
             _clientName = ConfigUtil.GetValue("ClientName");
+
             _vendorId = ConfigUtil.GetValue("VendorId");
 
             if(string.IsNullOrWhiteSpace(_version))
@@ -182,6 +187,7 @@ namespace KeLi.Common.Revit.Widgets
         private static string GetRevitInstallPath()
         {
             var products = RevitProductUtility.GetAllInstalledRevitProducts();
+
             var product = products.FirstOrDefault(f => f.Name.Contains(_version));
 
             return product?.InstallLocation;
@@ -193,7 +199,9 @@ namespace KeLi.Common.Revit.Widgets
         private static void SetEnvironmentVariable()
         {
             var revitPath = new[] {GetRevitInstallPath()};
+
             var path = new[] {Environment.GetEnvironmentVariable("PATH") ?? string.Empty};
+
             var newPath = string.Join(Path.PathSeparator.ToString(), path.Concat(revitPath));
 
             Environment.SetEnvironmentVariable("PATH", newPath);
@@ -208,6 +216,7 @@ namespace KeLi.Common.Revit.Widgets
         private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             var assemblyName = new AssemblyName(args.Name);
+
             var file = $"{Path.Combine(GetRevitInstallPath(), assemblyName.Name)}.dll";
 
             return File.Exists(file) ? Assembly.LoadFile(file) : null;

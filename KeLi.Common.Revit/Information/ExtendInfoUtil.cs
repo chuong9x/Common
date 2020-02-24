@@ -49,9 +49,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.ExtensibleStorage;
+
 using KeLi.Common.Revit.Widgets;
+
+using static Autodesk.Revit.DB.ExtensibleStorage.AccessLevel;
 
 namespace KeLi.Common.Revit.Information
 {
@@ -69,9 +73,12 @@ namespace KeLi.Common.Revit.Information
             var guid = Guid.NewGuid();
             var result = new SchemaBuilder(guid);
 
-            result.SetReadAccessLevel(AccessLevel.Public);
-            result.SetWriteAccessLevel(AccessLevel.Public);
+            result.SetReadAccessLevel(Public);
+
+            result.SetWriteAccessLevel(Public);
+
             result.SetSchemaName("Schema" + guid.ToString().Substring(0, 6));
+
             result.SetDocumentation(guid.ToString());
 
             return result;
@@ -90,8 +97,10 @@ namespace KeLi.Common.Revit.Information
 
             var result = new SchemaBuilder(Guid.NewGuid());
 
-            result.SetReadAccessLevel(AccessLevel.Public);
-            result.SetWriteAccessLevel(AccessLevel.Public);
+            result.SetReadAccessLevel(Public);
+
+            result.SetWriteAccessLevel(Public);
+
             result.SetSchemaName(schemaName);
 
             if (dcrp is null)
@@ -158,6 +167,7 @@ namespace KeLi.Common.Revit.Information
             var result = schemaBuilder.AddArrayField(fieldName, typeof(IEnumerable<T>));
 
             result.SetUnitType(unitType);
+
             result.SetDocumentation(dcrp);
         }
 
@@ -188,6 +198,7 @@ namespace KeLi.Common.Revit.Information
             var result = schemaBuilder.AddMapField(fieldName, typeof(K), typeof(V));
 
             result.SetUnitType(unitType);
+
             result.SetDocumentation(dcrp);
         }
 
@@ -211,6 +222,7 @@ namespace KeLi.Common.Revit.Information
             schemaBuilder.AddSimpleField(fieldName, typeof(T));
 
             var schema = schemaBuilder.Finish();
+
             var result = new Entity(schema);
 
             result.SetSimpleFieldValue(fieldName, value);
@@ -241,6 +253,7 @@ namespace KeLi.Common.Revit.Information
             schemaBuilder.AddArrayField(fieldName, typeof(T));
 
             var schema = schemaBuilder.Finish();
+
             var result = new Entity(schema);
 
             result.SetListFieldValue(fieldName, value);
@@ -275,6 +288,7 @@ namespace KeLi.Common.Revit.Information
             schemaBuilder.AddMapField(fieldName, typeof(K), typeof(V));
 
             var schema = schemaBuilder.Finish();
+
             var result = new Entity(schema);
 
             result.SetDictFieldValue(fieldName, value);
@@ -426,9 +440,11 @@ namespace KeLi.Common.Revit.Information
                 throw new NotSupportedException(nameof(T));
 
             var schema = elm.GetSchemaByFieldName(fieldName);
+
             var entity = elm.GetEntity(schema);
 
             entity.Set(fieldName, value);
+
             doc.AutoTransaction(() => elm.SetEntity(entity));
         }
 
@@ -482,9 +498,11 @@ namespace KeLi.Common.Revit.Information
                 throw new NotSupportedException(nameof(T));
 
             var schema = elm.GetSchemaByFieldName(fieldName);
+
             var entity = elm.GetEntity(schema);
 
             entity.Set(fieldName, value);
+
             doc.AutoTransaction(() => elm.SetEntity(entity));
         }
 
@@ -546,9 +564,11 @@ namespace KeLi.Common.Revit.Information
                 throw new NotSupportedException(nameof(V));
 
             var schema = elm.GetSchemaByFieldName(fieldName);
+
             var entity = elm.GetEntity(schema);
 
             entity.Set(fieldName, value);
+
             doc.AutoTransaction(() => elm.SetEntity(entity));
         }
 
@@ -571,7 +591,9 @@ namespace KeLi.Common.Revit.Information
                 throw new NotSupportedException(nameof(T));
 
             var schema = GetSchemaByFieldName(elm, fieldName);
+
             var entity = elm.GetEntity(schema);
+
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
 
             return field != null ? entity.Get<T>(field) : default;
@@ -600,7 +622,9 @@ namespace KeLi.Common.Revit.Information
                 throw new NotSupportedException(nameof(T));
 
             var schema = GetSchemaBySchemaName(elm, schemaName);
+
             var entity = elm.GetEntity(schema);
+
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
 
             return field != null ? entity.Get<T>(field) : default;
@@ -625,7 +649,9 @@ namespace KeLi.Common.Revit.Information
                 throw new NotSupportedException(nameof(T));
 
             var schema = elm.GetSchemaByFieldName(fieldName);
+
             var entity = elm.GetEntity(schema);
+
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
 
             return field != null ? entity.Get<IEnumerable<T>>(field) : default;
@@ -654,7 +680,9 @@ namespace KeLi.Common.Revit.Information
                 throw new NotSupportedException(nameof(T));
 
             var schema = elm.GetSchemaBySchemaName(schemaName);
+
             var entity = elm.GetEntity(schema);
+
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
 
             return field != null ? entity.Get<IEnumerable<T>>(field) : default;
@@ -683,7 +711,9 @@ namespace KeLi.Common.Revit.Information
                 throw new NotSupportedException(nameof(V));
 
             var schema = elm.GetSchemaByFieldName(fieldName);
+
             var entity = elm.GetEntity(schema);
+
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
 
             return field != null ? entity.Get<IDictionary<K, V>>(field) : default;
@@ -716,7 +746,9 @@ namespace KeLi.Common.Revit.Information
                 throw new NotSupportedException(nameof(V));
 
             var schema = elm.GetSchemaBySchemaName(schemaName);
+
             var entity = elm.GetEntity(schema);
+
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
 
             return field != null ? entity.Get<IDictionary<K, V>>(field) : default;

@@ -49,7 +49,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Autodesk.Revit.DB;
+
 using static Autodesk.Revit.DB.SpatialElementBoundaryLocation;
 
 namespace KeLi.Common.Revit.Filters
@@ -232,14 +234,7 @@ namespace KeLi.Common.Revit.Filters
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            var results = new List<T>();
-            var elms = room.GetIntersectElements(doc);
-
-            foreach (var elm in elms)
-                if (elm is T t)
-                    results.Add(t);
-
-            return results;
+            return room.GetIntersectElements(doc).Where(w => w is T).Cast<T>().ToList();
         }
 
         /// <summary>
@@ -257,11 +252,16 @@ namespace KeLi.Common.Revit.Filters
                 throw new ArgumentNullException(nameof(doc));
 
             var opt = new SpatialElementBoundaryOptions  { SpatialElementBoundaryLocation = Center };
-            var calc = new SpatialElementGeometryCalculator(doc, opt);
-            var solid = calc.CalculateSpatialElementGeometry(room).GetGeometry();
-            var intersectFilter = new ElementIntersectsSolidFilter(solid);
 
-            return new FilteredElementCollector(doc).WhereElementIsNotElementType().WherePasses(intersectFilter).ToList();
+            var calc = new SpatialElementGeometryCalculator(doc, opt);
+
+            var solid = calc.CalculateSpatialElementGeometry(room).GetGeometry();
+
+            var instFilter = new FilteredElementCollector(doc).WhereElementIsNotElementType();
+
+            var itstFilter = new ElementIntersectsSolidFilter(solid);
+
+            return instFilter.WherePasses(itstFilter).ToList();
         }
 
         /// <summary>
@@ -288,7 +288,9 @@ namespace KeLi.Common.Revit.Filters
             var graSetting = doc.ActiveView.GetElementOverrides(elm.Id);
 
             graSetting.SetProjectionFillPatternId(fillPattern.Id);
+
             graSetting.SetProjectionFillColor(color);
+
             doc.ActiveView.SetElementOverrides(elm.Id, graSetting);
         }
 

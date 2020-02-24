@@ -49,14 +49,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Structure;
+
 using KeLi.Common.Revit.Converters;
 using KeLi.Common.Revit.Filters;
 using KeLi.Common.Revit.Geometry;
 using KeLi.Common.Revit.Relations;
 using KeLi.Common.Revit.Widgets;
+
+using static Autodesk.Revit.DB.BuiltInParameter;
 
 namespace KeLi.Common.Revit.Builders
 {
@@ -87,6 +91,7 @@ namespace KeLi.Common.Revit.Builders
                 throw new ArgumentNullException(nameof(tplFileName));
 
             var rooms = doc.GetSpatialElementList();
+
             var results = new List<CurtainSystem>();
 
             foreach (var room in rooms)
@@ -121,6 +126,7 @@ namespace KeLi.Common.Revit.Builders
                 throw new NullReferenceException(nameof(tplFileName));
 
             var walls = room.GetBoundaryWallList(doc);
+
             var results = new List<CurtainSystem>();
 
             foreach (var wall in walls)
@@ -171,10 +177,15 @@ namespace KeLi.Common.Revit.Builders
                 throw new NullReferenceException(nameof(parm));
 
             var roomc = parm.Room.GetBoundingBox(doc).GetBoxCenter();
+
             var wline = parm.RefWall.GetLocationCurve() as Line;
+
             var wdir = wline.GetLineDirection(roomc);
+
             var innerNormal = wdir.GetInnerNormal();
+
             var face = parm.RefWall.GetInnerFace(roomc);
+
             var profile = face.GetEdgesAsCurveLoops().ToCurveArrArray();
 
 #if R2016
@@ -185,10 +196,15 @@ namespace KeLi.Common.Revit.Builders
 #endif
 
             var symbolParm = new FamilySymbolParameter(parm.TemplateFileName, profile, plane, 1);
+
             var symbol = doc.CreateExtrusionSymbol(app, symbolParm);
+
             var lvl = doc.GetElement(parm.RefWall.LevelId) as Level;
+
             var minPt = profile.ToCurveList().GetDistinctPointList().GetMinPoint();
+
             var instanceParm = new FamilyInstanceParameter(minPt, symbol, lvl, StructuralType.NonStructural);
+
             CurtainSystem result = null;
 
             doc.AutoTransaction(() =>
@@ -201,15 +217,17 @@ namespace KeLi.Common.Revit.Builders
                 var faces = inst.GetFaceList(-innerNormal).ToFaceArray();
 
                 result = doc.CreateCurtainSystem(faces);
+
                 doc.Delete(inst.Id);
+
                 doc.Delete(symbol.Family.Id);
 
                 if (parm.PanelType is null)
                     return;
 
-                result.CurtainSystemType.get_Parameter(BuiltInParameter.AUTO_PANEL).Set(parm.PanelType.Id);
+                result.CurtainSystemType.get_Parameter(AUTO_PANEL).Set(parm.PanelType.Id);
 
-                var thickness = parm.PanelType.get_Parameter(BuiltInParameter.CURTAIN_WALL_SYSPANEL_THICKNESS).AsDouble();
+                var thickness = parm.PanelType.get_Parameter(CURTAIN_WALL_SYSPANEL_THICKNESS).AsDouble();
 
                 ElementTransformUtils.MoveElement(doc, result.Id, innerNormal * thickness / 2);
             });
@@ -239,6 +257,7 @@ namespace KeLi.Common.Revit.Builders
                 throw new ArgumentNullException(nameof(tplFileName));
 
             var rooms = doc.GetSpatialElementList();
+
             var results = new List<CurtainSystem>();
 
             foreach (var room in rooms)
@@ -307,12 +326,19 @@ namespace KeLi.Common.Revit.Builders
         public static CurtainSystem CreateFloorCurtainSystem(this Document doc, Application app, CurtainSystemParameter parm)
         {
             var edges = parm.Room.GetEdgeLineList(SpatialElementBoundaryLocation.CoreBoundary);
+
             var profile = edges.ToCurveArrArray();
+
             var plane = Plane.CreateByNormalAndOrigin(XYZ.BasisZ, XYZ.Zero);
+
             var symbolParm = new FamilySymbolParameter(parm.TemplateFileName, profile, plane, 1);
+
             var symbol = doc.CreateExtrusionSymbol(app, symbolParm);
+
             var minPt = profile.ToCurveList().GetDistinctPointList().GetMinPoint();
+
             var instanceParm = new FamilyInstanceParameter(minPt, symbol, parm.Room.Level, StructuralType.NonStructural);
+
             CurtainSystem result = null;
 
             doc.AutoTransaction(() =>
@@ -325,15 +351,17 @@ namespace KeLi.Common.Revit.Builders
                 var faces = inst.GetFaceList(-XYZ.BasisZ).ToFaceArray();
 
                 result = doc.CreateCurtainSystem(faces);
+
                 doc.Delete(inst.Id);
+
                 doc.Delete(symbol.Family.Id);
 
                 if (parm.PanelType is null)
                     return;
 
-                result.CurtainSystemType.get_Parameter(BuiltInParameter.AUTO_PANEL).Set(parm.PanelType.Id);
+                result.CurtainSystemType.get_Parameter(AUTO_PANEL).Set(parm.PanelType.Id);
 
-                var thickness = parm.PanelType.get_Parameter(BuiltInParameter.CURTAIN_WALL_SYSPANEL_THICKNESS).AsDouble();
+                var thickness = parm.PanelType.get_Parameter(CURTAIN_WALL_SYSPANEL_THICKNESS).AsDouble();
 
                 ElementTransformUtils.MoveElement(doc, result.Id, XYZ.BasisZ * thickness / 2);
             });
@@ -356,7 +384,9 @@ namespace KeLi.Common.Revit.Builders
                 throw new ArgumentNullException(nameof(faces));
 
             var defaultTypeId = doc.GetDefaultElementTypeId(ElementTypeGroup.CurtainSystemType);
+
             var type = doc.GetElement(defaultTypeId) as CurtainSystemType;
+
             var cloneType = type?.Duplicate(Guid.NewGuid().ToString()) as CurtainSystemType;
 
             return doc.Create.NewCurtainSystem(faces, cloneType);

@@ -53,6 +53,7 @@ using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+
 using Newtonsoft.Json;
 
 namespace KeLi.Common.Tool.Web
@@ -84,6 +85,7 @@ namespace KeLi.Common.Tool.Web
                 postData = CreateParameter(postParamDict);
 
             var response = parm.CreateHttpResponse(postData);
+
             var stream = response.GetResponseStream();
 
             if (stream is null)
@@ -124,7 +126,9 @@ namespace KeLi.Common.Tool.Web
                 throw new ArgumentNullException(nameof(parm));
 
             var response = parm.CreateHttpResponse(string.Empty, filePath);
+
             var st = response.GetResponseStream();
+
             var results = new byte[response.ContentLength];
 
             if (st is null)
@@ -148,6 +152,7 @@ namespace KeLi.Common.Tool.Web
                 throw new ArgumentNullException(nameof(parm));
 
             var response = parm.CreateHttpResponse(string.Empty, filePath);
+
             var stream = response.GetResponseStream();
 
             if (stream is null)
@@ -175,25 +180,39 @@ namespace KeLi.Common.Tool.Web
             using (var fs = new FileStream(filePath.FullName, FileMode.Open, FileAccess.Read))
             {
                 var boundary = $"----------{DateTime.Now.Ticks:x}";
+
                 var boundaryBytes = Encoding.ASCII.GetBytes("\r\n--" + boundary + "\r\n");
+
                 var sb = new StringBuilder();
 
                 sb.Append("--");
+
                 sb.Append(boundary);
+
                 sb.AppendLine();
+
                 sb.Append($"Content-Disposition: \"form-data; name=file; filename={fs.Name}\"");
+
                 sb.AppendLine();
+
                 sb.Append("Content-Type: ");
+
                 sb.Append("application/octet-stream");
+
                 sb.AppendLine();
+
                 sb.AppendLine();
 
                 var postHeader = sb.ToString();
+
                 var postHeaderBytes = Encoding.UTF8.GetBytes(postHeader);
+
                 var fileContent = new byte[fs.Length];
 
                 request.ContentType = $"multipart/form-data; boundary={boundary}";
+
                 request.ContentLength = fs.Length + postHeaderBytes.Length + boundaryBytes.Length;
+
                 fs.Read(fileContent, 0, fileContent.Length);
 
                 using (var stream = request.GetRequestStream())
@@ -271,25 +290,37 @@ namespace KeLi.Common.Tool.Web
             }
 
             request.Accept = "text/html, application/xhtml+xml, application/json, text/javascript, */*; q=0.01";
+
             request.Headers["Accept-Language"] = "en-US,en;q=0.5";
+
             request.Headers["Pragma"] = "no-cache";
+
             request.Headers.Add("X-Requested-With", "XMLHttpRequest");
+
             request.Headers.Add("x-authentication-token", parm.Token);
+
             request.Headers.Add("X-CORAL-TENANT", parm.TenantId);
+
             request.Headers.Add("X-AUTH-ID", parm.AuthId);
+
             request.Headers.Add("X-Authorization", parm.Authorization);
+
             request.Referer = parm.Referer;
+
             request.UserAgent = parm.UserAgent;
+
             request.ContentType = parm.ContentType;
 
             if (parm.Cookies != null)
             {
                 request.CookieContainer = new CookieContainer();
+
                 request.CookieContainer.Add(parm.Cookies);
             }
             else
             {
                 request.CookieContainer = new CookieContainer();
+
                 request.CookieContainer.Add(Cookies);
             }
 
@@ -315,7 +346,9 @@ namespace KeLi.Common.Tool.Web
                 throw new NullReferenceException(nameof(result));
 
             Cookies.Add(request.CookieContainer.GetCookies(new Uri(@"http:\\" + new Uri(parm.Url).Host)));
+
             Cookies.Add(request.CookieContainer.GetCookies(new Uri(@"https:\\" + new Uri(parm.Url).Host)));
+
             Cookies.Add(result.Cookies);
 
             return result;

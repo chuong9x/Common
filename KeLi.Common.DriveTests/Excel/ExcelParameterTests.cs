@@ -1,5 +1,5 @@
-﻿using System.IO;
-using KeLi.Common.Drive.Excel;
+﻿using KeLi.Common.Drive.Excel;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace KeLi.Common.DriveTests.Excel
@@ -10,8 +10,10 @@ namespace KeLi.Common.DriveTests.Excel
         [TestMethod]
         public void ExcelParamTest()
         {
-            var filePath = @"Resources\Instance.xlsx";
-            var tplPath = @"Resources\Template.xlsx";
+            const string filePath = @"Resources\Instance.xlsx";
+
+            const string tplPath = @"Resources\Template.xlsx";
+
             var param = new ExcelParameter(filePath, tplPath);
 
             Assert.AreEqual(param.FilePath.Length, param.TemplatePath.Length);
