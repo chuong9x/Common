@@ -62,6 +62,7 @@ namespace KeLi.Common.Drive.Excel
 
         /// <summary>
         ///     Excel parameter.
+        ///     If writes data to excel, template file must exist.
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="tplPath"></param>
@@ -79,6 +80,7 @@ namespace KeLi.Common.Drive.Excel
 
         /// <summary>
         ///     Excel parameter.
+        ///     If writes data to excel, template file must exist.
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="tplPath"></param>
