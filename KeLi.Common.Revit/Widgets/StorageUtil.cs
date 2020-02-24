@@ -187,6 +187,7 @@ namespace KeLi.Common.Revit.Widgets
             if (Equals(uiapp.ActiveUIDocument.Document, doc))
             {
                 var modelPath = new FilePath(tmpRvt);
+
                 var opt = new OpenOptions();
 
                 uiapp.OpenAndActivateDocument(modelPath, opt, false);
