@@ -84,6 +84,9 @@ namespace KeLi.Common.Revit.Builders
 
             var tplPath = app.GeTemplateFilePath(parm.TemplateFileName);
 
+            if (!File.Exists(tplPath))
+                throw new FileNotFoundException(tplPath);
+
             var fdoc = app.NewFamilyDocument(tplPath);
 
             fdoc.AutoTransaction(() =>

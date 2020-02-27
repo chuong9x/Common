@@ -50,7 +50,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Structure;
 
@@ -61,6 +60,10 @@ using KeLi.Common.Revit.Relations;
 using KeLi.Common.Revit.Widgets;
 
 using static Autodesk.Revit.DB.BuiltInParameter;
+
+using Room = Autodesk.Revit.DB.SpatialElement;
+using App = Autodesk.Revit.ApplicationServices.Application;
+using Parameter = KeLi.Common.Revit.Builders.CurtainSystemParameter;
 
 namespace KeLi.Common.Revit.Builders
 {
@@ -75,8 +78,8 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="app"></param>
         /// <param name="pnlType"></param>
-        /// <param name="tplFileName"></param>
-        public static List<CurtainSystem> CreateWallCurtainSystemList(this Document doc, Application app, PanelType pnlType, string tplFileName)
+        /// <param name="tplName"></param>
+        public static List<CurtainSystem> CreateCurtainWallList(this Document doc, App app, PanelType pnlType, string tplName)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -87,15 +90,15 @@ namespace KeLi.Common.Revit.Builders
             if (pnlType is null)
                 throw new ArgumentNullException(nameof(pnlType));
 
-            if (tplFileName is null)
-                throw new ArgumentNullException(nameof(tplFileName));
+            if (tplName is null)
+                throw new ArgumentNullException(nameof(tplName));
 
             var rooms = doc.GetSpatialElementList();
 
             var results = new List<CurtainSystem>();
 
             foreach (var room in rooms)
-                results.AddRange(doc.CreateWallCurtainSystemList(app, room, pnlType, tplFileName));
+                results.AddRange(doc.CreateCurtainWallList(app, room, pnlType, tplName));
 
             return results;
         }
@@ -107,8 +110,8 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="app"></param>
         /// <param name="room"></param>
         /// <param name="pnlType"></param>
-        /// <param name="tplFileName"></param>
-        public static List<CurtainSystem> CreateWallCurtainSystemList(this Document doc, Application app, SpatialElement room, PanelType pnlType, string tplFileName)
+        /// <param name="tplName"></param>
+        public static List<CurtainSystem> CreateCurtainWallList(this Document doc, App app, Room room, PanelType pnlType, string tplName)
         {
             if (doc is null)
                 throw new NullReferenceException(nameof(doc));
@@ -122,8 +125,8 @@ namespace KeLi.Common.Revit.Builders
             if (pnlType is null)
                 throw new NullReferenceException(nameof(pnlType));
 
-            if (tplFileName is null)
-                throw new NullReferenceException(nameof(tplFileName));
+            if (tplName is null)
+                throw new NullReferenceException(nameof(tplName));
 
             var walls = room.GetBoundaryWallList(doc);
 
@@ -131,9 +134,9 @@ namespace KeLi.Common.Revit.Builders
 
             foreach (var wall in walls)
             {
-                var parm = new CurtainSystemParameter(wall, room, pnlType, tplFileName);
+                var parm = new Parameter(wall, room, pnlType, tplName);
 
-                results.Add(doc.CreateWallCurtainSystem(app, parm));
+                results.Add(doc.CreateCurtainWall(app, parm));
             }
 
             return results;
@@ -145,7 +148,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="app"></param>
         /// <param name="parms"></param>
-        public static List<CurtainSystem> CreateWallCurtainSystemList(this Document doc, Application app, IEnumerable<CurtainSystemParameter> parms)
+        public static List<CurtainSystem> CreateCurtainWallList(this Document doc, App app, IEnumerable<Parameter> parms)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -156,7 +159,7 @@ namespace KeLi.Common.Revit.Builders
             if (parms is null)
                 throw new NullReferenceException(nameof(parms));
 
-            return parms.Select(parm => doc.CreateWallCurtainSystem(app, parm)).ToList();
+            return parms.Select(parm => doc.CreateCurtainWall(app, parm)).ToList();
         }
 
         /// <summary>
@@ -165,7 +168,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="app"></param>
         /// <param name="parm"></param>
-        public static CurtainSystem CreateWallCurtainSystem(this Document doc, Application app, CurtainSystemParameter parm)
+        public static CurtainSystem CreateCurtainWall(this Document doc, App app, Parameter parm)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -241,8 +244,8 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="app"></param>
         /// <param name="pnlType"></param>
-        /// <param name="tplFileName"></param>
-        public static List<CurtainSystem> CreateFloorCurtainSystemList(this Document doc, Application app, PanelType pnlType, string tplFileName)
+        /// <param name="tplName"></param>
+        public static List<CurtainSystem> CreateCurtainFloorList(this Document doc, App app, PanelType pnlType, string tplName)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -253,15 +256,15 @@ namespace KeLi.Common.Revit.Builders
             if (pnlType is null)
                 throw new ArgumentNullException(nameof(pnlType));
 
-            if (tplFileName is null)
-                throw new ArgumentNullException(nameof(tplFileName));
+            if (tplName is null)
+                throw new ArgumentNullException(nameof(tplName));
 
             var rooms = doc.GetSpatialElementList();
 
             var results = new List<CurtainSystem>();
 
             foreach (var room in rooms)
-                results.Add(doc.CreateFloorCurtainSystem(app, room, pnlType, tplFileName));
+                results.Add(doc.CreateCurtainFloor(app, room, pnlType, tplName));
 
             return results;
         }
@@ -273,8 +276,8 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="app"></param>
         /// <param name="room"></param>
         /// <param name="pnlType"></param>
-        /// <param name="tplFileName"></param>
-        public static CurtainSystem CreateFloorCurtainSystem(this Document doc, Application app, SpatialElement room, PanelType pnlType, string tplFileName)
+        /// <param name="tplName"></param>
+        public static CurtainSystem CreateCurtainFloor(this Document doc, App app, Room room, PanelType pnlType, string tplName)
         {
             if (doc is null)
                 throw new NullReferenceException(nameof(doc));
@@ -288,12 +291,12 @@ namespace KeLi.Common.Revit.Builders
             if (pnlType is null)
                 throw new NullReferenceException(nameof(pnlType));
 
-            if (tplFileName is null)
-                throw new NullReferenceException(nameof(tplFileName));
+            if (tplName is null)
+                throw new NullReferenceException(nameof(tplName));
 
-            var parm = new CurtainSystemParameter(room, pnlType, tplFileName);
+            var parm = new Parameter(room, pnlType, tplName);
 
-            return doc.CreateFloorCurtainSystem(app, parm);
+            return doc.CreateCurtainFloor(app, parm);
         }
 
         /// <summary>
@@ -302,7 +305,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="app"></param>
         /// <param name="parms"></param>
-        public static List<CurtainSystem> CreateFloorCurtainSystemList(this Document doc, Application app, IEnumerable<CurtainSystemParameter> parms)
+        public static List<CurtainSystem> CreateCurtainFloorList(this Document doc, App app, IEnumerable<Parameter> parms)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -313,7 +316,7 @@ namespace KeLi.Common.Revit.Builders
             if (parms is null)
                 throw new NullReferenceException(nameof(parms));
 
-            return parms.Select(parm => doc.CreateFloorCurtainSystem(app, parm)).ToList();
+            return parms.Select(parm => doc.CreateCurtainFloor(app, parm)).ToList();
         }
 
         /// <summary>
@@ -323,7 +326,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="app"></param>
         /// <param name="parm"></param>
         /// <returns></returns>
-        public static CurtainSystem CreateFloorCurtainSystem(this Document doc, Application app, CurtainSystemParameter parm)
+        public static CurtainSystem CreateCurtainFloor(this Document doc, App app, Parameter parm)
         {
             var edges = parm.Room.GetEdgeLineList(SpatialElementBoundaryLocation.CoreBoundary);
 

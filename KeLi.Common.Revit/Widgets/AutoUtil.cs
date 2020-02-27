@@ -85,6 +85,32 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
+        ///     To auto execute transaction.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="func"></param>
+        public static Element AutoTransaction(this Document doc, Func<Element> func)
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (func is null)
+                throw new ArgumentNullException(nameof(func));
+
+            using (var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name))
+            {
+                trans.Start();
+
+                var result = func.Invoke();
+
+                if (trans.Commit() != TransactionStatus.Committed)
+                    trans.RollBack();
+
+                return result;
+            }
+        }
+
+        /// <summary>
         ///     To repeat call command.
         /// </summary>
         /// <param name="act"></param>
