@@ -2,13 +2,8 @@
 {
     public partial class CollectionConverterTests
     {
-        public class TestA
+        public class Test
         {
-            public TestA(int id)
-            {
-                Id = id;
-            }
-
             public int Id { get; set; }
         }
     }

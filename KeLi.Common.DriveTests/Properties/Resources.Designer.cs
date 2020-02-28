@@ -59,25 +59,5 @@ namespace KeLi.Common.DriveTests.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Instance {
-            get {
-                object obj = ResourceManager.GetObject("Instance", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Template {
-            get {
-                object obj = ResourceManager.GetObject("Template", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

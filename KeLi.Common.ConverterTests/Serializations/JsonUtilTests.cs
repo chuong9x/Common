@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 
 using KeLi.Common.Converter.Serializations;
 
@@ -13,17 +12,17 @@ namespace KeLi.Common.ConverterTests.Serializations
         [TestMethod]
         public void SerializeTest()
         {
-            var stu1 = new TestC(1)  { Name = "Jack" };
+            var stu1 = new Student(1)  { Name = "Jack" };
 
-            var stu2 = new TestC(2) { Name = "Tom" };
+            var stu2 = new Student(2) { Name = "Tom" };
 
-            JsonUtil.Serialize(new FileInfo("JsonTest.txt"), new[] { stu1,stu2 });
+            JsonUtil.Serialize("JsonTest.txt", new[] { stu1,stu2 });
         }
 
         [TestMethod]
         public void DeserializeTest()
         {
-            var stus = JsonUtil.Deserialize<TestC[]>(new FileInfo("JsonTest.txt"));
+            var stus = JsonUtil.Deserialize<Student[]>("JsonTest.txt");
 
             Assert.AreEqual(stus.Count() == 2, true);
         }

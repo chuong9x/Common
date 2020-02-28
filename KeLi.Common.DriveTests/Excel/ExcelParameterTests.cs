@@ -10,11 +10,7 @@ namespace KeLi.Common.DriveTests.Excel
         [TestMethod]
         public void ExcelParamTest()
         {
-            const string filePath = @"Resources\Instance.xlsx";
-
-            const string tplPath = @"Resources\Template.xlsx";
-
-            var param = new ExcelParameter(filePath, tplPath);
+            var param = new ExcelParameter(@"Resources\Instance.xlsx", @"Resources\Template.xlsx");
 
             Assert.AreEqual(param.FilePath.Length, param.TemplatePath.Length);
         }
