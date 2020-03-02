@@ -62,6 +62,25 @@ namespace KeLi.Common.Revit.Widgets
     public static class RoomUtil
     {
         /// <summary>
+        ///     Gets boundary curve list of the room.
+        /// </summary>
+        /// <param name="room"></param>
+        /// <param name="opt"></param>
+        /// <returns></returns>
+        public static List<Curve> GetBoundaryLineList(this SpatialElement room, Option opt)
+        {
+            if (room is null)
+                throw new ArgumentNullException(nameof(room));
+
+            if (opt is null)
+                throw new ArgumentNullException(nameof(opt));
+
+            var segs = room.GetBoundarySegments(opt).SelectMany(s => s);
+
+            return segs.Select(seg => seg.GetCurve()).ToList();
+        }
+
+        /// <summary>
         ///     Gets boundary wall list of the room.
         /// </summary>
         /// <param name="room"></param>
