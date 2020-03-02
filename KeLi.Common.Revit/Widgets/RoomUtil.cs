@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 12/27/2019 07:13:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -48,118 +48,56 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 using Autodesk.Revit.DB;
 
-using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledException;
+using Option = Autodesk.Revit.DB.SpatialElementBoundaryOptions;
 
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    ///     Auto action utility.
+    ///     Room utility.
     /// </summary>
-    public static class AutoUtil
+    public static class RoomUtil
     {
         /// <summary>
-        ///     To auto execute transaction.
+        ///     Gets boundary wall list of the room.
         /// </summary>
+        /// <param name="room"></param>
         /// <param name="doc"></param>
-        /// <param name="act"></param>
-        public static void AutoTransaction(this Document doc, Action act)
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            if (act is null)
-                throw new ArgumentNullException(nameof(act));
-
-            using (var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name))
-            {
-                trans.Start();
-
-                act.Invoke();
-
-                if (trans.Commit() != TransactionStatus.Committed)
-                    trans.RollBack();
-            }
-        }
-
-        /// <summary>
-        ///     To auto execute transaction.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="func"></param>
-        public static Element AutoTransaction(this Document doc, Func<Element> func)
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            if (func is null)
-                throw new ArgumentNullException(nameof(func));
-
-            using (var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name))
-            {
-                trans.Start();
-
-                var result = func.Invoke();
-
-                if (trans.Commit() != TransactionStatus.Committed)
-                    trans.RollBack();
-
-                return result;
-            }
-        }
-
-        /// <summary>
-        ///     To auto execute transaction.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="func"></param>
-        public static List<Element> AutoTransaction(this Document doc, Func<IEnumerable<Element>> func)
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            if (func is null)
-                throw new ArgumentNullException(nameof(func));
-
-            using (var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name))
-            {
-                trans.Start();
-
-                var result = func.Invoke();
-
-                if (trans.Commit() != TransactionStatus.Committed)
-                    trans.RollBack();
-
-                return result.ToList();
-            }
-        }
-
-        /// <summary>
-        ///     To repeat call command.
-        /// </summary>
-        /// <param name="act"></param>
+        /// <param name="opt"></param>
+        /// <param name="maxThickness"></param>
         /// <returns></returns>
-        public static bool RepeatCommand(this Action act)
+        public static List<Wall> GetBoundaryWallList(this SpatialElement room, Document doc, Option opt = null, double maxThickness = 80)
         {
-            if (act is null)
-                throw new ArgumentNullException(nameof(act));
+            if (room is null)
+                throw new ArgumentNullException(nameof(room));
 
-            try
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            var results = new List<Wall>();
+
+            var segments = room.GetBoundarySegments(opt).SelectMany(s => s);
+
+            foreach (var segment in segments)
             {
-                act.Invoke();
+                // It's invalid!
+                if (segment.ElementId.IntegerValue == -1)
+                    continue;
 
-                RepeatCommand(act);
-            }
-            catch (OperationCanceledException)
-            {
-                return false;
+                // Because base room boundary to do, so one wall maybe be picked up some times.
+                if (results.FirstOrDefault(f => f.Id == segment.ElementId) != null)
+                    continue;
+
+                if (doc.GetElement(segment.ElementId) is Wall wall)
+                    results.Add(wall);
             }
 
-            return true;
+            const BuiltInParameter parmEnum = BuiltInParameter.WALL_ATTR_WIDTH_PARAM;
+
+            return results.Where(w => Convert.ToDouble(w.WallType.get_Parameter(parmEnum).AsValueString()) < maxThickness).ToList();
         }
     }
 }

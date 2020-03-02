@@ -58,14 +58,17 @@ namespace KeLi.Common.Revit.Builders
     public class CurtainSystemParameter
     {
         /// <summary>
-        ///     Curtain system parameter.
+        ///     Curtain system parameter for ceiling, floor, etc.
         /// </summary>
         /// <param name="room"></param>
+        /// <param name="typeName"></param>
         /// <param name="pnlType"></param>
         /// <param name="tplFileName"></param>
-        public CurtainSystemParameter(SpatialElement room, PanelType pnlType, string tplFileName)
+        public CurtainSystemParameter(SpatialElement room, string typeName, PanelType pnlType, string tplFileName)
         {
             Room = room ?? throw new ArgumentNullException(nameof(room));
+
+            TypeName = typeName ?? throw new ArgumentNullException(nameof(typeName));
 
             PanelType = pnlType ?? throw new ArgumentNullException(nameof(pnlType));
 
@@ -73,27 +76,35 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        ///     Curtain system parameter.
+        ///     Curtain system parameter for wall.
         /// </summary>
-        /// <param name="refWall"></param>
         /// <param name="room"></param>
+        /// <param name="wall"></param>
+        /// <param name="typeName"></param>
         /// <param name="pnlType"></param>
-        /// <param name="tplFileName"></param>
-        public CurtainSystemParameter(Wall refWall, SpatialElement room, PanelType pnlType, string tplFileName)
+        /// <param name="tplName"></param>
+        public CurtainSystemParameter(SpatialElement room, Wall wall, string typeName, PanelType pnlType, string tplName)
         {
-            RefWall = refWall ?? throw new ArgumentNullException(nameof(refWall));
+            ReferenceWall = wall ?? throw new ArgumentNullException(nameof(wall));
 
             Room = room ?? throw new ArgumentNullException(nameof(room));
 
+            TypeName = typeName ?? throw new ArgumentNullException(nameof(typeName));
+
             PanelType = pnlType ?? throw new ArgumentNullException(nameof(pnlType));
 
-            TemplateFileName = tplFileName ?? throw new ArgumentNullException(nameof(tplFileName));
+            TemplateFileName = tplName ?? throw new ArgumentNullException(nameof(tplName));
         }
+
+        /// <summary>
+        ///     Curtain system's type name.
+        /// </summary>
+        public string TypeName { get; set; }
 
         /// <summary>
         ///     Reference wall.
         /// </summary>
-        public Wall RefWall { get; set; }
+        public Wall ReferenceWall { get; set; }
 
         /// <summary>
         ///     Reference room.

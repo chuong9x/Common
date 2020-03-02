@@ -77,15 +77,19 @@ namespace KeLi.Common.Revit.Builders
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="app"></param>
+        /// <param name="typeName"></param>
         /// <param name="pnlType"></param>
         /// <param name="tplName"></param>
-        public static List<CurtainSystem> CreateCurtainWallList(this Document doc, App app, PanelType pnlType, string tplName)
+        public static List<CurtainSystem> CreateCurtainWallList(this Document doc, App app, string typeName, PanelType pnlType, string tplName)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
             if (app is null)
                 throw new ArgumentNullException(nameof(app));
+
+            if (typeName is null)
+                throw new NullReferenceException(nameof(typeName));
 
             if (pnlType is null)
                 throw new ArgumentNullException(nameof(pnlType));
@@ -98,7 +102,7 @@ namespace KeLi.Common.Revit.Builders
             var results = new List<CurtainSystem>();
 
             foreach (var room in rooms)
-                results.AddRange(doc.CreateCurtainWallList(app, room, pnlType, tplName));
+                results.AddRange(doc.CreateCurtainWallList(app, room, typeName, pnlType, tplName));
 
             return results;
         }
@@ -109,18 +113,22 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="app"></param>
         /// <param name="room"></param>
+        /// <param name="typeName"></param>
         /// <param name="pnlType"></param>
         /// <param name="tplName"></param>
-        public static List<CurtainSystem> CreateCurtainWallList(this Document doc, App app, Room room, PanelType pnlType, string tplName)
+        public static List<CurtainSystem> CreateCurtainWallList(this Document doc, App app, Room room, string typeName, PanelType pnlType, string tplName)
         {
             if (doc is null)
                 throw new NullReferenceException(nameof(doc));
 
+            if (app is null)
+                throw new NullReferenceException(nameof(app));
+
             if (room is null)
                 throw new NullReferenceException(nameof(room));
 
-            if (app is null)
-                throw new NullReferenceException(nameof(app));
+            if (typeName is null)
+                throw new NullReferenceException(nameof(typeName));
 
             if (pnlType is null)
                 throw new NullReferenceException(nameof(pnlType));
@@ -130,13 +138,15 @@ namespace KeLi.Common.Revit.Builders
 
             var walls = room.GetBoundaryWallList(doc);
 
+            var view3D = doc.Get3DViewList().FirstOrDefault();
+
             var results = new List<CurtainSystem>();
 
             foreach (var wall in walls)
             {
-                var parm = new Parameter(wall, room, pnlType, tplName);
+                var parm = new Parameter(room, wall, typeName, pnlType, tplName);
 
-                results.Add(doc.CreateCurtainWall(app, parm));
+                results.Add(doc.CreateCurtainWall(app, parm, view3D));
             }
 
             return results;
@@ -159,7 +169,9 @@ namespace KeLi.Common.Revit.Builders
             if (parms is null)
                 throw new NullReferenceException(nameof(parms));
 
-            return parms.Select(parm => doc.CreateCurtainWall(app, parm)).ToList();
+            var view3D = doc.Get3DViewList().FirstOrDefault();
+
+            return parms.Select(parm => doc.CreateCurtainWall(app, parm, view3D)).ToList();
         }
 
         /// <summary>
@@ -168,7 +180,8 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="app"></param>
         /// <param name="parm"></param>
-        public static CurtainSystem CreateCurtainWall(this Document doc, App app, Parameter parm)
+        /// <param name="view3D"></param>
+        public static CurtainSystem CreateCurtainWall(this Document doc, App app, Parameter parm, View3D view3D)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -179,30 +192,20 @@ namespace KeLi.Common.Revit.Builders
             if (parm is null)
                 throw new NullReferenceException(nameof(parm));
 
-            var roomc = parm.Room.GetBoundingBox(doc).GetBoxCenter();
+            var face = parm.ReferenceWall.GetPlanarFaceList(parm.Room, doc, view3D).LastOrDefault();
 
-            var wline = parm.RefWall.GetLocationCurve() as Line;
-
-            var wdir = wline.GetLineDirection(roomc);
-
-            var innerNormal = wdir.GetInnerNormal();
-
-            var face = parm.RefWall.GetInnerFace(roomc);
+            if (face == null)
+                return null;
 
             var profile = face.GetEdgesAsCurveLoops().ToCurveArrArray();
 
-#if R2016
-            var plane = new Plane(innerNormal, XYZ.Zero);
-#endif
-#if !R2016
-            var plane = Plane.CreateByNormalAndOrigin(innerNormal, XYZ.Zero);
-#endif
+            var plane = face.FaceNormal.CreatePlane(XYZ.Zero);
 
             var symbolParm = new FamilySymbolParameter(parm.TemplateFileName, profile, plane, 1);
 
             var symbol = doc.CreateExtrusionSymbol(app, symbolParm);
 
-            var lvl = doc.GetElement(parm.RefWall.LevelId) as Level;
+            var lvl = doc.GetElement(parm.Room.LevelId) as Level;
 
             var minPt = profile.ToCurveList().GetDistinctPointList().GetMinPoint();
 
@@ -216,10 +219,10 @@ namespace KeLi.Common.Revit.Builders
 
                 doc.Regenerate();
 
-                // The instance has thickness.
-                var faces = inst.GetFaceList(-innerNormal).ToFaceArray();
+                 // The instance has thickness.
+                 var faces = inst.GetFaceList(-face.FaceNormal).ToFaceArray();
 
-                result = doc.CreateCurtainSystem(faces);
+                result = doc.CreateCurtainSystem(parm.TypeName, faces);
 
                 doc.Delete(inst.Id);
 
@@ -232,10 +235,11 @@ namespace KeLi.Common.Revit.Builders
 
                 var thickness = parm.PanelType.get_Parameter(CURTAIN_WALL_SYSPANEL_THICKNESS).AsDouble();
 
-                ElementTransformUtils.MoveElement(doc, result.Id, innerNormal * thickness / 2);
+                ElementTransformUtils.MoveElement(doc, result.Id, face.FaceNormal * thickness / 2);
             });
 
             return result;
+
         }
 
         /// <summary>
@@ -243,9 +247,10 @@ namespace KeLi.Common.Revit.Builders
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="app"></param>
+        /// <param name="typeName"></param>
         /// <param name="pnlType"></param>
         /// <param name="tplName"></param>
-        public static List<CurtainSystem> CreateCurtainFloorList(this Document doc, App app, PanelType pnlType, string tplName)
+        public static List<CurtainSystem> CreateCurtainFloorList(this Document doc, App app, string typeName, PanelType pnlType, string tplName)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -264,7 +269,7 @@ namespace KeLi.Common.Revit.Builders
             var results = new List<CurtainSystem>();
 
             foreach (var room in rooms)
-                results.Add(doc.CreateCurtainFloor(app, room, pnlType, tplName));
+                results.Add(doc.CreateCurtainFloor(app, room, typeName, pnlType, tplName));
 
             return results;
         }
@@ -275,9 +280,10 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="app"></param>
         /// <param name="room"></param>
+        /// <param name="typeName"></param>
         /// <param name="pnlType"></param>
         /// <param name="tplName"></param>
-        public static CurtainSystem CreateCurtainFloor(this Document doc, App app, Room room, PanelType pnlType, string tplName)
+        public static CurtainSystem CreateCurtainFloor(this Document doc, App app, Room room, string typeName, PanelType pnlType, string tplName)
         {
             if (doc is null)
                 throw new NullReferenceException(nameof(doc));
@@ -294,7 +300,7 @@ namespace KeLi.Common.Revit.Builders
             if (tplName is null)
                 throw new NullReferenceException(nameof(tplName));
 
-            var parm = new Parameter(room, pnlType, tplName);
+            var parm = new Parameter(room, typeName, pnlType, tplName);
 
             return doc.CreateCurtainFloor(app, parm);
         }
@@ -328,11 +334,11 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static CurtainSystem CreateCurtainFloor(this Document doc, App app, Parameter parm)
         {
-            var edges = parm.Room.GetEdgeLineList(SpatialElementBoundaryLocation.CoreBoundary);
+            var edges = parm.Room.GetBoundaryWallList(doc).Select(s => s.GetLocationCurve());
 
             var profile = edges.ToCurveArrArray();
 
-            var plane = Plane.CreateByNormalAndOrigin(XYZ.BasisZ, XYZ.Zero);
+            var plane = XYZ.BasisZ.CreatePlane(XYZ.Zero);
 
             var symbolParm = new FamilySymbolParameter(parm.TemplateFileName, profile, plane, 1);
 
@@ -353,7 +359,7 @@ namespace KeLi.Common.Revit.Builders
                 // The instance has thickness.
                 var faces = inst.GetFaceList(-XYZ.BasisZ).ToFaceArray();
 
-                result = doc.CreateCurtainSystem(faces);
+                result = doc.CreateCurtainSystem(parm.TypeName, faces);
 
                 doc.Delete(inst.Id);
 
@@ -376,9 +382,10 @@ namespace KeLi.Common.Revit.Builders
         ///     Creates a new CurtainSystem with transaction.
         /// </summary>
         /// <param name="doc"></param>
+        /// <param name="typeName"></param>
         /// <param name="faces"></param>
         /// <returns></returns>
-        public static CurtainSystem CreateCurtainSystem(this Document doc, FaceArray faces)
+        public static CurtainSystem CreateCurtainSystem(this Document doc, string typeName, FaceArray faces)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -390,7 +397,7 @@ namespace KeLi.Common.Revit.Builders
 
             var type = doc.GetElement(defaultTypeId) as CurtainSystemType;
 
-            var cloneType = type?.Duplicate(Guid.NewGuid().ToString()) as CurtainSystemType;
+            var cloneType = type?.Duplicate(typeName) as CurtainSystemType;
 
             return doc.Create.NewCurtainSystem(faces, cloneType);
         }
