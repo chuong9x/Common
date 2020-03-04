@@ -52,9 +52,9 @@ using System.Linq;
 
 using Autodesk.Revit.DB;
 
-using KeLi.Common.Revit.Geometry;
+using Option = Autodesk.Revit.DB.SpatialElementBoundaryOptions;
 
-namespace KeLi.Common.Revit.Filters
+namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
     ///     Room utility.
@@ -62,37 +62,22 @@ namespace KeLi.Common.Revit.Filters
     public static class RoomUtil
     {
         /// <summary>
-        ///     Gets the room's edge list.
+        ///     Gets boundary curve list of the room.
         /// </summary>
         /// <param name="room"></param>
-        /// <param name="boundary"></param>
+        /// <param name="opt"></param>
         /// <returns></returns>
-        public static List<Line> GetEdgeLineList(this SpatialElement room, SpatialElementBoundaryLocation boundary)
+        public static List<Curve> GetBoundaryLineList(this SpatialElement room, Option opt)
         {
             if (room is null)
                 throw new ArgumentNullException(nameof(room));
 
-            var result = new List<Line>();
-
-            var opt = new SpatialElementBoundaryOptions
-            {
-                StoreFreeBoundaryFaces = true,
-
-                SpatialElementBoundaryLocation = boundary
-            };
+            if (opt is null)
+                throw new ArgumentNullException(nameof(opt));
 
             var segs = room.GetBoundarySegments(opt).SelectMany(s => s);
 
-            foreach (var seg in segs)
-            {
-                var sp = seg.GetCurve().GetEndPoint(0);
-
-                var ep = seg.GetCurve().GetEndPoint(1);
-
-                result.Add(Line.CreateBound(sp, ep));
-            }
-
-            return result;
+            return segs.Select(s => s.GetCurve()).ToList();
         }
 
         /// <summary>
@@ -100,9 +85,10 @@ namespace KeLi.Common.Revit.Filters
         /// </summary>
         /// <param name="room"></param>
         /// <param name="doc"></param>
+        /// <param name="opt"></param>
         /// <param name="maxThickness"></param>
         /// <returns></returns>
-        public static List<Wall> GetBoundaryWallList(this SpatialElement room, Document doc, double maxThickness = 80)
+        public static List<Wall> GetBoundaryWallList(this SpatialElement room, Document doc, Option opt = null, double maxThickness = 80)
         {
             if (room is null)
                 throw new ArgumentNullException(nameof(room));
@@ -110,14 +96,11 @@ namespace KeLi.Common.Revit.Filters
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            const BuiltInParameter parmEnum = BuiltInParameter.WALL_ATTR_WIDTH_PARAM;
-
             var results = new List<Wall>();
 
-            var loops = room.GetBoundarySegments(new SpatialElementBoundaryOptions());
+            var segments = room.GetBoundarySegments(opt).SelectMany(s => s);
 
-            foreach (var loop in loops)
-            foreach (var segment in loop)
+            foreach (var segment in segments)
             {
                 // It's invalid!
                 if (segment.ElementId.IntegerValue == -1)
@@ -131,98 +114,9 @@ namespace KeLi.Common.Revit.Filters
                     results.Add(wall);
             }
 
+            const BuiltInParameter parmEnum = BuiltInParameter.WALL_ATTR_WIDTH_PARAM;
+
             return results.Where(w => Convert.ToDouble(w.WallType.get_Parameter(parmEnum).AsValueString()) < maxThickness).ToList();
-        }
-
-        /// <summary>
-        ///     Gets inner face of wall.
-        /// </summary>
-        /// <param name="wall"></param>
-        /// <param name="refPt"></param>
-        /// <returns></returns>
-        public static Face GetInnerFace(this Wall wall, XYZ refPt)
-        {
-            if (wall is null)
-                throw new ArgumentNullException(nameof(wall));
-
-            if (refPt is null)
-                throw new ArgumentNullException(nameof(refPt));
-
-            var line = wall.GetLocationCurve() as Line;
-
-            if (line is null)
-                throw new Exception("Curve wall isn't supported!");
-
-            var wdir = GetLineDirection(line, refPt);
-
-            var innerNormal = GetInnerNormal(wdir);
-
-            return wall.GetFaceList(innerNormal).FirstOrDefault();
-        }
-
-        /// <summary>
-        ///     Gets inner direction noraml.
-        /// </summary>
-        /// <param name="dir"></param>
-        /// <returns></returns>
-        public static XYZ GetInnerNormal(this LineDirection dir)
-        {
-            switch (dir)
-            {
-                case LineDirection.East:
-                    return -XYZ.BasisX;
-
-                case LineDirection.West:
-                    return XYZ.BasisX;
-
-                case LineDirection.South:
-                    return XYZ.BasisY;
-
-                case LineDirection.North:
-                    return -XYZ.BasisY;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
-            }
-        }
-
-        /// <summary>
-        ///     Gets direction of the line by a reference specified point.
-        /// </summary>
-        /// <param name="line"></param>
-        /// <param name="refPt"></param>
-        /// <returns></returns>
-        public static LineDirection GetLineDirection(this Line line, XYZ refPt)
-        {
-            if (line is null)
-                throw new ArgumentNullException(nameof(line));
-
-            if (refPt is null)
-                throw new ArgumentNullException(nameof(refPt));
-
-            // X axis direction.
-            if (Math.Abs(line.Direction.Y) < 1e-6)
-            {
-                // South
-                if (line.Origin.Y < refPt.Y)
-                    return LineDirection.South;
-
-                // North
-                return LineDirection.North;
-            }
-
-            // Y axis direction.
-            if (Math.Abs(line.Direction.X) < 1e-6)
-            {
-                // West
-                if (line.Origin.X < refPt.X)
-                    return LineDirection.West;
-
-                // East
-                return LineDirection.East;
-            }
-
-            throw new Exception("The wall location's direction isn't supported!");
         }
     }
 }

@@ -95,6 +95,58 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
+        ///     Gets planar face list by ray that room cener point to element center point.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="elm"></param>
+        /// <param name="room"></param>
+        /// <param name="doc"></param>
+        /// <param name="view"></param>
+        /// <returns></returns>
+        public static List<PlanarFace> GetPlanarFaceList<T>(this T elm, SpatialElement room, Document doc, View3D view) where T: Element
+        {
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (room is null)
+                throw new ArgumentNullException(nameof(room));
+
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (view is null)
+                throw new ArgumentNullException(nameof(view));
+
+            var elmCenter = elm.GetBoundingBox(doc).GetBoxCenter();
+
+            var roomCenter = room.GetBoundingBox(doc).GetBoxCenter();
+
+            var direction = (elmCenter - roomCenter).Normalize();
+
+            var elmFilter = new ElementClassFilter(typeof(T));
+
+            var intersector = new ReferenceIntersector(elmFilter, FindReferenceTarget.Face, view);
+
+            var contexts = intersector.Find(roomCenter, direction);
+
+            var results = new List<PlanarFace>();
+
+            foreach (var context in contexts)
+            {
+                var reference = context.GetReference();
+
+                var refElm = doc.GetElement(reference.ElementId);
+
+                var face = refElm.GetGeometryObjectFromReference(reference) as Face;
+
+                if (face is PlanarFace planarFace)
+                    results.Add(planarFace);
+            }
+
+            return results;
+        }
+
+        /// <summary>
         ///     Gets the specified type of the element list.
         /// </summary>
         /// <param name="doc"></param>

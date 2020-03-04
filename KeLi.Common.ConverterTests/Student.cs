@@ -1,17 +1,17 @@
 ﻿using System;
 
-namespace KeLi.Common.ConverterTests.Serializations
+namespace KeLi.Common.ConverterTests
 {
     [Serializable]
-    public class TestC
+    public class Student
     {
-        public TestC()
+        public Student()
         {
             Id = 0;
             Name = null;
         }
 
-        public TestC(int id)
+        public Student(int id)
         {
             Id = id;
         }

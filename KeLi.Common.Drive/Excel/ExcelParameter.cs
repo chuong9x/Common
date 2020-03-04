@@ -74,10 +74,6 @@ namespace KeLi.Common.Drive.Excel
 
             SheetName = SHEET_NAME;
 
-            RowIndex = 1;
-
-            ColumnIndex = 0;
-
             if (tplPath != null && File.Exists(tplPath))
                 File.Copy(tplPath, filePath, true);
         }

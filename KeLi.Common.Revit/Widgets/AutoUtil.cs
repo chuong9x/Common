@@ -47,7 +47,9 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 using Autodesk.Revit.DB;
 
@@ -81,6 +83,58 @@ namespace KeLi.Common.Revit.Widgets
 
                 if (trans.Commit() != TransactionStatus.Committed)
                     trans.RollBack();
+            }
+        }
+
+        /// <summary>
+        ///     To auto execute transaction.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="func"></param>
+        public static T AutoTransaction<T>(this Document doc, Func<T> func) where T : Element
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (func is null)
+                throw new ArgumentNullException(nameof(func));
+
+            using (var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name))
+            {
+                trans.Start();
+
+                var result = func.Invoke();
+
+                if (trans.Commit() != TransactionStatus.Committed)
+                    trans.RollBack();
+
+                return result;
+            }
+        }
+
+        /// <summary>
+        ///     To auto execute transaction.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="func"></param>
+        public static List<T> AutoTransaction<T>(this Document doc, Func<IEnumerable<T>> func) where T : Element
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (func is null)
+                throw new ArgumentNullException(nameof(func));
+
+            using (var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name))
+            {
+                trans.Start();
+
+                var result = func.Invoke();
+
+                if (trans.Commit() != TransactionStatus.Committed)
+                    trans.RollBack();
+
+                return result.ToList();
             }
         }
 

@@ -128,7 +128,7 @@ namespace KeLi.Common.Revit.Builders
         /// <summary>
         ///     The sweep symbol's profile plane location.
         /// </summary>
-        public ProfilePlaneLocation Location { get; set; }
+        public Location Location { get; set; }
 
         /// <summary>
         ///     The sweep symbol's index.

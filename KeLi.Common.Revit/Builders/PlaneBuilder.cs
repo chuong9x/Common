@@ -92,7 +92,24 @@ namespace KeLi.Common.Revit.Builders
 
             var normal = line.Direction.CrossProduct(refAsix).Normalize();
 
-            return Plane.CreateByNormalAndOrigin(normal, line.Origin);
+            return normal.CreatePlane(refAsix);
+        }
+
+        /// <summary>
+        ///     Creates a new plane.
+        /// </summary>
+        /// <param name="normal"></param>
+        /// <param name="origin"></param>
+        /// <returns></returns>
+        public static Plane CreatePlane(this XYZ normal, XYZ origin)
+        {
+#if R2016
+            return new Plane(normal, line.Origin);
+#endif
+#if !R2016
+
+            return Plane.CreateByNormalAndOrigin(normal, origin);
+#endif
         }
 
         /// <summary>

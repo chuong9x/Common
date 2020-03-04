@@ -64,7 +64,7 @@ namespace KeLi.Common.Revit.Builders
     public static class FamilySymbolBuilder
     {
         /// <summary>
-        ///     Creates a new extrusion symbol.
+        ///     Creates a new extrusion symbol with transaction.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="app"></param>
@@ -84,28 +84,31 @@ namespace KeLi.Common.Revit.Builders
 
             var tplPath = app.GeTemplateFilePath(parm.TemplateFileName);
 
+            if (!File.Exists(tplPath))
+                throw new FileNotFoundException(tplPath);
+
             var fdoc = app.NewFamilyDocument(tplPath);
+
+            var profile = ResetCurveArrArray(parm.Profile);
+
+            if (profile is null)
+                return null;
 
             fdoc.AutoTransaction(() =>
             {
-                var profile = ResetCurveArrArray(parm.Profile);
+               var skectchPlane = fdoc.CreateSketchPlane(parm.Plane);
 
-                if (profile is null)
-                    return;
+               if (skectchPlane is null)
+                   return;
 
-                var skectchPlane = fdoc.CreateSketchPlane(parm.Plane);
-
-                if (skectchPlane is null)
-                    return;
-
-                fdoc.FamilyCreate.NewExtrusion(true, profile, skectchPlane, parm.End);
+               fdoc.FamilyCreate.NewExtrusion(true, profile, skectchPlane, parm.End);
             });
 
             return doc.GetFamilySymbol(fdoc, rfaPath);
         }
 
         /// <summary>
-        ///     Creates a new sweep symbol.
+        ///     Creates a new sweep symbol with transaction.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="app"></param>
@@ -127,26 +130,26 @@ namespace KeLi.Common.Revit.Builders
 
             var fdoc = app.NewFamilyDocument(tplPath);
 
+            var curveLoops = ResetCurveArrArray(parm.Profile);
+
+            if (curveLoops is null)
+                return null;
+
             fdoc.AutoTransaction(() =>
             {
-                var curveLoops = ResetCurveArrArray(parm.Profile);
+               var profile = app.Create.NewCurveLoopsProfile(curveLoops);
 
-                if (curveLoops is null)
-                    return;
+               if (profile is null)
+                   return;
 
-                var profile = app.Create.NewCurveLoopsProfile(curveLoops);
-
-                if (profile is null)
-                    return;
-
-                fdoc.FamilyCreate.NewSweep(true, parm.SweepPath, profile, parm.Index, parm.Location);
+               fdoc.FamilyCreate.NewSweep(true, parm.SweepPath, profile, parm.Index, parm.Location);
             });
 
             return doc.GetFamilySymbol(fdoc, rfaPath);
         }
 
         /// <summary>
-        ///     Creates a new family symbol.
+        ///     Creates a new family symbol with transaction.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="rfaPath"></param>
@@ -159,54 +162,16 @@ namespace KeLi.Common.Revit.Builders
             if (rfaPath is null)
                 throw new ArgumentNullException(nameof(rfaPath));
 
-            doc.LoadFamily(rfaPath, out var family);
+            return doc.AutoTransaction(() =>
+            {
+                doc.LoadFamily(rfaPath, out var family);
 
-            return doc.GetFamilySymbol(family);
+                return doc.GetFamilySymbol(family);
+            });
         }
 
         /// <summary>
-        ///     Creates a new family symbol.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="app"></param>
-        /// <param name="tplFileName"></param>
-        /// <param name="rfaPath"></param>
-        /// <param name="act"></param>
-        /// <returns></returns>
-        public static FamilySymbol CreateFamilySymbol(this Document doc, Application app, string tplFileName, string rfaPath, Action<Document> act)
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            if (app is null)
-                throw new ArgumentNullException(nameof(app));
-
-            if (tplFileName is null)
-                throw new ArgumentNullException(nameof(tplFileName));
-
-            if (rfaPath is null)
-                throw new ArgumentNullException(nameof(rfaPath));
-
-            if (act is null)
-                throw new ArgumentNullException(nameof(act));
-
-            var tplPath = app.GeTemplateFilePath(tplFileName);
-
-            if (tplPath is null)
-                return null;
-
-            var fdoc = app.NewFamilyDocument(tplPath);
-
-            if (fdoc is null)
-                return null;
-
-            fdoc.AutoTransaction(() => act.Invoke(fdoc));
-
-            return doc.GetFamilySymbol(fdoc, rfaPath);
-        }
-
-        /// <summary>
-        ///     Gets the first family symbol from family document.
+        ///     Gets the first family symbol from family document with transaction.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="fdoc"></param>
@@ -225,11 +190,11 @@ namespace KeLi.Common.Revit.Builders
             if (rfaPath != null)
                 fdoc.CloseUnsavedFile(rfaPath);
 
-            return doc.GetFamilySymbol(family);
+            return doc.AutoTransaction(() => doc.GetFamilySymbol(family));
         }
 
         /// <summary>
-        ///     Gets the first family symbol from family document.
+        ///     Gets the first family symbol from family document, please call it on transaction.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="family"></param>
@@ -246,11 +211,8 @@ namespace KeLi.Common.Revit.Builders
 
             var result = doc.GetElement(symbolId) as FamilySymbol;
 
-            doc.AutoTransaction(() =>
-            {
-                if (result != null && !result.IsActive)
-                    result.Activate();
-            });
+            if (result != null && !result.IsActive)
+                result.Activate();
 
             return result;
         }

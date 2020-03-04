@@ -93,6 +93,16 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
+        ///     Gets 3D view list.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        public static List<View3D> Get3DViewList(this Document doc)
+        {
+            return doc.GetInstanceElementList<View3D>().Where(w => !w.IsTemplate).ToList();
+        }
+
+        /// <summary>
         ///     Gets FamilyInstance list.
         /// </summary>
         /// <param name="doc"></param>

@@ -66,8 +66,9 @@ namespace KeLi.Common.Revit.Builders
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="pt"></param>
+        /// <param name="sketchPlane"></param>
         /// <returns></returns>
-        public static ModelCurve CreateModelCurve(this Document doc, XYZ pt)
+        public static ModelCurve CreateModelCurve(this Document doc, XYZ pt, out SketchPlane sketchPlane)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -77,7 +78,7 @@ namespace KeLi.Common.Revit.Builders
 
             var line = Line.CreateBound(XYZ.Zero, pt);
 
-            return doc.CreateModelCurve(line, out _);
+            return doc.CreateModelCurve(line, out sketchPlane);
         }
 
         /// <summary>
@@ -86,8 +87,9 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="pt1"></param>
         /// <param name="pt2"></param>
+        /// <param name="sketchPlane"></param>
         /// <returns></returns>
-        public static ModelCurve CreateModelCurve(this Document doc, XYZ pt1, XYZ pt2)
+        public static ModelCurve CreateModelCurve(this Document doc, XYZ pt1, XYZ pt2, out SketchPlane sketchPlane)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -100,7 +102,7 @@ namespace KeLi.Common.Revit.Builders
 
             var line = Line.CreateBound(pt1, pt2);
 
-            return doc.CreateModelCurve(line, out _);
+            return doc.CreateModelCurve(line, out sketchPlane);
         }
 
         /// <summary>
@@ -149,7 +151,7 @@ namespace KeLi.Common.Revit.Builders
             if (pts is null)
                 throw new ArgumentNullException(nameof(pts));
 
-            return pts.Select(doc.CreateModelCurve).ToList();
+            return pts.Select(s => doc.CreateModelCurve(s, out _)).ToList();
         }
 
         /// <summary>
@@ -166,7 +168,7 @@ namespace KeLi.Common.Revit.Builders
             if (pts is null)
                 throw new ArgumentNullException(nameof(pts));
 
-            return pts.Select(doc.CreateModelCurve).ToList();
+            return pts.Select(s => doc.CreateModelCurve(s, out _)).ToList();
         }
 
         /// <summary>

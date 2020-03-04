@@ -118,7 +118,7 @@ namespace KeLi.Common.Drive.Excel
             if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
 
-            var results = new DataTable();
+            DataTable results;
 
             using (var excel = new ExcelPackage(new FileInfo(parm.FilePath)))
             {
@@ -132,15 +132,23 @@ namespace KeLi.Common.Drive.Excel
                 else
                     sheet = sheets[parm.SheetName] ?? sheets.FirstOrDefault();
 
+                results = new DataTable(sheet?.Name);
+
                 if (!(sheet?.Cells.Value is object[,] cells))
-                    return new DataTable();
+                    return results;
 
                 for (var j = parm.ColumnIndex; j < sheet.Dimension.Columns; j++)
                     results.Columns.Add(new DataColumn(cells[0, j]?.ToString()));
 
                 for (var i = parm.RowIndex; i < sheet.Dimension.Rows; i++)
+                {
+                    var row = results.NewRow();
+
                     for (var j = parm.ColumnIndex; j < sheet.Dimension.Columns; j++)
-                        results.Rows[i - parm.RowIndex][j] = cells[i + parm.RowIndex, j];
+                        row[j - parm.ColumnIndex] = cells[i - parm.RowIndex, j];
+
+                    results.Rows.Add(row);
+                }
             }
 
             return results;
@@ -176,31 +184,31 @@ namespace KeLi.Common.Drive.Excel
                 if (!(sheet?.Cells.Value is object[,] cells))
                     return new List<T>();
 
-                for (var i = parm.RowIndex; i < sheet.Dimension.Rows; i++)
+                // To skip the titlt row, so add 1.
+                for (var i = parm.RowIndex + 1; i < sheet.Dimension.Rows; i++)
                 {
                     var obj = (T)Activator.CreateInstance(typeof(T));
 
-                    for (var j = parm.ColumnIndex; j < typeof(T).GetProperties().Length + parm.ColumnIndex; j++)
+                    for (var j = parm.ColumnIndex; j < typeof(T).GetProperties().Length; j++)
                     {
-                        var columnName = cells[0, j]?.ToString();
+                        var columnName = cells[parm.RowIndex, j]?.ToString();
 
-                        var pls = ps.Where(w => w.GetDcrp().Equals(columnName) || w.Name.Equals(cells[parm.RowIndex, j]));
+                        var parmInfo = ps.FirstOrDefault(w => w.GetDcrp().Equals(columnName) || w.Name.Equals(columnName));
+
+                        if (parmInfo == null)
+                            continue;
 
                         var cellVal = cells[i, j];
 
-                        foreach (var p in pls)
-                        {
-                            object val;
+                        object val;
 
-                            if (p.PropertyType.IsEnum)
-                                val = Enum.Parse(p.PropertyType, cellVal.ToString());
+                        if (parmInfo.PropertyType.IsEnum)
+                            val = Enum.Parse(parmInfo.PropertyType, cellVal.ToString());
 
-                            else
-                                val = Convert.ChangeType(cellVal, p.PropertyType);
+                        else
+                            val = Convert.ChangeType(cellVal, parmInfo.PropertyType);
 
-                            p.SetValue(obj, cellVal != DBNull.Value ? val : null, null);
-                            break;
-                        }
+                        parmInfo.SetValue(obj, cellVal != DBNull.Value ? val : null, null);
                     }
 
                     results.Add(obj);
@@ -231,8 +239,9 @@ namespace KeLi.Common.Drive.Excel
 
             File.Copy(parm.TemplatePath, parm.FilePath);
 
-            // Epplus dll write excel file that column index from 1 to end column index and row index from 0 to end row index.
+            // Epplus dll write excel file that column index from 1 to end, row index from 1 to end.
             parm.ColumnIndex += 1;
+            parm.RowIndex += 1;
 
             var excel = parm.GetExcelPackage(out var sheet);
 
@@ -274,8 +283,9 @@ namespace KeLi.Common.Drive.Excel
 
             File.Copy(parm.TemplatePath, parm.FilePath);
 
-            // Epplus dll write excel file that column index from 1 to end column index and row index from 0 to end row index.
+            // Epplus dll write excel file that column index from 1 to end, row index from 1 to end.
             parm.ColumnIndex += 1;
+            parm.RowIndex += 1;
 
             var excel = parm.GetExcelPackage(out var sheet);
 
@@ -310,8 +320,9 @@ namespace KeLi.Common.Drive.Excel
 
             File.Copy(parm.TemplatePath, parm.FilePath);
 
-            // Epplus dll write excel file that column index from 1 to end column index and row index from 0 to end row index.
+            // Epplus dll write excel file that column index from 1 to end, row index from 1 to end.
             parm.ColumnIndex += 1;
+            parm.RowIndex += 1;
 
             var excel = parm.GetExcelPackage(out var sheet);
 
@@ -346,8 +357,9 @@ namespace KeLi.Common.Drive.Excel
 
             File.Copy(parm.TemplatePath, parm.FilePath);
 
-            // Epplus dll write excel file that column index from 1 to end column index and row index from 0 to end row index.
+            // Epplus dll write excel file that column index from 1 to end, row index from 1 to end.
             parm.ColumnIndex += 1;
+            parm.RowIndex += 1;
 
             var excel = parm.GetExcelPackage(out var sheet);
 
@@ -426,7 +438,7 @@ namespace KeLi.Common.Drive.Excel
             var objs = p.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
             // To throw not exception, must return empty string.
-            return objs.Length == 0 ? string.Empty : (objs[0] as DescriptionAttribute)?.Description;
+            return objs.Length == 0 ? p.Name : (objs[0] as DescriptionAttribute)?.Description;
         }
 
         /// <summary>
@@ -466,9 +478,9 @@ namespace KeLi.Common.Drive.Excel
                 return string.Empty;
 
             if (objs[0] is ReferenceAttribute attr)
-                return objs.Length == 0 ? string.Empty : attr.ColumnName;
+                return objs.Length == 0 ? p.Name : attr.ColumnName;
 
-            return string.Empty;
+            return p.Name;
         }
 
         /// <summary>

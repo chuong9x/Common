@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-using KeLi.Common.Converter.Serializations;
+﻿using KeLi.Common.Converter.Serializations;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -12,17 +10,17 @@ namespace KeLi.Common.ConverterTests.Serializations
         [TestMethod]
         public void SerializeTest()
         {
-            var test = new TestC(1) { Name = "Jack" };
+            var stu = new Student(1) { Name = "Jack" };
 
-            SoapUtil.Serialize(new FileInfo("SoapTest.txt"), test);
+            SoapUtil.Serialize("SoapTest.txt", stu);
         }
 
         [TestMethod]
         public void DeserializeTest()
         {
-           var test = SoapUtil.Deserialize<TestC>(new FileInfo("SoapTest.txt"));
+           var stus = SoapUtil.Deserialize<Student>("SoapTest.txt");
 
-           Assert.AreEqual(test.Name == "Jack", true);
+           Assert.AreEqual(stus.Name == "Jack", true);
         }
     }
 }

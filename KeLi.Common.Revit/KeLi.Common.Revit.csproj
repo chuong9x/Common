@@ -123,7 +123,7 @@
     <Compile Include="Geometry\BoxUtil.cs" />
     <Compile Include="Converters\UnitConverter.cs" />
     <Compile Include="Widgets\AutoUtil.cs" />
-    <Compile Include="Filters\RoomUtil.cs" />
+    <Compile Include="Widgets\RoomUtil.cs" />
     <Compile Include="Converters\TypeConverter.cs" />
     <Compile Include="Widgets\StructuredStorage.cs" />
     <Compile Include="Widgets\TableUtil.cs" />

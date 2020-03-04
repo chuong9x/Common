@@ -10,9 +10,9 @@ namespace KeLi.Common.ConverterTests.Collections
         [TestMethod]
         public void ToAnyTypeTest()
         {
-            var ta = new TestA(1);
+            var info = new Info(1);
 
-            var result = ta.ToAnyType<TestA, TestB>();
+            var result = info.ToAnyType<Info, Test>();
 
             Assert.AreEqual(result != null, true);
         }

@@ -368,7 +368,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="centralPath"></param>
         /// <param name="linkPaths"></param>
-        public static void SetRevitLinkList(this string centralPath, List<string> linkPaths)
+        public static void SetRevitLinkList(string centralPath, List<string> linkPaths)
         {
             if (centralPath is null)
                 throw new ArgumentNullException(nameof(centralPath));
