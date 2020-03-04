@@ -91,7 +91,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="func"></param>
-        public static Element AutoTransaction(this Document doc, Func<Element> func)
+        public static T AutoTransaction<T>(this Document doc, Func<T> func) where T : Element
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -117,7 +117,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="func"></param>
-        public static List<Element> AutoTransaction(this Document doc, Func<IEnumerable<Element>> func)
+        public static List<T> AutoTransaction<T>(this Document doc, Func<IEnumerable<T>> func) where T : Element
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));

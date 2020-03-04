@@ -77,7 +77,7 @@ namespace KeLi.Common.Revit.Widgets
 
             var segs = room.GetBoundarySegments(opt).SelectMany(s => s);
 
-            return segs.Select(seg => seg.GetCurve()).ToList();
+            return segs.Select(s => s.GetCurve()).ToList();
         }
 
         /// <summary>

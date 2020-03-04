@@ -117,7 +117,7 @@ namespace KeLi.Common.Tool.Security
         }
 
         /// <summary>
-        ///     Gets key value pair set.
+        ///     Gets key value pair.
         /// </summary>
         /// <returns></returns>
         private static KeyValuePair<string, string> GetKeyPair()

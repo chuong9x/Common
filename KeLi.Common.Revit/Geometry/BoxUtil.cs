@@ -403,6 +403,19 @@ namespace KeLi.Common.Revit.Geometry
         }
 
         /// <summary>
+        ///     Gets the box's height on z axis direction.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <returns></returns>
+        public static double GetBoxHeight(this BoundingBoxXYZ box)
+        {
+            if (box is null)
+                throw new ArgumentNullException(nameof(box));
+
+            return box.Max.Z - box.Min.Z;
+        }
+
+        /// <summary>
         ///     Gets the round point with custom precision.
         /// </summary>
         /// <param name="point"></param>

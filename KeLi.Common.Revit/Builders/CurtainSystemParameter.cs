@@ -62,15 +62,12 @@ namespace KeLi.Common.Revit.Builders
         /// </summary>
         /// <param name="room"></param>
         /// <param name="typeName"></param>
-        /// <param name="pnlType"></param>
         /// <param name="tplFileName"></param>
-        public CurtainSystemParameter(SpatialElement room, string typeName, PanelType pnlType, string tplFileName)
+        public CurtainSystemParameter(SpatialElement room, string typeName, string tplFileName)
         {
             Room = room ?? throw new ArgumentNullException(nameof(room));
 
             TypeName = typeName ?? throw new ArgumentNullException(nameof(typeName));
-
-            PanelType = pnlType ?? throw new ArgumentNullException(nameof(pnlType));
 
             TemplateFileName = tplFileName ?? throw new ArgumentNullException(nameof(tplFileName));
         }
@@ -81,17 +78,14 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="room"></param>
         /// <param name="wall"></param>
         /// <param name="typeName"></param>
-        /// <param name="pnlType"></param>
         /// <param name="tplName"></param>
-        public CurtainSystemParameter(SpatialElement room, Wall wall, string typeName, PanelType pnlType, string tplName)
+        public CurtainSystemParameter(SpatialElement room, Wall wall, string typeName, string tplName)
         {
             ReferenceWall = wall ?? throw new ArgumentNullException(nameof(wall));
 
             Room = room ?? throw new ArgumentNullException(nameof(room));
 
             TypeName = typeName ?? throw new ArgumentNullException(nameof(typeName));
-
-            PanelType = pnlType ?? throw new ArgumentNullException(nameof(pnlType));
 
             TemplateFileName = tplName ?? throw new ArgumentNullException(nameof(tplName));
         }
@@ -110,11 +104,6 @@ namespace KeLi.Common.Revit.Builders
         ///     Reference room.
         /// </summary>
         public SpatialElement Room { get; set; }
-
-        /// <summary>
-        ///     Panel type.
-        /// </summary>
-        public PanelType PanelType { get; set; }
 
         /// <summary>
         ///     Template file name.

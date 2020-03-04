@@ -184,31 +184,31 @@ namespace KeLi.Common.Drive.Excel
                 if (!(sheet?.Cells.Value is object[,] cells))
                     return new List<T>();
 
-                for (var i = parm.RowIndex; i < sheet.Dimension.Rows; i++)
+                // To skip the titlt row, so add 1.
+                for (var i = parm.RowIndex + 1; i < sheet.Dimension.Rows; i++)
                 {
                     var obj = (T)Activator.CreateInstance(typeof(T));
 
-                    for (var j = parm.ColumnIndex; j < typeof(T).GetProperties().Length + parm.ColumnIndex; j++)
+                    for (var j = parm.ColumnIndex; j < typeof(T).GetProperties().Length; j++)
                     {
-                        var columnName = cells[0, j]?.ToString();
+                        var columnName = cells[parm.RowIndex, j]?.ToString();
 
-                        var pls = ps.Where(w => w.GetDcrp().Equals(columnName) || w.Name.Equals(cells[parm.RowIndex, j]));
+                        var parmInfo = ps.FirstOrDefault(w => w.GetDcrp().Equals(columnName) || w.Name.Equals(columnName));
+
+                        if (parmInfo == null)
+                            continue;
 
                         var cellVal = cells[i, j];
 
-                        foreach (var p in pls)
-                        {
-                            object val;
+                        object val;
 
-                            if (p.PropertyType.IsEnum)
-                                val = Enum.Parse(p.PropertyType, cellVal.ToString());
+                        if (parmInfo.PropertyType.IsEnum)
+                            val = Enum.Parse(parmInfo.PropertyType, cellVal.ToString());
 
-                            else
-                                val = Convert.ChangeType(cellVal, p.PropertyType);
+                        else
+                            val = Convert.ChangeType(cellVal, parmInfo.PropertyType);
 
-                            p.SetValue(obj, cellVal != DBNull.Value ? val : null, null);
-                            break;
-                        }
+                        parmInfo.SetValue(obj, cellVal != DBNull.Value ? val : null, null);
                     }
 
                     results.Add(obj);
