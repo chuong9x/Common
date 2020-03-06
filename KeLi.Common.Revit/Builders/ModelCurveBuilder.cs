@@ -109,32 +109,48 @@ namespace KeLi.Common.Revit.Builders
         ///     Creates a new ModelCurve.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="line"></param>
+        /// <param name="curve"></param>
         /// <param name="sketchPlane"></param>
         /// <returns></returns>
-        public static ModelCurve CreateModelCurve(this Document doc, Line line, out SketchPlane sketchPlane)
+        public static ModelCurve CreateModelCurve(this Document doc, Curve curve, out SketchPlane sketchPlane)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (line is null)
-                throw new ArgumentNullException(nameof(line));
+            if (curve is null)
+                throw new ArgumentNullException(nameof(curve));
 
-            var refAsix = XYZ.BasisZ;
+            sketchPlane = null;
 
-            if (line.IsSameDirection(XYZ.BasisZ, -XYZ.BasisZ))
-                refAsix = XYZ.BasisX;
+            XYZ normal = null;
 
-            var normal = line.Direction.CrossProduct(refAsix).Normalize();
+            if (curve is Arc arc)
+                normal = arc.Normal;
 
-            var plane = Plane.CreateByNormalAndOrigin(normal, line.Origin);
+            if (curve is Ellipse ellipse)
+                normal = ellipse.Normal;
+
+            if (curve is Line line)
+            {
+                var refAsix = XYZ.BasisZ;
+
+                if (line.IsSameDirection(XYZ.BasisZ, -XYZ.BasisZ))
+                    refAsix = XYZ.BasisX;
+
+                normal = line.Direction.CrossProduct(refAsix).Normalize();
+            }
+
+            if (normal == null)
+                return null;
+
+            var plane = Plane.CreateByNormalAndOrigin(normal, curve.GetEndPoint(0));
 
             sketchPlane = SketchPlane.Create(doc, plane);
 
             if (doc.IsFamilyDocument)
-                return doc.FamilyCreate.NewModelCurve(line, sketchPlane);
+                return doc.FamilyCreate.NewModelCurve(curve, sketchPlane);
 
-            return doc.Create.NewModelCurve(line, sketchPlane);
+            return doc.Create.NewModelCurve(curve, sketchPlane);
         }
 
         /// <summary>
@@ -175,34 +191,34 @@ namespace KeLi.Common.Revit.Builders
         ///     Creates ModelCurve list.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="lines"></param>
+        /// <param name="curves"></param>
         /// <returns></returns>
-        public static List<ModelCurve> CreateModelCurveList(this Document doc, IEnumerable<Line> lines)
+        public static List<ModelCurve> CreateModelCurveList(this Document doc, IEnumerable<Curve> curves)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (lines is null)
-                throw new ArgumentNullException(nameof(lines));
+            if (curves is null)
+                throw new ArgumentNullException(nameof(curves));
 
-            return lines.Select(s => doc.CreateModelCurve(s, out _)).ToList();
+            return curves.Select(s => doc.CreateModelCurve(s, out _)).ToList();
         }
 
         /// <summary>
         ///     Creates ModelCurve list.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="lines"></param>
+        /// <param name="curves"></param>
         /// <returns></returns>
-        public static List<ModelCurve> CreateModelCurveList(this Document doc, params Line[] lines)
+        public static List<ModelCurve> CreateModelCurveList(this Document doc, params Curve[] curves)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (lines is null)
-                throw new ArgumentNullException(nameof(lines));
+            if (curves is null)
+                throw new ArgumentNullException(nameof(curves));
 
-            return lines.Select(s => doc.CreateModelCurve(s, out _)).ToList();
+            return curves.Select(s => doc.CreateModelCurve(s, out _)).ToList();
         }
     }
 }
