@@ -123,7 +123,7 @@ namespace KeLi.Common.Revit.Filters
 
             var direction = (elmCenter - roomCenter).Normalize();
 
-            var elmFilter = new ElementClassFilter(typeof(T));
+            var elmFilter = new ElementClassFilter(elm.GetType());
 
             var intersector = new ReferenceIntersector(elmFilter, FindReferenceTarget.Face, view);
 
@@ -144,6 +144,56 @@ namespace KeLi.Common.Revit.Filters
             }
 
             return results;
+        }
+
+        /// <summary>
+        ///     Gets planar face list by ray that room cener point to element center point.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="elm"></param>
+        /// <param name="room"></param>
+        /// <param name="doc"></param>
+        /// <param name="view"></param>
+        /// <returns></returns>
+        public static PlanarFace GetPlanarFace<T>(this T elm, SpatialElement room, Document doc, View3D view) where T : Element
+        {
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (room is null)
+                throw new ArgumentNullException(nameof(room));
+
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (view is null)
+                throw new ArgumentNullException(nameof(view));
+
+            var elmCenter = elm.GetBoundingBox(doc).GetBoxCenter();
+
+            var roomCenter = room.GetBoundingBox(doc).GetBoxCenter();
+
+            var direction = (elmCenter - roomCenter).Normalize();
+
+            var elmFilter = new ElementClassFilter(elm.GetType());
+
+            var intersector = new ReferenceIntersector(elmFilter, FindReferenceTarget.Face, view);
+
+            var context = intersector.FindNearest(roomCenter, direction);
+
+            if (context == null)
+                return null;
+
+            var reference = context.GetReference();
+
+            var refElm = doc.GetElement(reference.ElementId);
+
+            var face = refElm.GetGeometryObjectFromReference(reference) as Face;
+
+            if (face is PlanarFace planarFace)
+                return planarFace;
+
+            return null;
         }
 
         /// <summary>
@@ -235,22 +285,20 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        ///     Gets the element set that filter the max number of points.
+        ///     Gets the dictionary that geometry info as key and T type element list as value.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="maxNum"></param>
-        /// <param name="moreThan"></param>
         /// <param name="type"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static List<Element> GetElementList(this Document doc, CalcType type, int maxNum, bool moreThan, ElementId viewId = null)
+        public static Dictionary<int, List<T>> GetGeometryInstancesDict<T>(this Document doc, CalcType type, ElementId viewId = null)where T: Element
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            var elms = doc.Checkout(FilterType.Instance, viewId);
+            var elms = doc.GetInstanceElementList<T>(viewId);
 
-            var results = new List<Element>();
+            var results = new Dictionary<int, List<T>>();
 
             foreach (var elm in elms)
             {
@@ -274,13 +322,59 @@ namespace KeLi.Common.Revit.Filters
                         throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
 
-                if (moreThan && num <= maxNum)
-                    continue;
+                if (results.ContainsKey(num))
+                    results[num].Add(elm);
 
-                if (!moreThan && num > maxNum)
-                    continue;
+                else
+                    results.Add(num, new List<T>());
+            }
 
-                results.Add(elm);
+            return results;
+        }
+
+        /// <summary>
+        ///     Gets the dictionary that geometry info as key and element list as value.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="type"></param>
+        /// <param name="viewId"></param>
+        /// <returns></returns>
+        public static Dictionary<int, List<Element>> GetGeometryInstancesDict(this Document doc, CalcType type, ElementId viewId = null)
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            var elms = doc.Checkout(FilterType.Instance, viewId);
+
+            var results = new Dictionary<int, List<Element>>();
+
+            foreach (var elm in elms)
+            {
+                int num;
+
+                switch (type)
+                {
+                    case CalcType.FaceNum:
+                        num = elm.GetFaceList().Count;
+                        break;
+
+                    case CalcType.FacePointNum:
+                        num = elm.GetFacePointList().Count;
+                        break;
+
+                    case CalcType.SolidPointNum:
+                        num = elm.GetSolidPointList().Count;
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
+
+                if (results.ContainsKey(num))
+                    results[num].Add(elm);
+
+                else
+                    results.Add(num, new List<Element>());
             }
 
             return results;
