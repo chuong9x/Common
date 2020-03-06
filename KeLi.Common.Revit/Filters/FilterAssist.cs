@@ -147,7 +147,7 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        ///     Gets planar face list by ray that room cener point to element center point.
+        ///     Gets the nearest planar face by ray that room cener point to element center point.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="elm"></param>
@@ -155,7 +155,7 @@ namespace KeLi.Common.Revit.Filters
         /// <param name="doc"></param>
         /// <param name="view"></param>
         /// <returns></returns>
-        public static PlanarFace GetPlanarFace<T>(this T elm, SpatialElement room, Document doc, View3D view) where T : Element
+        public static PlanarFace GetNearestPlanarFace<T>(this T elm, SpatialElement room, Document doc, View3D view) where T : Element
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));

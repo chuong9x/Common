@@ -218,7 +218,7 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        ///     Gets the template file path.
+        ///     Gets the metric template file path.
         /// </summary>
         /// <param name="app"></param>
         /// <param name="fileName"></param>
@@ -231,7 +231,7 @@ namespace KeLi.Common.Revit.Builders
             if (fileName is null)
                 throw new ArgumentNullException(nameof(fileName));
 
-            return Path.Combine(app.FamilyTemplatePath, fileName);
+            return Path.Combine(app.FamilyTemplatePath.Replace("English_I", "English"), fileName);
         }
 
         /// <summary>
