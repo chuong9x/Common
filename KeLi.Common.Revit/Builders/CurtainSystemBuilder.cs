@@ -186,7 +186,7 @@ namespace KeLi.Common.Revit.Builders
             if (curtainParm is null)
                 throw new NullReferenceException(nameof(curtainParm));
 
-            var face = curtainParm.ReferenceWall.GetPlanarFaceList(curtainParm.Room, doc, view3D).LastOrDefault();
+            var face = curtainParm.ReferenceWall.GetNearestPlanarFace(curtainParm.Room, doc, view3D);
 
             if (face == null)
                 return null;
