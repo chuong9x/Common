@@ -379,52 +379,5 @@ namespace KeLi.Common.Revit.Filters
 
             return results;
         }
-
-        /// <summary>
-        ///     Gets the max number of points element and the number.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="type"></param>
-        /// <param name="viewId"></param>
-        /// <returns></returns>
-        public static (Element, int) GetMaxElementPair(this Document doc, CalcType type, ElementId viewId = null)
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            var elms = doc.Checkout(FilterType.Instance, viewId);
-
-            var maxElm = default(Element);
-
-            var maxNum = int.MinValue;
-
-            var num = 0;
-
-            foreach (var elm in elms)
-            {
-                switch (type)
-                {
-                    case CalcType.FaceNum:
-                        num = elm.GetFaceList().Count;
-                        break;
-
-                    case CalcType.FacePointNum:
-                        num = elm.GetFacePointList().Count;
-                        break;
-
-                    case CalcType.SolidPointNum:
-                        num = elm.GetSolidPointList().Count;
-                        break;
-                }
-
-                if (num <= maxNum)
-                    continue;
-
-                maxNum = num;
-                maxElm = elm;
-            }
-
-            return (maxElm, maxNum);
-        }
     }
 }
