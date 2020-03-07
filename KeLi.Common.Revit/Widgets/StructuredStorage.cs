@@ -87,7 +87,7 @@ namespace KeLi.Common.Revit.Widgets
 
             try
             {
-                BaseRoot = (StorageInfo) InvokeStorageRoot(null, "CreateOnStream", stream);
+                BaseRoot = (StorageInfo)InvokeStorageRoot(null, "CreateOnStream", stream);
             }
             catch (Exception ex)
             {
@@ -106,7 +106,7 @@ namespace KeLi.Common.Revit.Widgets
 
             try
             {
-                BaseRoot = (StorageInfo) InvokeStorageRoot(null, "Open", fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                BaseRoot = (StorageInfo)InvokeStorageRoot(null, "Open", fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
             }
             catch (Exception ex)
             {
@@ -234,7 +234,7 @@ namespace KeLi.Common.Revit.Widgets
         {
             var rawString = Encoding.Unicode.GetString(rawData);
 
-            var fileInfo = rawString.Split(new[] { "\0", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var fileInfo = rawString.Split(new[] { "\0", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
             fileInfo.RemoveAll(r => !r.Contains(":"));
 
