@@ -62,14 +62,14 @@ namespace KeLi.Common.Revit.Builders
         /// </summary>
         /// <param name="room"></param>
         /// <param name="typeName"></param>
-        /// <param name="tplFileName"></param>
-        public CurtainSystemParameter(SpatialElement room, string typeName, string tplFileName)
+        /// <param name="tplName"></param>
+        public CurtainSystemParameter(SpatialElement room, string typeName, string tplName)
         {
             Room = room ?? throw new ArgumentNullException(nameof(room));
 
             TypeName = typeName ?? throw new ArgumentNullException(nameof(typeName));
 
-            TemplateFileName = tplFileName ?? throw new ArgumentNullException(nameof(tplFileName));
+            TemplateFileName = tplName ?? throw new ArgumentNullException(nameof(tplName));
         }
 
         /// <summary>
@@ -80,14 +80,22 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="typeName"></param>
         /// <param name="tplName"></param>
         public CurtainSystemParameter(SpatialElement room, Wall wall, string typeName, string tplName)
+            : this(room, typeName, tplName)
         {
             ReferenceWall = wall ?? throw new ArgumentNullException(nameof(wall));
+        }
 
-            Room = room ?? throw new ArgumentNullException(nameof(room));
-
-            TypeName = typeName ?? throw new ArgumentNullException(nameof(typeName));
-
-            TemplateFileName = tplName ?? throw new ArgumentNullException(nameof(tplName));
+        /// <summary>
+        ///     Curtain system parameter for floor.
+        /// </summary>
+        /// <param name="room"></param>
+        /// <param name="typeName"></param>
+        /// <param name="tplName"></param>
+        /// <param name="profile"></param>
+        public CurtainSystemParameter(SpatialElement room, string typeName, string tplName, CurveArrArray profile)
+            : this(room, typeName, tplName)
+        {
+            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
         }
 
         /// <summary>
@@ -109,5 +117,10 @@ namespace KeLi.Common.Revit.Builders
         ///     Template file name.
         /// </summary>
         public string TemplateFileName { get; set; }
+
+        /// <summary>
+        /// Curtain system profile for floor.
+        /// </summary>
+        public CurveArrArray Profile { get; set; }
     }
 }
