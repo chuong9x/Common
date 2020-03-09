@@ -52,6 +52,8 @@ using System.Linq;
 
 using Autodesk.Revit.DB;
 
+using static Autodesk.Revit.DB.SpatialElementBoundaryLocation;
+
 using Option = Autodesk.Revit.DB.SpatialElementBoundaryOptions;
 
 namespace KeLi.Common.Revit.Widgets
@@ -67,13 +69,13 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="room"></param>
         /// <param name="opt"></param>
         /// <returns></returns>
-        public static List<Curve> GetBoundaryLineList(this SpatialElement room, Option opt)
+        public static List<Curve> GetBoundaryLineList(this SpatialElement room, Option opt = null)
         {
             if (room is null)
                 throw new ArgumentNullException(nameof(room));
 
-            if (opt is null)
-                throw new ArgumentNullException(nameof(opt));
+            if (opt == null)
+                opt = new Option { SpatialElementBoundaryLocation = Finish };
 
             var segs = room.GetBoundarySegments(opt).SelectMany(s => s);
 
@@ -86,9 +88,8 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="room"></param>
         /// <param name="doc"></param>
         /// <param name="opt"></param>
-        /// <param name="maxThickness"></param>
         /// <returns></returns>
-        public static List<Wall> GetBoundaryWallList(this SpatialElement room, Document doc, Option opt = null, double maxThickness = 80)
+        public static List<Wall> GetBoundaryWallList(this SpatialElement room, Document doc, Option opt = null)
         {
             if (room is null)
                 throw new ArgumentNullException(nameof(room));
@@ -97,6 +98,9 @@ namespace KeLi.Common.Revit.Widgets
                 throw new ArgumentNullException(nameof(doc));
 
             var results = new List<Wall>();
+
+            if (opt == null)
+                opt = new Option { SpatialElementBoundaryLocation = Finish };
 
             var segments = room.GetBoundarySegments(opt).SelectMany(s => s);
 
@@ -114,9 +118,7 @@ namespace KeLi.Common.Revit.Widgets
                     results.Add(wall);
             }
 
-            const BuiltInParameter parmEnum = BuiltInParameter.WALL_ATTR_WIDTH_PARAM;
-
-            return results.Where(w => Convert.ToDouble(w.WallType.get_Parameter(parmEnum).AsValueString()) < maxThickness).ToList();
+            return results;
         }
     }
 }

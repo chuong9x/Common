@@ -55,9 +55,9 @@ using Autodesk.Revit.DB;
 namespace KeLi.Common.Revit.Converters
 {
     /// <summary>
-    ///     Type converter.
+    ///     Pprofile converter.
     /// </summary>
-    public static class TypeConverter
+    public static class ProfileConverter
     {
         /// <summary>
         ///     Convers the space Curve to the plane Line.
@@ -92,16 +92,34 @@ namespace KeLi.Common.Revit.Converters
         /// <summary>
         ///     Converts the Reference set to the ReferenceArray.
         /// </summary>
-        /// <param name="refs"></param>
+        /// <param name="references"></param>
         /// <returns></returns>
-        public static ReferenceArray ToReferArray(this IEnumerable<Reference> refs)
+        public static ReferenceArray ToReferArray(this IEnumerable<Reference> references)
         {
-            if (refs is null)
-                throw new ArgumentNullException(nameof(refs));
+            if (references is null)
+                throw new ArgumentNullException(nameof(references));
 
             var results = new ReferenceArray();
 
-            foreach (var refer in refs)
+            foreach (var refer in references)
+                results.Append(refer);
+
+            return results;
+        }
+
+        /// <summary>
+        ///     Converts the Reference set to the ReferenceArray.
+        /// </summary>
+        /// <param name="references"></param>
+        /// <returns></returns>
+        public static ReferenceArray ToReferArray(params Reference[] references)
+        {
+            if (references is null)
+                throw new ArgumentNullException(nameof(references));
+
+            var results = new ReferenceArray();
+
+            foreach (var refer in references)
                 results.Append(refer);
 
             return results;
@@ -110,16 +128,16 @@ namespace KeLi.Common.Revit.Converters
         /// <summary>
         ///     Converts the ReferenceArray to the Reference list.
         /// </summary>
-        /// <param name="refs"></param>
+        /// <param name="references"></param>
         /// <returns></returns>
-        public static List<Reference> ToReferArray(this ReferenceArray refs)
+        public static List<Reference> ToReferArray(this ReferenceArray references)
         {
-            if (refs is null)
-                throw new ArgumentNullException(nameof(refs));
+            if (references is null)
+                throw new ArgumentNullException(nameof(references));
 
             var results = new List<Reference>();
 
-            foreach (Reference refer in refs)
+            foreach (Reference refer in references)
                 results.Add(refer);
 
             return results;
@@ -131,6 +149,24 @@ namespace KeLi.Common.Revit.Converters
         /// <param name="curveLoops"></param>
         /// <returns></returns>
         public static CurveArrArray ToCurveArrArray(this IEnumerable<CurveLoop> curveLoops)
+        {
+            if (curveLoops is null)
+                throw new ArgumentNullException(nameof(curveLoops));
+
+            var results = new CurveArrArray();
+
+            foreach (var curveLoop in curveLoops)
+                results.Append(curveLoop.ToCurveArray());
+
+            return results;
+        }
+
+        /// <summary>
+        ///     Converts the CurveLoop list to the CurveArrArray.
+        /// </summary>
+        /// <param name="curveLoops"></param>
+        /// <returns></returns>
+        public static CurveArrArray ToCurveArrArray(params CurveLoop[] curveLoops)
         {
             if (curveLoops is null)
                 throw new ArgumentNullException(nameof(curveLoops));
@@ -157,11 +193,37 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
+        ///     Converts the CurveLoop list to the Curve list.
+        /// </summary>
+        /// <param name="curveLoops"></param>
+        /// <returns></returns>
+        public static List<Curve> ToCurveList(params CurveLoop[] curveLoops)
+        {
+            if (curveLoops is null)
+                throw new ArgumentNullException(nameof(curveLoops));
+
+            return curveLoops.SelectMany(s => s).ToList();
+        }
+
+        /// <summary>
         ///     Converts the CurveLoop list to the CurveArray list.
         /// </summary>
         /// <param name="curveLoops"></param>
         /// <returns></returns>
         public static List<CurveArray> ToCurveArrayList(this IEnumerable<CurveLoop> curveLoops)
+        {
+            if (curveLoops is null)
+                throw new ArgumentNullException(nameof(curveLoops));
+
+            return curveLoops.Select(s => s.ToCurveArray()).ToList();
+        }
+
+        /// <summary>
+        ///     Converts the CurveLoop list to the CurveArray list.
+        /// </summary>
+        /// <param name="curveLoops"></param>
+        /// <returns></returns>
+        public static List<CurveArray> ToCurveArrayList(this CurveLoop[] curveLoops)
         {
             if (curveLoops is null)
                 throw new ArgumentNullException(nameof(curveLoops));
@@ -237,6 +299,19 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
+        ///     Converts the CurveArray list to the Curve list.
+        /// </summary>
+        /// <param name="curveArrays"></param>
+        /// <returns></returns>
+        public static List<Curve> ToCurveList(params CurveArray[] curveArrays)
+        {
+            if (curveArrays is null)
+                throw new ArgumentNullException(nameof(curveArrays));
+
+            return curveArrays.SelectMany(s => s.ToCurveList()).ToList();
+        }
+
+        /// <summary>
         ///     Converts the CurveArray list to the CurveArrArray.
         /// </summary>
         /// <param name="curveArrays"></param>
@@ -255,11 +330,47 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
+        ///     Converts the CurveArray list to the CurveArrArray.
+        /// </summary>
+        /// <param name="curveArrays"></param>
+        /// <returns></returns>
+        public static CurveArrArray ToCurveArrArray(params CurveArray[] curveArrays)
+        {
+            if (curveArrays is null)
+                throw new ArgumentNullException(nameof(curveArrays));
+
+            var results = new CurveArrArray();
+
+            foreach (var curves in curveArrays)
+                results.Append(curves);
+
+            return results;
+        }
+
+        /// <summary>
         ///     Converts the CurveArray list to the CurveLoop list.
         /// </summary>
         /// <param name="curveArrays"></param>
         /// <returns></returns>
         public static List<CurveLoop> ToCurveLoopList(this IEnumerable<CurveArray> curveArrays)
+        {
+            if (curveArrays is null)
+                throw new ArgumentNullException(nameof(curveArrays));
+
+            var results = new CurveArrArray();
+
+            foreach (var curves in curveArrays)
+                results.Append(curves);
+
+            return results.ToCurveLoopList();
+        }
+
+        /// <summary>
+        ///     Converts the CurveArray list to the CurveLoop list.
+        /// </summary>
+        /// <param name="curveArrays"></param>
+        /// <returns></returns>
+        public static List<CurveLoop> ToCurveLoopList(params CurveArray[] curveArrays)
         {
             if (curveArrays is null)
                 throw new ArgumentNullException(nameof(curveArrays));
@@ -363,11 +474,47 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
+        ///     Converts the Curve list to the CurveArray.
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static CurveArray ToCurveArray<T>(params T[] curves) where T : Curve
+        {
+            if (curves is null)
+                throw new ArgumentNullException(nameof(curves));
+
+            var results = new CurveArray();
+
+            foreach (var curve in curves)
+                results.Append(curve);
+
+            return results;
+        }
+
+        /// <summary>
         ///     Converts the Curve list to the CurveLoop.
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
         public static CurveLoop ToCurveLoop<T>(this IEnumerable<T> curves) where T : Curve
+        {
+            if (curves is null)
+                throw new ArgumentNullException(nameof(curves));
+
+            var results = new CurveLoop();
+
+            foreach (var curve in curves)
+                results.Append(curve);
+
+            return results;
+        }
+
+        /// <summary>
+        ///     Converts the Curve list to the CurveLoop.
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static CurveLoop ToCurveLoop<T>(params T[] curves) where T : Curve
         {
             if (curves is null)
                 throw new ArgumentNullException(nameof(curves));
@@ -403,6 +550,28 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
+        ///     Converts the Curve list to the CurveArrArray.
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static CurveArrArray ToCurveArrArray<T>(params T[] curves) where T : Curve
+        {
+            if (curves is null)
+                throw new ArgumentNullException(nameof(curves));
+
+            var ary = new CurveArray();
+
+            foreach (var curve in curves)
+                ary.Append(curve);
+
+            var results = new CurveArrArray();
+
+            results.Append(ary);
+
+            return results;
+        }
+
+        /// <summary>
         ///     Converts the Curve list to the CurveArray list.
         /// </summary>
         /// <param name="curves"></param>
@@ -418,6 +587,24 @@ namespace KeLi.Common.Revit.Converters
                 ary.Append(curve);
 
             return new List<CurveArray> {ary};
+        }
+
+        /// <summary>
+        ///     Converts the Curve list to the CurveArray list.
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static List<CurveArray> ToCurveArrayList<T>(params T[] curves) where T : Curve
+        {
+            if (curves is null)
+                throw new ArgumentNullException(nameof(curves));
+
+            var ary = new CurveArray();
+
+            foreach (var curve in curves)
+                ary.Append(curve);
+
+            return new List<CurveArray> { ary };
         }
 
         /// <summary>
@@ -439,11 +626,47 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
+        ///     Converts the Curve list to the CurveLoop list.
+        /// </summary>
+        /// <param name="curves"></param>
+        /// <returns></returns>
+        public static List<CurveLoop> ToCurveLoopList<T>(params T[] curves) where T : Curve
+        {
+            if (curves is null)
+                throw new ArgumentNullException(nameof(curves));
+
+            var loop = new CurveLoop();
+
+            foreach (var curve in curves)
+                loop.Append(curve);
+
+            return new List<CurveLoop> { loop };
+        }
+
+        /// <summary>
         ///     Converts the Face list to the FaceArray.
         /// </summary>
         /// <param name="faces"></param>
         /// <returns></returns>
-        public static FaceArray ToFaceArray(this IEnumerable<Face> faces)
+        public static FaceArray ToFaceArray<T>(this IEnumerable<T> faces) where T: Face
+        {
+            if (faces is null)
+                throw new ArgumentNullException(nameof(faces));
+
+            var results = new FaceArray();
+
+            foreach (var face in faces)
+                results.Append(face);
+
+            return results;
+        }
+
+        /// <summary>
+        ///     Converts the Face list to the FaceArray.
+        /// </summary>
+        /// <param name="faces"></param>
+        /// <returns></returns>
+        public static FaceArray ToFaceArray<T>(params T[] faces) where T : Face
         {
             if (faces is null)
                 throw new ArgumentNullException(nameof(faces));
@@ -461,15 +684,18 @@ namespace KeLi.Common.Revit.Converters
         /// </summary>
         /// <param name="faces"></param>
         /// <returns></returns>
-        public static List<Face> ToFaceList(this FaceArray faces)
+        public static List<T> ToFaceList<T>(this FaceArray faces) where T : Face
         {
             if (faces is null)
                 throw new ArgumentNullException(nameof(faces));
 
-            var results = new List<Face>();
+            var results = new List<T>();
 
-            foreach (Face face in faces)
-                results.Add(face);
+            foreach (var face in faces)
+            {
+                if (face is T item)
+                    results.Add(item);
+            }
 
             return results;
         }

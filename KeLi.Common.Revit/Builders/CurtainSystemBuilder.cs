@@ -289,13 +289,7 @@ namespace KeLi.Common.Revit.Builders
             if (curtainParm is null)
                 throw new NullReferenceException(nameof(curtainParm));
 
-            var opt = new SpatialElementBoundaryOptions
-            {
-                SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Finish,
-                StoreFreeBoundaryFaces = true
-            };
-
-            var profile = curtainParm.Room.GetBoundaryLineList(opt).ToCurveArrArray();
+            var profile = curtainParm.Room.GetBoundaryLineList().ToCurveArrArray();
 
             return CreateCurtainSystem(doc, app, profile, curtainParm, XYZ.BasisZ);
         }
@@ -393,14 +387,7 @@ namespace KeLi.Common.Revit.Builders
             if (curtainParm is null)
                 throw new NullReferenceException(nameof(curtainParm));
 
-            var opt = new SpatialElementBoundaryOptions
-            {
-                SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Finish,
-
-                StoreFreeBoundaryFaces = true
-            };
-
-            var profile = curtainParm.Room.GetBoundaryLineList(opt).ToCurveArrArray();
+            var profile = curtainParm.Room.GetBoundaryLineList().ToCurveArrArray();
 
             return CreateCurtainSystem(doc, app, profile, curtainParm, XYZ.BasisZ);
         }
