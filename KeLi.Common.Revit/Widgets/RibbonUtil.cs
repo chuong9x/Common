@@ -156,8 +156,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="pbd"></param>
         /// <param name="pbds"></param>
         /// <returns></returns>
-        public static SplitButton AddPushButton(this RibbonPanel pnl, SplitButtonData pbd,
-            IEnumerable<PushButtonData> pbds)
+        public static SplitButton AddPushButton(this RibbonPanel pnl, SplitButtonData pbd, IEnumerable<PushButtonData> pbds)
         {
             if (pnl is null)
                 throw new ArgumentNullException(nameof(pnl));
@@ -241,8 +240,7 @@ namespace KeLi.Common.Revit.Widgets
         ///     Creates a push button data.
         /// </summary>
         /// <returns></returns>
-        public static PushButtonData CreatePushButtonData(this Type type, string text, ImageSource image,
-            bool isAvailable = false)
+        public static PushButtonData CreatePushButtonData(this Type type, string text, ImageSource image, bool isAvailable = false)
         {
             if (type is null)
                 throw new ArgumentNullException(nameof(type));
