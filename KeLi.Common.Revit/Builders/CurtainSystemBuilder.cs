@@ -201,61 +201,6 @@ namespace KeLi.Common.Revit.Builders
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="app"></param>
-        /// <param name="typeName"></param>
-        /// <param name="tplName"></param>
-        public static List<CurtainSystem> CreateCurtainFloorList(this Document doc, App app, string typeName, string tplName)
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            if (app is null)
-                throw new ArgumentNullException(nameof(app));
-
-            if (tplName is null)
-                throw new ArgumentNullException(nameof(tplName));
-
-            var rooms = doc.GetSpatialElementList();
-
-            var results = new List<CurtainSystem>();
-
-            foreach (var room in rooms)
-                results.Add(doc.CreateCurtainFloor(app, room, typeName, tplName));
-
-            return results;
-        }
-
-        /// <summary>
-        ///     Creates a CurtainSystem for floor with transaction.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="app"></param>
-        /// <param name="room"></param>
-        /// <param name="typeName"></param>
-        /// <param name="tplName"></param>
-        public static CurtainSystem CreateCurtainFloor(this Document doc, App app, Room2 room, string typeName, string tplName)
-        {
-            if (doc is null)
-                throw new NullReferenceException(nameof(doc));
-
-            if (room is null)
-                throw new NullReferenceException(nameof(room));
-
-            if (app is null)
-                throw new NullReferenceException(nameof(app));
-
-            if (tplName is null)
-                throw new NullReferenceException(nameof(tplName));
-
-            var parm = new CurtainParm(room, typeName, tplName);
-
-            return doc.CreateCurtainFloor(app, parm);
-        }
-
-        /// <summary>
-        ///     Creates CurtainSystem list for floor with transaction.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="app"></param>
         /// <param name="curtainParms"></param>
         public static List<CurtainSystem> CreateCurtainFloorList(this Document doc, App app, IEnumerable<CurtainParm> curtainParms)
         {
@@ -289,9 +234,7 @@ namespace KeLi.Common.Revit.Builders
             if (curtainParm is null)
                 throw new NullReferenceException(nameof(curtainParm));
 
-            var profile = curtainParm.Room.GetBoundaryLineList().ToCurveArrArray();
-
-            return CreateCurtainSystem(doc, app, profile, curtainParm, XYZ.BasisZ);
+            return CreateCurtainSystem(doc, app, curtainParm, XYZ.BasisZ);
         }
 
         /// <summary>
@@ -323,7 +266,7 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        ///     Creates a CurtainSystem for ceiling with transaction.
+        ///     Creates a new CurtainSystem for ceiling with transaction.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="app"></param>
@@ -393,7 +336,42 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        ///  Creates a new CurtainSystem with transaction.
+        ///     Creates a new CurtainSystem for floor with transaction.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="app"></param>
+        /// <param name="curtainParm"></param>
+        /// <param name="normal"></param>
+        /// <returns></returns>
+        public static CurtainSystem CreateCurtainSystem(this Document doc, App app, CurtainParm curtainParm, XYZ normal)
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (app is null)
+                throw new NullReferenceException(nameof(app));
+
+            if (normal is null)
+                throw new NullReferenceException(nameof(normal));
+
+            var plane = normal.CreatePlane(XYZ.Zero);
+
+            if (curtainParm.Profile.Size == 0)
+                throw new ArgumentException(nameof(curtainParm.Profile));
+
+            var symbolParm = new SymbolParm(curtainParm.TemplateFileName, curtainParm.Profile, plane, 1.0);
+
+            var symbol = doc.CreateExtrusionSymbol(app, symbolParm);
+
+            var location = curtainParm.Profile.ToCurveList().GetDistinctPointList().GetMinPoint();
+
+            var instParm = new InstParm(location, symbol, curtainParm.Room.Level, StructuralType.NonStructural);
+
+            return CreateCurtainSystem(doc, curtainParm, instParm, normal);
+        }
+
+        /// <summary>
+        ///     Creates a new CurtainSystem with transaction.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="app"></param>
@@ -412,9 +390,6 @@ namespace KeLi.Common.Revit.Builders
             if (profile is null)
                 throw new NullReferenceException(nameof(profile));
 
-            if (curtainParm is null)
-                throw new NullReferenceException(nameof(curtainParm));
-
             if (normal is null)
                 throw new NullReferenceException(nameof(normal));
 
@@ -432,7 +407,7 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Creates a new CurtainSystem with transaction.
+        ///     Creates a new CurtainSystem with transaction.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="curtainParm"></param>
