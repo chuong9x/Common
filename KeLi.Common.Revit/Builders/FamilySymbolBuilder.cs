@@ -52,8 +52,7 @@ using System.Linq;
 
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
-
-using KeLi.Common.Revit.Relations;
+using KeLi.Common.Revit.Converters;
 using KeLi.Common.Revit.Widgets;
 
 namespace KeLi.Common.Revit.Builders
@@ -162,11 +161,18 @@ namespace KeLi.Common.Revit.Builders
             if (rfaPath is null)
                 throw new ArgumentNullException(nameof(rfaPath));
 
+            doc.LoadFamily(rfaPath, out var family);
+
             return doc.AutoTransaction(() =>
             {
-                doc.LoadFamily(rfaPath, out var family);
+                var symbolId = family.GetFamilySymbolIds().FirstOrDefault();
 
-                return doc.GetFamilySymbol(family);
+                var result = doc.GetElement(symbolId) as FamilySymbol;
+
+                if (result != null && !result.IsActive)
+                    result.Activate();
+
+                return result;
             });
         }
 
@@ -190,31 +196,17 @@ namespace KeLi.Common.Revit.Builders
             if (rfaPath != null)
                 fdoc.CloseUnsavedFile(rfaPath);
 
-            return doc.AutoTransaction(() => doc.GetFamilySymbol(family));
-        }
+            return doc.AutoTransaction(() =>
+            {
+                var symbolId = family.GetFamilySymbolIds().FirstOrDefault();
 
-        /// <summary>
-        ///     Gets the first family symbol from family document, please call it on transaction.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="family"></param>
-        /// <returns></returns>
-        public static FamilySymbol GetFamilySymbol(this Document doc, Family family)
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
+                var result = doc.GetElement(symbolId) as FamilySymbol;
 
-            if (family is null)
-                throw new ArgumentNullException(nameof(family));
+                if (result != null && !result.IsActive)
+                    result.Activate();
 
-            var symbolId = family.GetFamilySymbolIds().FirstOrDefault();
-
-            var result = doc.GetElement(symbolId) as FamilySymbol;
-
-            if (result != null && !result.IsActive)
-                result.Activate();
-
-            return result;
+                return result;
+            });
         }
 
         /// <summary>
@@ -246,7 +238,7 @@ namespace KeLi.Common.Revit.Builders
 
             var results = new CurveArrArray();
 
-            var location = GetLocationPoint(profile);
+            var location = profile.GetMinPoint();
 
             foreach (CurveArray lines in profile)
             {
@@ -270,25 +262,6 @@ namespace KeLi.Common.Revit.Builders
             }
 
             return results;
-        }
-
-        /// <summary>
-        ///     Gets the family symbol's raw location, it's for moving zero point.
-        /// </summary>
-        /// <param name="profile"></param>
-        /// <returns></returns>
-        private static XYZ GetLocationPoint(CurveArrArray profile)
-        {
-            if (profile is null)
-                throw new ArgumentNullException(nameof(profile));
-
-            var curves = profile.Cast<CurveArray>().SelectMany(s => s.Cast<Curve>()).ToList();
-
-            var pts = curves.GetDistinctPointList();
-
-            pts = pts.OrderBy(o => o.Z).ThenBy(o => o.Y).ThenBy(o => o.X).ToList();
-
-            return pts.FirstOrDefault();
         }
     }
 }

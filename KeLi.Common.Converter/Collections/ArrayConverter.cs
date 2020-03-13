@@ -68,8 +68,12 @@ namespace KeLi.Common.Converter.Collections
             var results = new object[array.GetLength(0)][];
 
             for (var i = 0; i < array.GetLength(0); i++)
+            {
+                results[i] = new object[array.GetLength(1)];
+
                 for (var j = 0; j < array.GetLength(1); j++)
                     results[i][j] = array[i, j];
+            }
 
             return results;
         }

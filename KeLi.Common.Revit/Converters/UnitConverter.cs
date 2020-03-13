@@ -46,6 +46,7 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
+using System;
 using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Converters
@@ -68,20 +69,30 @@ namespace KeLi.Common.Revit.Converters
         /// <summary>
         ///     Converts feet unit value to mm unit value.
         /// </summary>
-        /// <param name="num"></param>
+        /// <param name="feetNum"></param>
         /// <returns></returns>
-        public static double ConvertFeetToMm(double num)
+        public static double ConvertFeetToMm(object feetNum)
         {
+            if(feetNum is null)
+                throw new ArgumentNullException(nameof(feetNum));
+
+            var num = Convert.ToDouble(feetNum);
+
             return UnitUtils.Convert(num, DisplayUnitType.DUT_DECIMAL_FEET, DisplayUnitType.DUT_MILLIMETERS);
         }
 
         /// <summary>
         ///     Converts mm unit value to feet unit value.
         /// </summary>
-        /// <param name="num"></param>
+        /// <param name="mmNum"></param>
         /// <returns></returns>
-        public static double ConvertMmToFeet(double num)
+        public static double ConvertMmToFeet(object mmNum)
         {
+            if (mmNum is null)
+                throw new ArgumentNullException(nameof(mmNum));
+
+            var num = Convert.ToDouble(mmNum);
+
             return UnitUtils.Convert(num, DisplayUnitType.DUT_MILLIMETERS, DisplayUnitType.DUT_DECIMAL_FEET);
         }
     }

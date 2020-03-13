@@ -49,10 +49,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Windows;
 using Autodesk.Revit.DB;
-
+using KeLi.Common.Revit.Builders;
 using KeLi.Common.Revit.Geometry;
+using KeLi.Common.Revit.Widgets;
 
 namespace KeLi.Common.Revit.Filters
 {
@@ -180,6 +181,11 @@ namespace KeLi.Common.Revit.Filters
             var intersector = new ReferenceIntersector(elmFilter, FindReferenceTarget.Face, view);
 
             var context = intersector.FindNearest(roomCenter, direction);
+
+            doc.AutoTransaction(() =>
+            {
+                doc.CreateModelCurve(Line.CreateBound(roomCenter, elmCenter), out _);
+            });
 
             if (context == null)
                 return null;

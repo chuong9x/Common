@@ -51,6 +51,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Autodesk.Revit.DB;
+using KeLi.Common.Revit.Relations;
 
 namespace KeLi.Common.Revit.Converters
 {
@@ -698,6 +699,25 @@ namespace KeLi.Common.Revit.Converters
             }
 
             return results;
+        }
+
+        /// <summary>
+        ///     Gets the family symbol's raw location, it's for moving zero point.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <returns></returns>
+        public static XYZ GetMinPoint(this CurveArrArray profile)
+        {
+            if (profile is null)
+                throw new ArgumentNullException(nameof(profile));
+
+            var curves = profile.Cast<CurveArray>().SelectMany(s => s.Cast<Curve>()).ToList();
+
+            var pts = curves.GetDistinctPointList();
+
+            pts = pts.OrderBy(o => o.Z).ThenBy(o => o.Y).ThenBy(o => o.X).ToList();
+
+            return pts.FirstOrDefault();
         }
     }
 }
