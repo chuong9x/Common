@@ -109,7 +109,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Filters\CalcType.cs" />
-    <Compile Include="Widgets\StorageUtil.cs" />
     <Compile Include="Filters\ElementUtil.cs" />
     <Compile Include="Information\ExtendInfoUtil.cs" />
     <Compile Include="Geometry\MeshUtil.cs" />
@@ -125,6 +124,7 @@
     <Compile Include="Widgets\AutoUtil.cs" />
     <Compile Include="Widgets\RoomUtil.cs" />
     <Compile Include="Converters\ProfileConverter.cs" />
+    <Compile Include="Widgets\StorageUtil.cs" />
     <Compile Include="Widgets\StructuredStorage.cs" />
     <Compile Include="Widgets\TableUtil.cs" />
     <Compile Include="Widgets\VisabilityUtil.cs" />

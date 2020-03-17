@@ -48,11 +48,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Structure;
-
 using KeLi.Common.Revit.Converters;
 using KeLi.Common.Revit.Filters;
 using KeLi.Common.Revit.Geometry;
@@ -60,7 +59,7 @@ using KeLi.Common.Revit.Relations;
 using KeLi.Common.Revit.Widgets;
 
 using static Autodesk.Revit.DB.BuiltInParameter;
-
+using static Autodesk.Revit.DB.Structure.StructuralType;
 using Room2 = Autodesk.Revit.DB.SpatialElement;
 using App = Autodesk.Revit.ApplicationServices.Application;
 using CurtainParm = KeLi.Common.Revit.Builders.CurtainSystemParameter;
@@ -191,10 +190,16 @@ namespace KeLi.Common.Revit.Builders
             if (face == null)
                 return null;
 
-            var profile = face.GetEdgesAsCurveLoops().ToCurveArrArray();
+            var loops = face.GetEdgesAsCurveLoops();
+
+            if (loops.Any(a => a.IsOpen()))
+                throw new InvalidDataException("The profile isn't closed!");
+
+            var profile = loops.ToCurveArrArray();
 
             return CreateCurtainSystem(doc, app, profile, curtainParm, face.FaceNormal);
         }
+
 
         /// <summary>
         ///     Creates CurtainSystem list for floor with transaction.
@@ -330,7 +335,9 @@ namespace KeLi.Common.Revit.Builders
             if (curtainParm is null)
                 throw new NullReferenceException(nameof(curtainParm));
 
-            var profile = curtainParm.Room.GetBoundaryLineList().ToCurveArrArray();
+            var loop = curtainParm.Room.GetRoomProfile();
+
+            var profile = loop.ToCurveArrArray();
 
             return CreateCurtainSystem(doc, app, profile, curtainParm, XYZ.BasisZ);
         }
@@ -365,7 +372,7 @@ namespace KeLi.Common.Revit.Builders
 
             var location = curtainParm.Profile.ToCurveList().GetDistinctPointList().GetMinPoint();
 
-            var instParm = new InstParm(location, symbol, curtainParm.Room.Level, StructuralType.NonStructural);
+            var instParm = new InstParm(location, symbol, curtainParm.Room.Level, NonStructural);
 
             return CreateCurtainSystem(doc, curtainParm, instParm, normal);
         }
@@ -401,7 +408,7 @@ namespace KeLi.Common.Revit.Builders
 
             var location = profile.ToCurveList().GetDistinctPointList().GetMinPoint();
 
-            var instParm = new InstParm(location, symbol, curtainParm.Room.Level, StructuralType.NonStructural);
+            var instParm = new InstParm(location, symbol, curtainParm.Room.Level, NonStructural);
 
             return CreateCurtainSystem(doc, curtainParm, instParm, normal);
         }

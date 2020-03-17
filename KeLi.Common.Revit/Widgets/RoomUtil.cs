@@ -48,10 +48,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 using Autodesk.Revit.DB;
-
+using KeLi.Common.Revit.Converters;
 using static Autodesk.Revit.DB.SpatialElementBoundaryLocation;
 
 using Option = Autodesk.Revit.DB.SpatialElementBoundaryOptions;
@@ -69,7 +70,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="room"></param>
         /// <param name="opt"></param>
         /// <returns></returns>
-        public static List<Curve> GetBoundaryLineList(this SpatialElement room, Option opt = null)
+        public static CurveLoop GetRoomProfile(this SpatialElement room, Option opt = null)
         {
             if (room is null)
                 throw new ArgumentNullException(nameof(room));
@@ -79,7 +80,12 @@ namespace KeLi.Common.Revit.Widgets
 
             var segs = room.GetBoundarySegments(opt).SelectMany(s => s);
 
-            return segs.Select(s => s.GetCurve()).ToList();
+            var result =  segs.Select(s => s.GetCurve()).ToCurveLoop();
+
+            if (result.IsOpen())
+                throw new InvalidDataException("The profile isn't closed!");
+
+            return result;
         }
 
         /// <summary>
