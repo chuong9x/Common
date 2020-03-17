@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Cache\FrameworkCacheHelper.cs" />
     <Compile Include="Cache\EasyCacheHelper.cs" />
+    <Compile Include="Dir\DirectoryPlus.cs" />
     <Compile Include="Email\EmailHelper.cs" />
     <Compile Include="Email\FromerInfo.cs" />
     <Compile Include="Email\MailInfo.cs" />
