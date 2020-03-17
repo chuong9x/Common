@@ -35,6 +35,9 @@
     <DocumentationFile>..\bin\Release\KeLi.Common.Tool.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\Libs\HtmlAgilityPack.1.4.6\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\Newtonsoft.Json.10\Newtonsoft.Json.dll</HintPath>
@@ -46,6 +49,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
@@ -58,6 +62,16 @@
     <Compile Include="Email\EmailHelper.cs" />
     <Compile Include="Email\FromerInfo.cs" />
     <Compile Include="Email\MailInfo.cs" />
+    <Compile Include="Hardware\CpuInfo.cs" />
+    <Compile Include="Hardware\DisplayDriveInfo.cs" />
+    <Compile Include="Hardware\HardwareUtil.cs" />
+    <Compile Include="Hardware\LogicalDriveInfo.cs" />
+    <Compile Include="Hardware\MainboardInfo.cs" />
+    <Compile Include="Hardware\NetworkCardInfo.cs" />
+    <Compile Include="Hardware\OperationSystemInfo.cs" />
+    <Compile Include="Hardware\PhysicalDiskInfo.cs" />
+    <Compile Include="Hardware\RamInfo.cs" />
+    <Compile Include="Hardware\SoundCardInfo.cs" />
     <Compile Include="Other\ExceptionUtil.cs" />
     <Compile Include="Other\SingletonFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
