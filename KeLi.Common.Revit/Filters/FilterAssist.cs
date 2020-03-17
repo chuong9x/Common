@@ -49,7 +49,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using Autodesk.Revit.DB;
 using KeLi.Common.Revit.Builders;
 using KeLi.Common.Revit.Geometry;
