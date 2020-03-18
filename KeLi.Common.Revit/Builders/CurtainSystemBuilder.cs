@@ -464,7 +464,7 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        ///     Creates a new CurtainSystem with transaction.
+        ///     Creates a new CurtainSystem.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="typeName"></param>
