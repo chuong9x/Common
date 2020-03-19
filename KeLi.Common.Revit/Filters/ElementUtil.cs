@@ -116,7 +116,7 @@ namespace KeLi.Common.Revit.Filters
             if (symbolName is null)
                 throw new ArgumentNullException(nameof(symbolName));
 
-            return GetFamilyInstanceList(doc).Where(w => w.Symbol.Name == symbolName).ToList();
+            return GetFamilyInstanceList(doc).Where(w => w.Symbol.Name.Contains(symbolName)).ToList();
         }
 
         /// <summary>
