@@ -197,9 +197,8 @@ namespace KeLi.Common.Revit.Builders
 
             var profile = loops.ToCurveArrArray();
 
-            return CreateCurtainSystem(doc, app, profile, curtainParm, face.FaceNormal);
+            return doc.CreateCurtainSystem(app, profile, curtainParm, face.FaceNormal);
         }
-
 
         /// <summary>
         ///     Creates CurtainSystem list for floor with transaction.
@@ -339,7 +338,7 @@ namespace KeLi.Common.Revit.Builders
 
             var profile = loop.ToCurveArrArray();
 
-            return CreateCurtainSystem(doc, app, profile, curtainParm, XYZ.BasisZ);
+            return doc.CreateCurtainSystem(app, profile, curtainParm, XYZ.BasisZ);
         }
 
         /// <summary>
@@ -410,7 +409,7 @@ namespace KeLi.Common.Revit.Builders
 
             var instParm = new InstParm(location, symbol, curtainParm.Room.Level, NonStructural);
 
-            return CreateCurtainSystem(doc, curtainParm, instParm, normal);
+            return doc.CreateCurtainSystem(curtainParm, instParm, normal);
         }
 
         /// <summary>
@@ -464,7 +463,7 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        ///     Creates a new CurtainSystem with transaction.
+        ///     Creates a new CurtainSystem.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="typeName"></param>
