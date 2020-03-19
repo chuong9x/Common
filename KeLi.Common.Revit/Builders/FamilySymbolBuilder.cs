@@ -161,10 +161,10 @@ namespace KeLi.Common.Revit.Builders
             if (rfaPath is null)
                 throw new ArgumentNullException(nameof(rfaPath));
 
-            doc.LoadFamily(rfaPath, out var family);
-
             return doc.AutoTransaction(() =>
             {
+                doc.LoadFamily(rfaPath, out var family);
+
                 var symbolId = family.GetFamilySymbolIds().FirstOrDefault();
 
                 var result = doc.GetElement(symbolId) as FamilySymbol;
