@@ -213,9 +213,7 @@ namespace KeLi.Common.Revit.Relations
 
             // Must quadrature.
             if (line1.IsPlaneVertical(line2) && f1 || f2)
-            {
                 result = f1 ? new XYZ(x1, y3, pt1.Z) : new XYZ(x3, y1, pt1.Z);
-            }
 
             else
             {
@@ -407,7 +405,7 @@ namespace KeLi.Common.Revit.Relations
 
             var pt2 = curve.GetEndPoint(1);
 
-            return new List<XYZ> {pt1, pt2};
+            return new List<XYZ> { pt1, pt2 };
         }
 
         /// <summary>

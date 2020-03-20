@@ -226,16 +226,20 @@ namespace KeLi.Common.Drive.Pdf
                     content.AddTemplate(page, 1f, 0, 0, 1f, 0, 0);
 
                 else
+                {
                     switch (rotation)
                     {
                         case 90:
                             content.AddTemplate(page, 0, -1f, 1f, 0, 0, rect.Height);
+
                             break;
 
                         case 270:
                             content.AddTemplate(page, 0, 1.0F, -1.0F, 0, rect.Width, 0);
+
                             break;
                     }
+                }
 
                 startPage++;
             }
@@ -333,6 +337,7 @@ namespace KeLi.Common.Drive.Pdf
                 var page = 0;
 
                 foreach (DictionaryEntry kv in mark)
+                {
                     switch (kv.Key.ToString())
                     {
                         case "Action":
@@ -340,12 +345,15 @@ namespace KeLi.Common.Drive.Pdf
 
                         case "Title":
                             title = kv.Value.ToString();
+
                             break;
 
                         case "Page":
                             page = Convert.ToInt32(kv.Value.ToString().Split(' ')[0]);
+
                             break;
                     }
+                }
 
                 results.Add(page, title);
             }

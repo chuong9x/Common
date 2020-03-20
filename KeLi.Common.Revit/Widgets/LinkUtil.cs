@@ -114,7 +114,7 @@ namespace KeLi.Common.Revit.Widgets
 
             var doc = app.OpenDocumentFile(centralPath);
 
-            var option = new SaveOptions {Compact = true};
+            var option = new SaveOptions { Compact = true };
 
             doc.Save(option);
 
@@ -135,7 +135,7 @@ namespace KeLi.Common.Revit.Widgets
             if (centralPath is null)
                 throw new ArgumentNullException(nameof(centralPath));
 
-            var saveOption = new SaveAsOptions {OverwriteExistingFile = true};
+            var saveOption = new SaveAsOptions { OverwriteExistingFile = true };
 
             var sharingOption = new WorksharingSaveAsOptions
             {
@@ -245,7 +245,7 @@ namespace KeLi.Common.Revit.Widgets
             if (linkPath is null)
                 throw new ArgumentNullException(nameof(linkPath));
 
-            var options = new DWGImportOptions {OrientToView = true};
+            var options = new DWGImportOptions { OrientToView = true };
 
             doc.Link(linkPath, options, doc.ActiveView, out _);
         }
@@ -489,7 +489,7 @@ namespace KeLi.Common.Revit.Widgets
 
             var doc = uiapp.ActiveUIDocument.Document;
 
-            var saveOption = new SaveOptions {Compact = true};
+            var saveOption = new SaveOptions { Compact = true };
 
             doc.Save(saveOption);
 
@@ -511,7 +511,7 @@ namespace KeLi.Common.Revit.Widgets
             if (centralPath is null)
                 throw new ArgumentNullException(nameof(centralPath));
 
-            var saveOption = new SaveAsOptions {OverwriteExistingFile = true};
+            var saveOption = new SaveAsOptions { OverwriteExistingFile = true };
 
             var modelPath = new FilePath(centralPath);
 

@@ -132,8 +132,10 @@ namespace KeLi.Common.Revit.Builders
             var placePointIds = AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds(result);
 
             for (var i = 0; i < placePointIds.Count; i++)
+            {
                 if (doc.GetElement(placePointIds[i]) is ReferencePoint point)
                     point.Position = tmpPts[i];
+            }
 
             return result;
         }

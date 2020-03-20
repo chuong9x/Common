@@ -73,9 +73,7 @@ namespace KeLi.Common.Converter.Serializations
 
             // Not support generic list.
             using (var fs = new FileStream(filePath, FileMode.Create))
-            {
                 new SoapFormatter().Serialize(fs, t);
-            }
         }
 
         /// <summary>
@@ -107,9 +105,7 @@ namespace KeLi.Common.Converter.Serializations
                 throw new ArgumentNullException(nameof(filePath));
 
             using (var fs = new FileStream(filePath, FileMode.Open))
-            {
                 return new SoapFormatter().Deserialize(fs) as T;
-            }
         }
 
         /// <summary>
@@ -118,7 +114,7 @@ namespace KeLi.Common.Converter.Serializations
         /// <typeparam name="T"></typeparam>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static T Deserialize<T>(FileInfo filePath) where T: class
+        public static T Deserialize<T>(FileInfo filePath) where T : class
         {
             if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));

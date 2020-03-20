@@ -51,12 +51,12 @@ using System;
 namespace KeLi.Common.Tool.Email
 {
     /// <summary>
-    /// Mail information.
+    ///     Mail information.
     /// </summary>
     public class MailInfo
     {
         /// <summary>
-        /// Mail information.
+        ///     Mail information.
         /// </summary>
         /// <param name="address"></param>
         /// <param name="subject"></param>
@@ -74,22 +74,22 @@ namespace KeLi.Common.Tool.Email
         }
 
         /// <summary>
-        /// Mail address.
+        ///     Mail address.
         /// </summary>
         public string Address { get; }
 
         /// <summary>
-        /// Mail subject.
+        ///     Mail subject.
         /// </summary>
         public string Subject { get; }
 
         /// <summary>
-        /// Mail body.
+        ///     Mail body.
         /// </summary>
         public string Body { get; }
 
         /// <summary>
-        /// If true, mail is html.
+        ///     If true, mail is html.
         /// </summary>
         public bool IsHtml { get; }
     }

@@ -280,7 +280,7 @@ namespace KeLi.Common.Revit.Widgets
             if (image is null)
                 throw new ArgumentNullException(nameof(image));
 
-            return new PulldownButtonData(text, text) {LargeImage = image};
+            return new PulldownButtonData(text, text) { LargeImage = image };
         }
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace KeLi.Common.Revit.Widgets
             if (image is null)
                 throw new ArgumentNullException(nameof(image));
 
-            return new SplitButtonData(text, text) {LargeImage = image};
+            return new SplitButtonData(text, text) { LargeImage = image };
         }
     }
 }

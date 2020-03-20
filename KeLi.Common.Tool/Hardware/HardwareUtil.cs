@@ -80,6 +80,7 @@ namespace KeLi.Common.Tool.Hardware
                 foreach (var moItem in mcs)
                 {
                     info.PcType = moItem["Model"].ToString();
+
                     break;
                 }
             }

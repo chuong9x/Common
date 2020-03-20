@@ -84,7 +84,7 @@ namespace KeLi.Common.Drive.Excel
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="tplPath"></param>
-        public ExcelParameter(FileInfo filePath, FileInfo tplPath = null): this(filePath.FullName, tplPath?.FullName)
+        public ExcelParameter(FileInfo filePath, FileInfo tplPath = null) : this(filePath.FullName, tplPath?.FullName)
         {
         }
 

@@ -92,9 +92,7 @@ namespace KeLi.Common.Tool.Web
                 throw new NullReferenceException(nameof(stream));
 
             using (var reader = new StreamReader(stream, parm.EncodeType))
-            {
                 return reader.ReadToEnd();
-            }
         }
 
         /// <summary>
@@ -159,9 +157,7 @@ namespace KeLi.Common.Tool.Web
                 throw new NullReferenceException(nameof(stream));
 
             using (var reader = new StreamReader(stream, parm.EncodeType))
-            {
                 return reader.ReadToEnd();
-            }
         }
 
         /// <summary>
@@ -253,9 +249,7 @@ namespace KeLi.Common.Tool.Web
             }
 
             else
-            {
                 request = WebRequest.Create(parm.Url) as HttpWebRequest;
-            }
 
             if (request is null)
                 throw new NullReferenceException(nameof(request));
@@ -267,22 +261,27 @@ namespace KeLi.Common.Tool.Web
             {
                 case RequestType.Post:
                     request.Method = "POST";
+
                     break;
 
                 case RequestType.Delete:
                     request.Method = "DELETE";
+
                     break;
 
                 case RequestType.Put:
                     request.Method = "PUT";
+
                     break;
 
                 case RequestType.Patch:
                     request.Method = "PATCH";
+
                     break;
 
                 case RequestType.Get:
                     request.Method = "GET";
+
                     break;
 
                 default:
@@ -337,9 +336,7 @@ namespace KeLi.Common.Tool.Web
                 var data = parm.EncodeType.GetBytes(postData);
 
                 using (var stream = request.GetRequestStream())
-                {
                     stream.Write(data, 0, data.Length);
-                }
             }
 
             if (!(request.GetResponse() is HttpWebResponse result))

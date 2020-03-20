@@ -91,8 +91,10 @@ namespace KeLi.Common.Converter.Collections
             var results = new object[array.Length, array[0].Length];
 
             for (var i = 0; i < array.Length; i++)
+            {
                 for (var j = 0; j < array[i].Length; j++)
                     results[i, j] = array[i][j];
+            }
 
             return results;
         }

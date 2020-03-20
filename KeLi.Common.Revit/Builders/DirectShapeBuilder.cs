@@ -83,7 +83,7 @@ namespace KeLi.Common.Revit.Builders
 
             var result = DirectShape.CreateElement(doc, new ElementId(parm.Category));
 
-            result?.AppendShape(new List<GeometryObject> {solid});
+            result?.AppendShape(new List<GeometryObject> { solid });
 
             return result;
         }

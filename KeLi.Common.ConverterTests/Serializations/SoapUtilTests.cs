@@ -18,9 +18,9 @@ namespace KeLi.Common.ConverterTests.Serializations
         [TestMethod]
         public void DeserializeTest()
         {
-           var stus = SoapUtil.Deserialize<Student>("SoapTest.txt");
+            var stus = SoapUtil.Deserialize<Student>("SoapTest.txt");
 
-           Assert.AreEqual(stus.Name == "Jack", true);
+            Assert.AreEqual(stus.Name == "Jack", true);
         }
     }
 }

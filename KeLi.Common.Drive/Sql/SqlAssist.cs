@@ -94,7 +94,7 @@ namespace KeLi.Common.Drive.Sql
 
             using (var conn = new SqlConnection(ConnSql))
             {
-                var cmd = new SqlCommand(text, conn) {CommandType = ct};
+                var cmd = new SqlCommand(text, conn) { CommandType = ct };
 
                 conn.Open();
 
@@ -125,7 +125,7 @@ namespace KeLi.Common.Drive.Sql
 
             using (var conn = new SqlConnection(ConnSql))
             {
-                var cmd = new SqlCommand(text, conn) {CommandType = ct};
+                var cmd = new SqlCommand(text, conn) { CommandType = ct };
 
                 conn.Open();
 
@@ -262,7 +262,7 @@ namespace KeLi.Common.Drive.Sql
 
             using (var conn = new SqlConnection(ConnSql))
             {
-                var cmd = new SqlCommand(text, conn) {CommandType = ct};
+                var cmd = new SqlCommand(text, conn) { CommandType = ct };
 
                 conn.Open();
 
@@ -293,7 +293,7 @@ namespace KeLi.Common.Drive.Sql
 
             using (var conn = new SqlConnection(ConnSql))
             {
-                var cmd = new SqlCommand(text, conn) {CommandType = ct};
+                var cmd = new SqlCommand(text, conn) { CommandType = ct };
 
                 conn.Open();
 
@@ -322,7 +322,7 @@ namespace KeLi.Common.Drive.Sql
 
             using (var conn = new SqlConnection(ConnSql))
             {
-                var cmd = new SqlCommand(text, conn) {CommandType = ct};
+                var cmd = new SqlCommand(text, conn) { CommandType = ct };
 
                 new SqlDataAdapter(cmd).Fill(results);
 
@@ -352,7 +352,7 @@ namespace KeLi.Common.Drive.Sql
 
             using (var conn = new SqlConnection(ConnSql))
             {
-                var cmd = new SqlCommand(text, conn) {CommandType = ct};
+                var cmd = new SqlCommand(text, conn) { CommandType = ct };
 
                 cmd.Parameters.AddRange(sps.ToArray());
 

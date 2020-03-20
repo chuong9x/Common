@@ -12,13 +12,11 @@ namespace KeLi.Common.DriveTests.Excel
         [TestMethod]
         public void As2DArrayTest()
         {
-
         }
 
         [TestMethod]
         public void AsCrossArrayTest()
         {
-
         }
 
         [TestMethod]
@@ -34,7 +32,6 @@ namespace KeLi.Common.DriveTests.Excel
         [TestMethod]
         public void AsListTest()
         {
-
         }
 
         [TestMethod]
@@ -55,37 +52,31 @@ namespace KeLi.Common.DriveTests.Excel
         [TestMethod]
         public void SetExcelStyleTest()
         {
-
         }
 
         [TestMethod]
         public void GetExcelPackageTest()
         {
-
         }
 
         [TestMethod]
         public void GetDcrpTest()
         {
-
         }
 
         [TestMethod]
         public void GetSpanTest()
         {
-
         }
 
         [TestMethod]
         public void GetReferenceTest()
         {
-
         }
 
         [TestMethod]
         public void GetMegerValueTest()
         {
-
         }
     }
 }

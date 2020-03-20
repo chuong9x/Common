@@ -91,14 +91,10 @@ namespace KeLi.Common.Tool.Cache
             bool result;
 
             if (string.IsNullOrWhiteSpace(key))
-            {
                 result = false;
-            }
 
             else if (string.IsNullOrWhiteSpace(data.ToString()))
-            {
                 result = false;
-            }
 
             else
             {
@@ -173,7 +169,7 @@ namespace KeLi.Common.Tool.Cache
                 result = default;
 
             else
-                result = (T) _data[key].Key;
+                result = (T)_data[key].Key;
 
             return result;
         }

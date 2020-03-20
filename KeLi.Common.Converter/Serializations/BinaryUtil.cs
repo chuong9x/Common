@@ -71,9 +71,7 @@ namespace KeLi.Common.Converter.Serializations
                 throw new ArgumentNullException(nameof(t));
 
             using (var fs = new FileStream(filePath, FileMode.Create))
-            {
                 new BinaryFormatter().Serialize(fs, t);
-            }
         }
 
         /// <summary>
@@ -104,9 +102,7 @@ namespace KeLi.Common.Converter.Serializations
                 throw new ArgumentNullException(nameof(filePath));
 
             using (var fs = new FileStream(filePath, FileMode.Open))
-            {
                 return new BinaryFormatter().Deserialize(fs) as T;
-            }
         }
 
         /// <summary>

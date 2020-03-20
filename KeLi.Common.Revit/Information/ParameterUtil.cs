@@ -103,18 +103,22 @@ namespace KeLi.Common.Revit.Information
 
                 case StorageType.Integer:
                     result = parameter.AsInteger().ToString();
+
                     break;
 
                 case StorageType.Double:
                     result = parameter.AsDouble().ToString(CultureInfo.InvariantCulture);
+
                     break;
 
                 case StorageType.String:
                     result = parameter.AsString();
+
                     break;
 
                 case StorageType.ElementId:
                     result = parameter.AsElementId().IntegerValue.ToString();
+
                     break;
 
                 default:
@@ -229,9 +233,7 @@ namespace KeLi.Common.Revit.Information
                     if (!paramGroup.Name.Contains("Group"))
                     {
                         if (binding is InstanceBinding instanceBinding)
-                        {
                             bindingMap.ReInsert(definition, instanceBinding);
-                        }
 
                         else
                         {
@@ -243,9 +245,7 @@ namespace KeLi.Common.Revit.Information
                     else
                     {
                         if (binding is TypeBinding typeBinding)
-                        {
                             bindingMap.ReInsert(definition, typeBinding);
-                        }
 
                         else
                         {

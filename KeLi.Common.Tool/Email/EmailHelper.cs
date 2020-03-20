@@ -43,9 +43,7 @@ namespace KeLi.Common.Tool.Email
             }
 
             else
-            {
                 msg.To.Add(mail.Address);
-            }
 
             var client = new SmtpClient(former.Host, former.Port)
             {

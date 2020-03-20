@@ -96,6 +96,7 @@ namespace KeLi.Common.Converter.Collections
                     foreach (var property in properties.Where(w => w.Name.Equals(dt.Columns[index].ColumnName)))
                     {
                         property.SetValue(tab, dt.Rows[i][j] != DBNull.Value ? dt.Rows[i][j] : null, null);
+
                         break;
                     }
                 }
@@ -238,7 +239,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the List to the DataTable.
+        ///     Converts the List to the DataTable.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="ts"></param>
@@ -271,7 +272,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the SqlDataReader to the DataTable.
+        ///     Converts the SqlDataReader to the DataTable.
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
@@ -315,7 +316,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the T to the S.
+        ///     Converts the T to the S.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="S"></typeparam>
@@ -359,7 +360,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Convert the object to the SqlDbType.
+        ///     Convert the object to the SqlDbType.
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -376,54 +377,67 @@ namespace KeLi.Common.Converter.Collections
             {
                 case "Boolean":
                     result = SqlDbType.Bit;
+
                     break;
 
                 case "Byte":
                     result = SqlDbType.TinyInt;
+
                     break;
 
                 case "Int16":
                     result = SqlDbType.SmallInt;
+
                     break;
 
                 case "Int32":
                     result = SqlDbType.SmallInt;
+
                     break;
 
                 case "Single":
                     result = SqlDbType.Real;
+
                     break;
 
                 case "Double":
                     result = SqlDbType.Float;
+
                     break;
 
                 case "String":
                     result = SqlDbType.NChar;
+
                     break;
 
                 case "Guid":
                     result = SqlDbType.UniqueIdentifier;
+
                     break;
 
                 case "XmlReader":
                     result = SqlDbType.Xml;
+
                     break;
 
                 case "Decimal":
                     result = SqlDbType.Money;
+
                     break;
 
                 case "DateTime":
                     result = SqlDbType.DateTime2;
+
                     break;
 
                 case "Byte[]":
                     result = SqlDbType.Binary;
+
                     break;
 
                 case "Object":
                     result = SqlDbType.Variant;
+
                     break;
             }
 
@@ -431,7 +445,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the NameValueCollection to the Dictionary.
+        ///     Converts the NameValueCollection to the Dictionary.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -444,7 +458,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the NameValueCollection to the Dictionary.
+        ///     Converts the NameValueCollection to the Dictionary.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -457,7 +471,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the NameValueCollection to the ILookup.
+        ///     Converts the NameValueCollection to the ILookup.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -470,7 +484,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the NameValueCollection to the ILookup.
+        ///     Converts the NameValueCollection to the ILookup.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -483,7 +497,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the NameValueCollection to the pair string.
+        ///     Converts the NameValueCollection to the pair string.
         /// </summary>
         /// <param name="pairs"></param>
         public static string ToNvcString(this NameValueCollection pairs)
@@ -495,7 +509,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the NameValueCollection to the List.
+        ///     Converts the NameValueCollection to the List.
         /// </summary>
         /// <param name="pairs"></param>
         public static List<string> ToList(this NameValueCollection pairs)
@@ -507,7 +521,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the IDictionary to the NameValueCollection.
+        ///     Converts the IDictionary to the NameValueCollection.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -519,14 +533,16 @@ namespace KeLi.Common.Converter.Collections
             var result = new NameValueCollection();
 
             foreach (var pair in pairs)
+            {
                 foreach (var val in pair.Value)
                     result.Add(pair.Key, val);
+            }
 
             return result;
         }
 
         /// <summary>
-        /// Converts the IDictionary to the NameValueCollection.
+        ///     Converts the IDictionary to the NameValueCollection.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -544,7 +560,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the ILookup to the NameValueCollection.
+        ///     Converts the ILookup to the NameValueCollection.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -556,14 +572,16 @@ namespace KeLi.Common.Converter.Collections
             var result = new NameValueCollection();
 
             foreach (var pair in pairs)
+            {
                 foreach (var item in pair.SelectMany(s => s))
                     result.Add(pair.Key, item);
+            }
 
             return result;
         }
 
         /// <summary>
-        /// Converts the ILookup to the NameValueCollection.
+        ///     Converts the ILookup to the NameValueCollection.
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
@@ -581,7 +599,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the IEnumerable to the NameValueCollection.
+        ///     Converts the IEnumerable to the NameValueCollection.
         /// </summary>
         /// <param name="pairs"></param>
         /// <param name="delimiter"></param>
@@ -604,7 +622,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the pair string to the NameValueCollection.
+        ///     Converts the pair string to the NameValueCollection.
         /// </summary>
         /// <param name="pairs"></param>
         /// <param name="pattern"></param>
@@ -620,7 +638,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the pair string to the Dictionary.
+        ///     Converts the pair string to the Dictionary.
         /// </summary>
         /// <param name="pairs"></param>
         /// <param name="pattern"></param>
@@ -637,7 +655,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the pair string to the Dictionary.
+        ///     Converts the pair string to the Dictionary.
         /// </summary>
         /// <param name="pairs"></param>
         /// <param name="pattern"></param>
@@ -654,7 +672,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the IEnumerable to the Dictionary.
+        ///     Converts the IEnumerable to the Dictionary.
         /// </summary>
         /// <param name="pairs"></param>
         /// <param name="delimiter"></param>
@@ -670,7 +688,7 @@ namespace KeLi.Common.Converter.Collections
         }
 
         /// <summary>
-        /// Converts the IEnumerable to the Dictionary.
+        ///     Converts the IEnumerable to the Dictionary.
         /// </summary>
         /// <param name="pairs"></param>
         /// <param name="delimiter"></param>

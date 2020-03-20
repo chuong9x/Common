@@ -52,7 +52,9 @@ using System.IO;
 using System.Linq;
 
 using Autodesk.Revit.DB;
+
 using KeLi.Common.Revit.Converters;
+
 using static Autodesk.Revit.DB.SpatialElementBoundaryLocation;
 
 using Option = Autodesk.Revit.DB.SpatialElementBoundaryOptions;
@@ -80,7 +82,7 @@ namespace KeLi.Common.Revit.Widgets
 
             var segs = room.GetBoundarySegments(opt).SelectMany(s => s);
 
-            var result =  segs.Select(s => s.GetCurve()).ToCurveLoop();
+            var result = segs.Select(s => s.GetCurve()).ToCurveLoop();
 
             if (result.IsOpen())
                 throw new InvalidDataException("The profile isn't closed!");

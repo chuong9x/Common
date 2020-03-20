@@ -347,7 +347,7 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(elm2));
 
             if (!Enum.IsDefined(typeof(CutFailureReason), reason))
-                throw new InvalidEnumArgumentException(nameof(reason), (int) reason, typeof(CutFailureReason));
+                throw new InvalidEnumArgumentException(nameof(reason), (int)reason, typeof(CutFailureReason));
 
             return SolidSolidCutUtils.CanElementCutElement(elm1, elm2, out _);
         }
@@ -435,7 +435,7 @@ namespace KeLi.Common.Revit.Relations
                 throw new ArgumentNullException(nameof(solid2));
 
             return BooleanOperationsUtils.ExecuteBooleanOperation(solid1, solid2, BooleanOperationsType.Intersect)
-                       .Volume > 0;
+                .Volume > 0;
         }
     }
 }

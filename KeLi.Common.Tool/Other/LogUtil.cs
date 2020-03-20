@@ -86,11 +86,13 @@ namespace KeLi.Common.Tool.Other
             var filePath = Path.Combine(FOLDER_NAME, DateTime.Now.ToString(LOG_FILE_FORMAT));
 
             using (var fs = new FileStream(filePath, FileMode.Append))
-            using (var sw = new StreamWriter(fs))
             {
-                sw.WriteLine("[" + DateTime.Now.ToString(ITEM_TITLE) + "]" + context);
+                using (var sw = new StreamWriter(fs))
+                {
+                    sw.WriteLine("[" + DateTime.Now.ToString(ITEM_TITLE) + "]" + context);
 
-                sw.WriteLine();
+                    sw.WriteLine();
+                }
             }
         }
     }

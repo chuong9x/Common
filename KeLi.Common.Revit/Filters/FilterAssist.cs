@@ -49,7 +49,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Autodesk.Revit.DB;
+
 using KeLi.Common.Revit.Builders;
 using KeLi.Common.Revit.Geometry;
 using KeLi.Common.Revit.Widgets;
@@ -103,7 +105,7 @@ namespace KeLi.Common.Revit.Filters
         /// <param name="doc"></param>
         /// <param name="view"></param>
         /// <returns></returns>
-        public static List<PlanarFace> GetPlanarFaceList<T>(this T elm, SpatialElement room, Document doc, View3D view) where T: Element
+        public static List<PlanarFace> GetPlanarFaceList<T>(this T elm, SpatialElement room, Document doc, View3D view) where T : Element
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
@@ -181,10 +183,7 @@ namespace KeLi.Common.Revit.Filters
 
             var context = intersector.FindNearest(roomCenter, direction);
 
-            doc.AutoTransaction(() =>
-            {
-                doc.CreateModelCurve(Line.CreateBound(roomCenter, elmCenter), out _);
-            });
+            doc.AutoTransaction(() => { doc.CreateModelCurve(Line.CreateBound(roomCenter, elmCenter), out _); });
 
             if (context == null)
                 return null;
@@ -296,7 +295,7 @@ namespace KeLi.Common.Revit.Filters
         /// <param name="type"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static Dictionary<int, List<T>> GetGeometryInstancesDict<T>(this Document doc, CalcType type, ElementId viewId = null)where T: Element
+        public static Dictionary<int, List<T>> GetGeometryInstancesDict<T>(this Document doc, CalcType type, ElementId viewId = null) where T : Element
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -313,14 +312,17 @@ namespace KeLi.Common.Revit.Filters
                 {
                     case CalcType.FaceNum:
                         num = elm.GetFaceList().Count;
+
                         break;
 
                     case CalcType.FacePointNum:
                         num = elm.GetFacePointList().Count;
+
                         break;
 
                     case CalcType.SolidPointNum:
                         num = elm.GetSolidPointList().Count;
+
                         break;
 
                     default:
@@ -361,14 +363,17 @@ namespace KeLi.Common.Revit.Filters
                 {
                     case CalcType.FaceNum:
                         num = elm.GetFaceList().Count;
+
                         break;
 
                     case CalcType.FacePointNum:
                         num = elm.GetFacePointList().Count;
+
                         break;
 
                     case CalcType.SolidPointNum:
                         num = elm.GetSolidPointList().Count;
+
                         break;
 
                     default:

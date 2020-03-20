@@ -128,7 +128,7 @@ namespace KeLi.Common.Revit.Information
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
 
-            if(!typeof(T).IsPrimitive)
+            if (!typeof(T).IsPrimitive)
                 throw new NotSupportedException(nameof(T));
 
             var result = schemaBuilder.AddSimpleField(fieldName, typeof(T));

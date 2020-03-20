@@ -51,6 +51,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Autodesk.Revit.DB;
+
 using KeLi.Common.Revit.Filters;
 using KeLi.Common.Revit.Geometry;
 
@@ -62,7 +63,7 @@ namespace KeLi.Common.Revit.Builders
     public static class ModelCurveBuilder
     {
         /// <summary>
-        /// Defines graphics style category's name of the ModelCurve for debug.
+        ///     Defines graphics style category's name of the ModelCurve for debug.
         /// </summary>
         private const string MODEL_COLOR = "DebugLine";
 
