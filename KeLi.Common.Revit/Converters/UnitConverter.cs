@@ -47,6 +47,7 @@
 */
 
 using System;
+
 using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Converters
@@ -73,7 +74,7 @@ namespace KeLi.Common.Revit.Converters
         /// <returns></returns>
         public static double ConvertFeetToMm(object feetNum)
         {
-            if(feetNum is null)
+            if (feetNum is null)
                 throw new ArgumentNullException(nameof(feetNum));
 
             var num = Convert.ToDouble(feetNum);

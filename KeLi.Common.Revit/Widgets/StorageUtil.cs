@@ -203,9 +203,7 @@ namespace KeLi.Common.Revit.Widgets
             }
 
             else
-            {
                 doc.Close(false);
-            }
         }
     }
 }

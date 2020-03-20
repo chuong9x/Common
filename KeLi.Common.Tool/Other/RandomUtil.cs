@@ -93,9 +93,7 @@ namespace KeLi.Common.Tool.Other
             int result;
 
             if (max <= 0)
-            {
                 result = 0;
-            }
 
             else
             {
@@ -143,24 +141,16 @@ namespace KeLi.Common.Tool.Other
             var results = new int[num];
 
             if (num <= 0)
-            {
                 results = new int[num];
-            }
 
             else if (min <= 0)
-            {
                 results = new int[num];
-            }
 
             else if (max <= 0)
-            {
                 results = new int[num];
-            }
 
             else if (max - min < num)
-            {
                 results = new int[num];
-            }
 
             else
             {
@@ -197,24 +187,16 @@ namespace KeLi.Common.Tool.Other
             var results = new int[num];
 
             if (num <= 0)
-            {
                 results = new int[num];
-            }
 
             else if (min <= 0)
-            {
                 results = new int[num];
-            }
 
             else if (max <= 0)
-            {
                 results = new int[num];
-            }
 
             else if (max - min < num)
-            {
                 results = new int[num];
-            }
 
             else
             {
@@ -257,24 +239,16 @@ namespace KeLi.Common.Tool.Other
             int[] results;
 
             if (num <= 0)
-            {
                 results = new int[num];
-            }
 
             else if (min <= 0)
-            {
                 results = new int[num];
-            }
 
             else if (max <= 0)
-            {
                 results = new int[num];
-            }
 
             else if (max - min < num)
-            {
                 results = new int[num];
-            }
 
             else
             {
@@ -312,24 +286,16 @@ namespace KeLi.Common.Tool.Other
             int[] results;
 
             if (num <= 0)
-            {
                 results = new int[num];
-            }
 
             else if (min <= 0)
-            {
                 results = new int[num];
-            }
 
             else if (max <= 0)
-            {
                 results = new int[num];
-            }
 
             else if (max - min < num)
-            {
                 results = new int[num];
-            }
 
             else
             {
@@ -345,7 +311,7 @@ namespace KeLi.Common.Tool.Other
                         list.Add(temp);
                 }
 
-                results = (int[]) list.ToArray(typeof(int));
+                results = (int[])list.ToArray(typeof(int));
             }
 
             return results;
@@ -363,24 +329,16 @@ namespace KeLi.Common.Tool.Other
             Hashtable results;
 
             if (num <= 0)
-            {
                 results = new Hashtable();
-            }
 
             else if (min <= 0)
-            {
                 results = new Hashtable();
-            }
 
             else if (max <= 0)
-            {
                 results = new Hashtable();
-            }
 
             else if (max - min < num)
-            {
                 results = new Hashtable();
-            }
 
             else
             {

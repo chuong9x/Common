@@ -20,7 +20,7 @@ namespace KeLi.Common.Tool.Other
         /// <summary>
         ///     It's for getting instance by reflect way.
         /// </summary>
-        private static T _inst =  typeof(T).InvokeMember(typeof(T).Name, FLAGS, null, null, null, CurrentCulture) as T;
+        private static T _inst = typeof(T).InvokeMember(typeof(T).Name, FLAGS, null, null, null, CurrentCulture) as T;
 
         /// <summary>
         ///     It's a singleton.

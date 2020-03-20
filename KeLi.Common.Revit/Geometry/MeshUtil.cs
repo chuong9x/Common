@@ -229,13 +229,15 @@ namespace KeLi.Common.Revit.Geometry
             var results = pts.OrderBy(o => o.X).ThenBy(o => o.Y).ThenBy(o => o.Z).ToList();
 
             for (var i = 0; i < results.Count; i++)
-            for (var j = i + 1; j < results.Count; j++)
             {
-                if (results[i] is null || results[j] is null)
-                    continue;
+                for (var j = i + 1; j < results.Count; j++)
+                {
+                    if (results[i] is null || results[j] is null)
+                        continue;
 
-                if (results[j].GetRoundPoint(2).ToString() == results[i].GetRoundPoint(2).ToString())
-                    results[j] = null;
+                    if (results[j].GetRoundPoint(2).ToString() == results[i].GetRoundPoint(2).ToString())
+                        results[j] = null;
+                }
             }
 
             return results.Where(w => w != null).ToList();
@@ -293,9 +295,7 @@ namespace KeLi.Common.Revit.Geometry
                     continue;
 
                 if (obj is Solid solid)
-                {
                     results.Add(solid);
-                }
 
                 else if (obj is GeometryInstance gi)
                 {
@@ -309,9 +309,7 @@ namespace KeLi.Common.Revit.Geometry
                 }
 
                 else if (obj is GeometryElement subGe)
-                {
                     results = results.Union(subGe.GetValidSolidList()).ToList();
-                }
             }
 
             return results;

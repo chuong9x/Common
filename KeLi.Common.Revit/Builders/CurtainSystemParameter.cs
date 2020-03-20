@@ -119,7 +119,7 @@ namespace KeLi.Common.Revit.Builders
         public string TemplateFileName { get; set; }
 
         /// <summary>
-        /// Curtain system profile for floor.
+        ///     Curtain system profile for floor.
         /// </summary>
         public CurveArrArray Profile { get; set; }
     }

@@ -255,8 +255,10 @@ namespace KeLi.Common.Drive.Excel
 
             // The content row.
             for (var i = 0; i < tmpObjs.Count; i++)
+            {
                 for (var j = 0; j < ps.Length; j++)
                     sheet.Cells[i + parm.RowIndex + 1, j + parm.ColumnIndex].Value = ps[j].GetValue(tmpObjs[i]);
+            }
 
             sheet.SetExcelStyle();
 
@@ -290,8 +292,10 @@ namespace KeLi.Common.Drive.Excel
             var excel = parm.GetExcelPackage(out var sheet);
 
             for (var i = 0; i < table.GetLength(0); i++)
+            {
                 for (var j = 0; j < table[i].Length; j++)
                     sheet.Cells[i + parm.RowIndex, j + parm.ColumnIndex].Value = table[i][j];
+            }
 
             sheet.SetExcelStyle();
 
@@ -327,8 +331,10 @@ namespace KeLi.Common.Drive.Excel
             var excel = parm.GetExcelPackage(out var sheet);
 
             for (var i = 0; i < table.GetLength(0); i++)
+            {
                 for (var j = 0; j < table.GetLength(1); j++)
                     sheet.Cells[i + parm.RowIndex, j + parm.ColumnIndex].Value = table[i, j];
+            }
 
             sheet.SetExcelStyle();
 
@@ -371,8 +377,10 @@ namespace KeLi.Common.Drive.Excel
 
             // The cotent row.
             for (var i = 0; i < table.Rows.Count; i++)
+            {
                 for (var j = 0; j < columns.Count; j++)
                     sheet.Cells[i + parm.RowIndex + 1, j + parm.ColumnIndex].Value = table.Rows[i][columns[j].ColumnName];
+            }
 
             sheet.SetExcelStyle();
 

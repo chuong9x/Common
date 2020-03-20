@@ -51,6 +51,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Autodesk.Revit.DB;
+
 using KeLi.Common.Revit.Relations;
 
 namespace KeLi.Common.Revit.Converters
@@ -577,7 +578,7 @@ namespace KeLi.Common.Revit.Converters
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
-        public static List<CurveArray> ToCurveArrayList<T>(this IEnumerable<T> curves) where T: Curve
+        public static List<CurveArray> ToCurveArrayList<T>(this IEnumerable<T> curves) where T : Curve
         {
             if (curves is null)
                 throw new ArgumentNullException(nameof(curves));
@@ -587,7 +588,7 @@ namespace KeLi.Common.Revit.Converters
             foreach (var curve in curves)
                 ary.Append(curve);
 
-            return new List<CurveArray> {ary};
+            return new List<CurveArray> { ary };
         }
 
         /// <summary>
@@ -649,7 +650,7 @@ namespace KeLi.Common.Revit.Converters
         /// </summary>
         /// <param name="faces"></param>
         /// <returns></returns>
-        public static FaceArray ToFaceArray<T>(this IEnumerable<T> faces) where T: Face
+        public static FaceArray ToFaceArray<T>(this IEnumerable<T> faces) where T : Face
         {
             if (faces is null)
                 throw new ArgumentNullException(nameof(faces));

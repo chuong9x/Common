@@ -103,13 +103,13 @@ namespace KeLi.Common.Revit.Builders
         /// <returns></returns>
         public static Plane CreatePlane(this XYZ normal, XYZ origin)
         {
-#if R2016
+            #if R2016
             return new Plane(normal, line.Origin);
-#endif
-#if !R2016
+            #endif
+            #if !R2016
 
             return Plane.CreateByNormalAndOrigin(normal, origin);
-#endif
+            #endif
         }
 
         /// <summary>

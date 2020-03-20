@@ -106,18 +106,14 @@ namespace KeLi.Common.Tool.Cache
             bool result;
 
             if (string.IsNullOrWhiteSpace(key))
-            {
                 result = false;
-            }
 
             else if (string.IsNullOrWhiteSpace(data.ToString()))
-            {
                 result = false;
-            }
 
             else
             {
-                var cip = new CacheItemPolicy {AbsoluteExpiration = DateTime.Now.AddMinutes(timeout)};
+                var cip = new CacheItemPolicy { AbsoluteExpiration = DateTime.Now.AddMinutes(timeout) };
 
                 result = _data.Add(new CacheItem(key, data), cip);
             }
@@ -197,7 +193,7 @@ namespace KeLi.Common.Tool.Cache
                 result = default;
 
             else
-                result = (T) _data[key];
+                result = (T)_data[key];
 
             return result;
         }
@@ -219,9 +215,7 @@ namespace KeLi.Common.Tool.Cache
             var keys = _data.Where(w => regex.IsMatch(w.Key)).Select(s => s.Key).ToList();
 
             if (keys.Count == 0)
-            {
                 results = null;
-            }
 
             else
             {

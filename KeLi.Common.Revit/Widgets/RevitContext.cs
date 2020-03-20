@@ -115,7 +115,7 @@ namespace KeLi.Common.Revit.Widgets
 
             _vendorId = ConfigUtil.GetValue("VendorId");
 
-            if(string.IsNullOrWhiteSpace(_version))
+            if (string.IsNullOrWhiteSpace(_version))
                 _version = ConfigUtil.GetValue("RevitVersion");
         }
 
@@ -135,7 +135,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static RevitContext CreateInstance(RevitVersion version)
         {
-            _version =  version.ToString().Replace("Revit", string.Empty);
+            _version = version.ToString().Replace("Revit", string.Empty);
 
             return SingletonFactory<RevitContext>.CreateInstance();
         }
@@ -198,9 +198,9 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         private static void SetEnvironmentVariable()
         {
-            var revitPath = new[] {GetRevitInstallPath()};
+            var revitPath = new[] { GetRevitInstallPath() };
 
-            var path = new[] {Environment.GetEnvironmentVariable("PATH") ?? string.Empty};
+            var path = new[] { Environment.GetEnvironmentVariable("PATH") ?? string.Empty };
 
             var newPath = string.Join(Path.PathSeparator.ToString(), path.Concat(revitPath));
 

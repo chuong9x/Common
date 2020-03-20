@@ -172,7 +172,7 @@ namespace KeLi.Common.Revit.Widgets
 
             var rowNum = body.NumberOfRows;
 
-            var result = new DataTable {TableName = view.GetCellText(SectionType.Header, 0, 0)};
+            var result = new DataTable { TableName = view.GetCellText(SectionType.Header, 0, 0) };
 
             for (var i = 0; i < colNum; i++)
                 result.Columns.Add();
@@ -180,7 +180,7 @@ namespace KeLi.Common.Revit.Widgets
             for (var i = 0; i < rowNum; i++)
             {
                 var row = result.NewRow();
-                
+
                 for (var j = 0; j < colNum; j++)
                     row[j] = view.GetCellText(SectionType.Body, i, j);
 

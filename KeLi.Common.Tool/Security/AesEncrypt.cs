@@ -91,18 +91,22 @@ namespace KeLi.Common.Tool.Security
             var dcsp = new DESCryptoServiceProvider();
 
             using (var ms = new MemoryStream())
-            using (var cs = new CryptoStream(ms, dcsp.CreateEncryptor(keys, ivs), CryptoStreamMode.Write))
-            using (var sw = new StreamWriter(cs))
             {
-                sw.Write(content);
+                using (var cs = new CryptoStream(ms, dcsp.CreateEncryptor(keys, ivs), CryptoStreamMode.Write))
+                {
+                    using (var sw = new StreamWriter(cs))
+                    {
+                        sw.Write(content);
 
-                sw.Flush();
+                        sw.Flush();
 
-                cs.FlushFinalBlock();
+                        cs.FlushFinalBlock();
 
-                ms.Flush();
+                        ms.Flush();
 
-                return Convert.ToBase64String(ms.GetBuffer(), 0, (int)ms.Length);
+                        return Convert.ToBase64String(ms.GetBuffer(), 0, (int)ms.Length);
+                    }
+                }
             }
         }
 
@@ -131,10 +135,12 @@ namespace KeLi.Common.Tool.Security
             var context = Convert.FromBase64String(ciphertext);
 
             using (var ms = new MemoryStream(context))
-            using (var cs = new CryptoStream(ms, dcsp.CreateDecryptor(keys, ivs), CryptoStreamMode.Read))
-            using (var sr = new StreamReader(cs))
             {
-                return sr.ReadToEnd();
+                using (var cs = new CryptoStream(ms, dcsp.CreateDecryptor(keys, ivs), CryptoStreamMode.Read))
+                {
+                    using (var sr = new StreamReader(cs))
+                        return sr.ReadToEnd();
+                }
             }
         }
     }

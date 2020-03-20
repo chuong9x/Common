@@ -52,6 +52,7 @@ using System.Linq;
 
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
+
 using KeLi.Common.Revit.Converters;
 using KeLi.Common.Revit.Widgets;
 
@@ -95,12 +96,12 @@ namespace KeLi.Common.Revit.Builders
 
             fdoc.AutoTransaction(() =>
             {
-               var skectchPlane = fdoc.CreateSketchPlane(parm.Plane);
+                var skectchPlane = fdoc.CreateSketchPlane(parm.Plane);
 
-               if (skectchPlane is null)
-                   return;
+                if (skectchPlane is null)
+                    return;
 
-               fdoc.FamilyCreate.NewExtrusion(true, profile, skectchPlane, parm.End);
+                fdoc.FamilyCreate.NewExtrusion(true, profile, skectchPlane, parm.End);
             });
 
             return doc.GetFamilySymbol(fdoc, rfaPath);
@@ -136,12 +137,12 @@ namespace KeLi.Common.Revit.Builders
 
             fdoc.AutoTransaction(() =>
             {
-               var profile = app.Create.NewCurveLoopsProfile(curveLoops);
+                var profile = app.Create.NewCurveLoopsProfile(curveLoops);
 
-               if (profile is null)
-                   return;
+                if (profile is null)
+                    return;
 
-               fdoc.FamilyCreate.NewSweep(true, parm.SweepPath, profile, parm.Index, parm.Location);
+                fdoc.FamilyCreate.NewSweep(true, parm.SweepPath, profile, parm.Index, parm.Location);
             });
 
             return doc.GetFamilySymbol(fdoc, rfaPath);
