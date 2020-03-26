@@ -91,13 +91,13 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
-        ///     Gets boundary wall list of the room.
+        ///     Gets boundary element list of the room.
         /// </summary>
         /// <param name="room"></param>
         /// <param name="doc"></param>
         /// <param name="opt"></param>
         /// <returns></returns>
-        public static List<Wall> GetBoundaryWallList(this SpatialElement room, Document doc, Option opt = null)
+        public static List<Element> GetBoundaryElementList(this SpatialElement room, Document doc, Option opt = null)
         {
             if (room is null)
                 throw new ArgumentNullException(nameof(room));
@@ -105,7 +105,7 @@ namespace KeLi.Common.Revit.Widgets
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            var results = new List<Wall>();
+            var results = new List<Element>();
 
             if (opt == null)
                 opt = new Option { SpatialElementBoundaryLocation = Finish };
@@ -122,11 +122,55 @@ namespace KeLi.Common.Revit.Widgets
                 if (results.FirstOrDefault(f => f.Id == segment.ElementId) != null)
                     continue;
 
-                if (doc.GetElement(segment.ElementId) is Wall wall)
-                    results.Add(wall);
+                var elm = doc.GetElement(segment.ElementId);
+
+                results.Add(elm);
             }
 
             return results;
+        }
+
+        /// <summary>
+        ///     Gets boundary wall list of the room.
+        /// </summary>
+        /// <param name="room"></param>
+        /// <param name="doc"></param>
+        /// <param name="opt"></param>
+        /// <returns></returns>
+        public static List<Wall> GetBoundaryWallList(this SpatialElement room, Document doc, Option opt = null)
+        {
+            if (room is null)
+                throw new ArgumentNullException(nameof(room));
+
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            var boundaryElms = GetBoundaryElementList(room, doc, opt);
+
+            return boundaryElms.Where(w => w is Wall).Cast<Wall>().ToList();
+        }
+
+        /// <summary>
+        ///     Gets element as key and curve as value dictionary.
+        /// </summary>
+        /// <param name="room"></param>
+        /// <param name="doc"></param>
+        /// <param name="opt"></param>
+        /// <returns></returns>
+        public static Dictionary<Element, Curve> GetElementCurveDict(this SpatialElement room, Document doc, Option opt = null)
+        {
+            if (room is null)
+                throw new ArgumentNullException(nameof(room));
+
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (opt == null)
+                opt = new Option { SpatialElementBoundaryLocation = Finish };
+
+            var segments = room.GetBoundarySegments(opt).SelectMany(s => s);
+
+            return segments.ToDictionary(k => doc.GetElement(k.ElementId), v => v.GetCurve());
         }
     }
 }
