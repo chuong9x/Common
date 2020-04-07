@@ -143,7 +143,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="act"></param>
         /// <returns></returns>
-        public static bool RepeatCommand(this Action act)
+        public static void RepeatCommand(this Action act)
         {
             if (act is null)
                 throw new ArgumentNullException(nameof(act));
@@ -156,10 +156,33 @@ namespace KeLi.Common.Revit.Widgets
             }
             catch (OperationCanceledException)
             {
-                return false;
+            }
+        }
+
+        /// <summary>
+        ///     To repeat call command.
+        /// </summary>
+        /// <param name="continueTask"></param>
+        /// <param name="flag"></param>
+        /// <param name="ignoreCancelOperation"></param>
+        /// <returns></returns>
+        public static bool RepeatCommand(Func<bool> continueTask, bool flag = true, bool ignoreCancelOperation = true)
+        {
+            if (continueTask is null)
+                throw new ArgumentNullException(nameof(continueTask));
+
+            try
+            {
+                if (flag && continueTask.Invoke())
+                    return RepeatCommand(continueTask);
+            }
+            catch (OperationCanceledException)
+            {
+                if (ignoreCancelOperation && continueTask.Invoke())
+                    return RepeatCommand(continueTask);
             }
 
-            return true;
+            return false;
         }
     }
 }
