@@ -232,7 +232,7 @@ namespace KeLi.Common.Revit.Builders
         /// </summary>
         /// <param name="profile"></param>
         /// <returns></returns>
-        private static CurveArrArray ResetCurveArrArray(CurveArrArray profile)
+        public static CurveArrArray ResetCurveArrArray(CurveArrArray profile)
         {
             if (profile is null)
                 throw new ArgumentNullException(nameof(profile));
