@@ -52,6 +52,7 @@ using System.Diagnostics;
 using System.Linq;
 
 using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 
 using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledException;
 
@@ -141,6 +142,28 @@ namespace KeLi.Common.Revit.Widgets
         /// <summary>
         ///     To repeat call command.
         /// </summary>
+        /// <param name="uidoc"></param>
+        /// <param name="act"></param>
+        /// <returns></returns>
+        public static void RepeatCommand(this UIDocument uidoc, Action act)
+        {
+            if (act is null)
+                throw new ArgumentNullException(nameof(act));
+
+            try
+            {
+                act.Invoke();
+
+                RepeatCommand(uidoc, act);
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }
+
+        /// <summary>
+        ///     To repeat call command.
+        /// </summary>
         /// <param name="doc"></param>
         /// <param name="act"></param>
         /// <returns></returns>
@@ -158,6 +181,33 @@ namespace KeLi.Common.Revit.Widgets
             catch (OperationCanceledException)
             {
             }
+        }
+
+        /// <summary>
+        ///     To repeat call command.
+        /// </summary>
+        /// <param name="uidoc"></param>
+        /// <param name="func"></param>
+        /// <param name="flag"></param>
+        /// <param name="ignoreEsc"></param>
+        /// <returns></returns>
+        public static bool RepeatCommand(this UIDocument uidoc, Func<bool> func, bool flag = true, bool ignoreEsc = true)
+        {
+            if (func is null)
+                throw new ArgumentNullException(nameof(func));
+
+            try
+            {
+                if (flag && func.Invoke())
+                    return RepeatCommand(uidoc, func);
+            }
+            catch (OperationCanceledException)
+            {
+                if (ignoreEsc && func.Invoke())
+                    return RepeatCommand(uidoc, func);
+            }
+
+            return false;
         }
 
         /// <summary>
