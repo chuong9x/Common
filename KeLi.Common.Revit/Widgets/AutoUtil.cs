@@ -141,9 +141,10 @@ namespace KeLi.Common.Revit.Widgets
         /// <summary>
         ///     To repeat call command.
         /// </summary>
+        /// <param name="doc"></param>
         /// <param name="act"></param>
         /// <returns></returns>
-        public static void RepeatCommand(this Action act)
+        public static void RepeatCommand(this Document doc, Action act)
         {
             if (act is null)
                 throw new ArgumentNullException(nameof(act));
@@ -152,7 +153,7 @@ namespace KeLi.Common.Revit.Widgets
             {
                 act.Invoke();
 
-                RepeatCommand(act);
+                RepeatCommand(doc, act);
             }
             catch (OperationCanceledException)
             {
@@ -162,24 +163,25 @@ namespace KeLi.Common.Revit.Widgets
         /// <summary>
         ///     To repeat call command.
         /// </summary>
-        /// <param name="continueTask"></param>
+        /// <param name="doc"></param>
+        /// <param name="func"></param>
         /// <param name="flag"></param>
-        /// <param name="ignoreCancelOperation"></param>
+        /// <param name="ignoreEsc"></param>
         /// <returns></returns>
-        public static bool RepeatCommand(Func<bool> continueTask, bool flag = true, bool ignoreCancelOperation = true)
+        public static bool RepeatCommand(this Document doc, Func<bool> func, bool flag = true, bool ignoreEsc = true)
         {
-            if (continueTask is null)
-                throw new ArgumentNullException(nameof(continueTask));
+            if (func is null)
+                throw new ArgumentNullException(nameof(func));
 
             try
             {
-                if (flag && continueTask.Invoke())
-                    return RepeatCommand(continueTask);
+                if (flag && func.Invoke())
+                    return RepeatCommand(doc, func);
             }
             catch (OperationCanceledException)
             {
-                if (ignoreCancelOperation && continueTask.Invoke())
-                    return RepeatCommand(continueTask);
+                if (ignoreEsc && func.Invoke())
+                    return RepeatCommand(doc, func);
             }
 
             return false;
