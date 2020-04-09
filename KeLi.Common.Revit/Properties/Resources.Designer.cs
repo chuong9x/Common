@@ -59,5 +59,14 @@ namespace KeLi.Common.Revit.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 图纸.
+        /// </summary>
+        internal static string Draw_CHS {
+            get {
+                return ResourceManager.GetString("Draw_CHS", resourceCulture);
+            }
+        }
     }
 }
