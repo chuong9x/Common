@@ -58,12 +58,12 @@ using KeLi.Common.Revit.Properties;
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    /// Drawing utility.
+    /// 	Drawing utility.
     /// </summary>
     public static class DrawingUtil
     {
         /// <summary>
-        /// Exports drawing list.
+        /// 	Exports drawing list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="drawingPath"></param>

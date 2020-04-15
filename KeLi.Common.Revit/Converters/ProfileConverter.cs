@@ -431,12 +431,7 @@ namespace KeLi.Common.Revit.Converters
             if (curveArray is null)
                 throw new ArgumentNullException(nameof(curveArray));
 
-            var results = new CurveLoop();
-
-            foreach (Curve curve in curveArray)
-                results.Append(curve);
-
-            return results;
+            return curveArray.ToCurveList().ToCurveLoop();
         }
 
         /// <summary>
@@ -494,21 +489,58 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
-        ///     Converts the Curve list to the CurveLoop.
+        ///     Converts the CurveArray to the CurveLoop.
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
         public static CurveLoop ToCurveLoop<T>(this IEnumerable<T> curves) where T : Curve
         {
-            if (curves is null)
-                throw new ArgumentNullException(nameof(curves));
+           var curveList = curves.ToList();
 
-            var results = new CurveLoop();
+            if (curves == null || curveList.Count == 0)
+                throw new NullReferenceException(nameof(curveList));
 
-            foreach (var curve in curves)
-                results.Append(curve);
+            var curveLoop = new CurveLoop();
 
-            return results;
+            var endPt = curveList[0]?.GetEndPoint(1);
+
+            curveLoop.Append(curveList[0]);
+
+            curveList[0] = null;
+
+            while (curveLoop.Count() < curveList.Count)
+            {
+                for (var i = 0; i < curveList.Count; i++)
+                {
+                    if (curveList[i] == null)
+                        continue;
+
+                    var p0 = curveList[i].GetEndPoint(0);
+
+                    var p1 = curveList[i].GetEndPoint(1);
+
+                    if (p0.IsAlmostEqualTo(endPt))
+                    {
+                        endPt = p1;
+
+                        curveLoop.Append(curveList[i]);
+
+                        curveList[i] = null;
+                    }
+
+                    // The curve should be reversed.
+                    else if (p1.IsAlmostEqualTo(endPt))
+                    {
+                        endPt = p0;
+
+                        curveLoop.Append(curveList[i].CreateReversed());
+
+                        curveList[i] = null;
+                    }
+                }
+            }
+
+            return curveLoop;
         }
 
         /// <summary>
@@ -521,12 +553,7 @@ namespace KeLi.Common.Revit.Converters
             if (curves is null)
                 throw new ArgumentNullException(nameof(curves));
 
-            var results = new CurveLoop();
-
-            foreach (var curve in curves)
-                results.Append(curve);
-
-            return results;
+            return curves.ToCurveLoop();
         }
 
         /// <summary>
@@ -619,10 +646,7 @@ namespace KeLi.Common.Revit.Converters
             if (curves is null)
                 throw new ArgumentNullException(nameof(curves));
 
-            var loop = new CurveLoop();
-
-            foreach (var curve in curves)
-                loop.Append(curve);
+            var loop = curves.ToCurveLoop();
 
             return new List<CurveLoop> { loop };
         }
@@ -637,10 +661,7 @@ namespace KeLi.Common.Revit.Converters
             if (curves is null)
                 throw new ArgumentNullException(nameof(curves));
 
-            var loop = new CurveLoop();
-
-            foreach (var curve in curves)
-                loop.Append(curve);
+            var loop = curves.ToCurveLoop();
 
             return new List<CurveLoop> { loop };
         }
