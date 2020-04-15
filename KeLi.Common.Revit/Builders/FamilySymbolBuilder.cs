@@ -49,6 +49,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
@@ -82,7 +83,7 @@ namespace KeLi.Common.Revit.Builders
             if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
 
-            var tplPath = app.GeTemplateFilePath(parm.TemplateFileName);
+            var tplPath = app.GetTemplateFilePath(parm.TemplateFileName);
 
             if (!File.Exists(tplPath))
                 throw new FileNotFoundException(tplPath);
@@ -126,7 +127,7 @@ namespace KeLi.Common.Revit.Builders
             if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
 
-            var tplPath = app.GeTemplateFilePath(parm.TemplateFileName);
+            var tplPath = app.GetTemplateFilePath(parm.TemplateFileName);
 
             var fdoc = app.NewFamilyDocument(tplPath);
 
@@ -208,23 +209,6 @@ namespace KeLi.Common.Revit.Builders
 
                 return result;
             });
-        }
-
-        /// <summary>
-        ///     Gets the metric template file path.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        public static string GeTemplateFilePath(this Application app, string fileName)
-        {
-            if (app is null)
-                throw new ArgumentNullException(nameof(app));
-
-            if (fileName is null)
-                throw new ArgumentNullException(nameof(fileName));
-
-            return Path.Combine(app.FamilyTemplatePath.Replace("English_I", "English"), fileName);
         }
 
         /// <summary>
