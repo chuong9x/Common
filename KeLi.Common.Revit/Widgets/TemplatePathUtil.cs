@@ -53,7 +53,7 @@ using Autodesk.Revit.ApplicationServices;
 
 using KeLi.Common.Revit.Properties;
 
-namespace KeLi.Common.Revit.Builders
+namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
     /// Template path unitility.

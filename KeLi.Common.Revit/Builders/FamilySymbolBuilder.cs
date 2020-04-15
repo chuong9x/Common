@@ -49,7 +49,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
