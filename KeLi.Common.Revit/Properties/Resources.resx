@@ -120,4 +120,7 @@
   <data name="Draw_CHS" xml:space="preserve">
     <value>图纸</value>
   </data>
+  <data name="GeneralTemplateName_CHS" xml:space="preserve">
+    <value>公制常规模型.rft</value>
+  </data>
 </root>

@@ -96,6 +96,7 @@
     <Compile Include="Builders\PipeBuilder.cs" />
     <Compile Include="Builders\PipeParameter.cs" />
     <Compile Include="Builders\PlaneBuilder.cs" />
+    <Compile Include="Builders\TemplatePathUtil.cs" />
     <Compile Include="Builders\ViewBuilder.cs" />
     <Compile Include="Filters\FilterType.cs" />
     <Compile Include="Filters\LineDirection.cs" />

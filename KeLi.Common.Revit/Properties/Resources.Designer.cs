@@ -68,5 +68,14 @@ namespace KeLi.Common.Revit.Properties {
                 return ResourceManager.GetString("Draw_CHS", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 公制常规模型.rft.
+        /// </summary>
+        internal static string GeneralTemplateName_CHS {
+            get {
+                return ResourceManager.GetString("GeneralTemplateName_CHS", resourceCulture);
+            }
+        }
     }
 }
