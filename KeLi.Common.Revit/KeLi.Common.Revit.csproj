@@ -96,6 +96,9 @@
     <Compile Include="Builders\PipeBuilder.cs" />
     <Compile Include="Builders\PipeParameter.cs" />
     <Compile Include="Builders\PlaneBuilder.cs" />
+    <Compile Include="Widgets\ProfileUtil.cs" />
+    <Compile Include="Widgets\StorageManager.cs" />
+    <Compile Include="Widgets\SweepPathUtil.cs" />
     <Compile Include="Widgets\TemplatePathUtil.cs" />
     <Compile Include="Builders\ViewBuilder.cs" />
     <Compile Include="Filters\FilterType.cs" />
