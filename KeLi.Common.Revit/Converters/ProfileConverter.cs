@@ -508,7 +508,11 @@ namespace KeLi.Common.Revit.Converters
 
             curveList[0] = null;
 
-            while (curveLoop.Count() < curveList.Count)
+            // If computing count equals curveLoop count, it should break.
+            // Because, the curveLoop cannot find valid curve to append.
+            var count = 0;
+
+            while (count < curveList.Count && curveLoop.Count() < curveList.Count)
             {
                 for (var i = 0; i < curveList.Count; i++)
                 {
@@ -538,6 +542,8 @@ namespace KeLi.Common.Revit.Converters
                         curveList[i] = null;
                     }
                 }
+
+                count++;
             }
 
             return curveLoop;
