@@ -71,7 +71,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="parm"></param>
         /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateExtrusionSymbol(this Document doc, Application app, FamilySymbolParameter parm, string rfaPath = null)
+        public static FamilySymbol CreateExtrusion(this Document doc, Application app, ExtrudeParameter parm, string rfaPath = null)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -82,14 +82,14 @@ namespace KeLi.Common.Revit.Builders
             if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
 
-            var tplPath = app.GetTemplateFilePath(parm.TemplateFileName);
+            var tplPath = app.GetTemplateFilePath(parm.TemplateName);
 
             if (!File.Exists(tplPath))
                 throw new FileNotFoundException(tplPath);
 
             var fdoc = app.NewFamilyDocument(tplPath);
 
-            var profile = ResetCurveArrArray(parm.Profile);
+            var profile = ResetCurveArrArray(parm.Boundary);
 
             if (profile is null)
                 return null;
@@ -101,7 +101,7 @@ namespace KeLi.Common.Revit.Builders
                 if (skectchPlane is null)
                     return;
 
-                fdoc.FamilyCreate.NewExtrusion(true, profile, skectchPlane, parm.End);
+                fdoc.FamilyCreate.NewExtrusion(true, profile, skectchPlane, parm.Thick);
             });
 
             return doc.GetFamilySymbol(fdoc, rfaPath);
@@ -115,7 +115,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="parm"></param>
         /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateSweepSymbol(this Document doc, Application app, FamilySymbolParameter parm, string rfaPath = null)
+        public static FamilySymbol CreateSweep(this Document doc, Application app, SweepParameter parm, string rfaPath = null)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -126,7 +126,7 @@ namespace KeLi.Common.Revit.Builders
             if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
 
-            var tplPath = app.GetTemplateFilePath(parm.TemplateFileName);
+            var tplPath = app.GetTemplateFilePath(parm.TemplateName);
 
             var fdoc = app.NewFamilyDocument(tplPath);
 
@@ -142,7 +142,7 @@ namespace KeLi.Common.Revit.Builders
                 if (profile is null)
                     return;
 
-                fdoc.FamilyCreate.NewSweep(true, parm.SweepPath, profile, parm.Index, parm.Location);
+                fdoc.FamilyCreate.NewSweep(true, parm.Path, profile, parm.Index, parm.Location);
             });
 
             return doc.GetFamilySymbol(fdoc, rfaPath);

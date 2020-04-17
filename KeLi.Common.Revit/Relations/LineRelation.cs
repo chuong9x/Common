@@ -112,7 +112,10 @@ namespace KeLi.Common.Revit.Relations
 
             var p2 = line.GetEndPoint(1);
 
-            return Line.CreateBound(new XYZ(p1.X, p1.Y, p1.Z), new XYZ(p2.X, p2.Y, p1.Z));
+            if (p1.Z < p2.Z)
+                return Line.CreateBound(new XYZ(p1.X, p1.Y, p1.Z), new XYZ(p2.X, p2.Y, p1.Z));
+
+            return Line.CreateBound(new XYZ(p1.X, p1.Y, p2.Z), new XYZ(p2.X, p2.Y, p2.Z));
         }
 
         /// <summary>

@@ -79,8 +79,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="wall"></param>
         /// <param name="typeName"></param>
         /// <param name="tplName"></param>
-        public CurtainSystemParameter(SpatialElement room, Wall wall, string typeName, string tplName)
-            : this(room, typeName, tplName)
+        public CurtainSystemParameter(SpatialElement room, Wall wall, string typeName, string tplName) : this(room, typeName, tplName)
         {
             ReferenceWall = wall ?? throw new ArgumentNullException(nameof(wall));
         }
@@ -92,8 +91,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="typeName"></param>
         /// <param name="tplName"></param>
         /// <param name="profile"></param>
-        public CurtainSystemParameter(SpatialElement room, string typeName, string tplName, CurveArrArray profile)
-            : this(room, typeName, tplName)
+        public CurtainSystemParameter(SpatialElement room, string typeName, string tplName, CurveArrArray profile) : this(room, typeName, tplName)
         {
             Profile = profile ?? throw new ArgumentNullException(nameof(profile));
         }

@@ -66,7 +66,6 @@ using Room2 = Autodesk.Revit.DB.SpatialElement;
 using App = Autodesk.Revit.ApplicationServices.Application;
 using CurtainParm = KeLi.Common.Revit.Builders.CurtainSystemParameter;
 using InstParm = KeLi.Common.Revit.Builders.FamilyInstanceParameter;
-using SymbolParm = KeLi.Common.Revit.Builders.FamilySymbolParameter;
 
 namespace KeLi.Common.Revit.Builders
 {
@@ -367,9 +366,9 @@ namespace KeLi.Common.Revit.Builders
             if (curtainParm.Profile.Size == 0)
                 throw new ArgumentException(nameof(curtainParm.Profile));
 
-            var symbolParm = new SymbolParm(curtainParm.TemplateFileName, curtainParm.Profile, plane, 1.0);
+            var symbolParm = new ExtrudeParameter(curtainParm.TemplateFileName, curtainParm.Profile, plane, 100);
 
-            var symbol = doc.CreateExtrusionSymbol(app, symbolParm);
+            var symbol = doc.CreateExtrusion(app, symbolParm);
 
             var location = curtainParm.Profile.ToCurveList().GetDistinctPointList().GetMinPoint();
 
@@ -403,9 +402,9 @@ namespace KeLi.Common.Revit.Builders
 
             var plane = normal.CreatePlane(XYZ.Zero);
 
-            var symbolParm = new SymbolParm(curtainParm.TemplateFileName, profile, plane, 1.0);
+            var symbolParm = new ExtrudeParameter(curtainParm.TemplateFileName, profile, plane, 100);
 
-            var symbol = doc.CreateExtrusionSymbol(app, symbolParm);
+            var symbol = doc.CreateExtrusion(app, symbolParm);
 
             var location = profile.ToCurveList().GetDistinctPointList().GetMinPoint();
 

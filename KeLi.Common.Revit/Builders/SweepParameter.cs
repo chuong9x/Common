@@ -57,43 +57,28 @@ using Location = Autodesk.Revit.DB.ProfilePlaneLocation;
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    ///     Family symbol parmater.
+    ///     Sweep parameter.
     /// </summary>
-    public class FamilySymbolParameter
+    public class SweepParameter
     {
         /// <summary>
-        ///     Family symbol parameter.
+        ///     Sweep parameter.
         /// </summary>
-        /// <param name="tplName"></param>
-        /// <param name="profile"></param>
-        /// <param name="plane"></param>
-        /// <param name="end"></param>
-        public FamilySymbolParameter(string tplName, CurveArrArray profile, Plane plane, double end)
-        {
-            TemplateFileName = tplName ?? throw new ArgumentNullException(nameof(tplName));
-
-            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
-
-            Plane = plane ?? throw new ArgumentNullException(nameof(plane));
-
-            End = end;
-        }
-
-        /// <summary>
-        ///     Family symbol parameter.
-        /// </summary>
-        /// <param name="tplName"></param>
         /// <param name="profile"></param>
         /// <param name="path"></param>
         /// <param name="loc"></param>
         /// <param name="index"></param>
-        public FamilySymbolParameter(string tplName, CurveArrArray profile, ReferenceArray path, Location loc = Start, int index = 0)
+        /// <param name="tplName"></param>
+        public SweepParameter(string tplName, CurveArrArray profile, ReferenceArray path, Location loc = Start, int index = 0)
         {
-            TemplateFileName = tplName ?? throw new ArgumentNullException(nameof(tplName));
+            if (tplName == null)
+                throw new ArgumentNullException(nameof(tplName));
+
+            TemplateName = tplName.Replace(".rft", string.Empty) + ".rft";
 
             Profile = profile ?? throw new ArgumentNullException(nameof(profile));
 
-            SweepPath = path ?? throw new ArgumentNullException(nameof(path));
+            Path = path ?? throw new ArgumentNullException(nameof(path));
 
             Location = loc;
 
@@ -101,32 +86,22 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        ///     The family symbol's template file name including file suffix.
+        ///     Template file is for creating family document.
         /// </summary>
-        public string TemplateFileName { get; }
+        public string TemplateName { get; }
 
         /// <summary>
-        ///     The extrusion symbol's profile.
+        ///     The sweep's profile.
         /// </summary>
         public CurveArrArray Profile { get; }
 
         /// <summary>
-        ///     The family symbol's reference plane.
+        ///     The sweep's path.
         /// </summary>
-        public Plane Plane { get; }
+        public ReferenceArray Path { get; set; }
 
         /// <summary>
-        ///     The family symbol's end length.
-        /// </summary>
-        public double End { get; }
-
-        /// <summary>
-        ///     The sweep symbol's path.
-        /// </summary>
-        public ReferenceArray SweepPath { get; set; }
-
-        /// <summary>
-        ///     The sweep symbol's profile plane location.
+        ///     The profile's location.
         /// </summary>
         public Location Location { get; set; }
 
