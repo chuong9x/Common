@@ -74,7 +74,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="room"></param>
         /// <param name="view3D"></param>
         /// <param name="typeName"></param>
-        public static CurtainSystem CreateCurtainWall(this Wall wall, SpatialElement room, View3D view3D, string typeName = null)
+        public static CurtainSystem CreateWallCurtainSystem(this Wall wall, SpatialElement room, View3D view3D, string typeName = null)
         {
             if (wall is null)
                 throw new ArgumentNullException(nameof(wall));

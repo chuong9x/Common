@@ -160,7 +160,7 @@ namespace KeLi.Common.Revit.Builders
             if (normal == null)
                 return null;
 
-            var plane = Plane.CreateByNormalAndOrigin(normal, curve.GetEndPoint(0));
+            var plane = normal.CreatePlane(curve.GetEndPoint(0));
 
             sketchPlane = SketchPlane.Create(doc, plane);
 

@@ -99,17 +99,20 @@ namespace KeLi.Common.Revit.Builders
         ///     Creates a new plane.
         /// </summary>
         /// <param name="normal"></param>
-        /// <param name="origin"></param>
+        /// <param name="point"></param>
         /// <returns></returns>
-        public static Plane CreatePlane(this XYZ normal, XYZ origin)
+        public static Plane CreatePlane(this XYZ normal, XYZ point)
         {
             #if R2016
-            return new Plane(normal, line.Origin);
-            #endif
-            #if !R2016
 
-            return Plane.CreateByNormalAndOrigin(normal, origin);
-            #endif
+            return new Plane(normal, point);
+
+#endif
+
+#if !R2016
+            return Plane.CreateByNormalAndOrigin(normal, point);
+
+#endif
         }
 
         /// <summary>
