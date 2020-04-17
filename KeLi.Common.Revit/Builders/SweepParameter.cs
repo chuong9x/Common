@@ -68,14 +68,8 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="path"></param>
         /// <param name="loc"></param>
         /// <param name="index"></param>
-        /// <param name="tplName"></param>
-        public SweepParameter(string tplName, CurveArrArray profile, ReferenceArray path, Location loc = Start, int index = 0)
+        public SweepParameter(CurveArrArray profile, ReferenceArray path, Location loc = Start, int index = 0)
         {
-            if (tplName == null)
-                throw new ArgumentNullException(nameof(tplName));
-
-            TemplateName = tplName.Replace(".rft", string.Empty) + ".rft";
-
             Profile = profile ?? throw new ArgumentNullException(nameof(profile));
 
             Path = path ?? throw new ArgumentNullException(nameof(path));
@@ -84,11 +78,6 @@ namespace KeLi.Common.Revit.Builders
 
             Index = index;
         }
-
-        /// <summary>
-        ///     Template file is for creating family document.
-        /// </summary>
-        public string TemplateName { get; }
 
         /// <summary>
         ///     The sweep's profile.

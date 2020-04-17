@@ -14,28 +14,18 @@ namespace KeLi.Common.Revit.Builders
         /// <summary>
         ///     Extrude parameter
         /// </summary>
-        /// <param name="tplName"></param>
         /// <param name="boundary"></param>
         /// <param name="plane"></param>
         /// <param name="thick"></param>
         /// <param name="convertUnit"></param>
-        public ExtrudeParameter(string tplName, CurveArrArray boundary, Plane plane, double thick, bool convertUnit = true)
+        public ExtrudeParameter(CurveArrArray boundary, Plane plane, double thick, bool convertUnit = true)
         {
-            if (tplName == null)
-                throw new ArgumentNullException(nameof(tplName));
-
-            TemplateName = tplName.Replace(".rft", string.Empty) + ".rft";
-
             Boundary = boundary ?? throw new ArgumentNullException(nameof(boundary));
 
             Plane = plane ?? throw new ArgumentNullException(nameof(plane));
 
             Thick = convertUnit ? UnitConverter.ConvertMmToFeet(thick) : thick;
         }
-        /// <summary>
-        ///     Template file is for creating family document.
-        /// </summary>
-        public string TemplateName { get; }
 
         /// <summary>
         ///     The Extrude's boundary.

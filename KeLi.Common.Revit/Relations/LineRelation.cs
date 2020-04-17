@@ -284,7 +284,7 @@ namespace KeLi.Common.Revit.Relations
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
-        public static List<XYZ> GetDistinctPointList(this IEnumerable<Curve> curves)
+        public static List<XYZ> GetDiffPointList(this IEnumerable<Curve> curves)
         {
             if (curves is null)
                 throw new ArgumentNullException(nameof(curves));

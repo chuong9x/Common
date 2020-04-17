@@ -46,32 +46,34 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System;
-
 using Autodesk.Revit.DB;
+
+using static Autodesk.Revit.DB.BuiltInParameter;
+using static Autodesk.Revit.DB.BuiltInParameterGroup;
 
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    ///     Material builder.
+    ///     Material utility.
     /// </summary>
-    public static class MaterialBuilder
+    public static class MaterialUtil
     {
         /// <summary>
-        ///     Creates a new material.
+        ///     Associates material
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public static Material CreateMaterial(this Document doc, string name)
+        /// <param name="elm"></param>
+        /// <param name="parmName"></param>
+        /// <param name="isInstance"></param>
+        public static void AssociateMaterial(this GenericForm elm, string parmName, bool isInstance = true)
         {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
+            var mgr = elm.Document.FamilyManager;
 
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
+            var familyParm = mgr.AddParameter(parmName, PG_MATERIALS, ParameterType.Material, isInstance);
 
-            return doc.GetElement(Material.Create(doc, name)) as Material;
+            var parm = elm.get_Parameter(MATERIAL_ID_PARAM);
+
+            if (parm != null)
+                mgr.AssociateElementParameterToFamilyParameter(parm, familyParm);
         }
     }
 }

@@ -83,16 +83,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builders\CurtainSystemBuilder.cs" />
-    <Compile Include="Builders\CurtainSystemParameter.cs" />
     <Compile Include="Builders\DirectShapeBuilder.cs" />
     <Compile Include="Builders\DirectShapeParameter.cs" />
     <Compile Include="Builders\ExtrudeParameter.cs" />
-    <Compile Include="Builders\FamilyInstanceBuilder.cs" />
-    <Compile Include="Builders\FamilyInstanceParameter.cs" />
     <Compile Include="Builders\FamilySymbolBuilder.cs" />
     <Compile Include="Builders\SweepParameter.cs" />
     <Compile Include="Builders\GroupBuilder.cs" />
-    <Compile Include="Builders\MaterialBuilder.cs" />
+    <Compile Include="Builders\MaterialUtil.cs" />
     <Compile Include="Builders\ModelCurveBuilder.cs" />
     <Compile Include="Builders\PipeBuilder.cs" />
     <Compile Include="Builders\PipeParameter.cs" />
