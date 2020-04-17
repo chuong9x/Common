@@ -67,11 +67,6 @@ namespace KeLi.Common.Revit.Widgets
     public class StructuredStorage : IDisposable
     {
         /// <summary>
-        ///     It's a specific string.
-        /// </summary>
-        private const string _streamName = "BasicFileInfo";
-
-        /// <summary>
         ///     Binding flags.
         /// </summary>
         private const BindingFlags _flags = Static | Instance | Public | NonPublic | InvokeMethod;
@@ -205,7 +200,7 @@ namespace KeLi.Common.Revit.Widgets
             if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));
 
-            var rawData = GetRawBasicFileInfo(filePath);
+            var rawData = GetRawBasicFileInfo(filePath, "BasicFileInfo");
 
             return GetRevitInfoDict(rawData);
         }
@@ -220,7 +215,7 @@ namespace KeLi.Common.Revit.Widgets
             if (fileStream is null)
                 throw new ArgumentNullException(nameof(fileStream));
 
-            var rawData = GetRawBasicFileInfo(fileStream);
+            var rawData = GetRawBasicFileInfo(fileStream, "BasicFileInfo");
 
             return GetRevitInfoDict(rawData);
         }
@@ -258,8 +253,9 @@ namespace KeLi.Common.Revit.Widgets
         ///     Gets raw basic file info.
         /// </summary>
         /// <param name="filePath"></param>
+        /// <param name="streamName"></param>
         /// <returns></returns>
-        private static byte[] GetRawBasicFileInfo(string filePath)
+        private static byte[] GetRawBasicFileInfo(string filePath, string streamName)
         {
             if (filePath is null)
                 throw new ArgumentNullException(nameof(filePath));
@@ -269,10 +265,10 @@ namespace KeLi.Common.Revit.Widgets
 
             using (var storage = new StructuredStorage(filePath))
             {
-                if (!storage.BaseRoot.StreamExists(_streamName))
-                    throw new NotSupportedException($"File doesn't contain {_streamName} stream!");
+                if (!storage.BaseRoot.StreamExists(streamName))
+                    throw new NotSupportedException($"File doesn't contain {streamName} stream!");
 
-                var streamInfo = storage.BaseRoot.GetStreamInfo(_streamName);
+                var streamInfo = storage.BaseRoot.GetStreamInfo(streamName);
 
                 using (var stream = streamInfo.GetStream(FileMode.Open, FileAccess.Read))
                 {
@@ -289,18 +285,19 @@ namespace KeLi.Common.Revit.Widgets
         ///     Gets raw basic file info.
         /// </summary>
         /// <param name="fileStream"></param>
+        /// <param name="streamName"></param>
         /// <returns></returns>
-        private static byte[] GetRawBasicFileInfo(Stream fileStream)
+        private static byte[] GetRawBasicFileInfo(Stream fileStream, string streamName)
         {
             if (fileStream is null)
                 throw new ArgumentNullException(nameof(fileStream));
 
             using (var storage = new StructuredStorage(fileStream))
             {
-                if (!storage.BaseRoot.StreamExists(_streamName))
-                    throw new NotSupportedException($"File doesn't contain {_streamName} stream!");
+                if (!storage.BaseRoot.StreamExists(streamName))
+                    throw new NotSupportedException($"File doesn't contain {streamName} stream!");
 
-                var streamInfo = storage.BaseRoot.GetStreamInfo(_streamName);
+                var streamInfo = storage.BaseRoot.GetStreamInfo(streamName);
 
                 using (var stream = streamInfo.GetStream(FileMode.Open, FileAccess.Read))
                 {
