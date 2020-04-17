@@ -52,6 +52,8 @@ using System.Linq;
 
 using Autodesk.Revit.DB;
 
+using KeLi.Common.Revit.Builders;
+
 using static Autodesk.Revit.DB.SpatialElementBoundaryLocation;
 
 namespace KeLi.Common.Revit.Filters
@@ -331,7 +333,7 @@ namespace KeLi.Common.Revit.Filters
                     if (null == solid || solid.Faces.Size <= 0)
                         continue;
 
-                    var plane = Plane.CreateByOriginAndBasis(XYZ.Zero, XYZ.BasisX, XYZ.BasisY);
+                    var plane = XYZ.BasisZ.CreatePlane(XYZ.Zero);
 
                     ExtrusionAnalyzer analyzer;
 

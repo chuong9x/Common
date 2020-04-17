@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 01/15/2020 08:05:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -47,97 +47,56 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Structure;
+
+using static Autodesk.Revit.DB.ProfilePlaneLocation;
+
+using Location = Autodesk.Revit.DB.ProfilePlaneLocation;
 
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    ///     Family instance builder.
+    ///     Sweep parameter.
     /// </summary>
-    public static class FamilyInstanceBuilder
+    public class SweepParameter
     {
         /// <summary>
-        ///     Creates a new family instance.
+        ///     Sweep parameter.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="parm"></param>
-        /// <returns></returns>
-        public static FamilyInstance CreateFamilyInstance(this Document doc, FamilyInstanceParameter parm)
+        /// <param name="profile"></param>
+        /// <param name="path"></param>
+        /// <param name="loc"></param>
+        /// <param name="index"></param>
+        public SweepParameter(CurveArrArray profile, ReferenceArray path, Location loc = Start, int index = 0)
         {
-            if (parm is null)
-                throw new ArgumentNullException(nameof(parm));
+            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
 
-            if (doc.IsFamilyDocument)
-                return doc.FamilyCreate.NewFamilyInstance(parm.Location, parm.Symbol, parm.Level, parm.Type);
+            Path = path ?? throw new ArgumentNullException(nameof(path));
 
-            return doc.Create.NewFamilyInstance(parm.Location, parm.Symbol, parm.Level, parm.Type);
+            Location = loc;
+
+            Index = index;
         }
 
         /// <summary>
-        ///     Creates a new family instance with NonStructural type.
+        ///     The sweep's profile.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="location"></param>
-        /// <param name="symbol"></param>
-        /// <param name="lvl"></param>
-        /// <returns></returns>
-        public static FamilyInstance CreateNonStructuralInstance(this Document doc, XYZ location, FamilySymbol symbol,
-            Level lvl)
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            if (location is null)
-                throw new ArgumentNullException(nameof(location));
-
-            if (symbol is null)
-                throw new ArgumentNullException(nameof(symbol));
-
-            if (lvl is null)
-                throw new ArgumentNullException(nameof(lvl));
-
-            var parm = new FamilyInstanceParameter(location, symbol, lvl, StructuralType.NonStructural);
-
-            return doc.CreateFamilyInstance(parm);
-        }
+        public CurveArrArray Profile { get; }
 
         /// <summary>
-        ///     Creates a new instance of an adaptive component family.
+        ///     The sweep's path.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="symbol"></param>
-        /// <param name="pts"></param>
-        /// <returns></returns>
-        public static FamilyInstance CreateFamilyInstance(this Document doc, FamilySymbol symbol, IEnumerable<XYZ> pts)
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
+        public ReferenceArray Path { get; set; }
 
-            if (symbol is null)
-                throw new ArgumentNullException(nameof(symbol));
+        /// <summary>
+        ///     The profile's location.
+        /// </summary>
+        public Location Location { get; set; }
 
-            if (pts is null)
-                throw new ArgumentNullException(nameof(pts));
-
-            var tmpPts = pts.ToList();
-
-            // Creates a new instance of an adaptive component family.
-            var result = AdaptiveComponentInstanceUtils.CreateAdaptiveComponentInstance(doc, symbol);
-
-            // Gets the placement points of this instance.
-            var placePointIds = AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds(result);
-
-            for (var i = 0; i < placePointIds.Count; i++)
-            {
-                if (doc.GetElement(placePointIds[i]) is ReferencePoint point)
-                    point.Position = tmpPts[i];
-            }
-
-            return result;
-        }
+        /// <summary>
+        ///     The sweep symbol's index.
+        /// </summary>
+        public int Index { get; set; }
     }
 }

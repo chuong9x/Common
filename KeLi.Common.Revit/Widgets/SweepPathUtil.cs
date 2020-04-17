@@ -48,6 +48,8 @@
 
 using Autodesk.Revit.DB;
 
+using KeLi.Common.Revit.Builders;
+
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
@@ -73,7 +75,9 @@ namespace KeLi.Common.Revit.Widgets
 
             var p2 = curve2.GetEndPoint(1);
 
-            var plane = Plane.CreateByThreePoints(p0, p1, p2);
+            var normal = p0.CrossProduct(p1);
+
+            var plane = normal.CreatePlane(p2);
 
             return SketchPlane.Create(fdoc, plane);
         }

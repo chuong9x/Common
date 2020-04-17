@@ -81,7 +81,24 @@ namespace KeLi.Common.Revit.Builders
             if (opt != null)
                 solid = CreateExtrusionGeometry(parm.Profile.ToList(), parm.Direction, parm.Distance, opt);
 
-            var result = DirectShape.CreateElement(doc, new ElementId(parm.Category));
+            DirectShape result;
+
+            #if R2016
+
+            var appGuid = Guid.NewGuid().ToString();
+
+            var dataGuid = Guid.NewGuid().ToString();
+
+            // TODO: It's should test.
+            result = DirectShape.CreateElement(doc, new ElementId(parm.Category), appGuid, dataGuid);
+
+            #endif
+
+            #if R2018
+            
+            result = DirectShape.CreateElement(doc, new ElementId(parm.Category));
+            
+            #endif
 
             result?.AppendShape(new List<GeometryObject> { solid });
 

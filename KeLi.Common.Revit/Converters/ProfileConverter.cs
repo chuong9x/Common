@@ -741,7 +741,7 @@ namespace KeLi.Common.Revit.Converters
 
             var curves = profile.Cast<CurveArray>().SelectMany(s => s.Cast<Curve>()).ToList();
 
-            var pts = curves.GetDistinctPointList();
+            var pts = curves.GetDiffPointList();
 
             pts = pts.OrderBy(o => o.Z).ThenBy(o => o.Y).ThenBy(o => o.X).ToList();
 

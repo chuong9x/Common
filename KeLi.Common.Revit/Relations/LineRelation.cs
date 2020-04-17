@@ -112,7 +112,10 @@ namespace KeLi.Common.Revit.Relations
 
             var p2 = line.GetEndPoint(1);
 
-            return Line.CreateBound(new XYZ(p1.X, p1.Y, p1.Z), new XYZ(p2.X, p2.Y, p1.Z));
+            if (p1.Z < p2.Z)
+                return Line.CreateBound(new XYZ(p1.X, p1.Y, p1.Z), new XYZ(p2.X, p2.Y, p1.Z));
+
+            return Line.CreateBound(new XYZ(p1.X, p1.Y, p2.Z), new XYZ(p2.X, p2.Y, p2.Z));
         }
 
         /// <summary>
@@ -281,7 +284,7 @@ namespace KeLi.Common.Revit.Relations
         /// </summary>
         /// <param name="curves"></param>
         /// <returns></returns>
-        public static List<XYZ> GetDistinctPointList(this IEnumerable<Curve> curves)
+        public static List<XYZ> GetDiffPointList(this IEnumerable<Curve> curves)
         {
             if (curves is null)
                 throw new ArgumentNullException(nameof(curves));

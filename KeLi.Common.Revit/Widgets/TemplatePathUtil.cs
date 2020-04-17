@@ -50,6 +50,7 @@ using System;
 using System.IO;
 
 using Autodesk.Revit.ApplicationServices;
+using Autodesk.Revit.DB;
 
 using KeLi.Common.Revit.Properties;
 
@@ -63,28 +64,33 @@ namespace KeLi.Common.Revit.Widgets
         /// <summary>
         ///     Gets the general template file path.
         /// </summary>
-        /// <param name="app"></param>
+        /// <param name="doc"></param>
         /// <returns></returns>
-        public static string GeTemplateFilePath(this Application app)
+        public static string GeTemplateFilePath(this Document doc)
         {
-            var tplName = app.Language.GetGeneralTplName();
+            if (doc == null)
+                throw new NullReferenceException(nameof(doc));
 
-            return app.GetTemplateFilePath(tplName);
+            var tplName = doc.Application.Language.GetGeneralTplName();
+
+            return doc.GetTemplateFilePath(tplName);
         }
 
         /// <summary>
         ///     Gets the template file path.
         /// </summary>
-        /// <param name="app"></param>
+        /// <param name="doc"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public static string GetTemplateFilePath(this Application app, string fileName)
+        public static string GetTemplateFilePath(this Document doc, string fileName)
         {
-            if (app is null)
-                throw new ArgumentNullException(nameof(app));
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
 
             if (fileName is null)
                 throw new ArgumentNullException(nameof(fileName));
+
+            var app = doc.Application;
 
             return Path.Combine(app.FamilyTemplatePath.Replace("English_I", "English"), fileName);
         }

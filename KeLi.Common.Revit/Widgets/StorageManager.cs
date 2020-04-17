@@ -55,7 +55,6 @@ using System.Text;
 
 using KeLi.Common.Revit.Properties;
 using KeLi.Common.Tool.Dir;
-using KeLi.Common.Tool.Other;
 
 namespace KeLi.Common.Revit.Widgets
 {
@@ -105,10 +104,11 @@ namespace KeLi.Common.Revit.Widgets
         /// <summary>
         ///     Formats the exception to StringBuilder object.
         /// </summary>
-        /// <param name="sb"></param>
         /// <param name="ex"></param>
-        public static void FormatExceptionMsg(this StringBuilder sb, Exception ex)
+        public static string FormatExceptionMsg(this Exception ex)
         {
+            var sb = new StringBuilder();
+
             sb.AppendLine(ex.Message);
 
             var stackTrack = ex.StackTrace.Replace(Resources.At, Environment.NewLine + Resources.At);
@@ -120,64 +120,8 @@ namespace KeLi.Common.Revit.Widgets
             stackTrack = stackTrack.Replace("in ", "\r\nin ");
 
             sb.AppendLine(stackTrack);
-        }
 
-        /// <summary>
-        ///     Writes log, if showDlg is true, can show dialog.
-        /// </summary>
-        /// <param name="ex"></param>
-        public static void WriteLog(this Exception ex)
-        {
-            var sb = new StringBuilder();
-
-            sb.FormatExceptionMsg(ex);
-
-            sb.WriteLog("Error");
-        }
-
-        /// <summary>
-        ///     Writes log, if showDlg is true, can show dialog.
-        /// </summary>
-        /// <param name="sb"></param>
-        /// <param name="moduleName"></param>
-        /// <param name="minLineNum"></param>
-        public static void WriteLog(this StringBuilder sb, string moduleName, int minLineNum = 2)
-        {
-            if (sb is null)
-                throw new ArgumentNullException(nameof(sb));
-
-            if (moduleName is null)
-                throw new ArgumentNullException(nameof(moduleName));
-
-            var showDlg = Convert.ToBoolean(ConfigUtil.GetValue("IsShowLog"));
-
-            WriteLog(sb, moduleName, showDlg, minLineNum);
-        }
-
-        /// <summary>
-        ///     Writes log, if showDlg is true, can show dialog.
-        /// </summary>
-        /// <param name="sb"></param>
-        /// <param name="moduleName"></param>
-        /// <param name="showDlg"></param>
-        /// <param name="minLineNum"></param>
-        public static void WriteLog(this StringBuilder sb, string moduleName, bool showDlg, int minLineNum = 1)
-        {
-            if (sb is null)
-                throw new ArgumentNullException(nameof(sb));
-
-            if (GetSubStringCount(sb.ToString(), Environment.NewLine) < minLineNum)
-                return;
-
-            if (moduleName == null)
-                moduleName = DateTime.Now.ToString("yyyyMMddHHmmssffff");
-
-            var result = GetNewLogFile(string.Empty, moduleName);
-
-            File.WriteAllText(result, sb.ToString());
-
-            if (showDlg)
-                Process.Start(result);
+            return sb.ToString();
         }
 
         /// <summary>
