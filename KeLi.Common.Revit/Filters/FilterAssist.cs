@@ -102,10 +102,9 @@ namespace KeLi.Common.Revit.Filters
         /// <typeparam name="T"></typeparam>
         /// <param name="elm"></param>
         /// <param name="room"></param>
-        /// <param name="doc"></param>
         /// <param name="view"></param>
         /// <returns></returns>
-        public static List<PlanarFace> GetPlanarFaceList<T>(this T elm, SpatialElement room, Document doc, View3D view) where T : Element
+        public static List<PlanarFace> GetPlanarFaceList<T>(this T elm, SpatialElement room, View3D view) where T : Element
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
@@ -113,8 +112,7 @@ namespace KeLi.Common.Revit.Filters
             if (room is null)
                 throw new ArgumentNullException(nameof(room));
 
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
+            var doc = elm.Document;
 
             if (view is null)
                 throw new ArgumentNullException(nameof(view));
@@ -154,10 +152,9 @@ namespace KeLi.Common.Revit.Filters
         /// <typeparam name="T"></typeparam>
         /// <param name="elm"></param>
         /// <param name="room"></param>
-        /// <param name="doc"></param>
         /// <param name="view"></param>
         /// <returns></returns>
-        public static PlanarFace GetNearestPlanarFace<T>(this T elm, SpatialElement room, Document doc, View3D view) where T : Element
+        public static PlanarFace GetNearestPlanarFace<T>(this T elm, SpatialElement room, View3D view) where T : Element
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
@@ -165,11 +162,10 @@ namespace KeLi.Common.Revit.Filters
             if (room is null)
                 throw new ArgumentNullException(nameof(room));
 
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
             if (view is null)
                 throw new ArgumentNullException(nameof(view));
+
+            var doc = elm.Document;
 
             var elmCenter = elm.GetBoundingBox(doc).GetBoxCenter();
 
@@ -212,7 +208,7 @@ namespace KeLi.Common.Revit.Filters
                 throw new ArgumentNullException(nameof(doc));
 
             var filter = new FilteredElementCollector(doc);
-
+            
             if (viewId != null)
                 filter = new FilteredElementCollector(doc, viewId);
 

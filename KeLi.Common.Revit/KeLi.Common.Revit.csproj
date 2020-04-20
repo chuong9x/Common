@@ -87,6 +87,7 @@
     <Compile Include="Builders\DirectShapeParameter.cs" />
     <Compile Include="Builders\ExtrudeParameter.cs" />
     <Compile Include="Builders\FamilySymbolBuilder.cs" />
+    <Compile Include="Builders\GridWallBuilder.cs" />
     <Compile Include="Builders\SweepParameter.cs" />
     <Compile Include="Builders\GroupBuilder.cs" />
     <Compile Include="Builders\MaterialUtil.cs" />
