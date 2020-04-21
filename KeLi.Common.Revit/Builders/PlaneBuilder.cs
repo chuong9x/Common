@@ -107,12 +107,13 @@ namespace KeLi.Common.Revit.Builders
 
             return new Plane(normal, point);
 
-#endif
+            #endif
 
-#if !R2016
+            #if !R2016
+
             return Plane.CreateByNormalAndOrigin(normal, point);
 
-#endif
+            #endif
         }
 
         /// <summary>
@@ -162,6 +163,31 @@ namespace KeLi.Common.Revit.Builders
 
             if (plane is null)
                 throw new ArgumentNullException(nameof(plane));
+
+            return SketchPlane.Create(doc, plane);
+        }
+
+        /// <summary>
+        ///     Creates a new sketch plane.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="loftingPath"></param>
+        /// <returns></returns>
+        public static SketchPlane CreateSketchPlane(this Document doc, CurveArray loftingPath)
+        {
+            var curve1 = loftingPath.get_Item(0);
+
+            var curve2 = loftingPath.get_Item(1);
+
+            var p0 = curve1.GetEndPoint(0);
+
+            var p1 = curve1.GetEndPoint(1);
+
+            var p2 = curve2.GetEndPoint(1);
+
+            var normal = p0.CrossProduct(p1);
+
+            var plane = normal.CreatePlane(p2);
 
             return SketchPlane.Create(doc, plane);
         }

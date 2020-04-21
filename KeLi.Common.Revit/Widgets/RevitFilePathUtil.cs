@@ -1,7 +1,7 @@
 ﻿/*
  * MIT License
  *
- * Copyright(c) 2020 KeLi
+ * Copyright(c) 2019 KeLi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 04/15/2020 19:20:20 PM |  |  |     |         |      |
+     |  |              Creation Time: 04/16/2020 01:57:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -48,76 +48,109 @@
 
 using System;
 using System.IO;
-
+using System.Linq;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
 
-using KeLi.Common.Revit.Properties;
+using KeLi.Common.Revit.Converters;
+using KeLi.Common.Revit.Filters;
 
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    /// Template path unitility.
+    ///     About revit file path utility.
     /// </summary>
-    public static class TemplatePathUtil
+    public static class RevitFilePathUtil
     {
         /// <summary>
-        ///     Gets the general template file path.
+        ///     Gets sweep's profile.
         /// </summary>
         /// <param name="doc"></param>
+        /// <param name="familyPath"></param>
         /// <returns></returns>
-        public static string GeTemplateFilePath(this Document doc)
+        public static CurveArrArray GetSweepProfile(Document doc, string familyPath)
         {
             if (doc == null)
                 throw new NullReferenceException(nameof(doc));
 
-            var tplName = doc.Application.Language.GetGeneralTplName();
+            if (familyPath == null)
+                throw new NullReferenceException(nameof(familyPath));
 
-            return doc.GetTemplateFilePath(tplName);
+            var profileDoc = doc.Application.OpenDocumentFile(familyPath);
+
+            var detailCurves = profileDoc.GetInstanceElementList<CurveElement>();
+
+            var curves = detailCurves.Select(s => s.GeometryCurve);
+
+            return curves.ToCurveArrArray();
+        }
+
+        /// <summary>
+        ///     Gets sweep's profile.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="symbolName"></param>
+        /// <returns></returns>
+        public static CurveArrArray GetSweepProfile2(Document doc, string symbolName)
+        {
+            if (doc == null)
+                throw new NullReferenceException(nameof(doc));
+
+            if (symbolName == null)
+                throw new NullReferenceException(nameof(symbolName));
+
+            var symbol = doc.GetTypeElementList<FamilySymbol>().FirstOrDefault(f => f.Name == symbolName);
+
+            if(symbol == null)
+                throw new NullReferenceException(nameof(symbol));
+
+            var profileDoc = doc.EditFamily(symbol.Family);
+
+            var detailCurves = profileDoc.GetInstanceElementList<CurveElement>();
+
+            var curves = detailCurves.Select(s => s.GeometryCurve);
+
+            return curves.ToCurveArrArray();
         }
 
         /// <summary>
         ///     Gets the template file path.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="fileName"></param>
+        /// <param name="tplName"></param>
         /// <returns></returns>
-        public static string GetTemplateFilePath(this Document doc, string fileName)
+        public static string GetTemplateFilePath(this Document doc, string tplName = null)
         {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
+            var type = doc.Application.Language;
 
-            if (fileName is null)
-                throw new ArgumentNullException(nameof(fileName));
+            string langTplName;
 
-            var app = doc.Application;
-
-            return Path.Combine(app.FamilyTemplatePath.Replace("English_I", "English"), fileName);
-        }
-
-        /// <summary>
-        ///     Gets the general template file name.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static string GetGeneralTplName(this LanguageType type)
-        {
             switch (type)
             {
                 case LanguageType.Chinese_Simplified:
-                    return Resources.GeneralTemplateName_CHS;
-
+                    langTplName = "公制常规模型.rft";
+                    break;
                 case LanguageType.English_USA:
-                    return "Metric Generic Model.rft";
-
+                    langTplName = "Metric Generic Model.rft";
+                    break;
                 #if !R2016 && !R2017
                 case LanguageType.English_GB:
-                    return "Metric Generic Model.rft";
+                    langTplName = "Metric Generic Model.rft";
+                    break;
                 #endif
-
                 default:
                     throw new NotSupportedException($"No support {type} language!");
             }
+
+            if (string.IsNullOrWhiteSpace(langTplName))
+                tplName = langTplName;
+
+            else
+                tplName = tplName.Replace(".rft", string.Empty) + ".rft";
+
+            var app = doc.Application;
+
+            return Path.Combine(app.FamilyTemplatePath.Replace("English_I", "English"), tplName);
         }
     }
 }
