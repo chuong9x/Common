@@ -64,7 +64,7 @@ namespace KeLi.Common.Revit.Widgets
     /// <summary>
     ///     Revit file info.
     /// </summary>
-    public class StructuredStorage : IDisposable
+    public class RevitInfoUtil : IDisposable
     {
         /// <summary>
         ///     Binding flags.
@@ -75,7 +75,7 @@ namespace KeLi.Common.Revit.Widgets
         ///     Revit file info.
         /// </summary>
         /// <param name="stream"></param>
-        private StructuredStorage(Stream stream)
+        private RevitInfoUtil(Stream stream)
         {
             if (stream is null)
                 throw new ArgumentNullException(nameof(stream));
@@ -94,7 +94,7 @@ namespace KeLi.Common.Revit.Widgets
         ///     Revit file info.
         /// </summary>
         /// <param name="fileName"></param>
-        private StructuredStorage(string fileName)
+        private RevitInfoUtil(string fileName)
         {
             if (fileName is null)
                 throw new ArgumentNullException(nameof(fileName));
@@ -263,7 +263,7 @@ namespace KeLi.Common.Revit.Widgets
             if (!IsFileStructuredStorage(filePath))
                 throw new NotSupportedException("File isn't a structured storage file!");
 
-            using (var storage = new StructuredStorage(filePath))
+            using (var storage = new RevitInfoUtil(filePath))
             {
                 if (!storage.BaseRoot.StreamExists(streamName))
                     throw new NotSupportedException($"File doesn't contain {streamName} stream!");
@@ -292,7 +292,7 @@ namespace KeLi.Common.Revit.Widgets
             if (fileStream is null)
                 throw new ArgumentNullException(nameof(fileStream));
 
-            using (var storage = new StructuredStorage(fileStream))
+            using (var storage = new RevitInfoUtil(fileStream))
             {
                 if (!storage.BaseRoot.StreamExists(streamName))
                     throw new NotSupportedException($"File doesn't contain {streamName} stream!");

@@ -47,7 +47,12 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Text;
+
+using KeLi.Common.Tool.Dir;
+using KeLi.Common.Tool.Properties;
 
 namespace KeLi.Common.Tool.Other
 {
@@ -57,43 +62,46 @@ namespace KeLi.Common.Tool.Other
     public static class LogAssist
     {
         /// <summary>
-        ///     The log file name.
+        ///     Formats the exception to StringBuilder object.
         /// </summary>
-        private const string FOLDER_NAME = "WorkLog";
-
-        /// <summary>
-        ///     The file name format.
-        /// </summary>
-        private const string LOG_FILE_FORMAT = "yyyy-MM-dd-HH-mm";
-
-        /// <summary>
-        ///     The log item time stamp.
-        /// </summary>
-        private const string ITEM_TITLE = "mm:ss.ffff";
-
-        /// <summary>
-        ///     Writes the log.
-        /// </summary>
-        /// <param name="context"></param>
-        public static void WriteLog(this object context)
+        /// <param name="ex"></param>
+        public static string FormatExceptionMsg(this Exception ex)
         {
-            if (context is null)
-                throw new ArgumentNullException(nameof(context));
+            var sb = new StringBuilder();
 
-            if (!Directory.Exists(FOLDER_NAME))
-                Directory.CreateDirectory(FOLDER_NAME);
+            sb.AppendLine(ex.Message);
 
-            var filePath = Path.Combine(FOLDER_NAME, DateTime.Now.ToString(LOG_FILE_FORMAT));
+            var stackTrack = ex.StackTrace.Replace(Resources.At, Environment.NewLine + Resources.At);
 
-            using (var fs = new FileStream(filePath, FileMode.Append))
-            {
-                using (var sw = new StreamWriter(fs))
-                {
-                    sw.WriteLine("[" + DateTime.Now.ToString(ITEM_TITLE) + "]" + context);
+            stackTrack = stackTrack.Replace(Resources.In, Environment.NewLine + Resources.In);
 
-                    sw.WriteLine();
-                }
-            }
+            stackTrack = stackTrack.Replace("at ", "\r\nat ");
+
+            stackTrack = stackTrack.Replace("in ", "\r\nin ");
+
+            sb.AppendLine(stackTrack);
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        ///     Writes log, if showDlg is true, can show dialog.
+        /// </summary>
+        /// <param name="sb"></param>
+        /// <param name="showDlg"></param>
+        /// <param name="fileName"></param>
+        /// <param name="subDirName"></param>
+        public static void WriteLog(this StringBuilder sb, bool showDlg = true, string fileName = null, string subDirName = null)
+        {
+            if (sb is null)
+                throw new ArgumentNullException(nameof(sb));
+
+            var result = FileManager.GetNewLogFile(subDirName, fileName);
+
+            File.WriteAllText(result, sb.ToString());
+
+            if (showDlg)
+                Process.Start(result);
         }
     }
 }

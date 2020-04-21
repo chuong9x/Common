@@ -57,7 +57,7 @@ namespace KeLi.Common.Revit.Widgets
     /// <summary>
     ///     Storage utility.
     /// </summary>
-    public static class StorageUtil
+    public static class ClosingUtil
     {
         /// <summary>
         ///     Closes the unactive document that is unsaved.

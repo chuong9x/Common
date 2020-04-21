@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 04/16/2020 01:57:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,34 +46,85 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using Autodesk.Revit.DB;
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
-using static Autodesk.Revit.DB.BuiltInParameter;
-using static Autodesk.Revit.DB.BuiltInParameterGroup;
-
-namespace KeLi.Common.Revit.Builders
+namespace KeLi.Common.Tool.Dir
 {
     /// <summary>
-    ///     Material utility.
+    ///     File manager.
     /// </summary>
-    public static class MaterialUtil
+    public static class FileManager
     {
         /// <summary>
-        ///     Associates material
+        ///     Gets the last file path.
         /// </summary>
-        /// <param name="elm"></param>
-        /// <param name="parmName"></param>
-        /// <param name="isInstance"></param>
-        public static void AssociateMaterial(this GenericForm elm, string parmName, bool isInstance = true)
+        /// <param name="subDir"></param>
+        /// <param name="searchPattern"></param>
+        /// <returns></returns>
+        public static string GetLastFile(string subDir, string searchPattern)
         {
-            var mgr = elm.Document.FamilyManager;
+            if (subDir is null)
+                throw new ArgumentNullException(nameof(subDir));
 
-            var familyParm = mgr.AddParameter(parmName, PG_MATERIALS, ParameterType.Material, isInstance);
+            if (searchPattern is null)
+                throw new ArgumentNullException(nameof(searchPattern));
 
-            var parm = elm.get_Parameter(MATERIAL_ID_PARAM);
+            var subDirPath = CreateSubDirPath(subDir);
 
-            if (parm != null)
-                mgr.AssociateElementParameterToFamilyParameter(parm, familyParm);
+            return Directory.GetFiles(subDirPath,  searchPattern).Max();
+        }
+
+        /// <summary>
+        ///     Gets a new log name.
+        /// </summary>
+        /// <param name="subDir"></param>
+        /// <param name="moduleName"></param>
+        /// <returns></returns>
+        public static string GetNewLogFile(string subDir, string moduleName = null)
+        {
+            if (subDir is null)
+                throw new ArgumentNullException(nameof(subDir));
+
+            var subDirPath = CreateSubDirPath(subDir);
+
+            if (string.IsNullOrWhiteSpace(moduleName))
+                moduleName = DateTime.Now.ToString("yyyyMMddHHmmss") + ".log";
+
+            else
+                moduleName = moduleName + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".log";
+
+            return Path.Combine(subDirPath, moduleName);
+        }
+
+        /// <summary>
+        ///     Creates a new path with sub dir node.
+        /// </summary>
+        /// <param name="fullStr"></param>
+        /// <param name="subStr"></param>
+        /// <returns></returns>
+        public static int GetSubStringCount(string fullStr, string subStr)
+        {
+            if (!fullStr.Contains(subStr))
+                return 0;
+
+            var replacedStr = fullStr.Replace(subStr, string.Empty);
+
+            return (fullStr.Length - replacedStr.Length) / subStr.Length;
+        }
+
+        /// <summary>
+        ///     Creates a new path with sub dir node.
+        /// </summary>
+        /// <param name="pathNode"></param>
+        /// <returns></returns>
+        public static string CreateSubDirPath(string pathNode)
+        {
+            var baseDirPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            return DirectoryPlus.CombinePlus(baseDirPath, pathNode);
         }
     }
 }

@@ -89,15 +89,12 @@
     <Compile Include="Builders\FamilySymbolBuilder.cs" />
     <Compile Include="Builders\SweepParameter.cs" />
     <Compile Include="Builders\GroupBuilder.cs" />
-    <Compile Include="Builders\MaterialUtil.cs" />
+    <Compile Include="Widgets\MaterialUtil.cs" />
     <Compile Include="Builders\ModelCurveBuilder.cs" />
     <Compile Include="Builders\PipeBuilder.cs" />
     <Compile Include="Builders\PipeParameter.cs" />
     <Compile Include="Builders\PlaneBuilder.cs" />
-    <Compile Include="Widgets\ProfileUtil.cs" />
-    <Compile Include="Widgets\StorageManager.cs" />
-    <Compile Include="Widgets\SweepPathUtil.cs" />
-    <Compile Include="Widgets\TemplatePathUtil.cs" />
+    <Compile Include="Widgets\RevitFilePathUtil.cs" />
     <Compile Include="Builders\ViewBuilder.cs" />
     <Compile Include="Filters\FilterType.cs" />
     <Compile Include="Filters\LineDirection.cs" />
@@ -125,12 +122,10 @@
     <Compile Include="Geometry\BoxUtil.cs" />
     <Compile Include="Converters\UnitConverter.cs" />
     <Compile Include="Widgets\AutoUtil.cs" />
-    <Compile Include="Widgets\RoomUtil.cs" />
     <Compile Include="Converters\ProfileConverter.cs" />
-    <Compile Include="Widgets\StorageUtil.cs" />
-    <Compile Include="Widgets\StructuredStorage.cs" />
+    <Compile Include="Widgets\ClosingUtil.cs" />
+    <Compile Include="Widgets\RevitInfoUtil.cs" />
     <Compile Include="Widgets\TableUtil.cs" />
-    <Compile Include="Widgets\VisabilityUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

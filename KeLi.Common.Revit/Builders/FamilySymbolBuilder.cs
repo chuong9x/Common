@@ -76,8 +76,8 @@ namespace KeLi.Common.Revit.Builders
 
             if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
-
-            var tplPath = doc.GeTemplateFilePath();
+            
+            var tplPath = doc.GetTemplateFilePath();
 
             if (!File.Exists(tplPath))
                 throw new FileNotFoundException(tplPath);
@@ -117,7 +117,7 @@ namespace KeLi.Common.Revit.Builders
             if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
 
-            var tplPath = doc.GeTemplateFilePath();
+            var tplPath = doc.GetTemplateFilePath();
 
             var fdoc = doc.Application.NewFamilyDocument(tplPath);
 

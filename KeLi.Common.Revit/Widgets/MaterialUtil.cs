@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 04/16/2020 01:57:20 PM |  |  |     |         |      |
+     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,72 +46,31 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System;
-using System.Linq;
-
 using Autodesk.Revit.DB;
-
-using KeLi.Common.Revit.Converters;
-using KeLi.Common.Revit.Filters;
 
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    ///     Profile utility.
+    ///     Material utility.
     /// </summary>
-    public static class ProfileUtil
+    public static class MaterialUtil
     {
         /// <summary>
-        ///     Gets sweep's profile.
+        ///     Associates material
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="familyPath"></param>
-        /// <returns></returns>
-        public static CurveArrArray GetSweepProfile(Document doc, string familyPath)
+        /// <param name="elm"></param>
+        /// <param name="parmName"></param>
+        /// <param name="isInstance"></param>
+        public static void AssociateMaterial(this GenericForm elm, string parmName, bool isInstance = true)
         {
-            if (doc == null)
-                throw new NullReferenceException(nameof(doc));
+            var mgr = elm.Document.FamilyManager;
 
-            if (familyPath == null)
-                throw new NullReferenceException(nameof(familyPath));
+            var familyParm = mgr.AddParameter(parmName, BuiltInParameterGroup.PG_MATERIALS, ParameterType.Material, isInstance);
 
-            var profileDoc = doc.Application.OpenDocumentFile(familyPath);
+            var parm = elm.get_Parameter(BuiltInParameter.MATERIAL_ID_PARAM);
 
-            var detailCurves = profileDoc.GetInstanceElementList<CurveElement>();
-
-            var curves = detailCurves.Select(s => s.GeometryCurve);
-
-            return curves.ToCurveArrArray();
+            if (parm != null)
+                mgr.AssociateElementParameterToFamilyParameter(parm, familyParm);
         }
-
-        /// <summary>
-        ///     Gets sweep's profile.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="symbolName"></param>
-        /// <returns></returns>
-        public static CurveArrArray GetSweepProfile2(Document doc, string symbolName)
-        {
-            if (doc == null)
-                throw new NullReferenceException(nameof(doc));
-
-            if (symbolName == null)
-                throw new NullReferenceException(nameof(symbolName));
-
-            var symbol = doc.GetTypeElementList<FamilySymbol>().FirstOrDefault(f => f.Name == symbolName);
-
-            if(symbol == null)
-                throw new NullReferenceException(nameof(symbol));
-
-            var profileDoc = doc.EditFamily(symbol.Family);
-
-            var detailCurves = profileDoc.GetInstanceElementList<CurveElement>();
-
-            var curves = detailCurves.Select(s => s.GeometryCurve);
-
-            return curves.ToCurveArrArray();
-        }
-
-
     }
 }
