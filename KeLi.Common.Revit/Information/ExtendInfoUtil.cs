@@ -300,18 +300,14 @@ namespace KeLi.Common.Revit.Information
         ///     Binds the entity by simple field and value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="doc"></param>
         /// <param name="fieldName"></param>
         /// <param name="value"></param>
         /// <param name="elm"></param>
         /// <returns></returns>
-        public static void BindSimpleFieldEntity<T>(this Element elm, Document doc, string fieldName, T value)
+        public static void BindSimpleFieldEntity<T>(this Element elm, string fieldName, T value)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
-
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
 
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
@@ -324,25 +320,21 @@ namespace KeLi.Common.Revit.Information
 
             var entity = InitSimpleFieldEntity(fieldName, value);
 
-            doc.AutoTransaction(() => elm.SetEntity(entity));
+            elm.Document.AutoTransaction(() => elm.SetEntity(entity));
         }
 
         /// <summary>
         ///     Binds the entity by IEnumerable field and value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="doc"></param>
         /// <param name="fieldName"></param>
         /// <param name="value"></param>
         /// <param name="elm"></param>
         /// <returns></returns>
-        public static void BindListFieldEntity<T>(this Element elm, Document doc, string fieldName, IEnumerable<T> value)
+        public static void BindListFieldEntity<T>(this Element elm, string fieldName, IEnumerable<T> value)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
-
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
 
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
@@ -355,7 +347,7 @@ namespace KeLi.Common.Revit.Information
 
             var entity = InitListFieldEntity(fieldName, value);
 
-            doc.AutoTransaction(() => elm.SetEntity(entity));
+            elm.Document.AutoTransaction(() => elm.SetEntity(entity));
         }
 
         /// <summary>
@@ -363,18 +355,14 @@ namespace KeLi.Common.Revit.Information
         /// </summary>
         /// <typeparam name="K"></typeparam>
         /// <typeparam name="V"></typeparam>
-        /// <param name="doc"></param>
         /// <param name="fieldName"></param>
         /// <param name="value"></param>
         /// <param name="elm"></param>
         /// <returns></returns>
-        public static void BindDictFieldEntity<K, V>(this Element elm, Document doc, string fieldName, IDictionary<K, V> value)
+        public static void BindDictFieldEntity<K, V>(this Element elm, string fieldName, IDictionary<K, V> value)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
-
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
 
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
@@ -390,7 +378,7 @@ namespace KeLi.Common.Revit.Information
 
             var entity = InitDictFieldEntity(fieldName, value);
 
-            doc.AutoTransaction(() => elm.SetEntity(entity));
+            elm.Document.AutoTransaction(() => elm.SetEntity(entity));
         }
 
         /// <summary>
@@ -422,10 +410,9 @@ namespace KeLi.Common.Revit.Information
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="elm"></param>
-        /// <param name="doc"></param>
         /// <param name="fieldName"></param>
         /// <param name="value"></param>
-        public static void SetSimpleFieldValue<T>(this Element elm, Document doc, string fieldName, T value)
+        public static void SetSimpleFieldValue<T>(this Element elm, string fieldName, T value)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
@@ -445,7 +432,7 @@ namespace KeLi.Common.Revit.Information
 
             entity.Set(fieldName, value);
 
-            doc.AutoTransaction(() => elm.SetEntity(entity));
+            elm.Document.AutoTransaction(() => elm.SetEntity(entity));
         }
 
         /// <summary>
@@ -477,16 +464,12 @@ namespace KeLi.Common.Revit.Information
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="elm"></param>
-        /// <param name="doc"></param>
         /// <param name="fieldName"></param>
         /// <param name="value"></param>
-        public static void SetListFieldValue<T>(this Element elm, Document doc, string fieldName, IEnumerable<T> value)
+        public static void SetListFieldValue<T>(this Element elm, string fieldName, IEnumerable<T> value)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
-
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
 
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
@@ -503,7 +486,7 @@ namespace KeLi.Common.Revit.Information
 
             entity.Set(fieldName, value);
 
-            doc.AutoTransaction(() => elm.SetEntity(entity));
+            elm.Document.AutoTransaction(() => elm.SetEntity(entity));
         }
 
         /// <summary>
@@ -540,16 +523,12 @@ namespace KeLi.Common.Revit.Information
         /// <typeparam name="K"></typeparam>
         /// <typeparam name="V"></typeparam>
         /// <param name="elm"></param>
-        /// <param name="doc"></param>
         /// <param name="fieldName"></param>
         /// <param name="value"></param>
-        public static void SetDictFieldValue<K, V>(this Element elm, Document doc, string fieldName, IDictionary<K, V> value)
+        public static void SetDictFieldValue<K, V>(this Element elm, string fieldName, IDictionary<K, V> value)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
-
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
 
             if (fieldName is null)
                 throw new ArgumentNullException(nameof(fieldName));
@@ -569,7 +548,7 @@ namespace KeLi.Common.Revit.Information
 
             entity.Set(fieldName, value);
 
-            doc.AutoTransaction(() => elm.SetEntity(entity));
+            elm.Document.AutoTransaction(() => elm.SetEntity(entity));
         }
 
         /// <summary>

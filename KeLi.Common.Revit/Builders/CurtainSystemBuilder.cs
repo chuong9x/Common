@@ -82,9 +82,7 @@ namespace KeLi.Common.Revit.Builders
             if (room is null)
                 throw new ArgumentNullException(nameof(room));
 
-            var doc = wall.Document;
-
-            var face = wall.GetNearestPlanarFace(room, doc, view3D);
+            var face = wall.GetNearestPlanarFace(room, view3D);
 
             if (face == null)
                 return null;

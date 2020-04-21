@@ -66,24 +66,20 @@ namespace KeLi.Common.Revit.Relations
         /// <summary>
         ///     Gets the result of fast plane rejection of the box.
         /// </summary>
-        /// <param name="doc"></param>
         /// <param name="elm1"></param>
         /// <param name="elm2"></param>
         /// <returns></returns>
-        public static bool RejectPlaneBox(this Document doc, Element elm1, Element elm2)
+        public static bool RejectPlaneBox(this Element elm1, Element elm2)
         {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
             if (elm1 is null)
                 throw new ArgumentNullException(nameof(elm1));
 
             if (elm2 is null)
                 throw new ArgumentNullException(nameof(elm2));
 
-            var box1 = elm1.GetRoundBox(doc);
+            var box1 = elm1.GetRoundBox();
 
-            var box2 = elm2.GetRoundBox(doc);
+            var box2 = elm2.GetRoundBox();
 
             var v1 = box1.Min.X <= box2.Max.X;
 
@@ -128,24 +124,20 @@ namespace KeLi.Common.Revit.Relations
         /// <summary>
         ///     Gets the result of fast space rejection of the box.
         /// </summary>
-        /// <param name="doc"></param>
         /// <param name="elm1"></param>
         /// <param name="elm2"></param>
         /// <returns></returns>
-        public static bool RejectSpaceBox(this Document doc, Element elm1, Element elm2)
+        public static bool RejectSpaceBox(this Element elm1, Element elm2)
         {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
             if (elm1 is null)
                 throw new ArgumentNullException(nameof(elm1));
 
             if (elm2 is null)
                 throw new ArgumentNullException(nameof(elm2));
 
-            var box1 = elm1.GetRoundBox(doc);
+            var box1 = elm1.GetRoundBox();
 
-            var box2 = elm2.GetRoundBox(doc);
+            var box2 = elm2.GetRoundBox();
 
             var v1 = box1.Min.X <= box2.Max.X;
 
@@ -198,24 +190,20 @@ namespace KeLi.Common.Revit.Relations
         /// <summary>
         ///     Gets the result of plane cross of the box.
         /// </summary>
-        /// <param name="doc"></param>
         /// <param name="elm1"></param>
         /// <param name="elm2"></param>
         /// <returns></returns>
-        public static bool CrossPlaneBox(this Document doc, Element elm1, Element elm2)
+        public static bool CrossPlaneBox(this Element elm1, Element elm2)
         {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
             if (elm1 is null)
                 throw new ArgumentNullException(nameof(elm1));
 
             if (elm2 is null)
                 throw new ArgumentNullException(nameof(elm2));
 
-            var box1 = elm1.GetRoundBox(doc);
+            var box1 = elm1.GetRoundBox();
 
-            var box2 = elm2.GetRoundBox(doc);
+            var box2 = elm2.GetRoundBox();
 
             var cp1 = (box1.Min - box2.Min).ToPlanePoint().CrossProduct((box2.Max - box2.Min).ToPlanePoint());
 
@@ -268,24 +256,20 @@ namespace KeLi.Common.Revit.Relations
         /// <summary>
         ///     Gets the result of space cross of the box.
         /// </summary>
-        /// <param name="doc"></param>
         /// <param name="elm1"></param>
         /// <param name="elm2"></param>
         /// <returns></returns>
-        public static bool CrossSpaceBox(this Document doc, Element elm1, Element elm2)
+        public static bool CrossSpaceBox(this Element elm1, Element elm2)
         {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
             if (elm1 is null)
                 throw new ArgumentNullException(nameof(elm1));
 
             if (elm2 is null)
                 throw new ArgumentNullException(nameof(elm2));
 
-            var box1 = elm1.GetRoundBox(doc);
+            var box1 = elm1.GetRoundBox();
 
-            var box2 = elm2.GetRoundBox(doc);
+            var box2 = elm2.GetRoundBox();
 
             var cp1 = (box1.Min - box2.Min).CrossProduct(box2.Max - box2.Min);
 

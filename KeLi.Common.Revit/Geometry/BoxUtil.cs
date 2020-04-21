@@ -207,17 +207,13 @@ namespace KeLi.Common.Revit.Geometry
         ///     Gets the round box.
         /// </summary>
         /// <param name="elm"></param>
-        /// <param name="doc"></param>
         /// <returns></returns>
-        public static BoundingBoxXYZ GetRoundBox(this Element elm, Document doc)
+        public static BoundingBoxXYZ GetRoundBox(this Element elm)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            var box = elm.get_BoundingBox(doc.ActiveView);
+            var box = elm.get_BoundingBox(elm.Document.ActiveView);
 
             return new BoundingBoxXYZ
             {
