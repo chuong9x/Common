@@ -107,12 +107,13 @@ namespace KeLi.Common.Revit.Builders
 
             return new Plane(normal, point);
 
-#endif
+            #endif
 
-#if !R2016
+            #if !R2016
+
             return Plane.CreateByNormalAndOrigin(normal, point);
 
-#endif
+            #endif
         }
 
         /// <summary>
