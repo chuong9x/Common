@@ -54,8 +54,6 @@ using Autodesk.Revit.DB;
 using KeLi.Common.Revit.Converters;
 using KeLi.Common.Revit.Filters;
 using KeLi.Common.Revit.Geometry;
-using KeLi.Common.Revit.Relations;
-using KeLi.Common.Revit.Widgets;
 
 using static Autodesk.Revit.DB.BuiltInParameter;
 using static Autodesk.Revit.DB.Structure.StructuralType;
@@ -85,7 +83,7 @@ namespace KeLi.Common.Revit.Builders
             var face = wall.GetNearestPlanarFace(room, view3D);
 
             if (face == null)
-                return null;
+                throw new NullReferenceException(nameof(face));
 
             var boundary = face.GetEdgesAsCurveLoops().ToCurveArrArray();
 
@@ -95,7 +93,7 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        ///     Creates a new CurtainSystem with transaction.
+        ///     Creates a new CurtainSystem.
         /// </summary>
         /// <param name="profile"></param>
         /// <param name="lvl"></param>
@@ -109,40 +107,43 @@ namespace KeLi.Common.Revit.Builders
 
             var doc = lvl.Document;
 
-            var location = profile.ToCurveList().GetDiffPointList().GetMinPoint();
+            var pts = profile.ToCurveList().Select(s => s.GetEndPoint(0));
+
+            pts = pts.OrderBy(o => o.Z).ThenBy(o => o.Y).ThenBy(o => o.X);
+
+            var location = pts.FirstOrDefault();
 
             var plane = normal.CreatePlane(XYZ.Zero);
 
             var symbolParm = new ExtrudeParameter(profile, plane, 100);
 
-            var symbol = doc.CreateExtrusion(symbolParm);
+            var fdoc = doc.CreateExtrusion(symbolParm);
 
-            return doc.AutoTransaction(() =>
-            {
-                var instance = doc.Create.NewFamilyInstance(location, symbol, lvl, NonStructural);
+            var symbol = doc.NewLoadFamily(fdoc);
 
-                doc.Regenerate();
+            var instance = doc.Create.NewFamilyInstance(location, symbol, lvl, NonStructural);
 
-                // The instance has thickness.
-                var faces = instance.GetFaceList(-normal).ToFaceArray();
+            doc.Regenerate();
 
-                var result = doc.CreateCurtainSystem(faces, typeName);
+            // The instance has thickness.
+            var faces = instance.GetFaceList(-normal).ToFaceArray();
 
-                doc.Delete(instance.Id);
+            var result = doc.CreateCurtainSystem(faces, typeName);
 
-                doc.Delete(symbol.Family.Id);
+            doc.Delete(instance.Id);
 
-                var pnlTypeId = result.CurtainSystemType.get_Parameter(AUTO_PANEL).AsElementId();
+            doc.Delete(symbol.Family.Id);
 
-                if (!(doc.GetElement(pnlTypeId) is PanelType pnlType))
-                    return result;
+            var pnlTypeId = result.CurtainSystemType.get_Parameter(AUTO_PANEL).AsElementId();
 
-                var thickness = pnlType.get_Parameter(CURTAIN_WALL_SYSPANEL_THICKNESS).AsDouble();
-
-                ElementTransformUtils.MoveElement(doc, result.Id, normal * thickness / 2);
-
+            if (!(doc.GetElement(pnlTypeId) is PanelType pnlType))
                 return result;
-            });
+
+            var thickness = pnlType.get_Parameter(CURTAIN_WALL_SYSPANEL_THICKNESS).AsDouble();
+
+            ElementTransformUtils.MoveElement(doc, result.Id, normal * thickness / 2);
+
+            return result;
         }
 
         /// <summary>
@@ -157,7 +158,7 @@ namespace KeLi.Common.Revit.Builders
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (typeName is null)
+            if (string.IsNullOrWhiteSpace(typeName))
                 throw new ArgumentNullException(nameof(typeName));
 
             if (faces is null)

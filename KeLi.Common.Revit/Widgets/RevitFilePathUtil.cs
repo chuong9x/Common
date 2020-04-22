@@ -49,11 +49,13 @@
 using System;
 using System.IO;
 using System.Linq;
+
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
 
 using KeLi.Common.Revit.Converters;
 using KeLi.Common.Revit.Filters;
+using KeLi.Common.Revit.Properties;
 
 namespace KeLi.Common.Revit.Widgets
 {
@@ -75,6 +77,9 @@ namespace KeLi.Common.Revit.Widgets
 
             if (familyPath == null)
                 throw new NullReferenceException(nameof(familyPath));
+
+            if (!File.Exists(familyPath))
+                throw new FileNotFoundException(familyPath);
 
             var profileDoc = doc.Application.OpenDocumentFile(familyPath);
 
@@ -101,7 +106,7 @@ namespace KeLi.Common.Revit.Widgets
 
             var symbol = doc.GetTypeElementList<FamilySymbol>().FirstOrDefault(f => f.Name == symbolName);
 
-            if(symbol == null)
+            if (symbol == null)
                 throw new NullReferenceException(nameof(symbol));
 
             var profileDoc = doc.EditFamily(symbol.Family);
@@ -128,25 +133,31 @@ namespace KeLi.Common.Revit.Widgets
             switch (type)
             {
                 case LanguageType.Chinese_Simplified:
-                    langTplName = "公制常规模型.rft";
+                    langTplName = Resources.GeneralTemplateName_CHS;
+
                     break;
+
                 case LanguageType.English_USA:
                     langTplName = "Metric Generic Model.rft";
+
                     break;
+
                 #if !R2016 && !R2017
                 case LanguageType.English_GB:
                     langTplName = "Metric Generic Model.rft";
+
                     break;
                 #endif
+
                 default:
                     throw new NotSupportedException($"No support {type} language!");
             }
 
-            if (string.IsNullOrWhiteSpace(langTplName))
+            if (string.IsNullOrWhiteSpace(tplName))
                 tplName = langTplName;
 
-            else
-                tplName = tplName.Replace(".rft", string.Empty) + ".rft";
+            else if (!tplName.Contains(".rft"))
+                tplName += ".rft";
 
             var app = doc.Application;
 

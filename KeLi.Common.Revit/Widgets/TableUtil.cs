@@ -50,6 +50,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 
 using Autodesk.Revit.DB;
 
@@ -73,7 +74,7 @@ namespace KeLi.Common.Revit.Widgets
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (viewName is null)
+            if (string.IsNullOrWhiteSpace(viewName))
                 throw new ArgumentNullException(nameof(viewName));
 
             var view = doc.GetInstanceElementList<ViewSchedule>().FirstOrDefault(f => f.Name == viewName);
@@ -93,7 +94,7 @@ namespace KeLi.Common.Revit.Widgets
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (viewName is null)
+            if (string.IsNullOrWhiteSpace(viewName))
                 throw new ArgumentNullException(nameof(viewName));
 
             var view = doc.GetInstanceElementList<ViewSchedule>().FirstOrDefault(f => f.Name == viewName);
@@ -216,6 +217,9 @@ namespace KeLi.Common.Revit.Widgets
             if (viewNames is null)
                 throw new ArgumentNullException(nameof(viewNames));
 
+            if (!viewNames.Any())
+                throw new TargetParameterCountException(nameof(viewNames));
+
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
@@ -241,6 +245,9 @@ namespace KeLi.Common.Revit.Widgets
         {
             if (views is null)
                 throw new ArgumentNullException(nameof(views));
+
+            if (!views.Any())
+                throw new TargetParameterCountException(nameof(views));
 
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));

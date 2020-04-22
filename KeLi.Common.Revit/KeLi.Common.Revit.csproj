@@ -83,20 +83,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builders\CurtainSystemBuilder.cs" />
-    <Compile Include="Builders\DirectShapeBuilder.cs" />
-    <Compile Include="Builders\DirectShapeParameter.cs" />
     <Compile Include="Builders\ExtrudeParameter.cs" />
     <Compile Include="Builders\FamilySymbolBuilder.cs" />
     <Compile Include="Builders\GridWallBuilder.cs" />
     <Compile Include="Builders\SweepParameter.cs" />
-    <Compile Include="Builders\GroupBuilder.cs" />
+    <Compile Include="Converters\CurveArrArrayConverter.cs" />
+    <Compile Include="Converters\CurveArrayConverter.cs" />
+    <Compile Include="Converters\CurveLoopConverter.cs" />
+    <Compile Include="Converters\FaceArrayConverter.cs" />
+    <Compile Include="Converters\ReferenceConverter.cs" />
     <Compile Include="Widgets\MaterialUtil.cs" />
     <Compile Include="Builders\ModelCurveBuilder.cs" />
-    <Compile Include="Builders\PipeBuilder.cs" />
-    <Compile Include="Builders\PipeParameter.cs" />
     <Compile Include="Builders\PlaneBuilder.cs" />
     <Compile Include="Widgets\RevitFilePathUtil.cs" />
-    <Compile Include="Builders\ViewBuilder.cs" />
     <Compile Include="Filters\FilterType.cs" />
     <Compile Include="Filters\LineDirection.cs" />
     <Compile Include="Geometry\VectorUtil.cs" />
@@ -115,16 +114,13 @@
     <Compile Include="Filters\FilterAssist.cs" />
     <Compile Include="Widgets\DrawingUtil.cs" />
     <Compile Include="Widgets\LinkUtil.cs" />
-    <Compile Include="Relations\LineRelation.cs" />
-    <Compile Include="Relations\SolidRelaction.cs" />
     <Compile Include="Information\ParameterUtil.cs" />
     <Compile Include="Widgets\RevitContext.cs" />
     <Compile Include="Widgets\RibbonUtil.cs" />
     <Compile Include="Geometry\BoxUtil.cs" />
     <Compile Include="Converters\UnitConverter.cs" />
     <Compile Include="Widgets\AutoUtil.cs" />
-    <Compile Include="Converters\ProfileConverter.cs" />
-    <Compile Include="Widgets\ClosingUtil.cs" />
+    <Compile Include="Converters\CurveConverter.cs" />
     <Compile Include="Widgets\RevitInfoUtil.cs" />
     <Compile Include="Widgets\TableUtil.cs" />
   </ItemGroup>

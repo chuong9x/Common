@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 04/22/2020 08:05:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -47,35 +47,69 @@
 */
 
 using System;
+using System.Collections.Generic;
 
 using Autodesk.Revit.DB;
 
-namespace KeLi.Common.Revit.Builders
+namespace KeLi.Common.Revit.Converters
 {
     /// <summary>
-    ///     View builder.
+    ///     About reference converter.
     /// </summary>
-    public static class ViewBuilder
+    public static class ReferenceConverter
     {
         /// <summary>
-        ///     Creates a new view section.
+        ///     Converts the Reference set to the ReferenceArray.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="elmId"></param>
-        /// <param name="box"></param>
+        /// <param name="references"></param>
         /// <returns></returns>
-        public static ViewSection CreateViewSection(this Document doc, ElementId elmId, BoundingBoxXYZ box)
+        public static ReferenceArray ToReferArray(this IEnumerable<Reference> references)
         {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
+            if (references is null)
+                throw new ArgumentNullException(nameof(references));
 
-            if (elmId is null)
-                throw new ArgumentNullException(nameof(elmId));
+            var results = new ReferenceArray();
 
-            if (box is null)
-                throw new ArgumentNullException(nameof(box));
+            foreach (var refer in references)
+                results.Append(refer);
 
-            return doc.GetElement(elmId) is null ? null : ViewSection.CreateSection(doc, elmId, box);
+            return results;
+        }
+
+        /// <summary>
+        ///     Converts the Reference set to the ReferenceArray.
+        /// </summary>
+        /// <param name="references"></param>
+        /// <returns></returns>
+        public static ReferenceArray ToReferArray(params Reference[] references)
+        {
+            if (references is null)
+                throw new ArgumentNullException(nameof(references));
+
+            var results = new ReferenceArray();
+
+            foreach (var refer in references)
+                results.Append(refer);
+
+            return results;
+        }
+
+        /// <summary>
+        ///     Converts the ReferenceArray to the Reference list.
+        /// </summary>
+        /// <param name="references"></param>
+        /// <returns></returns>
+        public static List<Reference> ToReferArray(this ReferenceArray references)
+        {
+            if (references is null)
+                throw new ArgumentNullException(nameof(references));
+
+            var results = new List<Reference>();
+
+            foreach (Reference refer in references)
+                results.Add(refer);
+
+            return results;
         }
     }
 }

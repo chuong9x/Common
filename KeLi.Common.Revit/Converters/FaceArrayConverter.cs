@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 01/15/2020 10:22:11 AM |  |  |     |         |      |
+     |  |              Creation Time: 04/22/2020 08:05:20 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -51,49 +51,47 @@ using System.Collections.Generic;
 
 using Autodesk.Revit.DB;
 
-namespace KeLi.Common.Revit.Builders
+namespace KeLi.Common.Revit.Converters
 {
     /// <summary>
-    ///     DirectShape paramter.
+    ///     About faceArray converter.
     /// </summary>
-    public class DirectShapeParameter
+    public static class FaceArrayConverter
     {
         /// <summary>
-        ///     DirectShape paramter.
+        ///     Converts the Face list to the FaceArray.
         /// </summary>
-        /// <param name="profile"></param>
-        /// <param name="direction"></param>
-        /// <param name="distance"></param>
-        /// <param name="category"></param>
-        public DirectShapeParameter(IEnumerable<CurveLoop> profile, XYZ direction, double distance, BuiltInCategory category)
+        /// <param name="faces"></param>
+        /// <returns></returns>
+        public static FaceArray ToFaceArray<T>(this IEnumerable<T> faces) where T : Face
         {
-            Profile = profile ?? throw new ArgumentNullException(nameof(profile));
+            if (faces is null)
+                throw new ArgumentNullException(nameof(faces));
 
-            Direction = direction ?? throw new ArgumentNullException(nameof(direction));
+            var results = new FaceArray();
 
-            Distance = distance;
+            foreach (var face in faces)
+                results.Append(face);
 
-            Category = category;
+            return results;
         }
 
         /// <summary>
-        ///     Extrusion's profile.
+        ///     Converts the Face list to the FaceArray.
         /// </summary>
-        public IEnumerable<CurveLoop> Profile { get; set; }
+        /// <param name="faces"></param>
+        /// <returns></returns>
+        public static FaceArray ToFaceArray<T>(params T[] faces) where T : Face
+        {
+            if (faces is null)
+                throw new ArgumentNullException(nameof(faces));
 
-        /// <summary>
-        ///     Extrusion's direction.
-        /// </summary>
-        public XYZ Direction { get; set; }
+            var results = new FaceArray();
 
-        /// <summary>
-        ///     Extrusion's distance.
-        /// </summary>
-        public double Distance { get; set; }
+            foreach (var face in faces)
+                results.Append(face);
 
-        /// <summary>
-        ///     Extrusion's category.
-        /// </summary>
-        public BuiltInCategory Category { get; set; }
+            return results;
+        }
     }
 }

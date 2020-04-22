@@ -87,7 +87,7 @@ namespace KeLi.Common.Revit.Builders
 
             var result = doc.CreateModelCurve(line, out sketchPlane);
 
-            SetModelCurveColor(result, doc, color);
+            result.SetModelCurveColor(color);
 
             return result;
         }
@@ -116,7 +116,7 @@ namespace KeLi.Common.Revit.Builders
 
             var result = doc.CreateModelCurve(line, out sketchPlane);
 
-            SetModelCurveColor(result, doc, color);
+            result.SetModelCurveColor(color);
 
             return result;
         }
@@ -137,8 +137,6 @@ namespace KeLi.Common.Revit.Builders
             if (curve is null)
                 throw new ArgumentNullException(nameof(curve));
 
-            sketchPlane = null;
-
             XYZ normal = null;
 
             if (curve is Arc arc)
@@ -158,7 +156,7 @@ namespace KeLi.Common.Revit.Builders
             }
 
             if (normal == null)
-                return null;
+                throw new NullReferenceException(nameof(normal));
 
             var plane = normal.CreatePlane(curve.GetEndPoint(0));
 
@@ -172,7 +170,7 @@ namespace KeLi.Common.Revit.Builders
             else
                 result = doc.FamilyCreate.NewModelCurve(curve, sketchPlane);
 
-            SetModelCurveColor(result, doc, color);
+            result.SetModelCurveColor(color);
 
             return result;
         }
@@ -240,7 +238,7 @@ namespace KeLi.Common.Revit.Builders
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
-
+            
             if (curves is null)
                 throw new ArgumentNullException(nameof(curves));
 
@@ -251,15 +249,13 @@ namespace KeLi.Common.Revit.Builders
         ///     Set ModelCurve's graphics style color.
         /// </summary>
         /// <param name="modelCurve"></param>
-        /// <param name="doc"></param>
         /// <param name="color"></param>
-        private static void SetModelCurveColor(ModelCurve modelCurve, Document doc, Color color = null)
+        public static void SetModelCurveColor(this ModelCurve modelCurve, Color color = null)
         {
             if (modelCurve is null)
                 throw new ArgumentNullException(nameof(modelCurve));
 
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
+            var doc = modelCurve.Document;
 
             var lineCtg = doc.Settings.Categories.get_Item(BuiltInCategory.OST_Lines);
 

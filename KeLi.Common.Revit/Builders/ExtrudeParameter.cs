@@ -24,7 +24,7 @@ namespace KeLi.Common.Revit.Builders
 
             Plane = plane ?? throw new ArgumentNullException(nameof(plane));
 
-            Thick = convertUnit ? UnitConverter.ConvertMmToFeet(thick) : thick;
+            Thick = convertUnit ? UnitConverter.Mm2Feet(thick) : thick;
         }
 
         /// <summary>

@@ -72,7 +72,7 @@ namespace KeLi.Common.Revit.Converters
         /// </summary>
         /// <param name="feetNum"></param>
         /// <returns></returns>
-        public static double ConvertFeetToMm(object feetNum)
+        public static double Feet2Mm(object feetNum)
         {
             if (feetNum is null)
                 throw new ArgumentNullException(nameof(feetNum));
@@ -87,7 +87,7 @@ namespace KeLi.Common.Revit.Converters
         /// </summary>
         /// <param name="mmNum"></param>
         /// <returns></returns>
-        public static double ConvertMmToFeet(object mmNum)
+        public static double Mm2Feet(object mmNum)
         {
             if (mmNum is null)
                 throw new ArgumentNullException(nameof(mmNum));
