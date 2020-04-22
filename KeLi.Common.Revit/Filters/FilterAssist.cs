@@ -52,9 +52,7 @@ using System.Linq;
 
 using Autodesk.Revit.DB;
 
-using KeLi.Common.Revit.Builders;
 using KeLi.Common.Revit.Geometry;
-using KeLi.Common.Revit.Widgets;
 
 namespace KeLi.Common.Revit.Filters
 {
@@ -117,9 +115,9 @@ namespace KeLi.Common.Revit.Filters
             if (view is null)
                 throw new ArgumentNullException(nameof(view));
 
-            var elmCenter = elm.GetBoundingBox(doc).GetBoxCenter();
+            var elmCenter = elm.GetBoundingBox().GetBoxCenter();
 
-            var roomCenter = room.GetBoundingBox(doc).GetBoxCenter();
+            var roomCenter = room.GetBoundingBox().GetBoxCenter();
 
             var direction = (elmCenter - roomCenter).Normalize();
 
@@ -167,9 +165,9 @@ namespace KeLi.Common.Revit.Filters
 
             var doc = elm.Document;
 
-            var elmCenter = elm.GetBoundingBox(doc).GetBoxCenter();
+            var elmCenter = elm.GetBoundingBox().GetBoxCenter();
 
-            var roomCenter = room.GetBoundingBox(doc).GetBoxCenter();
+            var roomCenter = room.GetBoundingBox().GetBoxCenter();
 
             var direction = (elmCenter - roomCenter).Normalize();
 
@@ -179,10 +177,8 @@ namespace KeLi.Common.Revit.Filters
 
             var context = intersector.FindNearest(roomCenter, direction);
 
-            doc.AutoTransaction(() => { doc.CreateModelCurve(Line.CreateBound(roomCenter, elmCenter), out _); });
-
             if (context == null)
-                return null;
+                throw new NullReferenceException(nameof(context));
 
             var reference = context.GetReference();
 
@@ -193,7 +189,7 @@ namespace KeLi.Common.Revit.Filters
             if (face is PlanarFace planarFace)
                 return planarFace;
 
-            return null;
+            throw new NullReferenceException(nameof(planarFace));
         }
 
         /// <summary>
@@ -208,7 +204,7 @@ namespace KeLi.Common.Revit.Filters
                 throw new ArgumentNullException(nameof(doc));
 
             var filter = new FilteredElementCollector(doc);
-            
+
             if (viewId != null)
                 filter = new FilteredElementCollector(doc, viewId);
 

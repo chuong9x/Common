@@ -62,22 +62,6 @@ namespace KeLi.Common.Revit.Builders
         /// <summary>
         ///     Creates a new plane.
         /// </summary>
-        /// <param name="pt"></param>
-        /// <returns></returns>
-        public static Plane CreatePlane(this XYZ pt)
-        {
-            if (pt is null)
-                throw new ArgumentNullException(nameof(pt));
-
-            if (pt == XYZ.Zero)
-                throw new ArgumentException("The point cannot be zero point!");
-
-            return Line.CreateBound(XYZ.Zero, pt).CreatePlane();
-        }
-
-        /// <summary>
-        ///     Creates a new plane.
-        /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
         public static Plane CreatePlane(this Line line)
@@ -114,57 +98,6 @@ namespace KeLi.Common.Revit.Builders
             return Plane.CreateByNormalAndOrigin(normal, point);
 
             #endif
-        }
-
-        /// <summary>
-        ///     Creates a new sketch plane.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="pt"></param>
-        /// <returns></returns>
-        public static SketchPlane CreateSketchPlane(this Document doc, XYZ pt)
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            if (pt is null)
-                throw new ArgumentNullException(nameof(pt));
-
-            return SketchPlane.Create(doc, pt.CreatePlane());
-        }
-
-        /// <summary>
-        ///     Creates a new sketch plane.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="line"></param>
-        /// <returns></returns>
-        public static SketchPlane CreateSketchPlane(this Document doc, Line line)
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            if (line is null)
-                throw new ArgumentNullException(nameof(line));
-
-            return SketchPlane.Create(doc, line.CreatePlane());
-        }
-
-        /// <summary>
-        ///     Creates a new sketch plane.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="plane"></param>
-        /// <returns></returns>
-        public static SketchPlane CreateSketchPlane(this Document doc, Plane plane)
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            if (plane is null)
-                throw new ArgumentNullException(nameof(plane));
-
-            return SketchPlane.Create(doc, plane);
         }
 
         /// <summary>

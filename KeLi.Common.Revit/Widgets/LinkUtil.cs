@@ -50,6 +50,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
@@ -427,7 +428,7 @@ namespace KeLi.Common.Revit.Widgets
                 throw new ArgumentNullException(nameof(filePaths));
 
             if (filePaths.Count == 0)
-                return;
+                throw new TargetParameterCountException(nameof(filePaths.Count));
 
             filePaths.ForEach(doc.SetRevitLink);
         }

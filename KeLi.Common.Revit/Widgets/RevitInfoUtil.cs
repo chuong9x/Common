@@ -57,7 +57,10 @@ using System.Text;
 
 using KeLi.Common.Converter.Collections;
 
+using static System.Environment;
 using static System.Reflection.BindingFlags;
+using static System.StringComparison;
+using static System.StringSplitOptions;
 
 namespace KeLi.Common.Revit.Widgets
 {
@@ -96,7 +99,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="fileName"></param>
         private RevitInfoUtil(string fileName)
         {
-            if (fileName is null)
+            if (string.IsNullOrWhiteSpace(fileName))
                 throw new ArgumentNullException(nameof(fileName));
 
             try
@@ -142,14 +145,23 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static int GetRevitVersionNum(string filePath)
         {
-            if (filePath is null)
+            if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArgumentNullException(nameof(filePath));
+
+            if (!File.Exists(filePath))
+                throw new ArgumentNullException(filePath);
 
             var dict = GetRevitInfoDict(filePath);
 
+            if (dict is null)
+                throw new ArgumentNullException(nameof(dict));
+
             var versionInfo = dict.FirstOrDefault(f => f.Key == "Revit Build").Value;
 
-            var startIndex = versionInfo.IndexOf("Revit", StringComparison.Ordinal) + 6;
+            if (versionInfo is null)
+                throw new ArgumentNullException(nameof(versionInfo));
+
+            var startIndex = versionInfo.IndexOf("Revit", Ordinal) + 6;
 
             var version = versionInfo.Substring(startIndex, 4);
 
@@ -168,9 +180,12 @@ namespace KeLi.Common.Revit.Widgets
 
             var dict = GetRevitInfoDict(fileStream);
 
+            if (dict is null)
+                throw new ArgumentNullException(nameof(dict));
+
             var versionInfo = dict.FirstOrDefault(f => f.Key == "Revit Build").Value;
 
-            var startIndex = versionInfo.IndexOf("Revit", StringComparison.Ordinal) + 6;
+            var startIndex = versionInfo.IndexOf("Revit", Ordinal) + 6;
 
             var version = versionInfo.Substring(startIndex, 4);
 
@@ -197,8 +212,11 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static Dictionary<string, string> GetRevitInfoDict(string filePath)
         {
-            if (filePath is null)
+            if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArgumentNullException(nameof(filePath));
+
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException(filePath);
 
             var rawData = GetRawBasicFileInfo(filePath, "BasicFileInfo");
 
@@ -227,9 +245,15 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         private static Dictionary<string, string> GetRevitInfoDict(byte[] rawData)
         {
+            if (rawData == null)
+                throw new ArgumentNullException(nameof(rawData));
+
+            if (rawData.Length == 0)
+                throw new TargetParameterCountException(nameof(rawData.Length));
+
             var rawString = Encoding.Unicode.GetString(rawData);
 
-            var fileInfo = rawString.Split(new[] { "\0", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var fileInfo = rawString.Split(new[] { "\0", NewLine }, RemoveEmptyEntries).ToList();
 
             fileInfo.RemoveAll(r => !r.Contains(":"));
 
@@ -242,7 +266,7 @@ namespace KeLi.Common.Revit.Widgets
             if (worksharing is null)
                 return fileInfo.ToDictionary2();
 
-            var startIndex = worksharing.IndexOf("Worksharing", StringComparison.Ordinal);
+            var startIndex = worksharing.IndexOf("Worksharing", Ordinal);
 
             fileInfo[index] = worksharing.Substring(startIndex);
 
@@ -257,8 +281,14 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         private static byte[] GetRawBasicFileInfo(string filePath, string streamName)
         {
-            if (filePath is null)
+            if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArgumentNullException(nameof(filePath));
+
+            if (string.IsNullOrWhiteSpace(streamName))
+                throw new ArgumentNullException(nameof(streamName));
+
+            if(!File.Exists(filePath))
+                throw new FileNotFoundException(filePath);
 
             if (!IsFileStructuredStorage(filePath))
                 throw new NotSupportedException("File isn't a structured storage file!");
@@ -292,6 +322,9 @@ namespace KeLi.Common.Revit.Widgets
             if (fileStream is null)
                 throw new ArgumentNullException(nameof(fileStream));
 
+            if (string.IsNullOrWhiteSpace(streamName))
+                throw new ArgumentNullException(nameof(streamName));
+
             using (var storage = new RevitInfoUtil(fileStream))
             {
                 if (!storage.BaseRoot.StreamExists(streamName))
@@ -319,7 +352,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         private static object InvokeStorageRoot(StorageInfo storageRoot, string methodName, params object[] methodArgs)
         {
-            if (methodName is null)
+            if (string.IsNullOrWhiteSpace(methodName))
                 throw new ArgumentNullException(nameof(methodName));
 
             var type = typeof(StorageInfo).Assembly.GetType("System.IO.Packaging.StorageRoot", true, false);
@@ -342,8 +375,11 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         private static bool IsFileStructuredStorage(string filePath)
         {
-            if (filePath is null)
+            if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArgumentNullException(nameof(filePath));
+
+            if(!File.Exists(filePath))
+                throw new FileNotFoundException(filePath);
 
             var result = StgIsStorageFile(filePath);
 

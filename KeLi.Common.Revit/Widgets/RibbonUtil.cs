@@ -49,6 +49,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Media;
 
 using Autodesk.Revit.UI;
@@ -97,6 +98,9 @@ namespace KeLi.Common.Revit.Widgets
             if (pbds is null)
                 throw new ArgumentNullException(nameof(pbds));
 
+            if (!pbds.Any())
+                throw new TargetParameterCountException(nameof(pbds));
+
             var results = new List<PushButton>();
 
             pbds.ToList().ForEach(f => results.Add(pnl.AddButton(f)));
@@ -111,8 +115,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="pbd"></param>
         /// <param name="pbds"></param>
         /// <returns></returns>
-        public static PulldownButton AddPushButton(this RibbonPanel pnl, PulldownButtonData pbd,
-            IEnumerable<PushButtonData> pbds)
+        public static PulldownButton AddPushButton(this RibbonPanel pnl, PulldownButtonData pbd, IEnumerable<PushButtonData> pbds)
         {
             if (pnl is null)
                 throw new ArgumentNullException(nameof(pnl));
@@ -122,6 +125,9 @@ namespace KeLi.Common.Revit.Widgets
 
             if (pbds is null)
                 throw new ArgumentNullException(nameof(pbds));
+
+            if (!pbds.Any())
+                throw new TargetParameterCountException(nameof(pbds));
 
             if (!(pnl.AddItem(pbd) is PulldownButton result))
                 throw new InvalidCastException();
@@ -167,6 +173,9 @@ namespace KeLi.Common.Revit.Widgets
             if (pbds is null)
                 throw new ArgumentNullException(nameof(pbds));
 
+            if (!pbds.Any())
+                throw new TargetParameterCountException(nameof(pbds));
+
             if (!(pnl.AddItem(pbd) is SplitButton result))
                 throw new InvalidCastException();
 
@@ -199,7 +208,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static PushButtonData CreatePushButtonData<T>(string text, ImageSource image, bool isAvailable = false)
         {
-            if (text is null)
+            if (string.IsNullOrWhiteSpace(text))
                 throw new ArgumentNullException(nameof(text));
 
             if (image is null)
@@ -217,10 +226,12 @@ namespace KeLi.Common.Revit.Widgets
         ///     Creates a push button data.
         /// </summary>
         /// <returns></returns>
-        public static PushButtonData CreatePushButtonData(this IExternalCommand cmd, string text, ImageSource image,
-            bool isAvailable = false)
+        public static PushButtonData CreatePushButtonData(this IExternalCommand cmd, string text, ImageSource image, bool isAvailable = false)
         {
-            if (text is null)
+            if (cmd is null)
+                throw new ArgumentNullException(nameof(cmd));
+
+            if (string.IsNullOrWhiteSpace(text))
                 throw new ArgumentNullException(nameof(text));
 
             if (image is null)
@@ -245,7 +256,7 @@ namespace KeLi.Common.Revit.Widgets
             if (type is null)
                 throw new ArgumentNullException(nameof(type));
 
-            if (text is null)
+            if (string.IsNullOrWhiteSpace(text))
                 throw new ArgumentNullException(nameof(text));
 
             if (image is null)
@@ -274,7 +285,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static PulldownButtonData CreatePulldownButtonData(string text, ImageSource image)
         {
-            if (text is null)
+            if (string.IsNullOrWhiteSpace(text))
                 throw new ArgumentNullException(nameof(text));
 
             if (image is null)
@@ -289,7 +300,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <returns></returns>
         public static SplitButtonData CreateSplitButtonData(string text, ImageSource image)
         {
-            if (text is null)
+            if (string.IsNullOrWhiteSpace(text))
                 throw new ArgumentNullException(nameof(text));
 
             if (image is null)

@@ -63,13 +63,12 @@ namespace KeLi.Common.Revit.Builders
     public static class FamilySymbolBuilder
     {
         /// <summary>
-        ///     Creates a new extrusion symbol with transaction.
+        ///     Creates a new extrusion symbol.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="parm"></param>
-        /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateExtrusion(this Document doc, ExtrudeParameter parm, string rfaPath = null)
+        public static Document CreateExtrusion(this Document doc, ExtrudeParameter parm)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -87,19 +86,19 @@ namespace KeLi.Common.Revit.Builders
             var profile = ResetCurveArrArray(parm.Boundary);
 
             if (profile is null)
-                return null;
+                throw new NullReferenceException(nameof(profile));
 
             fdoc.AutoTransaction(() =>
             {
-                var skectchPlane = fdoc.CreateSketchPlane(parm.Plane);
+                var skectchPlane = SketchPlane.Create(fdoc, parm.Plane);
 
                 if (skectchPlane is null)
-                    return;
+                    throw new NullReferenceException(nameof(skectchPlane));
 
                 fdoc.FamilyCreate.NewExtrusion(true, profile, skectchPlane, parm.Thick);
             });
 
-            return doc.GetFamilySymbol(fdoc, rfaPath);
+            return fdoc;
         }
 
         /// <summary>
@@ -107,9 +106,8 @@ namespace KeLi.Common.Revit.Builders
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="parm"></param>
-        /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateSweep(this Document doc, SweepParameter parm, string rfaPath = null)
+        public static Document CreateSweep(this Document doc, SweepParameter parm)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -119,33 +117,36 @@ namespace KeLi.Common.Revit.Builders
 
             var tplPath = doc.GetTemplateFilePath();
 
+            if (!File.Exists(tplPath))
+                throw new FileNotFoundException(tplPath);
+
             var fdoc = doc.Application.NewFamilyDocument(tplPath);
 
             var curveLoops = ResetCurveArrArray(parm.Profile);
 
             if (curveLoops is null)
-                return null;
+                throw new NullReferenceException(nameof(curveLoops));
 
             fdoc.AutoTransaction(() =>
             {
                 var profile = doc.Application.Create.NewCurveLoopsProfile(curveLoops);
 
                 if (profile is null)
-                    return;
+                    throw new NullReferenceException(nameof(profile));
 
                 fdoc.FamilyCreate.NewSweep(true, parm.Path, profile, parm.Index, parm.Location);
             });
 
-            return doc.GetFamilySymbol(fdoc, rfaPath);
+            return fdoc;
         }
 
         /// <summary>
-        ///     Creates a new family symbol with transaction.
+        ///     Loads family.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol CreateFamilySymbol(this Document doc, string rfaPath)
+        public static FamilySymbol LoadFamily(this Document doc, string rfaPath)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -153,29 +154,28 @@ namespace KeLi.Common.Revit.Builders
             if (rfaPath is null)
                 throw new ArgumentNullException(nameof(rfaPath));
 
-            return doc.AutoTransaction(() =>
-            {
-                doc.LoadFamily(rfaPath, out var family);
+            if(!File.Exists(rfaPath))
+                throw new FileNotFoundException(rfaPath);
 
-                var symbolId = family.GetFamilySymbolIds().FirstOrDefault();
+            doc.LoadFamily(rfaPath, out var family);
 
-                var result = doc.GetElement(symbolId) as FamilySymbol;
+            var symbolId = family.GetFamilySymbolIds().FirstOrDefault();
 
-                if (result != null && !result.IsActive)
-                    result.Activate();
+            var result = doc.GetElement(symbolId) as FamilySymbol;
 
-                return result;
-            });
+            if (result != null && !result.IsActive)
+                result.Activate();
+
+            return result;
         }
 
         /// <summary>
-        ///     Gets the first family symbol from family document with transaction.
+        ///     Loads family.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="fdoc"></param>
-        /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol GetFamilySymbol(this Document doc, Document fdoc, string rfaPath = null)
+        public static FamilySymbol NewLoadFamily(this Document doc, Document fdoc)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -185,20 +185,14 @@ namespace KeLi.Common.Revit.Builders
 
             var family = fdoc.LoadFamily(doc);
 
-            if (rfaPath != null)
-                fdoc.CloseUnsavedFile(rfaPath);
+            var symbolId = family.GetFamilySymbolIds().FirstOrDefault();
 
-            return doc.AutoTransaction(() =>
-            {
-                var symbolId = family.GetFamilySymbolIds().FirstOrDefault();
+            var result = doc.GetElement(symbolId) as FamilySymbol;
 
-                var result = doc.GetElement(symbolId) as FamilySymbol;
+            if (result != null && !result.IsActive)
+                result.Activate();
 
-                if (result != null && !result.IsActive)
-                    result.Activate();
-
-                return result;
-            });
+            return result;
         }
 
         /// <summary>
@@ -213,7 +207,11 @@ namespace KeLi.Common.Revit.Builders
 
             var results = new CurveArrArray();
 
-            var location = profile.GetMinPoint();
+            var pts = profile.ToCurveList().Select(s => s.GetEndPoint(0));
+
+            pts = pts.OrderBy(o => o.Z).ThenBy(o => o.Y).ThenBy(o => o.X);
+
+            var location = pts.FirstOrDefault();
 
             foreach (CurveArray lines in profile)
             {
@@ -222,7 +220,7 @@ namespace KeLi.Common.Revit.Builders
                 foreach (var line in lines.Cast<Line>())
                 {
                     if (line.Length < 1e-2)
-                        return null;
+                        throw new InvalidDataException(line.ToString());
 
                     var pt1 = line.GetEndPoint(0) - location;
 

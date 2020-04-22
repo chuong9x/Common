@@ -65,15 +65,13 @@ namespace KeLi.Common.Revit.Geometry
         ///     Gets the bounding box.
         /// </summary>
         /// <param name="elm"></param>
-        /// <param name="doc"></param>
         /// <returns></returns>
-        public static BoundingBoxXYZ GetBoundingBox(this Element elm, Document doc)
+        public static BoundingBoxXYZ GetBoundingBox(this Element elm)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
+            var doc = elm.Document;
 
             var box = elm.get_BoundingBox(doc.ActiveView);
 
@@ -89,17 +87,13 @@ namespace KeLi.Common.Revit.Geometry
         ///     Gets the bounding box in plane.
         /// </summary>
         /// <param name="elm"></param>
-        /// <param name="doc"></param>
         /// <returns></returns>
-        public static BoundingBoxXYZ GetPlaneBox(this Element elm, Document doc)
+        public static BoundingBoxXYZ GetPlaneBox(this Element elm)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            var box = elm.GetBoundingBox(doc);
+            var box = elm.GetBoundingBox();
 
             return new BoundingBoxXYZ
             {

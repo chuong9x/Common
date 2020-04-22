@@ -47,6 +47,10 @@
 */
 
 using Autodesk.Revit.DB;
+using System;
+
+using static Autodesk.Revit.DB.BuiltInParameter;
+using static Autodesk.Revit.DB.BuiltInParameterGroup;
 
 namespace KeLi.Common.Revit.Widgets
 {
@@ -56,18 +60,24 @@ namespace KeLi.Common.Revit.Widgets
     public static class MaterialUtil
     {
         /// <summary>
-        ///     Associates material
+        ///     Associates material.
         /// </summary>
         /// <param name="elm"></param>
         /// <param name="parmName"></param>
         /// <param name="isInstance"></param>
         public static void AssociateMaterial(this GenericForm elm, string parmName, bool isInstance = true)
         {
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (string.IsNullOrWhiteSpace(parmName))
+                throw new ArgumentNullException(nameof(parmName));
+
             var mgr = elm.Document.FamilyManager;
 
-            var familyParm = mgr.AddParameter(parmName, BuiltInParameterGroup.PG_MATERIALS, ParameterType.Material, isInstance);
+            var familyParm = mgr.AddParameter(parmName, PG_MATERIALS, ParameterType.Material, isInstance);
 
-            var parm = elm.get_Parameter(BuiltInParameter.MATERIAL_ID_PARAM);
+            var parm = elm.get_Parameter(MATERIAL_ID_PARAM);
 
             if (parm != null)
                 mgr.AssociateElementParameterToFamilyParameter(parm, familyParm);
