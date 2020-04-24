@@ -77,7 +77,7 @@ namespace KeLi.Common.Revit.Widgets
             if (string.IsNullOrWhiteSpace(viewName))
                 throw new ArgumentNullException(nameof(viewName));
 
-            var view = doc.GetInstanceElementList<ViewSchedule>().FirstOrDefault(f => f.Name == viewName);
+            var view = doc.GetInstanceList<ViewSchedule>().FirstOrDefault(f => f.Name == viewName);
 
             return view.ToDataTable(doc);
         }
@@ -97,7 +97,7 @@ namespace KeLi.Common.Revit.Widgets
             if (string.IsNullOrWhiteSpace(viewName))
                 throw new ArgumentNullException(nameof(viewName));
 
-            var view = doc.GetInstanceElementList<ViewSchedule>().FirstOrDefault(f => f.Name == viewName);
+            var view = doc.GetInstanceList<ViewSchedule>().FirstOrDefault(f => f.Name == viewName);
 
             if (view is null)
                 throw new NullReferenceException(nameof(view));
@@ -201,7 +201,7 @@ namespace KeLi.Common.Revit.Widgets
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            var views = doc.GetInstanceElementList<ViewSchedule>();
+            var views = doc.GetInstanceList<ViewSchedule>();
 
             return views.ToDataTableList(doc);
         }

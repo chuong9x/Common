@@ -269,7 +269,7 @@ namespace KeLi.Common.Revit.Builders
                 modelCtg.LineColor = color;
             }
 
-            var graphicsStyles = doc.GetInstanceElementList<GraphicsStyle>();
+            var graphicsStyles = doc.GetInstanceList<GraphicsStyle>();
 
             var modelStyle = graphicsStyles.FirstOrDefault(f => f.GraphicsStyleCategory.Name == MODEL_COLOR);
 

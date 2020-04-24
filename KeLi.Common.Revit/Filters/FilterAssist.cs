@@ -220,7 +220,7 @@ namespace KeLi.Common.Revit.Filters
         /// <param name="category"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static List<T> GetTypeElementList<T>(this Document doc, BuiltInCategory category, ElementId viewId = null) where T : Element
+        public static List<T> GetTypeList<T>(this Document doc, BuiltInCategory category, ElementId viewId = null) where T : Element
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -241,7 +241,7 @@ namespace KeLi.Common.Revit.Filters
         /// <param name="doc"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static List<T> GetInstanceElementList<T>(this Document doc, ElementId viewId = null) where T : Element
+        public static List<T> GetInstanceList<T>(this Document doc, ElementId viewId = null) where T : Element
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -263,7 +263,7 @@ namespace KeLi.Common.Revit.Filters
         /// <param name="category"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static List<T> GetInstanceElementList<T>(this Document doc, BuiltInCategory category, ElementId viewId = null) where T : Element
+        public static List<T> GetInstanceList<T>(this Document doc, BuiltInCategory category, ElementId viewId = null) where T : Element
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -281,64 +281,13 @@ namespace KeLi.Common.Revit.Filters
         }
 
         /// <summary>
-        ///     Gets the dictionary that geometry info as key and T type element list as value.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="type"></param>
-        /// <param name="viewId"></param>
-        /// <returns></returns>
-        public static Dictionary<int, List<T>> GetGeometryInstancesDict<T>(this Document doc, CalcType type, ElementId viewId = null) where T : Element
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            var elms = doc.GetInstanceElementList<T>(viewId);
-
-            var results = new Dictionary<int, List<T>>();
-
-            foreach (var elm in elms)
-            {
-                int num;
-
-                switch (type)
-                {
-                    case CalcType.FaceNum:
-                        num = elm.GetFaceList().Count;
-
-                        break;
-
-                    case CalcType.FacePointNum:
-                        num = elm.GetFacePointList().Count;
-
-                        break;
-
-                    case CalcType.SolidPointNum:
-                        num = elm.GetSolidPointList().Count;
-
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                }
-
-                if (results.ContainsKey(num))
-                    results[num].Add(elm);
-
-                else
-                    results.Add(num, new List<T>());
-            }
-
-            return results;
-        }
-
-        /// <summary>
         ///     Gets the dictionary that geometry info as key and element list as value.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="type"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static Dictionary<int, List<Element>> GetGeometryInstancesDict(this Document doc, CalcType type, ElementId viewId = null)
+        public static Dictionary<int, List<Element>> GetInstanceDict(this Document doc, CalcType type, ElementId viewId = null)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));

@@ -91,7 +91,7 @@ namespace KeLi.Common.Revit.Filters
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            return doc.GetInstanceElementList<Wall>();
+            return doc.GetInstanceList<Wall>();
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace KeLi.Common.Revit.Filters
         /// <returns></returns>
         public static List<View3D> Get3DViewList(this Document doc)
         {
-            return doc.GetInstanceElementList<View3D>().Where(w => !w.IsTemplate).ToList();
+            return doc.GetInstanceList<View3D>().Where(w => !w.IsTemplate).ToList();
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace KeLi.Common.Revit.Filters
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            return doc.GetInstanceElementList<FamilyInstance>();
+            return doc.GetInstanceList<FamilyInstance>();
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace KeLi.Common.Revit.Filters
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            var results = doc.GetInstanceElementList<SpatialElement>();
+            var results = doc.GetInstanceList<SpatialElement>();
 
             if (isValid)
                 results = results.Where(w => w?.Location != null && w.Area > 1e-6).ToList();
@@ -202,7 +202,7 @@ namespace KeLi.Common.Revit.Filters
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            return doc.GetInstanceElementList<Level>();
+            return doc.GetInstanceList<Level>();
         }
 
         /// <summary>
