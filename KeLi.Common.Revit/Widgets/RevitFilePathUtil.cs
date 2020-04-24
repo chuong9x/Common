@@ -83,7 +83,7 @@ namespace KeLi.Common.Revit.Widgets
 
             var profileDoc = doc.Application.OpenDocumentFile(familyPath);
 
-            var detailCurves = profileDoc.GetInstanceElementList<CurveElement>();
+            var detailCurves = profileDoc.GetInstanceList<CurveElement>();
 
             var curves = detailCurves.Select(s => s.GeometryCurve);
 
@@ -111,7 +111,7 @@ namespace KeLi.Common.Revit.Widgets
 
             var profileDoc = doc.EditFamily(symbol.Family);
 
-            var detailCurves = profileDoc.GetInstanceElementList<CurveElement>();
+            var detailCurves = profileDoc.GetInstanceList<CurveElement>();
 
             var curves = detailCurves.Select(s => s.GeometryCurve);
 

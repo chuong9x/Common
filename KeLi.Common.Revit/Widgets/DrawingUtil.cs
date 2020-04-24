@@ -73,7 +73,7 @@ namespace KeLi.Common.Revit.Widgets
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            var viewSheets = doc.GetInstanceElementList<ViewSheet>();
+            var viewSheets = doc.GetInstanceList<ViewSheet>();
 
             var drawings = viewSheets.Where(w => w.ViewType == ViewType.DrawingSheet);
 
