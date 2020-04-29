@@ -84,8 +84,9 @@
   <ItemGroup>
     <Compile Include="Builders\CurtainSystemBuilder.cs" />
     <Compile Include="Builders\ExtrudeParameter.cs" />
-    <Compile Include="Builders\FamilySymbolBuilder.cs" />
+    <Compile Include="Builders\FamilySymbolLoader.cs" />
     <Compile Include="Builders\GridWallBuilder.cs" />
+    <Compile Include="Builders\OverrideLoadOption.cs" />
     <Compile Include="Builders\SweepParameter.cs" />
     <Compile Include="Converters\CurveArrArrayConverter.cs" />
     <Compile Include="Converters\CurveArrayConverter.cs" />

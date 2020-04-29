@@ -53,14 +53,16 @@ using System.Linq;
 using Autodesk.Revit.DB;
 
 using KeLi.Common.Revit.Converters;
+using KeLi.Common.Revit.Filters;
 using KeLi.Common.Revit.Widgets;
 
 namespace KeLi.Common.Revit.Builders
 {
+
     /// <summary>
-    ///     FamilySymbol builder.
+    ///     FamilySymbol loader.
     /// </summary>
-    public static class FamilySymbolBuilder
+    public static class FamilySymbolLoader
     {
         /// <summary>
         ///     Creates a new extrusion symbol.
@@ -146,7 +148,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="rfaPath"></param>
         /// <returns></returns>
-        public static FamilySymbol LoadFamily(this Document doc, string rfaPath)
+        public static FamilySymbol NewLoadFamily(this Document doc, string rfaPath)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -157,7 +159,14 @@ namespace KeLi.Common.Revit.Builders
             if(!File.Exists(rfaPath))
                 throw new FileNotFoundException(rfaPath);
 
-            doc.LoadFamily(rfaPath, out var family);
+            doc.LoadFamily(rfaPath, new OverrideLoadOption(), out var family);
+
+            if (family == null)
+            {
+                var families = doc.GetInstanceList<Family>();
+
+                family = families.FirstOrDefault(f => f.Name == Path.GetFileNameWithoutExtension(rfaPath));
+            }
 
             var symbolId = family.GetFamilySymbolIds().FirstOrDefault();
 
