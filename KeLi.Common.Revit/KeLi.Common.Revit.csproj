@@ -87,6 +87,7 @@
     <Compile Include="Builders\FamilySymbolLoader.cs" />
     <Compile Include="Builders\GridWallBuilder.cs" />
     <Compile Include="Builders\OverrideLoadOption.cs" />
+    <Compile Include="Builders\PartBuilder.cs" />
     <Compile Include="Builders\SweepParameter.cs" />
     <Compile Include="Converters\CurveArrArrayConverter.cs" />
     <Compile Include="Converters\CurveArrayConverter.cs" />
