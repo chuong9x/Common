@@ -68,7 +68,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="act"></param>
-        public static void AutoTransaction(this Document doc, Action act)
+        public static bool AutoTransaction(this Document doc, Action act)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -80,10 +80,22 @@ namespace KeLi.Common.Revit.Widgets
             {
                 trans.Start();
 
-                act.Invoke();
+                act?.Invoke();
 
-                if (trans.Commit() != TransactionStatus.Committed)
+                if (trans.Commit() == TransactionStatus.Committed)
+                    return true;
+
+                if (trans.GetStatus() == TransactionStatus.RolledBack)
+                    return false;
+
+                if (trans.GetStatus() != TransactionStatus.RolledBack)
+                {
                     trans.RollBack();
+
+                    return false;
+                }
+
+                return false;
             }
         }
 
@@ -106,8 +118,18 @@ namespace KeLi.Common.Revit.Widgets
 
                 var result = func.Invoke();
 
-                if (trans.Commit() != TransactionStatus.Committed)
+                if (trans.Commit() == TransactionStatus.Committed)
+                    return result;
+
+                if (trans.GetStatus() == TransactionStatus.RolledBack)
+                    return null;
+
+                if (trans.GetStatus() != TransactionStatus.RolledBack)
+                {
                     trans.RollBack();
+
+                    return null;
+                }
 
                 return result;
             }
@@ -132,54 +154,20 @@ namespace KeLi.Common.Revit.Widgets
 
                 var result = func.Invoke();
 
-                if (trans.Commit() != TransactionStatus.Committed)
+                if (trans.Commit() == TransactionStatus.Committed)
+                    return result.ToList();
+
+                if (trans.GetStatus() == TransactionStatus.RolledBack)
+                    return null;
+
+                if (trans.GetStatus() != TransactionStatus.RolledBack)
+                {
                     trans.RollBack();
 
+                    return null;
+                }
+
                 return result.ToList();
-            }
-        }
-
-        /// <summary>
-        ///     To repeat call command.
-        /// </summary>
-        /// <param name="uidoc"></param>
-        /// <param name="act"></param>
-        /// <returns></returns>
-        public static void RepeatCommand(this UIDocument uidoc, Action act)
-        {
-            if (act is null)
-                throw new ArgumentNullException(nameof(act));
-
-            try
-            {
-                act.Invoke();
-
-                RepeatCommand(uidoc, act);
-            }
-            catch (OperationCanceledException)
-            {
-            }
-        }
-
-        /// <summary>
-        ///     To repeat call command.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="act"></param>
-        /// <returns></returns>
-        public static void RepeatCommand(this Document doc, Action act)
-        {
-            if (act is null)
-                throw new ArgumentNullException(nameof(act));
-
-            try
-            {
-                act.Invoke();
-
-                RepeatCommand(doc, act);
-            }
-            catch (OperationCanceledException)
-            {
             }
         }
 
@@ -235,6 +223,40 @@ namespace KeLi.Common.Revit.Widgets
             }
 
             return false;
+        }
+
+        /// <summary>
+        ///     Deletes element list.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="elms"></param>
+        public static void DeleteElementList(this Document doc, List<Element> elms)
+        {
+            elms = elms.Where(w => w != null).ToList();
+
+            var ids = elms.Select(s => s.Id).ToList();
+
+            doc.DeleteElementList(ids);
+        }
+
+        /// <summary>
+        ///     Deletes element list.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="ids"></param>
+        public static void DeleteElementList(this Document doc, List<ElementId> ids)
+        {
+            AutoTransaction(doc, () =>
+            {
+                foreach (var id in ids)
+                {
+                    if (id == null || id.IntegerValue == -1)
+                        continue;
+
+                    if (doc.GetElement(id) != null)
+                        doc.Delete(id);
+                }
+            });
         }
     }
 }
