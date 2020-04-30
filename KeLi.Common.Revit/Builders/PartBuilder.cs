@@ -60,7 +60,7 @@ namespace KeLi.Common.Revit.Builders
     public static class PartBuilder
     {
         /// <summary>
-        /// Creates a new part.
+        /// Divide part list.
         /// </summary>
         /// <param name="elm"></param>
         /// <param name="origin"></param>
@@ -68,7 +68,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="xStep"></param>
         /// <param name="yStep"></param>
         /// <param name="radius"></param>
-        public static void CreatePart(Element elm, XYZ origin, XYZ baseX, double xStep, double yStep, double radius = 100000)
+        public static void DividePartList(Element elm, XYZ origin, XYZ baseX, double xStep, double yStep, double radius = 100000)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));

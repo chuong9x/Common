@@ -232,7 +232,8 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="elms"></param>
         public static void DeleteElementList(this Document doc, List<Element> elms)
         {
-            elms = elms.Where(w => w != null).ToList();
+            // It may be deleted.
+            elms = elms.Where(w => w != null && w.IsValidObject).ToList();
 
             var ids = elms.Select(s => s.Id).ToList();
 
