@@ -83,6 +83,21 @@ namespace KeLi.Common.Revit.Converters
         }
 
         /// <summary>
+        ///     Converts inch unit value to mm unit value.
+        /// </summary>
+        /// <param name="inchNum"></param>
+        /// <returns></returns>
+        public static double Inch2Mm(object inchNum)
+        {
+            if (inchNum is null)
+                throw new ArgumentNullException(nameof(inchNum));
+
+            var num = Convert.ToDouble(inchNum);
+
+            return UnitUtils.Convert(num, DisplayUnitType.DUT_DECIMAL_INCHES, DisplayUnitType.DUT_MILLIMETERS);
+        }
+
+        /// <summary>
         ///     Converts mm unit value to feet unit value.
         /// </summary>
         /// <param name="mmNum"></param>
@@ -95,6 +110,21 @@ namespace KeLi.Common.Revit.Converters
             var num = Convert.ToDouble(mmNum);
 
             return UnitUtils.Convert(num, DisplayUnitType.DUT_MILLIMETERS, DisplayUnitType.DUT_DECIMAL_FEET);
+        }
+
+        /// <summary>
+        ///     Converts mm unit value to inch unit value.
+        /// </summary>
+        /// <param name="mmNum"></param>
+        /// <returns></returns>
+        public static double Mm2Inch(object mmNum)
+        {
+            if (mmNum is null)
+                throw new ArgumentNullException(nameof(mmNum));
+
+            var num = Convert.ToDouble(mmNum);
+
+            return UnitUtils.Convert(num, DisplayUnitType.DUT_MILLIMETERS, DisplayUnitType.DUT_DECIMAL_INCHES);
         }
     }
 }
