@@ -198,7 +198,7 @@ namespace KeLi.Common.Revit.Filters
         /// <param name="doc"></param>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        public static List<T> GetTypeElementList<T>(this Document doc, ElementId viewId = null) where T : Element
+        public static List<T> GetTypeList<T>(this Document doc, ElementId viewId = null) where T : Element
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));

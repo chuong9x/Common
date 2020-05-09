@@ -472,7 +472,7 @@ namespace KeLi.Common.Revit.Widgets
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            return doc.GetTypeElementList<RevitLinkType>();
+            return doc.GetTypeList<RevitLinkType>();
         }
 
         /// <summary>

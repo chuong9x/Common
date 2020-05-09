@@ -78,7 +78,7 @@ namespace KeLi.Common.Revit.Filters
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            return doc.GetTypeElementList<FamilySymbol>();
+            return doc.GetTypeList<FamilySymbol>();
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace KeLi.Common.Revit.Filters
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            return doc.GetTypeElementList<PanelType>().ToList();
+            return doc.GetTypeList<PanelType>().ToList();
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace KeLi.Common.Revit.Filters
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            return doc.GetTypeElementList<WallType>();
+            return doc.GetTypeList<WallType>();
         }
 
         /// <summary>

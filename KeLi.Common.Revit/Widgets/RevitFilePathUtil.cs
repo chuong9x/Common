@@ -104,7 +104,7 @@ namespace KeLi.Common.Revit.Widgets
             if (symbolName == null)
                 throw new NullReferenceException(nameof(symbolName));
 
-            var symbol = doc.GetTypeElementList<FamilySymbol>().FirstOrDefault(f => f.Name == symbolName);
+            var symbol = doc.GetTypeList<FamilySymbol>().FirstOrDefault(f => f.Name == symbolName);
 
             if (symbol == null)
                 throw new NullReferenceException(nameof(symbol));

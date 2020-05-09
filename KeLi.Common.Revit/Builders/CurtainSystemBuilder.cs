@@ -164,7 +164,7 @@ namespace KeLi.Common.Revit.Builders
             if (faces is null)
                 throw new ArgumentNullException(nameof(faces));
 
-            var findType = doc.GetTypeElementList<CurtainSystemType>().FirstOrDefault(f => f.Name.Contains(typeName));
+            var findType = doc.GetTypeList<CurtainSystemType>().FirstOrDefault(f => f.Name.Contains(typeName));
 
             if (findType != null)
                 return doc.Create.NewCurtainSystem(faces, findType);
