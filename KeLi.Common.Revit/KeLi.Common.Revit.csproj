@@ -84,7 +84,7 @@
   <ItemGroup>
     <Compile Include="Builders\CurtainSystemBuilder.cs" />
     <Compile Include="Builders\ExtrudeParameter.cs" />
-    <Compile Include="Builders\FamilySymbolLoader.cs" />
+    <Compile Include="Builders\FamilyLoader.cs" />
     <Compile Include="Builders\MaterialManager.cs" />
     <Compile Include="Builders\OverrideLoadOption.cs" />
     <Compile Include="Builders\PartBuilder.cs" />

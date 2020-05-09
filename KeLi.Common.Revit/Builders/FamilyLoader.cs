@@ -60,9 +60,9 @@ namespace KeLi.Common.Revit.Builders
 {
 
     /// <summary>
-    ///     FamilySymbol loader.
+    ///     Family loader.
     /// </summary>
-    public static class FamilySymbolLoader
+    public static class FamilyLoader
     {
         /// <summary>
         ///     Creates a new extrusion symbol.
