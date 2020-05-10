@@ -47,10 +47,16 @@
 */
 
 using Autodesk.Revit.DB;
-using KeLi.Common.Revit.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Autodesk.Revit.DB.Visual;
+
+using static Autodesk.Revit.DB.DisplayUnitType;
+using static Autodesk.Revit.DB.Visual.UnifiedBitmap;
+
+using static KeLi.Common.Revit.Builders.PartBuilder.TextureAngle;
 
 namespace KeLi.Common.Revit.Builders
 {
@@ -65,10 +71,10 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="elm"></param>
         /// <param name="origin"></param>
         /// <param name="baseX"></param>
-        /// <param name="xStep"></param>
-        /// <param name="yStep"></param>
+        /// <param name="step"></param>
+        /// <param name="initAngle"></param>
         /// <param name="radius"></param>
-        public static void DividePartList(Element elm, XYZ origin, XYZ baseX, double xStep, double yStep, double radius = 100000)
+        public static void DividePartList(Element elm, XYZ origin, XYZ baseX, double[] step, TextureAngle initAngle, double radius = 5000)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
@@ -79,18 +85,17 @@ namespace KeLi.Common.Revit.Builders
             if (baseX is null)
                 throw new ArgumentNullException(nameof(baseX));
 
-            if (xStep < 0)
-                throw new ArgumentException(nameof(xStep));
+            if (step[0] < 0)
+                throw new ArgumentException(nameof(step));
 
-            if (yStep < 0)
-                throw new ArgumentException(nameof(yStep));
+            if (step[1] < 0)
+                throw new ArgumentException(nameof(step));
 
             if (radius < 0)
                 throw new ArgumentException(nameof(radius));
 
-            xStep = UnitConverter.Mm2Feet(xStep);
-            yStep = UnitConverter.Mm2Feet(yStep);
-            radius = UnitConverter.Mm2Feet(radius);
+            if (initAngle == Rotation90 || initAngle == Rotation270)
+                step = new[] { step[1], step[0] };
 
             var plane = Plane.CreateByNormalAndOrigin(XYZ.BasisZ, origin);
             var baseY = plane.Normal.CrossProduct(baseX);
@@ -105,13 +110,13 @@ namespace KeLi.Common.Revit.Builders
             var yp0 = yAxis.GetEndPoint(0);
             var yp1 = yAxis.GetEndPoint(1);
 
-            var xNum = Convert.ToInt32(Math.Ceiling(radius / xStep));
-            var yNum = Convert.ToInt32(Math.Ceiling(radius / yStep));
+            var xNum = Convert.ToInt32(Math.Ceiling(radius / step[0]));
+            var yNum = Convert.ToInt32(Math.Ceiling(radius / step[1]));
 
             // Draws lines on x direction 
             for (var i = 0; i < xNum; i++)
             {
-                var offset = (i + 1) * xStep * baseX;
+                var offset = (i + 1) * step[0] * baseX;
 
                 // On Right.
                 lines.Add(Line.CreateBound(yp0 + offset, yp1 + offset));
@@ -126,7 +131,7 @@ namespace KeLi.Common.Revit.Builders
             // Draws lines on y direction 
             for (var i = 0; i < yNum; i++)
             {
-                var offset = (i + 1) * yStep * baseY;
+                var offset = (i + 1) * step[1] * baseY;
 
                 // Above.
                 lines.Add(Line.CreateBound(xp0 + offset, xp1 + offset));
@@ -136,14 +141,25 @@ namespace KeLi.Common.Revit.Builders
             }
 
             var doc = elm.Document;
-
             var sketchPlane = SketchPlane.Create(doc, plane);
-
             var ids = PartUtils.GetAssociatedParts(doc, elm.Id, true, true).ToList();
+
+            foreach (var id in ids)
+            {
+                if (doc.GetElement(id) == null)
+                    continue;
+
+                var result = doc.GetElement(id).IsValidObject;
+
+                if (!result)
+                    continue;
+
+                doc.Delete(PartUtils.GetAssociatedPartMaker(doc, id).Id);
+            }
 
             if (ids.Count <= 0)
             {
-                PartUtils.CreateParts(doc, new List<ElementId>() { elm.Id });
+                PartUtils.CreateParts(doc, new List<ElementId> { elm.Id });
 
                 doc.Regenerate();
 
@@ -152,6 +168,153 @@ namespace KeLi.Common.Revit.Builders
 
             if (ids.Count == 1)
                 PartUtils.DivideParts(doc, ids, new List<ElementId>(), lines, sketchPlane.Id);
+        }
+
+        /// <summary>
+        ///     Sets texture.
+        /// </summary>
+        /// <param name="material"></param>
+        /// <param name="angle"></param>
+        /// <param name="offset"></param>
+        /// <param name="size"></param>
+        /// <param name="initAngle"></param>
+        public static void SetTexture(Material material, double angle, double[] offset, double[] size, TextureAngle initAngle)
+        {
+            var doc = material.Document;
+
+            if (offset == null || offset.Length == 0)
+                return;
+
+            if (size == null || size.Length == 0)
+                return;
+
+            if (initAngle == Rotation90 || initAngle == Rotation270)
+                size = new[] { size[1], size[0] };
+
+            if (initAngle == Rotation90 || initAngle == Rotation270)
+                offset = new[] { offset[1], offset[0] };
+
+            angle += (int)initAngle;
+
+            angle %= 360;
+
+            using (var editScope = new AppearanceAssetEditScope(doc))
+            {
+                var asset = editScope.Start(material.AppearanceAssetId);
+
+                if (angle >= 0 && angle <= 360)
+                {
+                    var angleProp = (AssetPropertyDouble)asset[TextureWAngle];
+
+                    if (angleProp != null)
+                        angleProp.Value = angle;
+                }
+
+                if (asset[TextureRealWorldOffsetX] is AssetPropertyDistance xOffsetProp)
+                    xOffsetProp.Value = UnitUtils.Convert(offset[0], DUT_DECIMAL_FEET, xOffsetProp.DisplayUnitType);
+
+                if (asset[TextureRealWorldOffsetY] is AssetPropertyDistance yOffsetProp)
+                    yOffsetProp.Value = UnitUtils.Convert(offset[1], DUT_DECIMAL_FEET, yOffsetProp.DisplayUnitType);
+
+                var xSizeProp = (AssetPropertyDistance)asset[TextureRealWorldScaleX];
+
+                if (xSizeProp != null)
+                {
+                    var minXSize = UnitUtils.Convert(0.01, xSizeProp.DisplayUnitType, DUT_MILLIMETERS);
+
+                    if (size[0] > minXSize)
+                        xSizeProp.Value = UnitUtils.Convert(size[0], DUT_DECIMAL_FEET, xSizeProp.DisplayUnitType);
+                }
+
+                var ySizeProp = (AssetPropertyDistance)asset[TextureRealWorldScaleY];
+
+                if (ySizeProp != null)
+                {
+                    var minYSize = UnitUtils.Convert(0.01, ySizeProp.DisplayUnitType, DUT_MILLIMETERS);
+
+                    if (size[1] > minYSize)
+                        ySizeProp.Value = UnitUtils.Convert(size[1], DUT_DECIMAL_FEET, ySizeProp.DisplayUnitType);
+                }
+
+                editScope.Commit(true);
+            }
+        }
+
+        /// <summary>
+        ///     Computes texture's initial angle.
+        /// </summary>
+        /// <param name="baseX"></param>
+        /// <param name="tolerance"></param>
+        /// <returns></returns>
+        public static double ComputeTextureAngle(XYZ baseX, double tolerance = 1e-9)
+        {
+            var baseRadian = baseX.AngleTo(XYZ.BasisX);
+
+            // To compute min radian with x asix.
+            if (baseRadian >= Math.PI / 2)
+                baseRadian = Math.PI - baseRadian;
+
+            var result = 0d;
+
+            // 1st quadrant.
+            if (baseX.X > tolerance && baseX.Y > tolerance)
+                result = 90 - baseRadian * 180 / Math.PI;
+
+            // 2nd quadrant.
+            else if (baseX.X < -tolerance && baseX.Y > tolerance)
+                result = 270 + baseRadian * 180 / Math.PI;
+
+            // 3rd quadrant.
+            else if (baseX.X < -tolerance && baseX.Y < -tolerance)
+                result = 180 + baseRadian * 180 / Math.PI;
+
+            // 4th quadrant.
+            else if (baseX.X > tolerance && baseX.Y < -tolerance)
+                result = 90 + baseRadian * 180 / Math.PI;
+
+            // →
+            else if (baseX.X > tolerance && baseX.Y <= tolerance)
+                result = 90;
+
+            // ↓
+            else if (baseX.X <= tolerance && baseX.Y < -tolerance)
+                result = 180;
+
+            // ←
+            else if (baseX.X < -tolerance && baseX.Y <= tolerance)
+                result = 270;
+
+            // ↑ 
+            else if (baseX.X > tolerance && baseX.Y <= tolerance)
+                result = 0;
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Texture angle.
+        /// </summary>
+        public enum TextureAngle
+        {
+            /// <summary>
+            ///     Initializes angle.
+            /// </summary>
+            Rotation0 = 0,
+
+            /// <summary>
+            ///     Rotates 90 angle.
+            /// </summary>
+            Rotation90 = 90,
+
+            /// <summary>
+            ///     Rotates 180 angle.
+            /// </summary>
+            Rotation180 = 180,
+
+            /// <summary>
+            ///     Rotates 270 angle.
+            /// </summary>
+            Rotation270 = 270,
         }
     }
 }
