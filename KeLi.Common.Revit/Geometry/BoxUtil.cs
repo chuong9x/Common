@@ -404,25 +404,5 @@ namespace KeLi.Common.Revit.Geometry
 
             return box.Max.Z - box.Min.Z;
         }
-
-        /// <summary>
-        ///     Gets the round point with custom precision.
-        /// </summary>
-        /// <param name="point"></param>
-        /// <param name="precision"></param>
-        /// <returns></returns>
-        public static XYZ GetRoundPoint(this XYZ point, int precision = 4)
-        {
-            if (point is null)
-                throw new ArgumentNullException(nameof(point));
-
-            var roundX = Round(point.X, precision);
-
-            var roundY = Round(point.Y, precision);
-
-            var roundZ = Round(point.Z, precision);
-
-            return new XYZ(roundX, roundY, roundZ);
-        }
     }
 }

@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 01/15/2020 03:11:11 PM |  |  |     |         |      |
+     |  |              Creation Time: 05/13/2020 06:02:02 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -46,85 +46,53 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Autodesk.Revit.DB;
-
-namespace KeLi.Common.Revit.Geometry
+namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
-    ///     Vector utility.
+    ///     Wall sweep info.
     /// </summary>
-    public static class VectorUtil
+    public class SweepInfo
     {
         /// <summary>
-        ///     If true, the specified line's direction and the specified directions are same.
+        ///     Wall sweep info.
         /// </summary>
-        /// <param name="line"></param>
-        /// <param name="dirs"></param>
-        /// <returns></returns>
-        public static bool IsSameDirection(this Line line, params XYZ[] dirs)
+        /// <param name="profileName"></param>
+        /// <param name="materialName"></param>
+        /// <param name="distance"></param>
+        /// <param name="flip"></param>
+        /// <param name="isAbsolute"></param>
+        public SweepInfo(string profileName, string materialName, double distance, bool flip, bool isAbsolute = false)
         {
-            if (line is null)
-                throw new ArgumentNullException(nameof(line));
-
-            if (dirs is null)
-                throw new ArgumentNullException(nameof(dirs));
-
-            return dirs.Any(a => line.Direction.AngleTo(a) < 1e-6);
+            ProfileName = profileName;
+            MaterialName = materialName;
+            Distance = distance;
+            Flip = flip;
+            IsAbsolute = isAbsolute;
         }
 
         /// <summary>
-        ///     If true, the specified direction set and the line's direction are same.
+        ///     ProfileName
         /// </summary>
-        /// <param name="line"></param>
-        /// <param name="dirs"></param>
-        /// <returns></returns>
-        public static bool IsSameDirection(this Line line, IEnumerable<XYZ> dirs)
-        {
-            if (line is null)
-                throw new ArgumentNullException(nameof(line));
-
-            if (dirs is null)
-                throw new ArgumentNullException(nameof(dirs));
-
-            return dirs.Any(a => line.IsSameDirection(a));
-        }
+        public string ProfileName { get; set; }
 
         /// <summary>
-        ///     If true, the line1's direction and the line2's direction are same.
+        ///     MaterialName
         /// </summary>
-        /// <param name="line1"></param>
-        /// <param name="Line2"></param>
-        /// <returns></returns>
-        public static bool IsSameDirection(this Line line1, Line Line2)
-        {
-            if (line1 is null)
-                throw new ArgumentNullException(nameof(line1));
-
-            if (Line2 is null)
-                throw new ArgumentNullException(nameof(Line2));
-
-            return line1.Direction.AngleTo(Line2.Direction) < 1e-6;
-        }
+        public string MaterialName { get; set; }
 
         /// <summary>
-        ///     If true, the dir1 and the dir2 are same.
+        ///     Distance
         /// </summary>
-        /// <param name="dir1"></param>
-        /// <param name="dir2"></param>
-        /// <returns></returns>
-        public static bool IsSameDirection(this XYZ dir1, XYZ dir2)
-        {
-            if (dir1 is null)
-                throw new ArgumentNullException(nameof(dir1));
+        public double Distance { get; set; }
 
-            if (dir2 is null)
-                throw new ArgumentNullException(nameof(dir2));
+        /// <summary>
+        ///     Flip
+        /// </summary>
+        public bool Flip { get; set; }
 
-            return dir1.AngleTo(dir2) < 1e-6;
-        }
+        /// <summary>
+        ///     IsAbsolute
+        /// </summary>
+        public bool IsAbsolute { get; set; }
     }
 }

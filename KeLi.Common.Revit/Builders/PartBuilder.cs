@@ -53,6 +53,9 @@ using System.Linq;
 
 using Autodesk.Revit.DB.Visual;
 
+using KeLi.Common.Revit.Filters;
+using KeLi.Common.Revit.Widgets;
+
 using static Autodesk.Revit.DB.DisplayUnitType;
 using static Autodesk.Revit.DB.Visual.UnifiedBitmap;
 
@@ -66,7 +69,7 @@ namespace KeLi.Common.Revit.Builders
     public static class PartBuilder
     {
         /// <summary>
-        /// Divide part list.
+        /// Divide part list for element.
         /// </summary>
         /// <param name="elm"></param>
         /// <param name="origin"></param>
@@ -74,7 +77,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="step"></param>
         /// <param name="initAngle"></param>
         /// <param name="radius"></param>
-        public static void DividePartList(Element elm, XYZ origin, XYZ baseX, double[] step, TextureAngle initAngle, double radius = 5000)
+        public static void DividePartList(this Element elm, XYZ origin, XYZ baseX, double[] step, TextureAngle initAngle, double radius = 5000)
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
@@ -142,20 +145,16 @@ namespace KeLi.Common.Revit.Builders
 
             var doc = elm.Document;
             var sketchPlane = SketchPlane.Create(doc, plane);
-            var ids = PartUtils.GetAssociatedParts(doc, elm.Id, true, true).ToList();
+            var ids = PartUtils.GetAssociatedParts(doc, elm.Id, true, false).ToList();
 
-            foreach (var id in ids)
+            if (ids.Count > 0)
             {
-                if (doc.GetElement(id) == null)
-                    continue;
+                var partMaker = PartUtils.GetAssociatedPartMaker(doc, ids[0]);
 
-                var result = doc.GetElement(id).IsValidObject;
-
-                if (!result)
-                    continue;
-
-                doc.Delete(PartUtils.GetAssociatedPartMaker(doc, id).Id);
+                doc.Delete(partMaker.Id);
             }
+
+            ids = PartUtils.GetAssociatedParts(doc, elm.Id, true, true).ToList();
 
             if (ids.Count <= 0)
             {
@@ -171,7 +170,124 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        ///     Sets texture.
+        ///     Divides part list for wall.
+        /// </summary>
+        /// <param name="wall"></param>
+        /// <param name="step"></param>
+        /// <param name="materialNames"></param>
+        /// <param name="isHorizontal"></param>
+        public static void DividePartList(this Wall wall, double[] step, string[] materialNames, bool isHorizontal = true)
+        {
+            if(wall is null)
+                throw new ArgumentNullException(nameof(wall));
+
+            if (step is null)
+                throw new ArgumentNullException(nameof(step));
+
+            if (materialNames is null)
+                throw new ArgumentNullException(nameof(materialNames));
+
+            const double lineHeight = 100;
+            var line = (wall.Location as LocationCurve)?.Curve as Line;
+            var lines = new List<Curve>();
+
+            if (isHorizontal)
+            {
+                var p0 = line.GetEndPoint(0);
+                var p1 = line.GetEndPoint(1);
+
+                lines.Add(Line.CreateBound(p0, p1));
+
+                for (var i = 0; i < step.Length; i++)
+                {
+                    var sum = step.Take(i + 1).Sum();
+
+                    var tmpP0 = new XYZ(p0.X, p0.Y, p0.Z + sum);
+                    var tmpP1 = new XYZ(p1.X, p1.Y, p1.Z + sum);
+                    var tmpLine = Line.CreateBound(tmpP0, tmpP1);
+
+                    lines.Add(tmpLine);
+                }
+            }
+
+            else
+            {
+                var p0 = line.GetEndPoint(0);
+                var p1 = new XYZ(p0.X, p0.Y, lineHeight);
+
+                lines.Add(Line.CreateBound(p0, p1));
+
+                for (var i = 0; i < step.Length; i++)
+                {
+                    var sum = step.Take(i + 1).Sum();
+
+                    var tmpP0 = p0 + sum * line.Direction;
+                    var tmpP1 = p1 + sum * line.Direction;
+                    var tmpLine = Line.CreateBound(tmpP0, tmpP1);
+
+                    lines.Add(tmpLine);
+                }
+            }
+
+            var opt = new Options
+            {
+                ComputeReferences = true,
+                DetailLevel = ViewDetailLevel.Coarse
+            };
+
+            var ge = wall.get_Geometry(opt);
+            var solid = ge.FirstOrDefault(f => f is Solid) as Solid;
+            var face = solid.Faces.Cast<PlanarFace>().FirstOrDefault(f => f.FaceNormal.AngleTo(wall.Orientation) < 1e-3);
+
+            var doc = wall.Document;
+            var plane = SketchPlane.Create(doc, face.Reference);
+            var ids = PartUtils.GetAssociatedParts(doc, wall.Id, true, false).ToList();
+
+            if (ids.Count > 0)
+            {
+                var partMaker = PartUtils.GetAssociatedPartMaker(doc, ids[0]);
+
+                doc.Delete(partMaker.Id);
+            }
+
+            ids = PartUtils.GetAssociatedParts(doc, wall.Id, true, true).ToList();
+
+            if (ids.Count <= 0)
+            {
+                PartUtils.CreateParts(doc, new List<ElementId>
+                {
+                    wall.Id
+                });
+
+                doc.Regenerate();
+                ids = PartUtils.GetAssociatedParts(doc, wall.Id, true, true).ToList();
+            }
+
+            if (ids.Count == 1)
+                PartUtils.DivideParts(doc, ids, new List<ElementId>(), lines, plane.Id);
+
+            var materials = doc.GetInstanceList<Material>();
+
+            for (var i = 0; i < ids.Count; i++)
+            {
+                var part = doc.GetElement(ids[i]) as Part;
+
+                doc.AutoTransaction(() =>
+                {
+                    var parm = part.get_Parameter(BuiltInParameter.DPART_MATERIAL_BY_ORIGINAL);
+
+                    parm.Set(0);
+
+                    var materialParm = part.get_Parameter(BuiltInParameter.DPART_MATERIAL_ID_PARAM);
+                    var materialId = materials.FirstOrDefault(f => f.Name == materialNames[i])?.Id;
+
+                    materialParm.Set(materialId);
+                });
+            }
+        }
+
+        /// <summary>
+        /// Sets texture.
         /// </summary>
         /// <param name="material"></param>
         /// <param name="angle"></param>
@@ -188,27 +304,15 @@ namespace KeLi.Common.Revit.Builders
             if (size == null || size.Length == 0)
                 return;
 
-            if (initAngle == Rotation90 || initAngle == Rotation270)
-                size = new[] { size[1], size[0] };
-
-            if (initAngle == Rotation90 || initAngle == Rotation270)
-                offset = new[] { offset[1], offset[0] };
-
             angle += (int)initAngle;
-
             angle %= 360;
 
             using (var editScope = new AppearanceAssetEditScope(doc))
             {
                 var asset = editScope.Start(material.AppearanceAssetId);
 
-                if (angle >= 0 && angle <= 360)
-                {
-                    var angleProp = (AssetPropertyDouble)asset[TextureWAngle];
-
-                    if (angleProp != null)
-                        angleProp.Value = angle;
-                }
+                if (asset[TextureWAngle] is AssetPropertyDouble angleProp && angle >= 0 && angle <= 360)
+                    angleProp.Value = angle;
 
                 if (asset[TextureRealWorldOffsetX] is AssetPropertyDistance xOffsetProp)
                     xOffsetProp.Value = UnitUtils.Convert(offset[0], DUT_DECIMAL_FEET, xOffsetProp.DisplayUnitType);
@@ -216,9 +320,7 @@ namespace KeLi.Common.Revit.Builders
                 if (asset[TextureRealWorldOffsetY] is AssetPropertyDistance yOffsetProp)
                     yOffsetProp.Value = UnitUtils.Convert(offset[1], DUT_DECIMAL_FEET, yOffsetProp.DisplayUnitType);
 
-                var xSizeProp = (AssetPropertyDistance)asset[TextureRealWorldScaleX];
-
-                if (xSizeProp != null)
+                if (asset[TextureRealWorldScaleX] is AssetPropertyDistance xSizeProp)
                 {
                     var minXSize = UnitUtils.Convert(0.01, xSizeProp.DisplayUnitType, DUT_MILLIMETERS);
 
@@ -226,9 +328,7 @@ namespace KeLi.Common.Revit.Builders
                         xSizeProp.Value = UnitUtils.Convert(size[0], DUT_DECIMAL_FEET, xSizeProp.DisplayUnitType);
                 }
 
-                var ySizeProp = (AssetPropertyDistance)asset[TextureRealWorldScaleY];
-
-                if (ySizeProp != null)
+                if (asset[TextureRealWorldScaleY] is AssetPropertyDistance ySizeProp)
                 {
                     var minYSize = UnitUtils.Convert(0.01, ySizeProp.DisplayUnitType, DUT_MILLIMETERS);
 
@@ -239,14 +339,13 @@ namespace KeLi.Common.Revit.Builders
                 editScope.Commit(true);
             }
         }
-
         /// <summary>
         ///     Computes texture's initial angle.
         /// </summary>
         /// <param name="baseX"></param>
         /// <param name="tolerance"></param>
         /// <returns></returns>
-        public static double ComputeTextureAngle(XYZ baseX, double tolerance = 1e-9)
+        public static double ComputeTextureAngle(XYZ baseX, double tolerance = 1e-6)
         {
             var baseRadian = baseX.AngleTo(XYZ.BasisX);
 
@@ -289,6 +388,30 @@ namespace KeLi.Common.Revit.Builders
                 result = 0;
 
             return result;
+        }
+
+        /// <summary>
+        ///     Sets texture's path.
+        /// </summary>
+        /// <param name="material"></param>
+        /// <param name="texturePath"></param>
+        public static void SetTexturePath(Material material, string texturePath)
+        {
+            var doc = material.Document;
+
+            doc.AutoTransaction(() =>
+            {
+                using (var editScope = new AppearanceAssetEditScope(doc))
+                {
+                    var editableAsset = editScope.Start(material.AppearanceAssetId);
+                    var bitmapAssist = editableAsset[UnifiedbitmapBitmap];
+
+                    if (bitmapAssist is AssetPropertyString path && path.IsValidValue(texturePath))
+                        path.Value = texturePath;
+
+                    editScope.Commit(true);
+                }
+            });
         }
 
         /// <summary>
