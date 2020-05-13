@@ -189,27 +189,16 @@ namespace KeLi.Common.Revit.Builders
 
             sweepDatas = sweepDatas.OrderBy(o => o.Index).ToList();
 
-            for (var i = 0; i < sweepDatas.Count; i++)
-            {
-                var materialId = sweepDatas[i].MaterialId;
-                var profileId = sweepDatas[i].ProfileId;
-                var offset = sweepDatas[i].Offset;
-                var flip = sweepDatas[i].Flip;
-
-                CreateWallSweep(wall.WallType, i, materialId, profileId, offset, flip);
-            }
+            foreach (var sweep in sweepDatas)
+                CreateWallSweep(wall.WallType, sweep);
         }
 
         /// <summary>
         ///     Creates wall's sweep.
         /// </summary>
         /// <param name="wallType"></param>
-        /// <param name="index"></param>
-        /// <param name="materialId"></param>
-        /// <param name="profileId"></param>
-        /// <param name="offset"></param>
-        /// <param name="reverse"></param>
-        public static void CreateWallSweep(WallType wallType, int index, ElementId materialId, ElementId profileId, double offset, bool reverse)
+        /// <param name="sweep"></param>
+        public static void CreateWallSweep(WallType wallType, SweepData sweep)
         {
             var doc = wallType.Document;
 
@@ -219,17 +208,17 @@ namespace KeLi.Common.Revit.Builders
 
                 var sweepInfo = new WallSweepInfo(true, WallSweepType.Sweep)
                 {
-                    Id = index + 1
+                    Id = sweep.Index + 1
                 };
 
-                if (materialId != null)
-                    sweepInfo.MaterialId = materialId;
+                if (sweep.MaterialId != null)
+                    sweepInfo.MaterialId = sweep.MaterialId;
 
-                if (profileId != null)
-                    sweepInfo.ProfileId = profileId;
+                if (sweep.ProfileId != null)
+                    sweepInfo.ProfileId = sweep.ProfileId;
 
-                sweepInfo.Distance = offset;
-                sweepInfo.IsProfileFlipped = reverse;
+                sweepInfo.Distance = sweep.Offset;
+                sweepInfo.IsProfileFlipped = sweep.Flip;
 
                 cs.AddWallSweep(sweepInfo);
                 wallType.SetCompoundStructure(cs);
