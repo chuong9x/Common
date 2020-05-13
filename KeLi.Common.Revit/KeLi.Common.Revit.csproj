@@ -94,13 +94,13 @@
     <Compile Include="Converters\CurveLoopConverter.cs" />
     <Compile Include="Converters\FaceArrayConverter.cs" />
     <Compile Include="Converters\ReferenceConverter.cs" />
+    <Compile Include="Geometry\LineUtil.cs" />
     <Compile Include="Widgets\MaterialUtil.cs" />
     <Compile Include="Builders\ModelCurveBuilder.cs" />
     <Compile Include="Builders\PlaneBuilder.cs" />
     <Compile Include="Widgets\RevitFilePathUtil.cs" />
     <Compile Include="Filters\FilterType.cs" />
     <Compile Include="Filters\LineDirection.cs" />
-    <Compile Include="Geometry\VectorUtil.cs" />
     <Compile Include="Information\ElementParameter.cs" />
     <Compile Include="Information\GroupParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

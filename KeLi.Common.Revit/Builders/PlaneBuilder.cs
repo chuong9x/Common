@@ -50,8 +50,6 @@ using System;
 
 using Autodesk.Revit.DB;
 
-using KeLi.Common.Revit.Geometry;
-
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
@@ -71,7 +69,10 @@ namespace KeLi.Common.Revit.Builders
 
             var refAsix = XYZ.BasisZ;
 
-            if (line.IsSameDirection(XYZ.BasisZ, -XYZ.BasisZ))
+            if (Math.Abs(line.Direction.AngleTo(XYZ.BasisZ)) < 1e-6)
+                refAsix = XYZ.BasisX;
+
+            else if (Math.Abs(line.Direction.AngleTo(-XYZ.BasisZ)) < 1e-6)
                 refAsix = XYZ.BasisX;
 
             var normal = line.Direction.CrossProduct(refAsix).Normalize();
