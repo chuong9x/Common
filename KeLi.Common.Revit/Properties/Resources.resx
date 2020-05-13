@@ -123,4 +123,7 @@
   <data name="GeneralTemplateName_CHS" xml:space="preserve">
     <value>公制常规模型.rft</value>
   </data>
+  <data name="WallSweep_Height" xml:space="preserve">
+    <value>高度</value>
+  </data>
 </root>

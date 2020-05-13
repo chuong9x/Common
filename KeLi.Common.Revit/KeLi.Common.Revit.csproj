@@ -88,7 +88,9 @@
     <Compile Include="Builders\MaterialManager.cs" />
     <Compile Include="Builders\OverrideLoadOption.cs" />
     <Compile Include="Builders\PartBuilder.cs" />
+    <Compile Include="Builders\SweepInfo.cs" />
     <Compile Include="Builders\SweepParameter.cs" />
+    <Compile Include="Builders\WallSweepBuilder.cs" />
     <Compile Include="Converters\CurveArrArrayConverter.cs" />
     <Compile Include="Converters\CurveArrayConverter.cs" />
     <Compile Include="Converters\CurveLoopConverter.cs" />

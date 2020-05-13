@@ -77,5 +77,14 @@ namespace KeLi.Common.Revit.Properties {
                 return ResourceManager.GetString("GeneralTemplateName_CHS", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 高度.
+        /// </summary>
+        internal static string WallSweep_Height {
+            get {
+                return ResourceManager.GetString("WallSweep_Height", resourceCulture);
+            }
+        }
     }
 }
