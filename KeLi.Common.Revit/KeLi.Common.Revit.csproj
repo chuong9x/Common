@@ -113,7 +113,7 @@
     </Compile>
     <Compile Include="Filters\CalcType.cs" />
     <Compile Include="Filters\ElementUtil.cs" />
-    <Compile Include="Information\ExtendInfoUtil.cs" />
+    <Compile Include="Information\ExtendDataUtil.cs" />
     <Compile Include="Geometry\MeshUtil.cs" />
     <Compile Include="Filters\FilterAssist.cs" />
     <Compile Include="Widgets\DrawingUtil.cs" />
