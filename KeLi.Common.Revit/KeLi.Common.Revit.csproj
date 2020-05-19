@@ -97,6 +97,7 @@
     <Compile Include="Converters\FaceArrayConverter.cs" />
     <Compile Include="Converters\ReferenceConverter.cs" />
     <Compile Include="Geometry\LineUtil.cs" />
+    <Compile Include="Widgets\KeySender.cs" />
     <Compile Include="Widgets\MaterialUtil.cs" />
     <Compile Include="Builders\ModelCurveBuilder.cs" />
     <Compile Include="Builders\PlaneBuilder.cs" />
