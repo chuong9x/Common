@@ -14,7 +14,7 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="hWnd"></param>
         /// <returns></returns>
         [DllImport("user32.dll")]
-        internal static extern bool SetForegroundWindow(IntPtr hWnd);
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
 
         /// <summary>
         ///     Sends key.
@@ -24,16 +24,16 @@ namespace KeLi.Common.Revit.Widgets
         /// <param name="dwFlags"></param>
         /// <param name="dwExtraInfo"></param>
         [DllImport("user32.dll")]
-        internal static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
+        private static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
 
         /// <summary>
         ///     Sends key.
         /// </summary>
         public void SendKey(byte key, int times = 1)
         {
-            var Revit = Autodesk.Windows.ComponentManager.ApplicationWindow;
+            var revit = Autodesk.Windows.ComponentManager.ApplicationWindow;
 
-            SetForegroundWindow(Revit);
+            SetForegroundWindow(revit);
 
             for (var i = 0; i < times; i++)
             {
