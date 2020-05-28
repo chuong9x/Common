@@ -59,6 +59,7 @@
       <HintPath>..\Libs\Revit.API.2018.2\RevitNET.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="UIFrameworkServices">
       <HintPath>..\Libs\Revit.API.2018.2\UIFrameworkServices.dll</HintPath>
       <Private>False</Private>
@@ -97,6 +98,10 @@
     <Compile Include="Converters\FaceArrayConverter.cs" />
     <Compile Include="Converters\ReferenceConverter.cs" />
     <Compile Include="Geometry\LineUtil.cs" />
+    <Compile Include="Hook\WindowHook.cs" />
+    <Compile Include="Hook\GlobalMsg.cs" />
+    <Compile Include="Hook\KeyboardHookStruct.cs" />
+    <Compile Include="Hook\MouseHookStruct.cs" />
     <Compile Include="Widgets\KeySender.cs" />
     <Compile Include="Widgets\MaterialUtil.cs" />
     <Compile Include="Builders\ModelCurveBuilder.cs" />
