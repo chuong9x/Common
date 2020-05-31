@@ -98,6 +98,7 @@
     <Compile Include="Converters\FaceArrayConverter.cs" />
     <Compile Include="Converters\ReferenceConverter.cs" />
     <Compile Include="Geometry\LineUtil.cs" />
+    <Compile Include="Hook\Win32Api.cs" />
     <Compile Include="Hook\WindowHook.cs" />
     <Compile Include="Hook\GlobalMsg.cs" />
     <Compile Include="Hook\KeyboardHookStruct.cs" />
