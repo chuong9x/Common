@@ -112,12 +112,12 @@ namespace KeLi.Common.Revit.Hook
         /// <returns></returns>
         public bool StartKeyboardHook()
         {
-            var hInstance = GetModuleHandle(Process.GetCurrentProcess().MainModule?.ModuleName);
+            var hInstance = Win32Api.GetModuleHandle(Process.GetCurrentProcess().MainModule?.ModuleName);
 
             if (_hKeyboardHook != 0)
                 StopKeyboardHook();
 
-            _hKeyboardHook = SetWindowsHookEx(GlobalMsg.WH_KEYBOARD_LL, KeyboardHookProc, hInstance, 0);
+            _hKeyboardHook = Win32Api.SetWindowsHookEx(GlobalMsg.WH_KEYBOARD_LL, KeyboardHookProc, hInstance, 0);
 
             if (_hKeyboardHook == 0)
                 StopKeyboardHook();
@@ -131,7 +131,7 @@ namespace KeLi.Common.Revit.Hook
         /// <returns></returns>
         public bool StopKeyboardHook()
         {
-            var result = UnhookWindowsHookEx(_hKeyboardHook);
+            var result = Win32Api.UnhookWindowsHookEx(_hKeyboardHook);
 
             _hKeyboardHook = 0;
 
@@ -144,12 +144,12 @@ namespace KeLi.Common.Revit.Hook
         /// <returns></returns>
         public bool StartMouseHook()
         {
-            var hInstance = GetModuleHandle(Process.GetCurrentProcess().MainModule?.ModuleName);
+            var hInstance = Win32Api.GetModuleHandle(Process.GetCurrentProcess().MainModule?.ModuleName);
 
             if (_hMouseHook != 0)
                 StopMouseHook();
 
-            _hMouseHook = SetWindowsHookEx(GlobalMsg.WH_MOUSE_LL, MouseHookProc, hInstance, 0);
+            _hMouseHook = Win32Api.SetWindowsHookEx(GlobalMsg.WH_MOUSE_LL, MouseHookProc, hInstance, 0);
 
             if (_hMouseHook == 0)
                 StopMouseHook();
@@ -163,7 +163,7 @@ namespace KeLi.Common.Revit.Hook
         /// <returns></returns>
         public bool StopMouseHook()
         {
-            var result = UnhookWindowsHookEx(_hMouseHook);
+            var result = Win32Api.UnhookWindowsHookEx(_hMouseHook);
 
             _hMouseHook = 0;
 
@@ -180,7 +180,7 @@ namespace KeLi.Common.Revit.Hook
         private int MouseHookProc(int nCode, int wParam, IntPtr lParam)
         {
             if (nCode < 0 || OnMouseActivity == null)
-                return CallNextHookEx(_hMouseHook, nCode, wParam, lParam);
+                return Win32Api.CallNextHookEx(_hMouseHook, nCode, wParam, lParam);
 
             var button = MouseButtons.None;
 
@@ -213,7 +213,7 @@ namespace KeLi.Common.Revit.Hook
 
             OnMouseActivity(this, e);
 
-            return CallNextHookEx(_hMouseHook, nCode, wParam, lParam);
+            return Win32Api.CallNextHookEx(_hMouseHook, nCode, wParam, lParam);
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace KeLi.Common.Revit.Hook
         private int KeyboardHookProc(int nCode, int wParam, IntPtr lParam)
         {
             if (nCode < 0 || OnKeyDown == null && OnKeyUp == null && OnKeyPress == null)
-                return CallNextHookEx(_hKeyboardHook, nCode, wParam, lParam);
+                return Win32Api.CallNextHookEx(_hKeyboardHook, nCode, wParam, lParam);
 
             var keyboardHook = (KeyboardHookStruct)Marshal.PtrToStructure(lParam, typeof(KeyboardHookStruct));
 
@@ -234,11 +234,11 @@ namespace KeLi.Common.Revit.Hook
             {
                 var keyState = new byte[256];
 
-                GetKeyboardState(keyState);
+                Win32Api.GetKeyboardState(keyState);
 
                 var inBuffer = new byte[2];
 
-                if (ToAscii(keyboardHook.VkCode, keyboardHook.ScanCode, keyState, inBuffer, keyboardHook.Flags) == 1)
+                if (Win32Api.ToAscii(keyboardHook.VkCode, keyboardHook.ScanCode, keyState, inBuffer, keyboardHook.Flags) == 1)
                     OnKeyPress(this, new KeyPressEventArgs((char)inBuffer[0]));
             }
 
@@ -252,74 +252,7 @@ namespace KeLi.Common.Revit.Hook
             if (OnKeyUp != null && (wParam == GlobalMsg.WM_KEYUP || wParam == GlobalMsg.WM_SYSKEYUP))
                 OnKeyUp(this, new KeyEventArgs((Keys)keyboardHook.VkCode));
 
-            return CallNextHookEx(_hKeyboardHook, nCode, wParam, lParam);
+            return Win32Api.CallNextHookEx(_hKeyboardHook, nCode, wParam, lParam);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="idHook"></param>
-        /// <param name="lpfn"></param>
-        /// <param name="hInstance"></param>
-        /// <param name="threadId"></param>
-        /// <returns></returns>
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        private static extern int SetWindowsHookEx(int idHook, GlobalHookProc lpfn, IntPtr hInstance, int threadId);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="idHook"></param>
-        /// <returns></returns>
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        private static extern bool UnhookWindowsHookEx(int idHook);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="idHook"></param>
-        /// <param name="nCode"></param>
-        /// <param name="wParam"></param>
-        /// <param name="lParam"></param>
-        /// <returns></returns>
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        private static extern int CallNextHookEx(int idHook, int nCode, int wParam, IntPtr lParam);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="uVirtKey"></param>
-        /// <param name="uScanCode"></param>
-        /// <param name="lpbKeyState"></param>
-        /// <param name="lpwTransKey"></param>
-        /// <param name="fuState"></param>
-        /// <returns></returns>
-        [DllImport("user32")]
-        private static extern int ToAscii(int uVirtKey, int uScanCode, byte[] lpbKeyState, byte[] lpwTransKey, int fuState);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pbKeyState"></param>
-        /// <returns></returns>
-        [DllImport("user32")]
-        private static extern int GetKeyboardState(byte[] pbKeyState);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        [DllImport("kernel32.dll")]
-        private static extern IntPtr GetModuleHandle(string name);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="nCode"></param>
-        /// <param name="wParam"></param>
-        /// <param name="lParam"></param>
-        /// <returns></returns>
-        private delegate int GlobalHookProc(int nCode, int wParam, IntPtr lParam);
     }
 }
