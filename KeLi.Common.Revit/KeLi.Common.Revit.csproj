@@ -103,6 +103,7 @@
     <Compile Include="Hook\GlobalMsg.cs" />
     <Compile Include="Hook\KeyboardHookStruct.cs" />
     <Compile Include="Hook\MouseHookStruct.cs" />
+    <Compile Include="Widgets\CommandBase.cs" />
     <Compile Include="Widgets\KeySender.cs" />
     <Compile Include="Widgets\MaterialUtil.cs" />
     <Compile Include="Builders\ModelCurveBuilder.cs" />

@@ -67,20 +67,20 @@ namespace KeLi.Common.Revit.Widgets
         ///     To auto execute transaction.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="act"></param>
-        public static bool AutoTransaction(this Document doc, Action act)
+        /// <param name="action"></param>
+        public static bool AutoTransaction(this Document doc, Action action)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (act is null)
-                throw new ArgumentNullException(nameof(act));
+            if (action is null)
+                throw new ArgumentNullException(nameof(action));
 
             using (var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name))
             {
                 trans.Start();
 
-                act?.Invoke();
+                action.Invoke();
 
                 if (trans.Commit() == TransactionStatus.Committed)
                     return true;
@@ -103,6 +103,38 @@ namespace KeLi.Common.Revit.Widgets
         ///     To auto execute transaction.
         /// </summary>
         /// <param name="doc"></param>
+        /// <param name="actions"></param>
+        public static bool AutoTransaction(this Document doc, params Action[] actions)
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (actions is null)
+                throw new ArgumentNullException(nameof(actions));
+
+            return doc.AutoTransaction(() => actions.ToList().ForEach(f => f?.Invoke()));
+        }
+
+        /// <summary>
+        ///     To auto execute transaction.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="actions"></param>
+        public static bool AutoTransaction(this Document doc, IEnumerable<Action> actions)
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (actions is null)
+                throw new ArgumentNullException(nameof(actions));
+
+            return doc.AutoTransaction(() => actions.ToList().ForEach(f => f?.Invoke()));
+        }
+
+        /// <summary>
+        ///     To auto execute transaction.
+        /// </summary>
+        /// <param name="doc"></param>
         /// <param name="func"></param>
         public static T AutoTransaction<T>(this Document doc, Func<T> func) where T : Element
         {
@@ -112,27 +144,51 @@ namespace KeLi.Common.Revit.Widgets
             if (func is null)
                 throw new ArgumentNullException(nameof(func));
 
-            using (var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name))
-            {
-                trans.Start();
+            T result = null;
 
-                var result = func.Invoke();
+            doc.AutoTransaction(() => result = func.Invoke());
 
-                if (trans.Commit() == TransactionStatus.Committed)
-                    return result;
+            return result;
+        }
 
-                if (trans.GetStatus() == TransactionStatus.RolledBack)
-                    return null;
+        /// <summary>
+        ///     To auto execute transaction.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="funcs"></param>
+        public static List<T> AutoTransaction<T>(this Document doc, params Func<T>[] funcs) where T : Element
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
 
-                if (trans.GetStatus() != TransactionStatus.RolledBack)
-                {
-                    trans.RollBack();
+            if (funcs is null)
+                throw new ArgumentNullException(nameof(funcs));
 
-                    return null;
-                }
+            var results = new List<T>();
 
-                return result;
-            }
+            doc.AutoTransaction(() => results = funcs.Select(s => s.Invoke()).ToList());
+
+            return results;
+        }
+
+        /// <summary>
+        ///     To auto execute transaction.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="funcs"></param>
+        public static List<T> AutoTransaction<T>(this Document doc, IEnumerable<Func<T>> funcs) where T : Element
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (funcs is null)
+                throw new ArgumentNullException(nameof(funcs));
+
+            var results = new List<T>();
+
+            doc.AutoTransaction(() => results = funcs.Select(s => s.Invoke()).ToList());
+
+            return results;
         }
 
         /// <summary>
@@ -148,27 +204,31 @@ namespace KeLi.Common.Revit.Widgets
             if (func is null)
                 throw new ArgumentNullException(nameof(func));
 
-            using (var trans = new Transaction(doc, new StackTrace(true).GetFrame(1).GetMethod().Name))
-            {
-                trans.Start();
+            var results = new List<T>();
 
-                var result = func.Invoke();
+            doc.AutoTransaction(() => results = func.Invoke().ToList());
 
-                if (trans.Commit() == TransactionStatus.Committed)
-                    return result.ToList();
+            return results;
+        }
 
-                if (trans.GetStatus() == TransactionStatus.RolledBack)
-                    return null;
+        /// <summary>
+        ///     To auto execute transaction.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="funcs"></param>
+        public static List<List<T>> AutoTransaction<T>(this Document doc, IEnumerable<Func<IEnumerable<T>>> funcs) where T : Element
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
 
-                if (trans.GetStatus() != TransactionStatus.RolledBack)
-                {
-                    trans.RollBack();
+            if (funcs is null)
+                throw new ArgumentNullException(nameof(funcs));
 
-                    return null;
-                }
+            var results = new List<List<T>>();
 
-                return result.ToList();
-            }
+            doc.AutoTransaction(() => results = funcs.Select(s => s.Invoke().ToList()).ToList());
+
+            return results;
         }
 
         /// <summary>
@@ -260,4 +320,9 @@ namespace KeLi.Common.Revit.Widgets
             });
         }
     }
+}
+
+
+namespace KeLi.RevitDev.App.Commands
+{
 }
