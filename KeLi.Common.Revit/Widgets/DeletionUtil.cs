@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 04/16/2020 01:57:20 PM |  |  |     |         |      |
+     |  |              Creation Time: 06/05/2020 12:05:00 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -47,121 +47,130 @@
 */
 
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 
-using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
-
-using KeLi.Common.Revit.Converters;
-using KeLi.Common.Revit.Filters;
-using KeLi.Common.Revit.Properties;
 
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    ///     About revit file path utility.
+    ///     Element deletion utility.
     /// </summary>
-    public static class RevitFilePathUtil
+    public static class DeletionUtil
     {
         /// <summary>
-        ///     Gets sweep's profile.
+        ///     Deletes element list.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="familyPath"></param>
-        /// <returns></returns>
-        public static CurveArrArray GetSweepProfile(Document doc, string familyPath)
+        /// <param name="elms"></param>
+        public static void DeleteElementList(params Element[] elms)
         {
-            if (doc == null)
-                throw new NullReferenceException(nameof(doc));
+            if (elms is null)
+                throw new ArgumentNullException(nameof(elms));
 
-            if (familyPath == null)
-                throw new NullReferenceException(nameof(familyPath));
-
-            if (!File.Exists(familyPath))
-                throw new FileNotFoundException(familyPath);
-
-            var profileDoc = doc.Application.OpenDocumentFile(familyPath);
-
-            var detailCurves = profileDoc.GetInstanceList<CurveElement>();
-
-            var curves = detailCurves.Select(s => s.GeometryCurve);
-
-            return curves.ToCurveArrArray();
+            elms.DeleteElementList();
         }
 
         /// <summary>
-        ///     Gets sweep's profile.
+        ///     Deletes element list.
         /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="symbolName"></param>
-        /// <returns></returns>
-        public static CurveArrArray GetSweepProfile2(Document doc, string symbolName)
+        /// <param name="elms"></param>
+        public static void DeleteElementList(this IEnumerable<Element> elms)
         {
-            if (doc == null)
-                throw new NullReferenceException(nameof(doc));
+            if (elms is null)
+                throw new ArgumentNullException(nameof(elms));
 
-            if (symbolName == null)
-                throw new NullReferenceException(nameof(symbolName));
-
-            var symbol = doc.GetTypeList<FamilySymbol>().FirstOrDefault(f => f.Name == symbolName);
-
-            if (symbol == null)
-                throw new NullReferenceException(nameof(symbol));
-
-            var profileDoc = doc.EditFamily(symbol.Family);
-
-            var detailCurves = profileDoc.GetInstanceList<CurveElement>();
-
-            var curves = detailCurves.Select(s => s.GeometryCurve);
-
-            return curves.ToCurveArrArray();
+            elms.ToList().ForEach(DeleteElement);
         }
 
         /// <summary>
-        ///     Gets the template file path.
+        ///     Deletes element list.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="tplName"></param>
-        /// <returns></returns>
-        public static string GetTemplateFilePath(this Document doc, string tplName = null)
+        /// <param name="ids"></param>
+        public static void DeleteElementList(this Document doc, params ElementId[] ids)
         {
-            var type = doc.Application.Language;
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
 
-            string langTplName;
+            if (ids is null)
+                throw new ArgumentNullException(nameof(ids));
 
-            switch (type)
-            {
-                case LanguageType.Chinese_Simplified:
-                    langTplName = Resources.GeneralTemplate;
+            ids.ToList().ForEach(doc.DeleteElement);
+        }
 
-                    break;
+        /// <summary>
+        ///     Deletes element list.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="ids"></param>
+        public static void DeleteElementList(this Document doc, IEnumerable<ElementId> ids)
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
 
-                case LanguageType.English_USA:
-                    langTplName = "Metric Generic Model.rft";
+            if (ids is null)
+                throw new ArgumentNullException(nameof(ids));
 
-                    break;
+            ids.ToList().ForEach(doc.DeleteElement);
+        }
 
-                #if !R2016 && !R2017
-                case LanguageType.English_GB:
-                    langTplName = "Metric Generic Model.rft";
+        /// <summary>
+        ///     Deletes element.
+        /// </summary>
+        /// <param name="elm"></param>
+        public static void DeleteElement(this Element elm)
+        {
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
 
-                    break;
-                #endif
+            if (!elm.IsValidObject)
+                return;
 
-                default:
-                    throw new NotSupportedException($"No support {type} language!");
-            }
+            if (elm.Id.IntegerValue == -1)
+                return;
 
-            if (string.IsNullOrWhiteSpace(tplName))
-                tplName = langTplName;
+            elm.Document.Delete(elm.Id);
+        }
 
-            else if (!tplName.Contains(".rft"))
-                tplName += ".rft";
+        /// <summary>
+        ///     Deletes element.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="id"></param>
+        public static void DeleteElement(this Document doc, ElementId id)
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
 
-            var app = doc.Application;
+            if (id is null)
+                throw new ArgumentNullException(nameof(id));
 
-            return Path.Combine(app.FamilyTemplatePath.Replace("English_I", "English"), tplName);
+            if (id.IntegerValue == -1)
+                return;
+
+            var elm = doc.GetElement(id);
+
+            if (elm == null || !elm.IsValidObject)
+                return;
+
+            doc.Delete(id);
+        }
+
+        /// <summary>
+        ///     Deletes element.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="doc"></param>
+        public static void DeleteElement(this ElementId id, Document doc)
+        {
+            if (id is null)
+                throw new ArgumentNullException(nameof(id));
+
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            doc.DeleteElement(id);
         }
     }
 }

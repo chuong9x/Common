@@ -46,11 +46,11 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Visual;
 
 using KeLi.Common.Revit.Filters;
@@ -69,7 +69,33 @@ namespace KeLi.Common.Revit.Builders
     public static class PartBuilder
     {
         /// <summary>
-        /// Divide part list for element.
+        ///     Texture angle.
+        /// </summary>
+        public enum TextureAngle
+        {
+            /// <summary>
+            ///     Initializes angle.
+            /// </summary>
+            Rotation0 = 0,
+
+            /// <summary>
+            ///     Rotates 90 angle.
+            /// </summary>
+            Rotation90 = 90,
+
+            /// <summary>
+            ///     Rotates 180 angle.
+            /// </summary>
+            Rotation180 = 180,
+
+            /// <summary>
+            ///     Rotates 270 angle.
+            /// </summary>
+            Rotation270 = 270
+        }
+
+        /// <summary>
+        ///     Divide part list for element.
         /// </summary>
         /// <param name="elm"></param>
         /// <param name="origin"></param>
@@ -98,7 +124,11 @@ namespace KeLi.Common.Revit.Builders
                 throw new ArgumentException(nameof(radius));
 
             if (initAngle == Rotation90 || initAngle == Rotation270)
-                step = new[] { step[1], step[0] };
+                step = new[]
+                {
+                    step[1],
+                    step[0]
+                };
 
             var plane = Plane.CreateByNormalAndOrigin(XYZ.BasisZ, origin);
             var baseY = plane.Normal.CrossProduct(baseX);
@@ -158,7 +188,10 @@ namespace KeLi.Common.Revit.Builders
 
             if (ids.Count <= 0)
             {
-                PartUtils.CreateParts(doc, new List<ElementId> { elm.Id });
+                PartUtils.CreateParts(doc, new List<ElementId>
+                {
+                    elm.Id
+                });
 
                 doc.Regenerate();
 
@@ -178,7 +211,7 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="isHorizontal"></param>
         public static void DividePartList(this Wall wall, double[] step, string[] materialNames, bool isHorizontal = true)
         {
-            if(wall is null)
+            if (wall is null)
                 throw new ArgumentNullException(nameof(wall));
 
             if (step is null)
@@ -287,7 +320,7 @@ namespace KeLi.Common.Revit.Builders
         }
 
         /// <summary>
-        /// Sets texture.
+        ///     Sets texture.
         /// </summary>
         /// <param name="material"></param>
         /// <param name="angle"></param>
@@ -339,6 +372,7 @@ namespace KeLi.Common.Revit.Builders
                 editScope.Commit(true);
             }
         }
+
         /// <summary>
         ///     Computes texture's initial angle.
         /// </summary>
@@ -412,32 +446,6 @@ namespace KeLi.Common.Revit.Builders
                     editScope.Commit(true);
                 }
             });
-        }
-
-        /// <summary>
-        ///     Texture angle.
-        /// </summary>
-        public enum TextureAngle
-        {
-            /// <summary>
-            ///     Initializes angle.
-            /// </summary>
-            Rotation0 = 0,
-
-            /// <summary>
-            ///     Rotates 90 angle.
-            /// </summary>
-            Rotation90 = 90,
-
-            /// <summary>
-            ///     Rotates 180 angle.
-            /// </summary>
-            Rotation180 = 180,
-
-            /// <summary>
-            ///     Rotates 270 angle.
-            /// </summary>
-            Rotation270 = 270,
         }
     }
 }

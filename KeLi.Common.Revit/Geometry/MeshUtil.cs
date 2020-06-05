@@ -270,7 +270,11 @@ namespace KeLi.Common.Revit.Geometry
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
-            var opt = new Options { ComputeReferences = true, DetailLevel = Coarse };
+            var opt = new Options
+            {
+                ComputeReferences = true,
+                DetailLevel = Coarse
+            };
 
             var ge = elm.get_Geometry(opt);
 

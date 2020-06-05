@@ -11,6 +11,15 @@ namespace KeLi.Common.Revit.Hook
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="nCode"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <returns></returns>
+        public delegate int GlobalHookProc(int nCode, int wParam, IntPtr lParam);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="idHook"></param>
         /// <param name="lpfn"></param>
         /// <param name="hInstance"></param>
@@ -65,14 +74,5 @@ namespace KeLi.Common.Revit.Hook
         /// <returns></returns>
         [DllImport("kernel32.dll")]
         public static extern IntPtr GetModuleHandle(string name);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="nCode"></param>
-        /// <param name="wParam"></param>
-        /// <param name="lParam"></param>
-        /// <returns></returns>
-        public delegate int GlobalHookProc(int nCode, int wParam, IntPtr lParam);
     }
 }

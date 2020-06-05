@@ -1,7 +1,8 @@
-﻿using Autodesk.Revit.DB;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Autodesk.Revit.DB;
 
 namespace KeLi.Common.Revit.Geometry
 {
@@ -127,6 +128,5 @@ namespace KeLi.Common.Revit.Geometry
 
             return results;
         }
-
     }
 }

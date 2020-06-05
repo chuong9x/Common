@@ -145,7 +145,10 @@ namespace KeLi.Common.Revit.Converters
 
             var loop = curves.ToCurveLoop();
 
-            return new List<CurveLoop> { loop };
+            return new List<CurveLoop>
+            {
+                loop
+            };
         }
 
         /// <summary>
@@ -160,7 +163,10 @@ namespace KeLi.Common.Revit.Converters
 
             var loop = curves.ToCurveLoop();
 
-            return new List<CurveLoop> { loop };
+            return new List<CurveLoop>
+            {
+                loop
+            };
         }
 
         /// <summary>

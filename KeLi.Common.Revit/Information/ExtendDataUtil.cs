@@ -63,6 +63,27 @@ namespace KeLi.Common.Revit.Information
     public static class ExtendDataUtil
     {
         /// <summary>
+        ///     Filed type.
+        /// </summary>
+        public enum SchemaFieldType
+        {
+            /// <summary>
+            ///     Simple type.
+            /// </summary>
+            Simple,
+
+            /// <summary>
+            ///     List type.
+            /// </summary>
+            List,
+
+            /// <summary>
+            ///     Dictionary type.
+            /// </summary>
+            Dictionary
+        }
+
+        /// <summary>
         ///     Creates an entity.
         /// </summary>
         /// <param name="schemaName"></param>
@@ -132,15 +153,18 @@ namespace KeLi.Common.Revit.Information
                     case SchemaFieldType.Simple:
 
                         schemaBuilder.AddSimpleField(field.Key, typeof(string));
+
                         break;
 
                     case SchemaFieldType.List:
 
                         schemaBuilder.AddArrayField(field.Key, typeof(string));
+
                         break;
 
                     case SchemaFieldType.Dictionary:
                         schemaBuilder.AddMapField(field.Key, typeof(string), typeof(string));
+
                         break;
 
                     default:
@@ -203,27 +227,6 @@ namespace KeLi.Common.Revit.Information
 
             entity.Set(fieldName, value);
             elm.SetEntity(entity);
-        }
-
-        /// <summary>
-        ///     Filed type.
-        /// </summary>
-        public enum SchemaFieldType
-        {
-            /// <summary>
-            ///     Simple type.
-            /// </summary>
-            Simple,
-
-            /// <summary>
-            ///     List type.
-            /// </summary>
-            List,
-
-            /// <summary>
-            ///     Dictionary type.
-            /// </summary>
-            Dictionary
         }
     }
 }

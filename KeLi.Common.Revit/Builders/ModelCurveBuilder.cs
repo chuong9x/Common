@@ -54,6 +54,8 @@ using Autodesk.Revit.DB;
 
 using KeLi.Common.Revit.Filters;
 
+using static KeLi.Common.Revit.Properties.Resources;
+
 namespace KeLi.Common.Revit.Builders
 {
     /// <summary>
@@ -62,62 +64,41 @@ namespace KeLi.Common.Revit.Builders
     public static class ModelCurveBuilder
     {
         /// <summary>
-        ///     Defines graphics style category's name of the ModelCurve for debug.
-        /// </summary>
-        private const string MODEL_COLOR = "DebugLine";
-
-        /// <summary>
         ///     Creates a new ModelCurve.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="pt"></param>
-        /// <param name="sketchPlane"></param>
+        /// <param name="curve"></param>
+        /// <param name="lineName"></param>
         /// <param name="color"></param>
         /// <returns></returns>
-        public static ModelCurve CreateModelCurve(this Document doc, XYZ pt, out SketchPlane sketchPlane, Color color = null)
+        public static ModelCurve CreateModelCurve(this Curve curve, Document doc, string lineName = null, Color color = null)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (pt is null)
-                throw new ArgumentNullException(nameof(pt));
+            if (curve is null)
+                throw new ArgumentNullException(nameof(curve));
 
-            var line = Line.CreateBound(XYZ.Zero, pt);
-
-            var result = doc.CreateModelCurve(line, out sketchPlane);
-
-            result.SetModelCurveColor(color);
-
-            return result;
+            return doc.CreateModelCurve(curve, out _, lineName, color);
         }
 
         /// <summary>
         ///     Creates a new ModelCurve.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="pt1"></param>
-        /// <param name="pt2"></param>
-        /// <param name="sketchPlane"></param>
+        /// <param name="curve"></param>
+        /// <param name="lineName"></param>
         /// <param name="color"></param>
         /// <returns></returns>
-        public static ModelCurve CreateModelCurve(this Document doc, XYZ pt1, XYZ pt2, out SketchPlane sketchPlane, Color color = null)
+        public static ModelCurve CreateModelCurve(this Document doc, Curve curve, string lineName = null, Color color = null)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            if (pt1 is null)
-                throw new ArgumentNullException(nameof(pt1));
+            if (curve is null)
+                throw new ArgumentNullException(nameof(curve));
 
-            if (pt2 is null)
-                throw new ArgumentNullException(nameof(pt2));
-
-            var line = Line.CreateBound(pt1, pt2);
-
-            var result = doc.CreateModelCurve(line, out sketchPlane);
-
-            result.SetModelCurveColor(color);
-
-            return result;
+            return doc.CreateModelCurve(curve, out _, lineName, color);
         }
 
         /// <summary>
@@ -126,9 +107,30 @@ namespace KeLi.Common.Revit.Builders
         /// <param name="doc"></param>
         /// <param name="curve"></param>
         /// <param name="sketchPlane"></param>
+        /// <param name="lineName"></param>
         /// <param name="color"></param>
         /// <returns></returns>
-        public static ModelCurve CreateModelCurve(this Document doc, Curve curve, out SketchPlane sketchPlane, Color color = null)
+        public static ModelCurve CreateModelCurve(this Curve curve, Document doc, out SketchPlane sketchPlane, string lineName = null, Color color = null)
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (curve is null)
+                throw new ArgumentNullException(nameof(curve));
+
+            return doc.CreateModelCurve(curve, out sketchPlane, lineName, color);
+        }
+
+        /// <summary>
+        ///     Creates a new ModelCurve.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="curve"></param>
+        /// <param name="sketchPlane"></param>
+        /// <param name="lineName"></param>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public static ModelCurve CreateModelCurve(this Document doc, Curve curve, out SketchPlane sketchPlane, string lineName = null, Color color = null)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -172,7 +174,7 @@ namespace KeLi.Common.Revit.Builders
             else
                 result = doc.FamilyCreate.NewModelCurve(curve, sketchPlane);
 
-            result.SetModelCurveColor(color);
+            result.SetModelCurveColor(lineName, color);
 
             return result;
         }
@@ -181,45 +183,11 @@ namespace KeLi.Common.Revit.Builders
         ///     Creates ModelCurve list.
         /// </summary>
         /// <param name="doc"></param>
-        /// <param name="pts"></param>
-        /// <param name="color"></param>
-        /// <returns></returns>
-        public static List<ModelCurve> CreateModelCurveList(this Document doc, IEnumerable<XYZ> pts, Color color = null)
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            if (pts is null)
-                throw new ArgumentNullException(nameof(pts));
-
-            return pts.Select(s => doc.CreateModelCurve(s, out _, color)).ToList();
-        }
-
-        /// <summary>
-        ///     Creates ModelCurve list.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="pts"></param>
-        /// <returns></returns>
-        public static List<ModelCurve> CreateModelCurveList(this Document doc, params XYZ[] pts)
-        {
-            if (doc is null)
-                throw new ArgumentNullException(nameof(doc));
-
-            if (pts is null)
-                throw new ArgumentNullException(nameof(pts));
-
-            return pts.Select(s => doc.CreateModelCurve(s, out _)).ToList();
-        }
-
-        /// <summary>
-        ///     Creates ModelCurve list.
-        /// </summary>
-        /// <param name="doc"></param>
         /// <param name="curves"></param>
+        /// <param name="lineName"></param>
         /// <param name="color"></param>
         /// <returns></returns>
-        public static List<ModelCurve> CreateModelCurveList(this Document doc, IEnumerable<Curve> curves, Color color = null)
+        public static List<ModelCurve> CreateModelCurveList(this Document doc, IEnumerable<Curve> curves, string lineName = null, Color color = null)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -227,32 +195,34 @@ namespace KeLi.Common.Revit.Builders
             if (curves is null)
                 throw new ArgumentNullException(nameof(curves));
 
-            return curves.Select(s => doc.CreateModelCurve(s, out _, color)).ToList();
+            return curves.Select(s => doc.CreateModelCurve(s, out _, lineName, color)).ToList();
         }
 
         /// <summary>
         ///     Creates ModelCurve list.
         /// </summary>
         /// <param name="doc"></param>
+        /// <param name="lineName"></param>
         /// <param name="curves"></param>
         /// <returns></returns>
-        public static List<ModelCurve> CreateModelCurveList(this Document doc, params Curve[] curves)
+        public static List<ModelCurve> CreateModelCurveList(this Document doc, string lineName = null, params Curve[] curves)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
-            
+
             if (curves is null)
                 throw new ArgumentNullException(nameof(curves));
 
-            return curves.Select(s => doc.CreateModelCurve(s, out _)).ToList();
+            return curves.Select(s => doc.CreateModelCurve(s, out _, lineName)).ToList();
         }
 
         /// <summary>
         ///     Set ModelCurve's graphics style color.
         /// </summary>
         /// <param name="modelCurve"></param>
+        /// <param name="lineName"></param>
         /// <param name="color"></param>
-        public static void SetModelCurveColor(this ModelCurve modelCurve, Color color = null)
+        public static void SetModelCurveColor(this ModelCurve modelCurve, string lineName = null, Color color = null)
         {
             if (modelCurve is null)
                 throw new ArgumentNullException(nameof(modelCurve));
@@ -261,19 +231,22 @@ namespace KeLi.Common.Revit.Builders
 
             var lineCtg = doc.Settings.Categories.get_Item(BuiltInCategory.OST_Lines);
 
-            if (!lineCtg.SubCategories.Contains(MODEL_COLOR))
-            {
-                var modelCtg = doc.Settings.Categories.NewSubcategory(lineCtg, MODEL_COLOR);
+            if (string.IsNullOrWhiteSpace(lineName))
+                lineName = DebugLine;
 
+            if (!lineCtg.SubCategories.Contains(lineName))
+            {
                 if (color == null)
                     color = new Color(255, 0, 0);
+
+                var modelCtg = doc.Settings.Categories.NewSubcategory(lineCtg, lineName);
 
                 modelCtg.LineColor = color;
             }
 
             var graphicsStyles = doc.GetInstanceList<GraphicsStyle>();
 
-            var modelStyle = graphicsStyles.FirstOrDefault(f => f.GraphicsStyleCategory.Name == MODEL_COLOR);
+            var modelStyle = graphicsStyles.FirstOrDefault(f => f.GraphicsStyleCategory.Name == lineName);
 
             var parm = modelCurve.get_Parameter(BuiltInParameter.BUILDING_CURVE_GSTYLE);
 

@@ -73,9 +73,9 @@ namespace KeLi.Common.Revit.Builders
             if (size == null || size.Length == 0)
                 return;
 
-            using (AppearanceAssetEditScope editScope = new AppearanceAssetEditScope(doc))
+            using (var editScope = new AppearanceAssetEditScope(doc))
             {
-                Asset asset = editScope.Start(material.AppearanceAssetId);
+                var asset = editScope.Start(material.AppearanceAssetId);
 
                 var angleProp = asset[UnifiedBitmap.TextureWAngle] as AssetPropertyDouble;
                 angleProp.Value = angle;

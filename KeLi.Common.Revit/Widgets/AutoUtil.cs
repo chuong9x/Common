@@ -216,6 +216,26 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="funcs"></param>
+        public static List<List<T>> AutoTransaction<T>(this Document doc, params Func<IEnumerable<T>>[] funcs) where T : Element
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (funcs is null)
+                throw new ArgumentNullException(nameof(funcs));
+
+            var results = new List<List<T>>();
+
+            doc.AutoTransaction(() => results = funcs.Select(s => s.Invoke().ToList()).ToList());
+
+            return results;
+        }
+
+        /// <summary>
+        ///     To auto execute transaction.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="funcs"></param>
         public static List<List<T>> AutoTransaction<T>(this Document doc, IEnumerable<Func<IEnumerable<T>>> funcs) where T : Element
         {
             if (doc is null)
@@ -284,45 +304,5 @@ namespace KeLi.Common.Revit.Widgets
 
             return false;
         }
-
-        /// <summary>
-        ///     Deletes element list.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="elms"></param>
-        public static void DeleteElementList(this Document doc, List<Element> elms)
-        {
-            // It may be deleted.
-            elms = elms.Where(w => w != null && w.IsValidObject).ToList();
-
-            var ids = elms.Select(s => s.Id).ToList();
-
-            doc.DeleteElementList(ids);
-        }
-
-        /// <summary>
-        ///     Deletes element list.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="ids"></param>
-        public static void DeleteElementList(this Document doc, List<ElementId> ids)
-        {
-            AutoTransaction(doc, () =>
-            {
-                foreach (var id in ids)
-                {
-                    if (id == null || id.IntegerValue == -1)
-                        continue;
-
-                    if (doc.GetElement(id) != null)
-                        doc.Delete(id);
-                }
-            });
-        }
     }
-}
-
-
-namespace KeLi.RevitDev.App.Commands
-{
 }

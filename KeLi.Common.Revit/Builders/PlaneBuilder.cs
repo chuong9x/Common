@@ -89,7 +89,6 @@ namespace KeLi.Common.Revit.Builders
         public static Plane CreatePlane(this XYZ normal, XYZ point)
         {
             #if R2016
-
             return new Plane(normal, point);
 
             #endif

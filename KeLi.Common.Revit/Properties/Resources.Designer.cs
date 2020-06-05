@@ -61,20 +61,29 @@ namespace KeLi.Common.Revit.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 调试模型线.
+        /// </summary>
+        internal static string DebugLine {
+            get {
+                return ResourceManager.GetString("DebugLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 图纸.
         /// </summary>
-        internal static string Draw_CHS {
+        internal static string Draw {
             get {
-                return ResourceManager.GetString("Draw_CHS", resourceCulture);
+                return ResourceManager.GetString("Draw", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 公制常规模型.rft.
         /// </summary>
-        internal static string GeneralTemplateName_CHS {
+        internal static string GeneralTemplate {
             get {
-                return ResourceManager.GetString("GeneralTemplateName_CHS", resourceCulture);
+                return ResourceManager.GetString("GeneralTemplate", resourceCulture);
             }
         }
         

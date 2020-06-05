@@ -263,7 +263,10 @@ namespace KeLi.Common.Revit.Filters
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
 
-            var opt = new SpatialElementBoundaryOptions { SpatialElementBoundaryLocation = Center };
+            var opt = new SpatialElementBoundaryOptions
+            {
+                SpatialElementBoundaryLocation = Center
+            };
 
             var calc = new SpatialElementGeometryCalculator(doc, opt);
 
