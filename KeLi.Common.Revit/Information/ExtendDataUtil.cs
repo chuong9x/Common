@@ -47,13 +47,12 @@
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.ExtensibleStorage;
-
-using static Autodesk.Revit.DB.ExtensibleStorage.AccessLevel;
 
 namespace KeLi.Common.Revit.Information
 {
@@ -63,33 +62,13 @@ namespace KeLi.Common.Revit.Information
     public static class ExtendDataUtil
     {
         /// <summary>
-        ///     Filed type.
+        ///     Sets an entity.
         /// </summary>
-        public enum SchemaFieldType
-        {
-            /// <summary>
-            ///     Simple type.
-            /// </summary>
-            Simple,
-
-            /// <summary>
-            ///     List type.
-            /// </summary>
-            List,
-
-            /// <summary>
-            ///     Dictionary type.
-            /// </summary>
-            Dictionary
-        }
-
-        /// <summary>
-        ///     Creates an entity.
-        /// </summary>
+        /// <param name="elm"></param>
         /// <param name="schemaName"></param>
         /// <param name="fields"></param>
         /// <returns></returns>
-        public static Entity CreateEntity(string schemaName, params KeyValuePair<string, SchemaFieldType>[] fields)
+        public static void SetEntity(this Element elm, string schemaName, params FieldInfo[] fields)
         {
             if (schemaName is null)
                 throw new ArgumentNullException(nameof(schemaName));
@@ -97,26 +76,26 @@ namespace KeLi.Common.Revit.Information
             var guid = Guid.NewGuid();
             var schemaBuilder = new SchemaBuilder(guid);
 
-            schemaBuilder.SetReadAccessLevel(Public);
-            schemaBuilder.SetWriteAccessLevel(Public);
+            schemaBuilder.SetReadAccessLevel(AccessLevel.Public);
+            schemaBuilder.SetWriteAccessLevel(AccessLevel.Public);
             schemaBuilder.SetSchemaName(schemaName);
 
             foreach (var field in fields)
             {
-                switch (field.Value)
+                switch (field.FieldType)
                 {
                     case SchemaFieldType.Simple:
-                        schemaBuilder.AddSimpleField(field.Key, typeof(string));
+                        schemaBuilder.AddSimpleField(field.FieldName, field.DataType);
 
                         break;
 
                     case SchemaFieldType.List:
-                        schemaBuilder.AddArrayField(field.Key, typeof(string));
+                        schemaBuilder.AddArrayField(field.FieldName, field.DataType);
 
                         break;
 
                     case SchemaFieldType.Dictionary:
-                        schemaBuilder.AddMapField(field.Key, typeof(string), typeof(string));
+                        schemaBuilder.AddMapField(field.FieldName, field.KeyType, field.ValueType);
 
                         break;
 
@@ -125,16 +104,17 @@ namespace KeLi.Common.Revit.Information
                 }
             }
 
-            return new Entity(schemaBuilder.Finish());
+            elm.SetEntity(new Entity(schemaBuilder.Finish()));
         }
 
         /// <summary>
-        ///     Creates an entity.
+        ///     Sets an entity.
         /// </summary>
         /// <param name="fields"></param>
+        /// <param name="elm"></param>
         /// <param name="schemaName"></param>
         /// <returns></returns>
-        public static Entity CreateEntity(string schemaName, IEnumerable<KeyValuePair<string, SchemaFieldType>> fields)
+        public static void SetEntity(this Element elm, string schemaName, IEnumerable<FieldInfo> fields)
         {
             if (schemaName is null)
                 throw new ArgumentNullException(nameof(schemaName));
@@ -142,28 +122,26 @@ namespace KeLi.Common.Revit.Information
             var guid = Guid.NewGuid();
             var schemaBuilder = new SchemaBuilder(guid);
 
-            schemaBuilder.SetReadAccessLevel(Public);
-            schemaBuilder.SetWriteAccessLevel(Public);
+            schemaBuilder.SetReadAccessLevel(AccessLevel.Public);
+            schemaBuilder.SetWriteAccessLevel(AccessLevel.Public);
             schemaBuilder.SetSchemaName(schemaName);
 
             foreach (var field in fields)
             {
-                switch (field.Value)
+                switch (field.FieldType)
                 {
                     case SchemaFieldType.Simple:
-
-                        schemaBuilder.AddSimpleField(field.Key, typeof(string));
+                        schemaBuilder.AddSimpleField(field.FieldName, field.DataType);
 
                         break;
 
                     case SchemaFieldType.List:
-
-                        schemaBuilder.AddArrayField(field.Key, typeof(string));
+                        schemaBuilder.AddArrayField(field.FieldName, field.DataType);
 
                         break;
 
                     case SchemaFieldType.Dictionary:
-                        schemaBuilder.AddMapField(field.Key, typeof(string), typeof(string));
+                        schemaBuilder.AddMapField(field.FieldName, field.KeyType, field.ValueType);
 
                         break;
 
@@ -172,7 +150,7 @@ namespace KeLi.Common.Revit.Information
                 }
             }
 
-            return new Entity(schemaBuilder.Finish());
+            elm.SetEntity(new Entity(schemaBuilder.Finish()));
         }
 
         /// <summary>
@@ -183,20 +161,52 @@ namespace KeLi.Common.Revit.Information
         /// <param name="fieldName"></param>
         /// <param name="schemaName"></param>
         /// <returns></returns>
-        public static T GetFieldValue<T>(this Element elm, string fieldName, string schemaName)
+        public static T GetFieldValue<T>(this Element elm, string fieldName, string schemaName) where T : class
         {
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
-            if (!typeof(T).IsPrimitive)
-                throw new NotSupportedException(nameof(T));
-
-            var guids = elm.GetEntitySchemaGuids();
-            var schema = guids.Select(Schema.Lookup).FirstOrDefault(f => f.SchemaName == schemaName);
+            var schema = elm.GetSchema(schemaName);
             var entity = elm.GetEntity(schema);
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
 
-            return field != null ? entity.Get<T>(field) : default;
+            if (field == null)
+                return null;
+
+            if (!typeof(T).IsPrimitive)
+            {
+                var keyType = field.KeyType;
+                var valueType = field.ValueType;
+
+                if (keyType == typeof(int) && valueType == typeof(int))
+                    return entity.Get<IDictionary<int, int>>(field) as T;
+
+                if (keyType == typeof(int) && valueType == typeof(double))
+                    return entity.Get<IDictionary<int, double>>(field) as T;
+
+                if (keyType == typeof(int) && valueType == typeof(string))
+                    return entity.Get<IDictionary<int, string>>(field) as T;
+
+                if (keyType == typeof(double) && valueType == typeof(int))
+                    return entity.Get<IDictionary<int, int>>(field) as T;
+
+                if (keyType == typeof(double) && valueType == typeof(double))
+                    return entity.Get<IDictionary<double, double>>(field) as T;
+
+                if (keyType == typeof(double) && valueType == typeof(string))
+                    return entity.Get<IDictionary<double, string>>(field) as T;
+
+                if (keyType == typeof(string) && valueType == typeof(int))
+                    return entity.Get<IDictionary<string, int>>(field) as T;
+
+                if (keyType == typeof(string) && valueType == typeof(double))
+                    return entity.Get<IDictionary<string, double>>(field) as T;
+
+                if (keyType == typeof(string) && valueType == typeof(string))
+                    return entity.Get<IDictionary<string, string>>(field) as T;
+            }
+
+            return entity.Get<T>(field);
         }
 
         /// <summary>
@@ -218,15 +228,67 @@ namespace KeLi.Common.Revit.Information
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
 
-            if (!typeof(T).IsPrimitive)
-                throw new NotSupportedException(nameof(T));
-
-            var guids = elm.GetEntitySchemaGuids();
-            var schema = guids.Select(Schema.Lookup).FirstOrDefault(f => f.SchemaName == schemaName);
+            var schema = elm.GetSchema(schemaName);
             var entity = elm.GetEntity(schema);
 
-            entity.Set(fieldName, value);
+            var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
+
+            if (!typeof(T).IsPrimitive)
+            {
+                var keyType = field.KeyType;
+                var valueType = field.ValueType;
+
+                if (keyType == typeof(int) && valueType == typeof(int))
+                    entity.Set(fieldName, value as IDictionary<int, int>);
+
+                if (keyType == typeof(int) && valueType == typeof(double))
+                    entity.Set(fieldName, value as IDictionary<int, double>);
+
+                if (keyType == typeof(int) && valueType == typeof(string))
+                    entity.Set(fieldName, value as IDictionary<int, string>);
+
+                if (keyType == typeof(double) && valueType == typeof(int))
+                    entity.Set(fieldName, value as IDictionary<double, int>);
+
+                if (keyType == typeof(double) && valueType == typeof(double))
+                    entity.Set(fieldName, value as IDictionary<double, double>);
+
+                if (keyType == typeof(double) && valueType == typeof(string))
+                    entity.Set(fieldName, value as IDictionary<double, string>);
+
+                if (keyType == typeof(string) && valueType == typeof(int))
+                    entity.Set(fieldName, value as IDictionary<string, int>);
+
+                if (keyType == typeof(string) && valueType == typeof(double))
+                    entity.Set(fieldName, value as IDictionary<string, double>);
+
+                if (keyType == typeof(string) && valueType == typeof(string))
+                    entity.Set(fieldName, value as IDictionary<string, string>);
+            }
+
+            else
+                entity.Set(fieldName, value);
+
             elm.SetEntity(entity);
+        }
+
+        /// <summary>
+        ///     Gets element's schema by name.
+        /// </summary>
+        /// <param name="elm"></param>
+        /// <param name="schemaName"></param>
+        /// <returns></returns>
+        public static Schema GetSchema(this Element elm, string schemaName)
+        {
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
+
+            if (schemaName is null)
+                throw new ArgumentNullException(nameof(schemaName));
+
+            var guids = elm.GetEntitySchemaGuids();
+
+            return guids.Select(Schema.Lookup).FirstOrDefault(f => f.SchemaName == schemaName);
         }
     }
 }

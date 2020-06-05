@@ -103,6 +103,8 @@
     <Compile Include="Hook\GlobalMsg.cs" />
     <Compile Include="Hook\KeyboardHookStruct.cs" />
     <Compile Include="Hook\MouseHookStruct.cs" />
+    <Compile Include="Information\FieldInfo.cs" />
+    <Compile Include="Information\SchemaFieldType.cs" />
     <Compile Include="Widgets\CommandBase.cs" />
     <Compile Include="Widgets\DeletionUtil.cs" />
     <Compile Include="Widgets\KeySender.cs" />
@@ -132,10 +134,11 @@
     <Compile Include="Widgets\RibbonUtil.cs" />
     <Compile Include="Geometry\BoxUtil.cs" />
     <Compile Include="Converters\UnitConverter.cs" />
-    <Compile Include="Widgets\AutoUtil.cs" />
+    <Compile Include="Widgets\RepeationUtil.cs" />
     <Compile Include="Converters\CurveConverter.cs" />
     <Compile Include="Widgets\RevitInfoUtil.cs" />
     <Compile Include="Widgets\TableUtil.cs" />
+    <Compile Include="Widgets\TransactionUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

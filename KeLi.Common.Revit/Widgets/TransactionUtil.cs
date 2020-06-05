@@ -33,7 +33,7 @@
      |  |                                                    |  |  |/----|`---=    |      |
      |  |              Author: KeLi                          |  |  |     |         |      |
      |  |              Email: kelistudy@163.com              |  |  |     |         |      |
-     |  |              Creation Time: 10/30/2019 07:08:41 PM |  |  |     |         |      |
+     |  |              Creation Time: 06/05/2020 07:08:41 PM |  |  |     |         |      |
      |  | C:\>_                                              |  |  |     | -==----'|      |
      |  |                                                    |  |  |   ,/|==== ooo |      ;
      |  |                                                    |  |  |  // |(((( [66]|    ,"
@@ -52,16 +52,13 @@ using System.Diagnostics;
 using System.Linq;
 
 using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-
-using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledException;
 
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
     ///     Auto action utility.
     /// </summary>
-    public static class AutoUtil
+    public static class TransactionUtil
     {
         /// <summary>
         ///     To auto execute transaction.
@@ -104,7 +101,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="actions"></param>
-        public static bool AutoTransaction(this Document doc, params Action[] actions)
+        public static bool AutoTransactionList(this Document doc, params Action[] actions)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -120,7 +117,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="actions"></param>
-        public static bool AutoTransaction(this Document doc, IEnumerable<Action> actions)
+        public static bool AutoTransactionList(this Document doc, IEnumerable<Action> actions)
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -156,7 +153,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="funcs"></param>
-        public static List<T> AutoTransaction<T>(this Document doc, params Func<T>[] funcs) where T : Element
+        public static List<T> AutoTransactionList<T>(this Document doc, params Func<T>[] funcs) where T : Element
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -176,7 +173,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="funcs"></param>
-        public static List<T> AutoTransaction<T>(this Document doc, IEnumerable<Func<T>> funcs) where T : Element
+        public static List<T> AutoTransactionList<T>(this Document doc, IEnumerable<Func<T>> funcs) where T : Element
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -216,7 +213,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="funcs"></param>
-        public static List<List<T>> AutoTransaction<T>(this Document doc, params Func<IEnumerable<T>>[] funcs) where T : Element
+        public static List<List<T>> AutoTransactionList<T>(this Document doc, params Func<IEnumerable<T>>[] funcs) where T : Element
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -236,7 +233,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="funcs"></param>
-        public static List<List<T>> AutoTransaction<T>(this Document doc, IEnumerable<Func<IEnumerable<T>>> funcs) where T : Element
+        public static List<List<T>> AutoTransactionList<T>(this Document doc, IEnumerable<Func<IEnumerable<T>>> funcs) where T : Element
         {
             if (doc is null)
                 throw new ArgumentNullException(nameof(doc));
@@ -249,60 +246,6 @@ namespace KeLi.Common.Revit.Widgets
             doc.AutoTransaction(() => results = funcs.Select(s => s.Invoke().ToList()).ToList());
 
             return results;
-        }
-
-        /// <summary>
-        ///     To repeat call command.
-        /// </summary>
-        /// <param name="uidoc"></param>
-        /// <param name="func"></param>
-        /// <param name="flag"></param>
-        /// <param name="ignoreEsc"></param>
-        /// <returns></returns>
-        public static bool RepeatCommand(this UIDocument uidoc, Func<bool> func, bool flag = true, bool ignoreEsc = true)
-        {
-            if (func is null)
-                throw new ArgumentNullException(nameof(func));
-
-            try
-            {
-                if (flag && func.Invoke())
-                    return RepeatCommand(uidoc, func);
-            }
-            catch (OperationCanceledException)
-            {
-                if (ignoreEsc && func.Invoke())
-                    return RepeatCommand(uidoc, func);
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        ///     To repeat call command.
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="func"></param>
-        /// <param name="flag"></param>
-        /// <param name="ignoreEsc"></param>
-        /// <returns></returns>
-        public static bool RepeatCommand(this Document doc, Func<bool> func, bool flag = true, bool ignoreEsc = true)
-        {
-            if (func is null)
-                throw new ArgumentNullException(nameof(func));
-
-            try
-            {
-                if (flag && func.Invoke())
-                    return RepeatCommand(doc, func);
-            }
-            catch (OperationCanceledException)
-            {
-                if (ignoreEsc && func.Invoke())
-                    return RepeatCommand(doc, func);
-            }
-
-            return false;
         }
     }
 }
