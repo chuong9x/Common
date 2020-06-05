@@ -9,7 +9,7 @@ using KeLi.Common.Revit.Properties;
 /*
  * MIT License
  *
- * Copyright(c) 2020 KeLi
+ * Copyright(c) 2019 KeLi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
