@@ -245,7 +245,13 @@ namespace KeLi.Common.Revit.Geometry
 
             var p41 = Line.CreateBound(p4, p1);
 
-            return new List<Line> { p12, p23, p34, p41 };
+            return new List<Line>
+            {
+                p12,
+                p23,
+                p34,
+                p41
+            };
         }
 
         /// <summary>
@@ -266,7 +272,13 @@ namespace KeLi.Common.Revit.Geometry
 
             var p4 = new XYZ(p1.X, box.Max.Y, p1.Z);
 
-            return new List<XYZ> { p1, p2, p3, p4 };
+            return new List<XYZ>
+            {
+                p1,
+                p2,
+                p3,
+                p4
+            };
         }
 
         /// <summary>
@@ -321,7 +333,21 @@ namespace KeLi.Common.Revit.Geometry
 
             var p78 = Line.CreateBound(p7, p8);
 
-            return new List<Line> { p12, p14, p15, p23, p24, p34, p37, p48, p56, p58, p67, p78 };
+            return new List<Line>
+            {
+                p12,
+                p14,
+                p15,
+                p23,
+                p24,
+                p34,
+                p37,
+                p48,
+                p56,
+                p58,
+                p67,
+                p78
+            };
         }
 
         /// <summary>
@@ -350,7 +376,17 @@ namespace KeLi.Common.Revit.Geometry
 
             var p8 = box.Max;
 
-            return new List<XYZ> { p1, p2, p3, p4, p5, p6, p7, p8 };
+            return new List<XYZ>
+            {
+                p1,
+                p2,
+                p3,
+                p4,
+                p5,
+                p6,
+                p7,
+                p8
+            };
         }
 
         /// <summary>

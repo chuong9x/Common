@@ -110,7 +110,10 @@ namespace KeLi.Common.Revit.Widgets
 
             var rowNum = body.NumberOfRows;
 
-            var result = new DataTable { TableName = view.GetCellText(SectionType.Header, 0, 0) };
+            var result = new DataTable
+            {
+                TableName = view.GetCellText(SectionType.Header, 0, 0)
+            };
 
             var colIndexs = new List<int>();
 
@@ -173,7 +176,10 @@ namespace KeLi.Common.Revit.Widgets
 
             var rowNum = body.NumberOfRows;
 
-            var result = new DataTable { TableName = view.GetCellText(SectionType.Header, 0, 0) };
+            var result = new DataTable
+            {
+                TableName = view.GetCellText(SectionType.Header, 0, 0)
+            };
 
             for (var i = 0; i < colNum; i++)
                 result.Columns.Add();

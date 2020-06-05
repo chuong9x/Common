@@ -58,7 +58,6 @@ using KeLi.Common.Revit.Widgets;
 
 namespace KeLi.Common.Revit.Builders
 {
-
     /// <summary>
     ///     Family loader.
     /// </summary>
@@ -77,7 +76,7 @@ namespace KeLi.Common.Revit.Builders
 
             if (parm is null)
                 throw new ArgumentNullException(nameof(parm));
-            
+
             var tplPath = doc.GetTemplateFilePath();
 
             if (!File.Exists(tplPath))
@@ -156,7 +155,7 @@ namespace KeLi.Common.Revit.Builders
             if (rfaPath is null)
                 throw new ArgumentNullException(nameof(rfaPath));
 
-            if(!File.Exists(rfaPath))
+            if (!File.Exists(rfaPath))
                 throw new FileNotFoundException(rfaPath);
 
             doc.LoadFamily(rfaPath, new OverrideLoadOption(), out var family);

@@ -117,10 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Draw_CHS" xml:space="preserve">
+  <data name="DebugLine" xml:space="preserve">
+    <value>调试模型线</value>
+  </data>
+  <data name="Draw" xml:space="preserve">
     <value>图纸</value>
   </data>
-  <data name="GeneralTemplateName_CHS" xml:space="preserve">
+  <data name="GeneralTemplate" xml:space="preserve">
     <value>公制常规模型.rft</value>
   </data>
   <data name="WallSweep_Height" xml:space="preserve">

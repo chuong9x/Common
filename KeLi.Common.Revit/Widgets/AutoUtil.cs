@@ -232,6 +232,26 @@ namespace KeLi.Common.Revit.Widgets
         }
 
         /// <summary>
+        ///     To auto execute transaction.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="funcs"></param>
+        public static List<List<T>> AutoTransaction<T>(this Document doc, params Func<IEnumerable<T>>[] funcs) where T : Element
+        {
+            if (doc is null)
+                throw new ArgumentNullException(nameof(doc));
+
+            if (funcs is null)
+                throw new ArgumentNullException(nameof(funcs));
+
+            var results = new List<List<T>>();
+
+            doc.AutoTransaction(() => results = funcs.Select(s => s.Invoke().ToList()).ToList());
+
+            return results;
+        }
+
+        /// <summary>
         ///     To repeat call command.
         /// </summary>
         /// <param name="uidoc"></param>
@@ -320,9 +340,4 @@ namespace KeLi.Common.Revit.Widgets
             });
         }
     }
-}
-
-
-namespace KeLi.RevitDev.App.Commands
-{
 }

@@ -172,7 +172,10 @@ namespace KeLi.Common.Revit.Converters
             foreach (var curve in curves)
                 ary.Append(curve);
 
-            return new List<CurveArray> { ary };
+            return new List<CurveArray>
+            {
+                ary
+            };
         }
 
         /// <summary>
@@ -190,7 +193,10 @@ namespace KeLi.Common.Revit.Converters
             foreach (var curve in curves)
                 ary.Append(curve);
 
-            return new List<CurveArray> { ary };
+            return new List<CurveArray>
+            {
+                ary
+            };
         }
     }
 }

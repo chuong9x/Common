@@ -253,7 +253,11 @@ namespace KeLi.Common.Revit.Widgets
 
             var rawString = Encoding.Unicode.GetString(rawData);
 
-            var fileInfo = rawString.Split(new[] { "\0", NewLine }, RemoveEmptyEntries).ToList();
+            var fileInfo = rawString.Split(new[]
+            {
+                "\0",
+                NewLine
+            }, RemoveEmptyEntries).ToList();
 
             fileInfo.RemoveAll(r => !r.Contains(":"));
 
@@ -287,7 +291,7 @@ namespace KeLi.Common.Revit.Widgets
             if (string.IsNullOrWhiteSpace(streamName))
                 throw new ArgumentNullException(nameof(streamName));
 
-            if(!File.Exists(filePath))
+            if (!File.Exists(filePath))
                 throw new FileNotFoundException(filePath);
 
             if (!IsFileStructuredStorage(filePath))
@@ -378,7 +382,7 @@ namespace KeLi.Common.Revit.Widgets
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArgumentNullException(nameof(filePath));
 
-            if(!File.Exists(filePath))
+            if (!File.Exists(filePath))
                 throw new FileNotFoundException(filePath);
 
             var result = StgIsStorageFile(filePath);

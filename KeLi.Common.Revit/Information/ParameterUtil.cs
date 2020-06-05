@@ -148,7 +148,10 @@ namespace KeLi.Common.Revit.Information
             if (definition != null)
                 return definition;
 
-            var opt = new ExternalDefinitionCreationOptions(paramName, ParameterType.Text) { UserModifiable = canEdit };
+            var opt = new ExternalDefinitionCreationOptions(paramName, ParameterType.Text)
+            {
+                UserModifiable = canEdit
+            };
 
             return group.Definitions.Create(opt);
         }

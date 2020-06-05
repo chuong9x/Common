@@ -133,7 +133,7 @@ namespace KeLi.Common.Revit.Widgets
             switch (type)
             {
                 case LanguageType.Chinese_Simplified:
-                    langTplName = Resources.GeneralTemplateName_CHS;
+                    langTplName = Resources.GeneralTemplate;
 
                     break;
 

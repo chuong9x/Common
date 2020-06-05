@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+using Autodesk.Windows;
+
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
@@ -31,7 +33,7 @@ namespace KeLi.Common.Revit.Widgets
         /// </summary>
         public void SendKey(byte key, int times = 1)
         {
-            var revit = Autodesk.Windows.ComponentManager.ApplicationWindow;
+            var revit = ComponentManager.ApplicationWindow;
 
             SetForegroundWindow(revit);
 

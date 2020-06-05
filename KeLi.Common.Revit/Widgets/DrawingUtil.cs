@@ -1,4 +1,11 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
+
+using Autodesk.Revit.DB;
+
+using KeLi.Common.Revit.Filters;
+using KeLi.Common.Revit.Properties;
 /*
  * MIT License
  *
@@ -22,7 +29,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 /*
              ,---------------------------------------------------,              ,---------,
         ,----------------------------------------------------------,          ,"        ,"|
@@ -47,23 +53,15 @@
         /_==__==========__==_ooo__ooo=_/'   /___________,"
 */
 
-using System.IO;
-using System.Linq;
-
-using Autodesk.Revit.DB;
-
-using KeLi.Common.Revit.Filters;
-using KeLi.Common.Revit.Properties;
-
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    /// 	Drawing utility.
+    ///     Drawing utility.
     /// </summary>
     public static class DrawingUtil
     {
         /// <summary>
-        /// 	Exports drawing list.
+        ///     Exports drawing list.
         /// </summary>
         /// <param name="doc"></param>
         /// <param name="drawingPath"></param>
@@ -99,7 +97,7 @@ namespace KeLi.Common.Revit.Widgets
 
             foreach (var filePath in filePaths)
             {
-                var newFilePath = filePath.Replace($"{docName}-{Resources.Draw_CHS} - ", string.Empty);
+                var newFilePath = filePath.Replace($"{docName}-{Resources.Draw} - ", string.Empty);
 
                 if (File.Exists(filePath))
                     File.Move(filePath, newFilePath);
