@@ -53,9 +53,9 @@ using Autodesk.Revit.UI;
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    /// External application base class.
+    /// Base external application class.
     /// </summary>
-    public abstract class AppBase : IExternalApplication
+    public abstract class BaseApp : IExternalApplication
     {
         /// <summary>
         ///     Starts the application.

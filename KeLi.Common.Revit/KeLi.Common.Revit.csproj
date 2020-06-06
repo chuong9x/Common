@@ -106,7 +106,7 @@
     <Compile Include="Information\FieldInfo.cs" />
     <Compile Include="Information\SchemaFieldType.cs" />
     <Compile Include="Widgets\AppBase.cs" />
-    <Compile Include="Widgets\CmdBase.cs" />
+    <Compile Include="Widgets\BaseCmd.cs" />
     <Compile Include="Widgets\DeletionUtil.cs" />
     <Compile Include="Widgets\KeySender.cs" />
     <Compile Include="Widgets\MaterialUtil.cs" />
