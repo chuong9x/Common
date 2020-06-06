@@ -59,7 +59,7 @@ namespace KeLi.Common.Revit.Widgets
     /// </summary>
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public abstract class CommandBase : IExternalCommand, IExternalCommandAvailability
+    public abstract class CmdBase : IExternalCommand, IExternalCommandAvailability
     {
         /// <summary>
         ///     Executes command.
