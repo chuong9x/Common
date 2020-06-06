@@ -47,7 +47,6 @@
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -70,14 +69,23 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static void SetEntity(this Element elm, string schemaName, params FieldInfo[] fields)
         {
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
+
             if (schemaName is null)
                 throw new ArgumentNullException(nameof(schemaName));
 
+            if (fields is null)
+                throw new ArgumentNullException(nameof(fields));
+
             var guid = Guid.NewGuid();
+
             var schemaBuilder = new SchemaBuilder(guid);
 
             schemaBuilder.SetReadAccessLevel(AccessLevel.Public);
+
             schemaBuilder.SetWriteAccessLevel(AccessLevel.Public);
+
             schemaBuilder.SetSchemaName(schemaName);
 
             foreach (var field in fields)
@@ -116,8 +124,14 @@ namespace KeLi.Common.Revit.Information
         /// <returns></returns>
         public static void SetEntity(this Element elm, string schemaName, IEnumerable<FieldInfo> fields)
         {
+            if (elm is null)
+                throw new ArgumentNullException(nameof(elm));
+
             if (schemaName is null)
                 throw new ArgumentNullException(nameof(schemaName));
+
+            if (fields is null)
+                throw new ArgumentNullException(nameof(fields));
 
             var guid = Guid.NewGuid();
             var schemaBuilder = new SchemaBuilder(guid);
@@ -166,7 +180,17 @@ namespace KeLi.Common.Revit.Information
             if (elm is null)
                 throw new ArgumentNullException(nameof(elm));
 
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+
+            if (schemaName is null)
+                throw new ArgumentNullException(nameof(schemaName));
+
             var schema = elm.GetSchema(schemaName);
+
+            if (schema == null)
+                return null;
+
             var entity = elm.GetEntity(schema);
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
 
@@ -228,7 +252,14 @@ namespace KeLi.Common.Revit.Information
             if (value is null)
                 throw new ArgumentNullException(nameof(value));
 
+            if (schemaName is null)
+                throw new ArgumentNullException(nameof(schemaName));
+
             var schema = elm.GetSchema(schemaName);
+
+            if (schema  is null)
+                throw new ArgumentNullException(nameof(value));
+
             var entity = elm.GetEntity(schema);
 
             var field = schema.ListFields().FirstOrDefault(f => f.FieldName == fieldName);
@@ -236,6 +267,7 @@ namespace KeLi.Common.Revit.Information
             if (!typeof(T).IsPrimitive)
             {
                 var keyType = field.KeyType;
+
                 var valueType = field.ValueType;
 
                 if (keyType == typeof(int) && valueType == typeof(int))
