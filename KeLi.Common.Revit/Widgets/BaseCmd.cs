@@ -48,6 +48,7 @@
 
 using System;
 
+using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -62,6 +63,26 @@ namespace KeLi.Common.Revit.Widgets
     public abstract class BaseCmd : IExternalCommand, IExternalCommandAvailability
     {
         /// <summary>
+        ///     UI aplication.
+        /// </summary>
+        protected UIApplication _uiapp;
+
+        /// <summary>
+        ///     Application.
+        /// </summary>
+        protected Application _app;
+
+        /// <summary>
+        ///     UI document.
+        /// </summary>
+        protected UIDocument _uidoc;
+
+        /// <summary>
+        ///     Document.
+        /// </summary>
+        protected Document _doc;
+
+        /// <summary>
         ///     Executes command.
         /// </summary>
         /// <param name="commandData"></param>
@@ -72,7 +93,15 @@ namespace KeLi.Common.Revit.Widgets
         {
             try
             {
-                Run(commandData, ref message, elements);
+                _uiapp = commandData.Application;
+
+                _app = _uiapp.Application;
+
+                _uidoc = _uiapp.ActiveUIDocument;
+
+                _doc = _uidoc.Document;
+
+                Run(ref message, elements);
 
                 return Result.Succeeded;
             }
@@ -98,9 +127,8 @@ namespace KeLi.Common.Revit.Widgets
         /// <summary>
         ///     Runs sth.
         /// </summary>
-        /// <param name="commandData"></param>
         /// <param name="message"></param>
         /// <param name="elements"></param>
-        public abstract void Run(ExternalCommandData commandData, ref string message, ElementSet elements);
+        public abstract void Run(ref string message, ElementSet elements);
     }
 }
