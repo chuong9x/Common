@@ -105,7 +105,7 @@
     <Compile Include="Hook\MouseHookStruct.cs" />
     <Compile Include="Information\FieldInfo.cs" />
     <Compile Include="Information\SchemaFieldType.cs" />
-    <Compile Include="Widgets\AppBase.cs" />
+    <Compile Include="Widgets\BaseApp.cs" />
     <Compile Include="Widgets\BaseCmd.cs" />
     <Compile Include="Widgets\DeletionUtil.cs" />
     <Compile Include="Widgets\KeySender.cs" />
