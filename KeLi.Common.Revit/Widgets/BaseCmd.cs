@@ -55,11 +55,11 @@ using Autodesk.Revit.UI;
 namespace KeLi.Common.Revit.Widgets
 {
     /// <summary>
-    ///     Command base class.
+    ///     Base command class.
     /// </summary>
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public abstract class CmdBase : IExternalCommand, IExternalCommandAvailability
+    public abstract class BaseCmd : IExternalCommand, IExternalCommandAvailability
     {
         /// <summary>
         ///     Executes command.
