@@ -139,14 +139,21 @@ namespace KeLi.Common.Revit.Builders
                 throw new ArgumentNullException(nameof(curve));
 
             XYZ normal = null;
+            XYZ endPt = null;
 
             if (curve is Arc arc)
+            {
                 normal = arc.Normal;
+                endPt = arc.Center;
+            }
 
-            if (curve is Ellipse ellipse)
+            else if (curve is Ellipse ellipse)
+            {
                 normal = ellipse.Normal;
+                endPt = ellipse.Center;
+            }
 
-            if (curve is Line line)
+            else if (curve is Line line)
             {
                 var refAsix = XYZ.BasisZ;
 
@@ -157,22 +164,18 @@ namespace KeLi.Common.Revit.Builders
                     refAsix = XYZ.BasisX;
 
                 normal = line.Direction.CrossProduct(refAsix).Normalize();
+                endPt = line.Origin;
             }
 
             if (normal == null)
                 throw new NullReferenceException(nameof(normal));
 
-            var plane = normal.CreatePlane(curve.GetEndPoint(0));
+            var plane = normal.CreatePlane(endPt);
 
             sketchPlane = SketchPlane.Create(doc, plane);
 
-            ModelCurve result;
-
-            if (!doc.IsFamilyDocument)
-                result = doc.Create.NewModelCurve(curve, sketchPlane);
-
-            else
-                result = doc.FamilyCreate.NewModelCurve(curve, sketchPlane);
+            var result = !doc.IsFamilyDocument ? doc.Create.NewModelCurve(curve, sketchPlane) 
+                : doc.FamilyCreate.NewModelCurve(curve, sketchPlane);
 
             result.SetModelCurveColor(lineName, color);
 
@@ -228,7 +231,6 @@ namespace KeLi.Common.Revit.Builders
                 throw new ArgumentNullException(nameof(modelCurve));
 
             var doc = modelCurve.Document;
-
             var lineCtg = doc.Settings.Categories.get_Item(BuiltInCategory.OST_Lines);
 
             if (string.IsNullOrWhiteSpace(lineName))
@@ -245,9 +247,7 @@ namespace KeLi.Common.Revit.Builders
             }
 
             var graphicsStyles = doc.GetInstanceList<GraphicsStyle>();
-
             var modelStyle = graphicsStyles.FirstOrDefault(f => f.GraphicsStyleCategory.Name == lineName);
-
             var parm = modelCurve.get_Parameter(BuiltInParameter.BUILDING_CURVE_GSTYLE);
 
             if (modelStyle != null)
